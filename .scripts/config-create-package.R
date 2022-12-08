@@ -81,15 +81,19 @@ usethis::use_git_ignore(ignores = c(
     ".Rproj.user",
     ".Rhistory",
     ".RData",
-    ".Renviron"))
+    ".Renviron",
+    "*.code-workspace"))
 
 
 # .Rbuildignore ----------------------------------------------------------------
 
 
-usethis::use_build_ignore(escape = TRUE, files = c(
+usethis::use_build_ignore(escape = FALSE, files = "[.]code-workspace$")
+usethis::use_build_ignore(escape = TRUE,  files = c(
     ".git",
+    ".github",
     ".scripts",
+    ".gitignore",
     ".Rprofile",
     "codecov.yml"))
 

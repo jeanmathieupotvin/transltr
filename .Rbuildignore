@@ -1,6 +1,7 @@
-^codecov\.yml$
-^README\.Rmd$
+[.]code-workspace$
 ^\.git$
-^\.scripts$
-^\.Rprofile$
 ^\.github$
+^\.scripts$
+^\.gitignore$
+^\.Rprofile$
+^codecov\.yml$

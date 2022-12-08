@@ -1,5 +1,6 @@
+.github/*.html
 .Rproj.user
 .Rhistory
 .RData
 .Renviron
-.github/*.html
+*.code-workspace
