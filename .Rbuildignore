@@ -1,0 +1,5 @@
+^codecov\.yml$
+^README\.Rmd$
+^\.git$
+^\.scripts$
+^\.Rprofile$

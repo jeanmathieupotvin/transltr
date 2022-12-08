@@ -1,0 +1,24 @@
+Package: transltr
+Title: A general purpose translator for R
+Version: 0.0.1
+Authors@R: c(
+    person("Jean-Mathieu", "Potvin", , "jm@potvin.xyz", role = "aut",
+           comment = c(ORCID = "0000-0002-8237-422X")),
+    person("Jérôme", "Lavoué", , "jerome.lavoue@umontreal.ca", role = "ctb",
+           comment = c(ORCID = "0000-0003-4950-5475"))
+  )
+Description: A collection of translation mechanisms. Detect messages to be
+    be translated in an application, organize their corresponding
+    translated messages, and seamlessly use them.
+License: MIT
+URL: https://github.com/jeanmathieupotvin/transltr
+Contact: jm@potvin.xyz
+ContactName: Jean-Mathieu Potvin
+Encoding: UTF-8
+Language: en
+Roxygen: list(markdown = TRUE, r6 = TRUE)
+RoxygenNote: 7.2.1
+Suggests: 
+    covr,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
