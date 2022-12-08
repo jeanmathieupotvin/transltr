@@ -9,6 +9,7 @@
 #' @author Jean-Mathieu Potvin (<jm@@potvin.xyz>)
 #'
 #' @seealso [The usethis package](https://usethis.r-lib.org/)
+NULL
 
 
 # Setup ------------------------------------------------------------------------
@@ -29,19 +30,18 @@ usethis::create_package("transltr",
         Package     = "transltr",
         Title       = "A general purpose translator for R",
         Version     = "0.0.1",
-        License     = "MIT",
+        License     = "MIT + LICENSE",
         Language    = "en",
         Encoding    = "UTF-8",
         Roxygen     = "list(markdown = TRUE, r6 = TRUE)",
         URL         = "https://github.com/jeanmathieupotvin/transltr",
-        Contact     = "jm@potvin.xyz",
-        ContactName = "Jean-Mathieu Potvin",
+        BugReports  = "https://github.com/jeanmathieupotvin/transltr/issues/new",
         `Authors@R` = 'c(
             utils::person(
                 given   = "Jean-Mathieu",
                 family  = "Potvin",
                 email   = "jm@potvin.xyz",
-                role    = "aut",
+                role    = c("aut", "cre"),
                 comment = c(ORCID = "0000-0002-8237-422X")),
             utils::person(
                 given   = "Jérôme",
@@ -59,9 +59,10 @@ usethis::create_package("transltr",
 
 
 usethis::use_testthat()
-usethis::use_coverage("codecov", repo_spec = "jeanmathieupotvin/transltr")
+usethis::use_coverage("codecov", "jeanmathieupotvin/transltr")
 usethis::use_github_action("check-standard")
 usethis::use_github_action("test-coverage")
+usethis::use_github_actions_badge("check-standard", "jeanmathieupotvin/transltr")
 
 
 # .Rprofile --------------------------------------------------------------------
