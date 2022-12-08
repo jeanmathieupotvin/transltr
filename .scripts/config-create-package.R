@@ -60,6 +60,8 @@ usethis::create_package("transltr",
 
 usethis::use_testthat()
 usethis::use_coverage("codecov", repo_spec = "jeanmathieupotvin/transltr")
+usethis::use_github_action("check-standard")
+usethis::use_github_action("test-coverage")
 
 
 # .Rprofile --------------------------------------------------------------------
@@ -74,6 +76,7 @@ usethis::use_partial_warnings()
 
 
 usethis::use_git_ignore(ignores = c(
+    ".github/*.html",
     ".Rproj.user",
     ".Rhistory",
     ".RData",
