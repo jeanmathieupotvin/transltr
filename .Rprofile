@@ -36,7 +36,7 @@ if (interactive()) {
     .mb <- microbenchmark::microbenchmark
 
     .tf <- function(file = character(1L)) {
-        path <- file.path("tests", "testthat", sprintf("%s.R", file))
+        path <- file.path("tests", "testthat", sprintf("test-%s.R", file))
         return(testthat::test_file(path))
     }
 
