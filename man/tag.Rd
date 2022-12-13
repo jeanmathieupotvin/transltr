@@ -27,18 +27,21 @@ are also removed.}
 length of argument \code{strings}.
 
 \code{\link[=isTagged]{isTagged()}} returns a logical vector of a length equal to the length of
-argument \code{strings}. A \code{TRUE} implies that the underlying elements is
-enclosed by double braces. Use \code{\link[=tag]{tag()}} to normalize them if required.
+argument \code{strings}. A \code{TRUE} implies that the underlying element is
+enclosed by double braces. You may use \code{\link[=tag]{tag()}} to normalize them.
 }
 \description{
 Wrap character strings with double braces (\code{{{ }}}) and/or remove them.
 }
 \examples{
 # Strings can be wrapped.
-identical(tag("test string."), "{{ test string. }}")
+identical(tag("test string."), "{{ test string. }}")  ## TRUE
+
+# Strings can be unwrapped.
+identical(tag("{{ test string. }}"), "test string.")  ## TRUE
 
 # Tags can be normalized.
-identical(tag("  {{   test string.   }}   "), "{{ test string. }}")
+identical(tag("  {{   test string.   }}   "), "{{ test string. }}")  ## TRUE
 
 }
 \author{

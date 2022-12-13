@@ -16,17 +16,20 @@
 #' length of argument `strings`.
 #'
 #' [isTagged()] returns a logical vector of a length equal to the length of
-#' argument `strings`. A `TRUE` implies that the underlying elements is
-#' enclosed by double braces. Use [tag()] to normalize them if required.
+#' argument `strings`. A `TRUE` implies that the underlying element is
+#' enclosed by double braces. You may use [tag()] to normalize them.
 #'
 #' @author Jean-Mathieu Potvin (<jm@@potvin.xyz>)
 #'
 #' @examples
 #' # Strings can be wrapped.
-#' identical(tag("test string."), "{{ test string. }}")
+#' identical(tag("test string."), "{{ test string. }}")  ## TRUE
+#'
+#' # Strings can be unwrapped.
+#' identical(tag("{{ test string. }}"), "test string.")  ## TRUE
 #'
 #' # Tags can be normalized.
-#' identical(tag("  {{   test string.   }}   "), "{{ test string. }}")
+#' identical(tag("  {{   test string.   }}   "), "{{ test string. }}")  ## TRUE
 #'
 #' @export
 tag <- function(strings = character(), normalize = TRUE) {
@@ -76,7 +79,7 @@ untag <- function(strings = character(), keepDoubleQuotes = FALSE) {
 
     if (keepDoubleQuotes) {
         # Identify doubly quoted strings
-        # and keep these quotes by adding them.
+        # and keep them by readding them.
         quoted        <- startsWith(strings, "\"") & endsWith(strings, "\"")
         inner[quoted] <- dQuote(inner[quoted], FALSE)
     }
