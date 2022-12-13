@@ -4,7 +4,7 @@ Version: 0.0.1
 Authors@R: c(
     person("Jean-Mathieu", "Potvin", , "jm@potvin.xyz", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-8237-422X")),
-    person("Jérôme", "Lavoué", , "jerome.lavoue@umontreal.ca", role = "ctb",
+    person("Jérôme", "Lavoué", , "jerome.lavoue@umontreal.ca", role = c("ctb", "fnd", "rev"),
            comment = c(ORCID = "0000-0003-4950-5475"))
   )
 Description: A collection of translation mechanisms. Detect messages to be

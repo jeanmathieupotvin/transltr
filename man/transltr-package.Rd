@@ -21,7 +21,7 @@ Useful links:
 
 Other contributors:
 \itemize{
-  \item Jérôme Lavoué \email{jerome.lavoue@umontreal.ca} (\href{https://orcid.org/0000-0003-4950-5475}{ORCID}) [contributor]
+  \item Jérôme Lavoué \email{jerome.lavoue@umontreal.ca} (\href{https://orcid.org/0000-0003-4950-5475}{ORCID}) [contributor, funder, reviewer]
 }
 
 }

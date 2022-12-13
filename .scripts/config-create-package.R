@@ -47,7 +47,7 @@ usethis::create_package("transltr",
                 given   = "Jérôme",
                 family  = "Lavoué",
                 email   = "jerome.lavoue@umontreal.ca",
-                role    = "ctb",
+                role    = c("ctb", "fnd", "rev"),
                 comment = c(ORCID = "0000-0003-4950-5475")))',
         Description = "
             A collection of translation mechanisms. Detect messages to be
