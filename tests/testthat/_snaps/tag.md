@@ -48,17 +48,17 @@
 
 # tag() validates strings
 
-    `strings` must be a character vector of non-NA values.
+    TypeError: `strings` must be a character vector of non-NA values.
 
 # tag() validates normalize
 
-    `normalize` must be a non-NA integer vector of length 1.
+    TypeError: `normalize` must be a non-NA integer value.
 
 # untag() validates strings
 
-    `strings` must be a character vector of non-NA values.
+    TypeError: `strings` must be a character vector of non-NA values.
 
 # untag() validates keepDoubleQuotes
 
-    `keepDoubleQuotes` must be a non-NA integer vector of length 1.
+    TypeError: `keepDoubleQuotes` must be a non-NA integer value.
 

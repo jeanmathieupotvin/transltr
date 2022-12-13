@@ -38,10 +38,10 @@ tag <- function(strings = character(), normalize = TRUE) {
     }
 
     if (!is.character(strings) || any(is.na(strings))) {
-        stopf("`strings` must be a character vector of non-NA values.")
+        stopf("TypeError", "`strings` must be a character vector of non-NA values.")
     }
     if (!is.logical(normalize) || length(normalize) != 1L || is.na(normalize)) {
-        stopf("`normalize` must be a non-NA integer vector of length 1.")
+        stopf("TypeError", "`normalize` must be a non-NA integer value.")
     }
 
     if (normalize) {
@@ -65,12 +65,12 @@ untag <- function(strings = character(), keepDoubleQuotes = FALSE) {
     }
 
     if (!is.character(strings) || any(is.na(strings))) {
-        stopf("`strings` must be a character vector of non-NA values.")
+        stopf("TypeError", "`strings` must be a character vector of non-NA values.")
     }
     if (!is.logical(keepDoubleQuotes) ||
         length(keepDoubleQuotes) != 1L ||
         is.na(keepDoubleQuotes)) {
-        stopf("`keepDoubleQuotes` must be a non-NA integer vector of length 1.")
+        stopf("TypeError", "`keepDoubleQuotes` must be a non-NA integer value.")
     }
 
     left  <- attr(LTAG, "regex")
