@@ -4,7 +4,7 @@
 \alias{stopf}
 \title{Throw errors}
 \usage{
-stopf(type = c("TypeError"), fmt = character(1L), ...)
+stopf(type = c("TypeError", "InterfaceError"), fmt = character(1L), ...)
 }
 \arguments{
 \item{type}{Character string stating the underlying error's type.}
@@ -22,8 +22,10 @@ This function is \strong{experimental}.
 prefix by an informative error \code{type} such as \code{TypeError: ...} .
 }
 \examples{
+\dontrun{
 stopf("TypeError", "argument must contain exactly \%i values.", 7L)
 # TypeError: argument must contain exactly 7 values.
+}
 
 }
 \author{

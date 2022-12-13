@@ -1,4 +1,4 @@
 # stopf() validates type
 
-    'arg' should be "TypeError"
+    'arg' should be one of "TypeError", "InterfaceError"
 

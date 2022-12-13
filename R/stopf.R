@@ -17,12 +17,14 @@
 #' @author Jean-Mathieu Potvin (<jm@@potvin.xyz>)
 #'
 #' @examples
+#' \dontrun{
 #' stopf("TypeError", "argument must contain exactly %i values.", 7L)
 #' # TypeError: argument must contain exactly 7 values.
+#' }
 #'
 #' @export
 stopf <- function(
-    type = c("TypeError"),
+    type = c("TypeError", "InterfaceError"),
     fmt  = character(1L), ...)
 {
     # Construct a new fmt with format Type: fmt.
