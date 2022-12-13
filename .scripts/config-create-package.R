@@ -78,6 +78,7 @@ usethis::use_partial_warnings()
 
 usethis::use_git_ignore(ignores = c(
     ".github/*.html",
+    ".local",
     ".Rproj.user",
     ".Rhistory",
     ".RData",
@@ -92,6 +93,7 @@ usethis::use_build_ignore(escape = FALSE, files = "[.]code-workspace$")
 usethis::use_build_ignore(escape = TRUE,  files = c(
     ".git",
     ".github",
+    ".local",
     ".scripts",
     ".gitignore",
     ".Rprofile",
