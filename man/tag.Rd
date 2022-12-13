@@ -17,7 +17,8 @@ isTagged(strings = character())
 are left as is and are not tagged.}
 
 \item{normalize}{A logical flag. Should existing braces be replaced?
-Preceding and trailing outer spaces are removed.}
+Preceding and trailing outer spaces are removed. Escaped double quotes
+are also removed.}
 
 \item{keepDoubleQuotes}{A logical flag. Keep existing outer double quotes?}
 }

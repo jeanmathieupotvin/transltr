@@ -6,7 +6,8 @@
 #'   are left as is and are not tagged.
 #'
 #' @param normalize A logical flag. Should existing braces be replaced?
-#'   Preceding and trailing outer spaces are removed.
+#'   Preceding and trailing outer spaces are removed. Escaped double quotes
+#'   are also removed.
 #'
 #' @param keepDoubleQuotes A logical flag. Keep existing outer double quotes?
 #'
@@ -74,6 +75,8 @@ untag <- function(strings = character(), keepDoubleQuotes = FALSE) {
     inner <- gsub(left, "", gsub(right, "", strings))
 
     if (keepDoubleQuotes) {
+        # Identify doubly quoted strings
+        # and keep these quotes by adding them.
         quoted        <- startsWith(strings, "\"") & endsWith(strings, "\"")
         inner[quoted] <- dQuote(inner[quoted], FALSE)
     }
