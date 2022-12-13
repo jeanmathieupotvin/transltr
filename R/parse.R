@@ -1,14 +1,10 @@
-stopf <- function(fmt = character(1L), ...) {
-    stop(sprintf(fmt, ...), call. = FALSE)
-}
-
 tokenizeScript <- function(file = character(1L)) {
     if (!is.character(file) || !length(file) || !nzchar(file)) {
-        stopf("`file` must be a single, non-empty, character string.")
+        stopf("TypeError", "`file` must be a non-empty character string.")
     }
 
     if (!utils::file_test("-f", file)) {
-        stopf("`file` [%s] either is not a file or does not exist.", file)
+        stopf("InterfaceError", "[%s] is not a valid `file`.", file)
     }
 
     tokens <- getParseData(parse(file), NA)
@@ -20,50 +16,28 @@ isTokensTable <- function(x) {
     return(inherits(x, "TokensTable"))
 }
 
-isEnclosedString <- function(x = character(1L)) {
-    return(
-        is.character(x) &&
-        length(x) &&
-        nzchar(x) &&
-        grepl("^\"?\\{\\{[ \t]?(.*?)[ \t]?\\}\\}\"?$", x))
-}
-
-# FIXME: this does not work.
-extractEnclosedString <- function(x = character(1L)) {
-    a <- gregexpr("^\"?\\{\\{[ \t]?(.*?)[ \t]?\\}\\}\"?$", x, perl = TRUE)
-    startIndices <- attr(a, "capture.start")
-    textlengths  <- attr(a, "capture.length")
-    substring(x, startIndices, startIndices + textlengths)
-    return()
-}
-
 getFunctionCallsIndices <- function(
-    tokens       = data.frame(),
-    functionName = character(1L))
+    tokens = data.frame(),
+    fun    = character(1L))
 {
     if (!isTokensTable(tokens)) {
-        stopf("`tokens` must be a `TokensTable` object. See `tokenizeScript()`.")
+        stopf("TypeError", "`tokens` must be a `TokensTable` object.")
+    }
+    if (!is.character(fun) || length(fun) != 1L || !nzchar(fun)) {
+        stopf("TypeError", "`fun` must be a non-empty character string.")
     }
 
-    if (!is.character(functionName) ||
-        !length(functionName) ||
-        !nzchar(functionName)) {
-        stopf("`functionName` must be a single, non-empty, character string.")
-    }
-
-    return(
-        which(
-            tokens$token == "SYMBOL_FUNCTION_CALL" &
-            tokens$text  == functionName[[1L]]))
+    return(which(tokens$token == "SYMBOL_FUNCTION_CALL" & tokens$text  == fun))
 }
 
 getTextToTranslate <- function(file = character(1L)) {
-    # Argument's name of transltr::translate() to
-    # which  a string to be translated is passed.
+    # String to translate is passed to argument
+    # ARG_NAME of function FUN_NAME in package.
+    FUN_NAME <- "translate"
     ARG_NAME <- "text"
 
     tokens <- tokenizeScript(file)
-    translateCallsIndices <- getFunctionCallsIndices(tokens, "translate")
+    translateCallsIndices <- getFunctionCallsIndices(tokens, FUN_NAME)
 
     # Extract values passed to argument
     # text of function transltr::translate().
@@ -81,7 +55,7 @@ getTextToTranslate <- function(file = character(1L)) {
             # To avoid extracting values passed to another translate()
             # function, we check that the extracted "STR_CONST" token
             # is enclosed by double brackets.
-            if (!isEnclosedString(tokens[ip3, "text"])) {
+            if (!isTagged(tokens[ip3, "text"])) {
                 return(NULL)
             }
 
@@ -111,7 +85,7 @@ getTextToTranslate <- function(file = character(1L)) {
                 # To avoid extracting values passed to another translate()
                 # function, we check that the extracted "STR_CONST" token
                 # is enclosed by double brackets.
-                if (!isEnclosedString(tokens[j + 2L, "text"])) {
+                if (!isTagged(tokens[j + 2L, "text"])) {
                     return(NULL)
                 }
 
@@ -127,5 +101,3 @@ getTextToTranslate <- function(file = character(1L)) {
     # remaining elements arerows of tokens.
     return(do.call(rbind, tokensToTranslate))
 }
-
-# getTextToTranslate("/home/jmp/Projects/spike-shiny-translater/app.R")
