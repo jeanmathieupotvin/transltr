@@ -48,7 +48,7 @@ tag <- function(strings = character(), normalize = TRUE) {
         strings <- untag(strings)
     }
 
-    tagged <- paste0(.LTAG, " ", strings, " ", .RTAG)
+    tagged <- paste0(.TRANSLTR_L_TAG, " ", strings, " ", .TRANSLTR_R_TAG)
 
     # Empty strings are tagged above
     # but we want to leave them as is.
@@ -73,8 +73,8 @@ untag <- function(strings = character(), keepDoubleQuotes = FALSE) {
         stopf("TypeError", "`keepDoubleQuotes` must be a non-NA integer value.")
     }
 
-    left  <- attr(.LTAG, "regex")
-    right <- attr(.RTAG, "regex")
+    left  <- attr(.TRANSLTR_L_TAG, "regex")
+    right <- attr(.TRANSLTR_R_TAG, "regex")
     inner <- gsub(left, "", gsub(right, "", strings))
 
     if (keepDoubleQuotes) {
@@ -99,22 +99,6 @@ isTagged <- function(strings = character()) {
     }
 
     return(
-        grepl(attr(.LTAG, "regex"), strings) &
-        grepl(attr(.RTAG, "regex"), strings))
+        grepl(attr(.TRANSLTR_L_TAG, "regex"), strings) &
+        grepl(attr(.TRANSLTR_R_TAG, "regex"), strings))
 }
-
-
-# Internal constants -----------------------------------------------------------
-
-
-# This regular expression identifies tags possibly
-# surrounded by spaces and/or double quotes.
-#
-# ^      : matches the beginning of a string;
-# $      : matches the end of a string;
-# \"?    : matches a possibly missing double string character;
-# [ \t]* : matches space(s) and tab(s) ([ \t]) zero or multiple times (*);
-# \\{\\{ : matches {{ literally;
-# \\}\\} : matches }} literally.
-.LTAG <- structure("{{", regex = "^\"?[ \t]*\\{\\{[ \t]*")
-.RTAG <- structure("}}", regex = "[ \t]*\\}\\}[ \t]*\"?$")
