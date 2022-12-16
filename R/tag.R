@@ -48,7 +48,7 @@ tag <- function(strings = character(), normalize = TRUE) {
         strings <- untag(strings)
     }
 
-    tagged <- paste0(LTAG, " ", strings, " ", RTAG)
+    tagged <- paste0(.LTAG, " ", strings, " ", .RTAG)
 
     # Empty strings are tagged above
     # but we want to leave them as is.
@@ -73,8 +73,8 @@ untag <- function(strings = character(), keepDoubleQuotes = FALSE) {
         stopf("TypeError", "`keepDoubleQuotes` must be a non-NA integer value.")
     }
 
-    left  <- attr(LTAG, "regex")
-    right <- attr(RTAG, "regex")
+    left  <- attr(.LTAG, "regex")
+    right <- attr(.RTAG, "regex")
     inner <- gsub(left, "", gsub(right, "", strings))
 
     if (keepDoubleQuotes) {
@@ -99,8 +99,8 @@ isTagged <- function(strings = character()) {
     }
 
     return(
-        grepl(attr(LTAG, "regex"), strings) &
-        grepl(attr(RTAG, "regex"), strings))
+        grepl(attr(.LTAG, "regex"), strings) &
+        grepl(attr(.RTAG, "regex"), strings))
 }
 
 
@@ -116,5 +116,5 @@ isTagged <- function(strings = character()) {
 # [ \t]* : matches space(s) and tab(s) ([ \t]) zero or multiple times (*);
 # \\{\\{ : matches {{ literally;
 # \\}\\} : matches }} literally.
-LTAG <- structure("{{", regex = "^\"?[ \t]*\\{\\{[ \t]*")
-RTAG <- structure("}}", regex = "[ \t]*\\}\\}[ \t]*\"?$")
+.LTAG <- structure("{{", regex = "^\"?[ \t]*\\{\\{[ \t]*")
+.RTAG <- structure("}}", regex = "[ \t]*\\}\\}[ \t]*\"?$")
