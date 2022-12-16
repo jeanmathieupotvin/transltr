@@ -24,7 +24,7 @@
 #'
 #' @export
 stopf <- function(
-    type = c("TypeError", "InterfaceError"),
+    type = c("InterfaceError", "LogicError", "TypeError"),
     fmt  = character(1L), ...)
 {
     # Construct a new fmt with format Type: fmt.
