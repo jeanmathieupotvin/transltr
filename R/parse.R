@@ -1,103 +1,155 @@
-tokenizeScript <- function(file = character(1L)) {
-    if (!is.character(file) || !length(file) || !nzchar(file)) {
-        stopf("TypeError", "`file` must be a non-empty character string.")
+validateFile <- function(file = character(1L)) {
+    if (!is.character(file) || !length(file) || !nzchar(file) || is.na(file)) {
+        stopf("TypeError", "`file` must be a non-empty, non-NA character string.")
     }
-
     if (!utils::file_test("-f", file)) {
         stopf("InterfaceError", "[%s] is not a valid `file`.", file)
     }
 
-    tokens <- getParseData(parse(file), NA)
-    class(tokens) <- c("TokensTable", class(tokens))
-    return(tokens)
+    return(invisible(file))
 }
 
-isTokensTable <- function(x) {
-    return(inherits(x, "TokensTable"))
-}
-
-getFunctionCallsIndices <- function(
-    tokens = data.frame(),
-    fun    = character(1L))
-{
-    if (!isTokensTable(tokens)) {
-        stopf("TypeError", "`tokens` must be a `TokensTable` object.")
+validateTokens <- function(tokens) {
+    # tokens must be a data.frame created
+    # by function utils::getParseData().
+    if (is.null(tokens$token)) {
+        stopf("LogicError", "`tokens` must have a column named 'token'.")
     }
-    if (!is.character(fun) || length(fun) != 1L || !nzchar(fun)) {
-        stopf("TypeError", "`fun` must be a non-empty character string.")
+    if (is.null(tokens$text)) {
+        stopf("LogicError", "`tokens` must have a column named 'text'.")
     }
 
-    return(which(tokens$token == "SYMBOL_FUNCTION_CALL" & tokens$text  == fun))
+    return(invisible(tokens))
 }
 
-getTextToTranslate <- function(file = character(1L)) {
-    # String to translate is passed to argument
-    # ARG_NAME of function FUN_NAME in package.
-    FUN_NAME <- "translate"
-    ARG_NAME <- "text"
+validateSymbol <- function(sym = character(1L)) {
+    if (!is.character(sym) || !length(sym) || !nzchar(sym) || is.na(sym)) {
+        stopf("TypeError", "`sym` must be a non-empty, non-NA character string.")
+    }
 
-    tokens <- tokenizeScript(file)
-    translateCallsIndices <- getFunctionCallsIndices(tokens, FUN_NAME)
+    return(invisible(sym))
+}
 
-    # Extract values passed to argument
-    # text of function transltr::translate().
-    tokensToTranslate <- lapply(translateCallsIndices, \(i) {
+tokenize <- function(file = character(1L)) {
+    validateFile(file)
 
-        # Case 1 : value of argument text is passed by position.
-        # Example: translate("{{ ... }}").
-        #
-        # Value will be preceded by token "(", then by an implicit "expr"
-        # token, and then by a "SYMBOL_FUNCTION_CALL" token.
-        #
-        # The value to extract is a STR_CONST token.
-        if (tokens[ip3 <- i + 3L, "token"] == "STR_CONST") {
+    expr   <- parse(file, NULL, keep.source = TRUE)
+    tokens <- getParseData(expr, NA)
 
-            # To avoid extracting values passed to another translate()
-            # function, we check that the extracted "STR_CONST" token
-            # is enclosed by double brackets.
-            if (!isTagged(tokens[ip3, "text"])) {
-                return(NULL)
-            }
+    # Comments only slows down execution later.
+    return(tokens[tokens$token != "COMMENT", ])
+}
 
-            return(tokens[ip3, ])
-        }
+extractSymbolFunctionCalls <- function(tokens, sym) {
+    validateTokens(tokens)
+    validateSymbol(sym)
 
-        # Case 2 : value of argument is passed explicitly.
-        # Example: translate(text = "{{ ... }}").
-        #
-        # Value may not be passed first and may be preceded by many tokens.
-        # This value may appear anywhere between the "(" and ")" tokens of
-        # the underlying "expr" token.
-        j      <- i
-        exprId <- tokens[i + 1L, "id"]
+    # Extract srcfile object from tokens
+    # to attach it to extracted calls.
+    srcFile <- attr(tokens, "srcfile")
 
-        # Traverse elements of the underlying "expr"
-        # token until its closing ")" token is detected.
-        while (tokens[j, "token"] != ")" || tokens[j, "parent"] != exprId) {
+    # Local function to extract one call.
+    extractSymFunCall <- function(i = integer(1L)) {
+        # Symbol function calls tokens are
+        # always followed by a '(' token.
+        j  <- i + 1L
+        id <- tokens$parent[[j]]
 
-            # Stop if a "SYMBOL_SUB" token matching argument "text" is
-            # encountered. It is always followed by an "EQ_SUB" token.
-            #
-            # The value to extract is the "STR_CONST" token that follows.
-            if (tokens[j, "token"] == "SYMBOL_SUB" &&
-                tokens[j, "text"]  == ARG_NAME) {
-
-                # To avoid extracting values passed to another translate()
-                # function, we check that the extracted "STR_CONST" token
-                # is enclosed by double brackets.
-                if (!isTagged(tokens[j + 2L, "text"])) {
-                    return(NULL)
-                }
-
-                return(tokens[j + 2L, ])
-            }
-
+        # Find the matching ')' token. It has the
+        # same parent ID as the '(' token above.
+        while (ctokens[[j]] != "')'" || cparents[[j]] != id) {
             j <- j + 1L
         }
-    })
 
-    # rbind() drops NULL elements and passes class(es)
-    # of tokens to the concatenated output because all
-    # remaining elements arerows of tokens.
-    return(do.call(rbind, tokensToTranslate))
+        # Indices i and j marks the beginning and the
+        # end of a typical function call: sym(...). All
+        # tokens between i and j (inclusively) are part
+        # of the call to extract.
+        callIndices  <- seq.int(i, j, 1L)
+        callLocation <- c(
+            tokens[i, c("line1", "col1"), drop = TRUE],
+            tokens[j, c("line2", "col2"), drop = TRUE])
+
+        return(
+            structure(
+                str2lang(collapse(ctexts[callIndices])),
+                srcFile  = srcFile,
+                index    = i,
+                indices  = callIndices,
+                location = callLocation))
+    }
+
+    # Extract columns from tokens for faster extractions.
+    ctokens  <- tokens$token
+    cparents <- tokens$parent
+    ctexts   <- tokens$text
+
+    # Get positions of calls to function sym in tokens.
+    # This also validates arguments tokens and sym.
+    symFunCallsIndices <- which(
+        ctokens == "SYMBOL_FUNCTION_CALL" &
+        ctexts  == sym)
+
+    return(lapply(symFunCallsIndices, extractSymFunCall))
 }
+
+extractArgFromCalls <- function(
+    calls = list(),
+    sym   = character(1L),
+    pos   = integer(1L))
+{
+    validateSymbol(sym)
+
+    if (!is.integer(pos) || !length(pos) || is.na(pos) || pos <= 0L) {
+        stopf("TypeError", "`pos` must be a non-NA, positive integer value.")
+    }
+
+    # Local function to extract sym from one call.
+    extractArgFromCall <- function(callObj = call()) {
+        if (!inherits(callObj, "call")) {
+            stopf("TypeError", "`callObj` must be a `call` object.")
+        }
+
+        # First element is a function name.
+        # Further elements are the values
+        # passed to its arguments. Values
+        # are named whenever arguments are
+        # explicitly stated in the call.
+        callList <- as.list(callObj)
+
+        # Extract by name if possible.
+        if (!is.null(value <- callList[[sym]])) {
+            return(value)
+        }
+
+        # Else, extract by position.
+        return(callList[[pos + 1L]])
+    }
+
+    return(lapply(calls, extractArgFromCall))
+}
+
+toTranslate <- function(file = character(1L)) {
+    tokens  <- tokenize(file)
+    calls   <- extractSymbolFunctionCalls(tokens, .FUN_NAME)
+    values  <- extractArgFromCalls(calls, .ARG_NAME, .ARG_POS)
+    strings <- unlist(values)
+
+
+    # FIXME: strings must be checked by isTagged().
+    # FIXME: strings must convey the information passed to attributes of calls.
+    # FIXME: this function name must be renamed accordingly.
+    tokens[match(strings, gsub("\"", "", tokens$text)), ]
+    strings <- untag(strings[isTagged(strings)])
+
+    return()
+}
+
+
+# Internal constants -----------------------------------------------------------
+
+
+# Parameters controlling values extracted by toTranslate().
+.FUN_NAME <- "translate"
+.ARG_NAME <- "text"
+.ARG_POS  <- 1L
