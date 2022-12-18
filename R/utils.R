@@ -1,7 +1,3 @@
-collapse <- function(x = character()) {
-    return(paste0(x, collapse = ""))
-}
-
 classes <- function(x) {
     return(vapply(x, \(el) class(el)[[1L]], NA_character_, USE.NAMES = FALSE))
 }
