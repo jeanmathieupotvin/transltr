@@ -9,6 +9,17 @@ validateString <- function(x = character(1L)) {
     return(invisible(x))
 }
 
+validateStream <- function(x = character()) {
+    if (!is.character(x) || anyNA(x)) {
+        stopf(
+            "TypeError",
+            "`%s` must be a character string of non-NA elements.",
+            deparse(substitute(x)))
+    }
+
+    return(invisible(x))
+}
+
 validateIndex <- function(x = integer(1L)) {
     if (!is.integer(x) || length(x) != 1L || is.na(x) || x <= 0L) {
         stopf(
