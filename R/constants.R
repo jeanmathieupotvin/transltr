@@ -1,6 +1,3 @@
-# Tokens and tags --------------------------------------------------------------
-
-
 # This constant defines a subtoken of R's "COMMENT" token. It marks a
 # line in a source code as a comment that only relates to the package.
 # It has a regular expression to ease the parsing process.
@@ -10,9 +7,6 @@
 # [ \t\n]* : matches space(s), tab(s), and new lines ([ \t\n])
 #            zero or multiple times (*);
 .TRANSLTR_COMMENT <- structure("#~", regex = "^#~[ \t\n]*")
-
-
-# Code parsing and analysis ----------------------------------------------------
 
 
 # These character strings are used to mark text to translate.
