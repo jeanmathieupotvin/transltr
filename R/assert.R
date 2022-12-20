@@ -9,6 +9,17 @@ assertString <- function(x = character(1L)) {
     return(invisible(x))
 }
 
+assertNoEmptyStrings <- function(x = character()) {
+    if (any(nzchar(x))) {
+        stopf(
+            "TypeError",
+            "`%s` cannot contain empty strings.",
+            deparse(substitute(x)))
+    }
+
+    return(invisible(x))
+}
+
 assertScalarInteger <- function(x = integer(1L)) {
     return(assertScalar(x, "integer", is.integer))
 }
