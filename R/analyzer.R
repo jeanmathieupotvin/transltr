@@ -1,3 +1,12 @@
+# stream <- TokenStream("/home/jmp/Projects/spike-shiny-translater/app.R")
+
+# callStarts  <- findCalls(stream, "translate")
+# callEnds    <- vapply(callStarts, findCallEnd, NA_integer_, stream = stream)
+# callSeqs    <- createSequences(callStarts - 2L, callEnds)
+# callStrings <- lapply(callSeqs, \(s, x) x[s], x = stream)
+# calls       <- lapply(callStrings, parseStream)
+
+
 TokenStream <- function(file = character(1L)) {
     assertString(file)
 
