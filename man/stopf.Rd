@@ -4,7 +4,11 @@
 \alias{stopf}
 \title{Throw errors}
 \usage{
-stopf(type = c("TypeError", "InterfaceError"), fmt = character(1L), ...)
+stopf(
+  type = c("InterfaceError", "LogicError", "TypeError"),
+  fmt = character(1L),
+  ...
+)
 }
 \arguments{
 \item{type}{Character string stating the underlying error's type.}

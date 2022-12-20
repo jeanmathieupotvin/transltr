@@ -1,64 +1,73 @@
-stream <- function(file = character(1L)) {
-    validateFile(file)
+TokenStream <- function(file = character(1L)) {
+    assertString(file)
+
+    if (!utils::file_test("-f", file)) {
+        stopf("InterfaceError", "`file` must be an existing file.")
+    }
 
     # Use R's built-in tokenizer.
     expr   <- parse(file, NULL, keep.source = TRUE)
     parsed <- getParseData(expr, NA)
-
-    # Drop tokens that are tied to empty text.
-    # This only slows down execution for what
-    # we are trying to achieve.
-    parsed <- parsed[nzchar(parsed$text), ]
     stream <- parsed$text
 
     # Attach tokens' locations to the stream.
-    attr(stream, "line1") <- parsed$line1
-    attr(stream, "col1")  <- parsed$col1
-    attr(stream, "line2") <- parsed$line2
-    attr(stream, "col2")  <- parsed$col2
-
-    class(stream) <- c("TokenStream", "character")
-    return(stream)
+    return(
+        structure(stream,
+            srcloc = sprintf("%i:%i", parsed$line1, parsed$col1),
+            class  = c("TokenStream", "character")))
 }
 
-findCallNames <- function(stream = character(), name = character(1L)) {
-    validateStream(stream)
-    validateString(name)
+#' @export
+`[.TokenStream` <- function(x, i) {
+    return(
+       structure(NextMethod("["),
+           srcloc = attr(x, "srcloc")[i],
+           class  = c("TokenStream", "character")))
+}
 
-    if (!length(stream)) {
-        return(integer())
-    }
+findCalls <- function(stream = character(), name = character(1L)) {
+    assertNonEmptyCharacter(stream)
+    assertString(name)
 
-    # A call is equivalent to an open parenthesis.
-    # In a stream, calls are preceded by the names
-    # of the functions being called.
-    pos <- which(stream == "(") - 1L
-    return(pos[stream[pos] == name])
+    # A call is identified by a '(' token. In
+    # a TokenStream, calls are preceded by an
+    # empty string and then by the name of the
+    # function being called.
+    pos <- which(stream == "(")
+    return(pos[stream[pos - 2L] == name])
 }
 
 findCallEnd <- function(stream = character(), start = integer(1L)) {
-    validateStream(stream)
-    validateIndex(start)
+    assertNonEmptyCharacter(stream)
+    assertScalarInteger(start)
 
-    streamLength <- length(stream)
+    nTokens <- length(stream)
 
-    # Find next '(' token in the stream from start.
+    if (start <= 0L || start >= nTokens) {
+        stopf(
+            "LogicError",
+            "`start` must be greater than 0 and less than or equal to `length(stream)`.")
+    }
+
+    # Find next '(' token in the stream
+    # starting at position given by start.
     while (stream[[start]] != "(") {
         start <- start + 1L
 
-        # There could be no call at all in the stream.
-        if (start > streamLength) {
+        # There could be no call in the stream.
+        if (start > nTokens) {
             return(0L)
         }
     }
 
-    # Track current call's depth. It increases
-    # by 1 whenever an embedded call is detected.
+    # Track current call's depth.
+    # It is increased by 1 whenever an embedded '(' is
+    # detected and decreased by 1 whenever an embedded
+    # ')' ends.
     depth <- 0L
     end   <- start
 
     while (TRUE) {
-
         # Adjust depth based on current token.
         depth <- depth + switch(stream[[end]],
             "(" =  1L,
@@ -75,8 +84,18 @@ findCallEnd <- function(stream = character(), start = integer(1L)) {
     }
 }
 
-# FIXME: here.
+createSequences <- function(from = integer(), to = integer()) {
+    assertNonEmptyInteger(from)
+    assertNonEmptyInteger(to)
+
+    if (length(from) != length(to)) {
+        stopf("LogicError", "`from` and `to` must have equal lengths.")
+    }
+
+    return(.mapply(seq.int, list(from = from, to = to), list(by = 1L)))
+}
+
 parseStream <- function(stream = character()) {
-    validateStream(stream)
+    assertNonEmptyCharacter(stream)
     return(str2lang(paste0(stream, collapse = "")))
 }

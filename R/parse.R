@@ -89,24 +89,6 @@ getSymbolFunctionCalls <- function(
                 srcLocation = newSrcLocation(tokens, i, j)))
     }
 
-    findCallToken <- function(
-        start  = integer(1L),
-        tokens = data.frame())
-    {
-
-    }
-
-    parseTokenStream <- function(stream = character()) {
-        if (!is.character(stream) || anyNA(stream)) {
-            stopf(
-                "TypeError",
-                "`tokens` must be a character vector of non-NA elements.")
-        }
-
-        string <- paste0(stream, collapse = "")
-        return(str2lang(string))
-    }
-
     # Extract srcfile object from tokens
     # to attach it to extracted calls.
     srcFile <- attr(tokens, "srcfile")
