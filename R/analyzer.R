@@ -1,13 +1,40 @@
-# stream <- TokenStream("/home/jmp/Projects/spike-shiny-translater/app.R")
+analyze <- function(file = character(1L)) {
+    stream <- tokenize(file)
+    meta   <- attributes(stream)[c(
+        "file",
+        "workingDir",
+        "encoding",
+        "timeStamp")]
 
-# callStarts  <- findCalls(stream, "translate")
-# callEnds    <- vapply(callStarts, findCallEnd, NA_integer_, stream = stream)
-# callSeqs    <- createSequences(callStarts - 2L, callEnds)
-# callStrings <- lapply(callSeqs, \(s, x) x[s], x = stream)
-# calls       <- lapply(callStrings, parseStream)
+    # findCalls() returns the positions of the
+    # matching '(' tokens. The function's name
+    # that precedes it must be included.
+    starts    <- findCalls(stream, "translate") - 1L
+    ends      <- vapply1i(starts, findCallEnd, stream = stream)
+    locations <- attr(stream, "locations")[starts]
 
+    # Each pair of start and end values defines
+    # a set of tokens to be parsed as a call.
+    streams <- map(\(s, e) stream[seq.int(s, e, 1L)], s = starts, e = ends)
+    calls   <- lapply(streams, parseStream)
 
-TokenStream <- function(file = character(1L)) {
+    # Extract value passed to argument
+    # text from calls to translate().
+    values   <- lapply(calls, extractCallArgumentValue, "text", 1L)
+    isNotChr <- vapply1c(values, class) != "character"
+
+    if (any(isNotChr)) {
+        stopf(
+            "InterfaceError",
+            "%s: value passed to argument `text` of `transltr::translate()` must be a litteral character string.",
+            locations[isNotChr][[1L]])
+    }
+
+    text <- map(list, location = locations, value = values)
+    return(c(meta, nCalls = length(calls), list(text = text)))
+}
+
+tokenize <- function(file = character(1L)) {
     assertString(file)
 
     if (!utils::file_test("-f", file)) {
@@ -15,35 +42,34 @@ TokenStream <- function(file = character(1L)) {
     }
 
     # Use R's built-in tokenizer.
-    expr   <- parse(file, NULL, keep.source = TRUE)
-    parsed <- getParseData(expr, NA)
-    stream <- parsed$text
+    expr    <- parse(file, NULL, keep.source = TRUE)
+    parsed  <- utils::getParseData(expr, NA)
+    srcfile <- attr(parsed, "srcfile")
 
-    # Attach tokens' locations to the stream.
-    return(
-        structure(stream,
-            srcloc = sprintf("%i:%i", parsed$line1, parsed$col1),
-            class  = c("TokenStream", "character")))
-}
+    # Keep only tokens that are not empty strings.
+    stream  <- parsed$text
+    keep    <- nzchar(stream)
+    srclocs <- sprintf("Ln %i, Col %i", parsed$line1[keep], parsed$col1[keep])
 
-#' @export
-`[.TokenStream` <- function(x, i) {
     return(
-       structure(NextMethod("["),
-           srcloc = attr(x, "srcloc")[i],
-           class  = c("TokenStream", "character")))
+        structure(
+            stream[keep],
+            workingDir = srcfile$wd,
+            file       = srcfile$filename,
+            encoding   = srcfile$Enc,
+            timeStamp  = format(srcfile$timestamp, tz = "UTC", usetz = TRUE),
+            locations  = srclocs))
 }
 
 findCalls <- function(stream = character(), name = character(1L)) {
     assertNonEmptyCharacter(stream)
     assertString(name)
 
-    # A call is identified by a '(' token. In
-    # a TokenStream, calls are preceded by an
-    # empty string and then by the name of the
-    # function being called.
+    # Calls are identified by a '(' token. In
+    # a stream of tokens, they are preceded by
+    # by the name of the function being called.
     pos <- which(stream == "(")
-    return(pos[stream[pos - 2L] == name])
+    return(pos[stream[pos - 1L] == name])
 }
 
 findCallEnd <- function(stream = character(), start = integer(1L)) {
@@ -55,7 +81,7 @@ findCallEnd <- function(stream = character(), start = integer(1L)) {
     if (start <= 0L || start >= nTokens) {
         stopf(
             "LogicError",
-            "`start` must be greater than 0 and less than or equal to `length(stream)`.")
+            "`start` must be greater than 0 and less than `stream`'s length'.")
     }
 
     # Find next '(' token in the stream
@@ -76,7 +102,7 @@ findCallEnd <- function(stream = character(), start = integer(1L)) {
     depth <- 0L
     end   <- start
 
-    while (TRUE) {
+    while (end <= nTokens) {
         # Adjust depth based on current token.
         depth <- depth + switch(stream[[end]],
             "(" =  1L,
@@ -91,20 +117,40 @@ findCallEnd <- function(stream = character(), start = integer(1L)) {
 
         end <- end + 1L
     }
-}
 
-createSequences <- function(from = integer(), to = integer()) {
-    assertNonEmptyInteger(from)
-    assertNonEmptyInteger(to)
-
-    if (length(from) != length(to)) {
-        stopf("LogicError", "`from` and `to` must have equal lengths.")
-    }
-
-    return(.mapply(seq.int, list(from = from, to = to), list(by = 1L)))
+    # end should never be greater than the length
+    # of stream because it is created via parse().
+    # 0 is returned if no matching outer ')' is
+    # detected.
+    return(0L)
 }
 
 parseStream <- function(stream = character()) {
     assertNonEmptyCharacter(stream)
     return(str2lang(paste0(stream, collapse = "")))
+}
+
+extractCallArgumentValue <- function(
+    call    = call(),
+    argName = character(1L),
+    argPos  = integer(1L))
+{
+    assertString(argName)
+    assertScalarInteger(argPos)
+
+    if (!is.call(call)) {
+        stopf("TypeError", "`call` must be a `call` object.")
+    }
+
+    callList <- as.list(call)
+
+    # Extract value by argument's name if possible.
+    if (!is.null(value <- callList[[argName]])) {
+        return(value)
+    }
+
+    # Else, extract value by position. argPos
+    # is shifted by 1 because the function's
+    # name is inserted into the list.
+    return(callList[[argPos + 1L]])
 }
