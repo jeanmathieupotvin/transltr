@@ -10,7 +10,7 @@ assertString <- function(x = character(1L)) {
 }
 
 assertNoEmptyStrings <- function(x = character()) {
-    if (any(nzchar(x))) {
+    if (any(!nzchar(x))) {
         stopf(
             "TypeError",
             "`%s` cannot contain empty strings.",
