@@ -24,7 +24,7 @@ containing the following elements:
 
 \describe{
 \item{\code{location}}{The \code{location} of a call to \code{\link[=translate]{translate()}} in file.
-The format is \code{"Ln X, Col Y"}, where \code{X} and \code{Y} are both positive
+The format is \code{"Ln X, Col Y"}, where \code{X} and \code{Y} are positive
 integers.}
 \item{\code{value}}{The actual value passed to formal argument \code{text} of
 \code{\link[=translate]{translate()}} either by name (preferred) or by position.}
@@ -58,12 +58,12 @@ and \code{\link[=findCallEnd]{findCallEnd()}} returned. Each sub-stream is parse
 \link[base:call]{call} object by \code{\link[=parseStream]{parseStream()}}.
 \item The actual value passed to argument \code{text} is extracted from each call
 by function \code{\link[=extractCallArgumentValue]{extractCallArgumentValue()}}.
-\item The extracted values are checked. Since \code{\link[=analyze]{analyze()}} performs a
-static code analysis, these must be litteral character strings.
+\item The extracted values are checked.
 }
 
-With further work, this limitation could be lifted (for some cases) in the
-future.
+Since \code{\link[=analyze]{analyze()}} performs a static code analysis, extracted values must be
+litteral character strings. With further work, this limitation could be
+lifted (for some cases) in the future.
 }
 \author{
 Jean-Mathieu Potvin (\href{mailto:jm@potvin.xyz}{jm@potvin.xyz})

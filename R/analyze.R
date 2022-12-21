@@ -33,11 +33,11 @@
 #'   5. The actual value passed to argument `text` is extracted from each call
 #'      by function [extractCallArgumentValue()].
 #'
-#'   6. The extracted values are checked. Since [analyze()] performs a
-#'      static code analysis, these must be litteral character strings.
+#'   6. The extracted values are checked.
 #'
-#' With further work, this limitation could be lifted (for some cases) in the
-#' future.
+#' Since [analyze()] performs a static code analysis, extracted values must be
+#' litteral character strings. With further work, this limitation could be
+#' lifted (for some cases) in the future.
 #'
 #' @returns
 #' A named list of length 6 containing the following elements:
@@ -54,7 +54,7 @@
 #'
 #'   \describe{
 #'     \item{`location`}{The `location` of a call to [translate()] in file.
-#'       The format is `"Ln X, Col Y"`, where `X` and `Y` are both positive
+#'       The format is `"Ln X, Col Y"`, where `X` and `Y` are positive
 #'       integers.}
 #'     \item{`value`}{The actual value passed to formal argument `text` of
 #'       [translate()] either by name (preferred) or by position.}
@@ -117,11 +117,19 @@ tokenize <- function(file = character(1L)) {
     expr    <- parse(file, NULL, keep.source = TRUE)
     parsed  <- utils::getParseData(expr, NA)
     srcfile <- attr(parsed, "srcfile")
+    stream  <- parsed$text
+
+    # Big strings are manually injected into stream.
+    # utils::getParseData(, TRUE) yields a different
+    # AST and is avoided because it makes no sense
+    # at all.
+    if (length(bigStrings <- findBigStrings(stream))) {
+       bigStringsIds      <- parsed$id[bigStrings]
+       stream[bigStrings] <- getParseText(parsed, bigStringsIds)
+    }
 
     # Keep only tokens that are not empty strings.
-    stream  <- parsed$text
-    keep    <- nzchar(stream)
-    srclocs <- sprintf("Ln %i, Col %i", parsed$line1[keep], parsed$col1[keep])
+    keep <- nzchar(stream)
 
     return(
         structure(
@@ -130,16 +138,20 @@ tokenize <- function(file = character(1L)) {
             file       = srcfile$filename,
             encoding   = srcfile$Enc,
             timeStamp  = format(srcfile$timestamp, tz = "UTC", usetz = TRUE),
-            locations  = srclocs))
+            locations  = sprintf("Ln %i, Col %i",
+                parsed$line1[keep],
+                parsed$col1[keep])))
+}
+
+# FIXME: document me in analyze-engine.Rd.
+# FIXME: mark me as an internal function.
+findBigStrings <- function(stream = character()) {
+    return(grep("\\[[0-9]* chars", stream))
 }
 
 # FIXME: document me in analyze-engine.Rd.
 # FIXME: mark me as an internal function.
 findCalls <- function(stream = character(), name = "translate") {
-    assertNonEmptyCharacter(stream)
-    assertNoEmptyStrings(stream)
-    assertString(name)
-
     # Calls are identified by a '(' token. In
     # a stream of tokens, they are preceded by
     # by the name of the function being called.
@@ -150,10 +162,6 @@ findCalls <- function(stream = character(), name = "translate") {
 # FIXME: document me in analyze-engine.Rd.
 # FIXME: mark me as an internal function.
 findCallEnd <- function(stream = character(), start = integer(1L)) {
-    assertNonEmptyCharacter(stream)
-    assertNoEmptyStrings(stream)
-    assertScalarInteger(start)
-
     nTokens <- length(stream)
 
     if (start <= 0L || start >= nTokens) {
@@ -206,17 +214,12 @@ findCallEnd <- function(stream = character(), start = integer(1L)) {
 # FIXME: document me in analyze-engine.Rd.
 # FIXME: mark me as an internal function.
 parseStream <- function(stream = character()) {
-    assertNonEmptyCharacter(stream)
-    assertNoEmptyStrings(stream)
     return(str2lang(paste0(stream, collapse = "")))
 }
 
 # FIXME: document me in analyze-engine.Rd.
 # FIXME: mark me as an internal function.
-extractCallArgumentValue <- function(call, argName = "text", argPos  = 1L) {
-    assertString(argName)
-    assertScalarInteger(argPos)
-
+extractCallArgumentValue <- function(call, argName = "text", argPos = 1L) {
     if (!is.call(call)) {
         stopf("TypeError", "`call` must be a `call` object.")
     }
