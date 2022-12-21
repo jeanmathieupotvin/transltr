@@ -42,24 +42,21 @@
 #' @returns
 #' A named list of length 6 containing the following elements:
 #'
-#' \describe{
 #'   \item{`file`}{Path to the underlying \R script. See `file` above.}
 #'   \item{`workingDir`}{Current working directory.}
 #'   \item{`encoding`}{Encoding of `file`.}
 #'   \item{`timeStamp`}{Last time `file` was modified in Coordinated Universal
 #'     Time (UTC).}
 #'   \item{`nCalls`}{Number of detected calls to [translate()].}
-#'   \item{`text`}{Each element in `text` is a named list of length 2
-#'     containing the following elements:
+#'   \item{`text`}{A list. See below.}
 #'
-#'   \describe{
-#'     \item{`location`}{The `location` of a call to [translate()] in file.
-#'       The format is `"Ln X, Col Y"`, where `X` and `Y` are positive
-#'       integers.}
-#'     \item{`value`}{The actual value passed to formal argument `text` of
-#'       [translate()] either by name (preferred) or by position.}
-#'   }}
-#' }
+#' Each element of `text` is itself a named list of length 2 containing
+#' the following elements:
+#'
+#'   \item{`location`}{The `location` of a call to [translate()] in `file`.
+#'     The format is `"Ln X, Col Y"`, where `X` and `Y` are positive integers.}
+#'   \item{`value`}{The actual value passed to formal argument `text` of
+#'     [translate()] either by name (preferred) or by position.}
 #'
 #' @author Jean-Mathieu Potvin (<jm@@potvin.xyz>)
 #'
@@ -104,8 +101,73 @@ analyze <- function(file = character(1L)) {
 # Low-level engine -------------------------------------------------------------
 
 
-# FIXME: document me in analyze-engine.Rd.
-# FIXME: mark me as an internal function.
+#' Backend of the static analyzer
+#'
+#' These functions are internally used by function [analyze()]. They should
+#' not be used elsewhere.
+#'
+#' @name analyze-backend
+#'
+#' @param stream A *stream* of non-empty tokens created by [tokenize()].
+#'   See Details.
+#'
+#' @param name A function's name.
+#'
+#' @param start An index stating where to start in `stream` when *traversing*
+#'   it (when looping through its elements).
+#'
+#' @param call A [call][base::call()].
+#'
+#' @param argName Expected name of a function's argument.
+#'
+#' @param argPos Expected position of a function's argument (in the underlying
+#'   [call][base::call()]).
+#'
+#' @inheritParams analyze
+#'
+#' @inherit analyze details
+#'
+#' @returns
+#' [tokenizer()] returns a character vector of non-empty, non-[NA][base::NA]
+#' values. It attaches the following attributes to it:
+#'
+#'   \item{`file`}{Path to the underlying \R script. See `file` above.}
+#'   \item{`workingDir`}{Current working directory.}
+#'   \item{`encoding`}{Encoding of `file`.}
+#'   \item{`timeStamp`}{Last time `file` was modified in Coordinated Universal
+#'     Time (UTC).}
+#'   \item{`locations`}{The `locations` of calls made to `name` in `file`.
+#'       The format is `"Ln X, Col Y"`, where `X` and `Y` are positive
+#'       integers.}
+#'
+#' All these attributes are later passed down to the output of [analyze()].
+#' They stem from the underlying [srcfile][base::srcfile()] object returned
+#' by [base::parse()] and from further attached information when `keep.source`
+#' is `TRUE`.
+#'
+#' [findBigStrings()] and [findCalls()] return an integer vector.
+#'
+#' [findCallEnd()] returns a single integer value.
+#'
+#' [parseStream()] returns a [language][base::is.language()] object. This
+#' will typically be a [call][base::call()] but could also be something *else*
+#' (an [ȩxpression][base::expression()], a [symbol][base::is.symbol()], etc.)
+#' depending on the underlying `stream`.
+#'
+#' [extractCallArgumentValue()] may return *almost* anything, depending on the
+#' context: a [language][base::is.language()] object, an
+#' [atomic][base::vector()] vector, etc. It is expected that it returns a
+#' single character value when `name`, `argName`, and `argPos` are respectively
+#' equal to `"translate"`, `"text"`, and `1L`.
+#'
+#' @section Structure:
+#' The engine has a single entry point: [analyze()]. It assembles individual
+#' parts described here. It mainly goes through the steps described in section
+#' *Note* of the latter.
+#'
+#' #FIXME: TO BE COMPLETED.
+#'
+#' @keywords internal
 tokenize <- function(file = character(1L)) {
     assertString(file)
 
@@ -134,8 +196,8 @@ tokenize <- function(file = character(1L)) {
     return(
         structure(
             stream[keep],
-            workingDir = srcfile$wd,
             file       = srcfile$filename,
+            workingDir = srcfile$wd,
             encoding   = srcfile$Enc,
             timeStamp  = format(srcfile$timestamp, tz = "UTC", usetz = TRUE),
             locations  = sprintf("Ln %i, Col %i",
@@ -143,14 +205,14 @@ tokenize <- function(file = character(1L)) {
                 parsed$col1[keep])))
 }
 
-# FIXME: document me in analyze-engine.Rd.
-# FIXME: mark me as an internal function.
+#' @rdname analyze-backend
+#' @keywords internal
 findBigStrings <- function(stream = character()) {
     return(grep("\\[[0-9]* chars", stream))
 }
 
-# FIXME: document me in analyze-engine.Rd.
-# FIXME: mark me as an internal function.
+#' @rdname analyze-backend
+#' @keywords internal
 findCalls <- function(stream = character(), name = "translate") {
     # Calls are identified by a '(' token. In
     # a stream of tokens, they are preceded by
@@ -159,8 +221,8 @@ findCalls <- function(stream = character(), name = "translate") {
     return(pos[stream[pos - 1L] == name])
 }
 
-# FIXME: document me in analyze-engine.Rd.
-# FIXME: mark me as an internal function.
+#' @rdname analyze-backend
+#' @keywords internal
 findCallEnd <- function(stream = character(), start = integer(1L)) {
     nTokens <- length(stream)
 
@@ -211,14 +273,14 @@ findCallEnd <- function(stream = character(), start = integer(1L)) {
     return(0L)
 }
 
-# FIXME: document me in analyze-engine.Rd.
-# FIXME: mark me as an internal function.
+#' @rdname analyze-backend
+#' @keywords internal
 parseStream <- function(stream = character()) {
     return(str2lang(paste0(stream, collapse = "")))
 }
 
-# FIXME: document me in analyze-engine.Rd.
-# FIXME: mark me as an internal function.
+#' @rdname analyze-backend
+#' @keywords internal
 extractCallArgumentValue <- function(call, argName = "text", argPos = 1L) {
     if (!is.call(call)) {
         stopf("TypeError", "`call` must be a `call` object.")
