@@ -22,7 +22,7 @@
 #' # TypeError: argument must contain exactly 7 values.
 #' }
 #'
-#' @export
+#' @keywords internal
 stopf <- function(
     type = c("InterfaceError", "LogicError", "TypeError"),
     fmt  = character(1L), ...)

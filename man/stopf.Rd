@@ -35,3 +35,4 @@ stopf("TypeError", "argument must contain exactly \%i values.", 7L)
 \author{
 Jean-Mathieu Potvin (\href{mailto:jm@potvin.xyz}{jm@potvin.xyz})
 }
+\keyword{internal}
