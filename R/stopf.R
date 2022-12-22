@@ -1,11 +1,49 @@
 #' Throw errors
 #'
-#' @description
-#' This function is **experimental**.
+#' Combine [`sprintf()`][base::sprintf()] and [`stop()`][base::stop()] in
+#' a single call.
 #'
-#' [stopf()] combines [`sprintf()`][base::sprintf()] and
-#' [`stop()`][base::stop()]. It further replaces usual `Error: ...`
-#' prefix by an informative error `type` such as `TypeError: ...` .
+#' It further introduces new informative labels for errors. They are always
+#' included in error messages:
+#'
+#' ```
+#' Error: <TypeError>: ...
+#' ```
+#'
+#' The `<TypeError>` string above is replaced by a `type`. See below for
+#' available values.
+#'
+#' \describe{
+#'
+#' \item{`InterfaceError`}{
+#'   An input or an argument passed to a function do not conform to the
+#'   accepted standards of an *external dependency*:
+#'
+#'   * a function defined in another package,
+#'   * a value passed to another software internally, etc.
+#'
+#' }
+#' \item{`LogicError`}{
+#'   A function operated incorrectly and/or triggered an unanticipated
+#'   situation without terminating abnormally. This (obviously) happened
+#'   before triggering a call to [stopf()].
+#'
+#'   This is usually a type used by *guard clauses* that cover edge cases of a
+#'   function.
+#' }
+#' \item{`TypeError`}{
+#'   An input or an argument passed to a function is incompatible with its
+#'   expected *shape*:
+#'
+#'   * its [type][base::typeof()],
+#'   * its [class][base::class()],
+#'   * its [length][base::length()],
+#'   * its [attributes][base::attributes()],
+#'   * its boundaries, and
+#'   * any other restrictions that depend on the underlying context.
+#'
+#' }
+#' }
 #'
 #' @param type Character string stating the underlying error's type.
 #'

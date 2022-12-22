@@ -19,11 +19,52 @@ stopf(
 Nothing. This function is used for its side-effect.
 }
 \description{
-This function is \strong{experimental}.
+Combine \code{\link[base:sprintf]{sprintf()}} and \code{\link[base:stop]{stop()}} in
+a single call.
+}
+\details{
+It further introduces new informative labels for errors. They are always
+included in error messages:
 
-\code{\link[=stopf]{stopf()}} combines \code{\link[base:sprintf]{sprintf()}} and
-\code{\link[base:stop]{stop()}}. It further replaces usual \code{Error: ...}
-prefix by an informative error \code{type} such as \code{TypeError: ...} .
+\if{html}{\out{<div class="sourceCode">}}\preformatted{Error: <TypeError>: ...
+}\if{html}{\out{</div>}}
+
+The \verb{<TypeError>} string above is replaced by a \code{type}. See below for
+available values.
+
+\describe{
+
+\item{\code{InterfaceError}}{
+An input or an argument passed to a function do not conform to the
+accepted standards of an \emph{external dependency}:
+\itemize{
+\item a function defined in another package,
+\item a value passed to another software internally, etc.
+}
+
+}
+\item{\code{LogicError}}{
+A function operated incorrectly and/or triggered an unanticipated
+situation without terminating abnormally. This (obviously) happened
+before triggering a call to \code{\link[=stopf]{stopf()}}.
+
+This is usually a type used by \emph{guard clauses} that cover edge cases of a
+function.
+}
+\item{\code{TypeError}}{
+An input or an argument passed to a function is incompatible with its
+expected \emph{shape}:
+\itemize{
+\item its \link[base:typeof]{type},
+\item its \link[base:class]{class},
+\item its \link[base:length]{length},
+\item its \link[base:attributes]{attributes},
+\item its boundaries, and
+\item any other restrictions that depend on the underlying context.
+}
+
+}
+}
 }
 \examples{
 \dontrun{

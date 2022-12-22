@@ -317,7 +317,7 @@ findCallEnd <- function(stream = character(), start = integer(1L)) {
 
     if (start <= 0L || start >= nTokens) {
         stopf(
-            "LogicError",
+            "TypeError",
             "`start` must be greater than 0 and less than `stream`'s length'.")
     }
 
