@@ -12,21 +12,36 @@ analyze(file = character(1L))
 \value{
 A named list of length 6 containing the following elements:
 
-\item{\code{file}}{Path to the underlying \R script. See \code{file} above.}
-\item{\code{workingDir}}{Current working directory.}
-\item{\code{encoding}}{Encoding of \code{file}.}
-\item{\code{timeStamp}}{Last time \code{file} was modified in Coordinated Universal
-Time (UTC).}
-\item{\code{nCalls}}{Number of detected calls to \code{\link[=translate]{translate()}}.}
-\item{\code{text}}{A list. See below.}
+\item{\code{file}}{
+Path to the underlying \R script. See \code{file} above.
+}
+\item{\code{workingDir}}{
+Current working directory.
+}
+\item{\code{encoding}}{
+Encoding of \code{file}.
+}
+\item{\code{timeStamp}}{
+Last time \code{file} was modified in Coordinated Universal Time (UTC).
+}
+\item{\code{nCalls}}{
+Number of detected calls to \code{\link[=translate]{translate()}}.
+}
+\item{\code{text}}{
+A list. See below.
+}
 
-Each element of \code{text} is itself a named list of length 2 containing
-the following elements:
+Each element of \code{text} is itself a named list of length 2 containing the
+following elements:
 
-\item{\code{location}}{The \code{location} of a call to \code{\link[=translate]{translate()}} in \code{file}.
-The format is \code{"Ln X, Col Y"}, where \code{X} and \code{Y} are positive integers.}
-\item{\code{value}}{The actual value passed to formal argument \code{text} of
-\code{\link[=translate]{translate()}} either by name (preferred) or by position.}
+\item{\code{location}}{
+The \code{location} of a call to \code{\link[=translate]{translate()}} in \code{file}.
+The format is \code{"Ln X, Col Y"}, where \code{X} and \code{Y} are positive integers.
+}
+\item{\code{value}}{
+The actual value passed to formal argument \code{text} of
+\code{\link[=translate]{translate()}} either by name (preferred) or by position.
+}
 }
 \description{
 Statically \code{\link[=analyze]{analyze()}} \R scripts (without executing the source code) and

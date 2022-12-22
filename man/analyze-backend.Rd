@@ -20,7 +20,7 @@ findCallEnd(stream = character(), start = integer(1L))
 
 parseStream(stream = character())
 
-extractCallArgumentValue(call, argName = "text", argPos = 1L)
+extractCallArgumentValue(cl = call(), argName = "text", argPos = 1L)
 }
 \arguments{
 \item{file}{A file path. It must point to an existing \R script.}
@@ -33,7 +33,7 @@ See Details.}
 \item{start}{An index stating where to start in \code{stream} when \emph{traversing}
 it (when looping through its elements).}
 
-\item{call}{A \link[base:call]{call}.}
+\item{cl}{A \link[base:call]{call}.}
 
 \item{argName}{Expected name of a function's argument.}
 
@@ -44,23 +44,37 @@ it (when looping through its elements).}
 \code{\link[=tokenizer]{tokenizer()}} returns a character vector of non-empty, non-\link[base:NA]{NA}
 values. It attaches the following attributes to it:
 
-\item{\code{file}}{Path to the underlying \R script. See \code{file} above.}
-\item{\code{workingDir}}{Current working directory.}
-\item{\code{encoding}}{Encoding of \code{file}.}
-\item{\code{timeStamp}}{Last time \code{file} was modified in Coordinated Universal
-Time (UTC).}
-\item{\code{locations}}{The \code{locations} of calls made to \code{name} in \code{file}.
-The format is \code{"Ln X, Col Y"}, where \code{X} and \code{Y} are positive
-integers.}
+\item{\code{file}}{
+Path to the underlying \R script. See \code{file} above.
+}
+\item{\code{workingDir}}{
+Current working directory.
+}
+\item{\code{encoding}}{
+Encoding of \code{file}.
+}
+\item{\code{timeStamp}}{
+Last time \code{file} was modified in Coordinated Universal Time (UTC).
+}
+\item{\code{locations}}{
+The \code{locations} of calls made to \code{name} in \code{file}. The format is
+\code{"Ln X, Col Y"}, where \code{X} and \code{Y} are positive integers.
+}
 
 All these attributes are later passed down to the output of \code{\link[=analyze]{analyze()}}.
-They stem from the underlying \link[base:srcfile]{srcfile} object returned
-by \code{\link[base:parse]{base::parse()}} and from further attached information when \code{keep.source}
-is \code{TRUE}.
+They stem from
+\enumerate{
+\item the underlying \link[base:srcfile]{srcfile} object returned by
+\code{\link[base:parse]{base::parse()}}, and
+\item from further attached information when \code{keep.source} is \code{TRUE}.
+}
 
 \code{\link[=findBigStrings]{findBigStrings()}} and \code{\link[=findCalls]{findCalls()}} return an integer vector.
 
-\code{\link[=findCallEnd]{findCallEnd()}} returns a single integer value.
+\code{\link[=findCallEnd]{findCallEnd()}} returns a single integer value. It returns \code{0} if a call
+has no end (no corresponding \code{")"} token). This value must be treated as
+an error and is a sign that \code{stream} is not semantically valid according
+to the \R language.
 
 \code{\link[=parseStream]{parseStream()}} returns a \link[base:is.language]{language} object. This
 will typically be a \link[base:call]{call} but could also be something \emph{else}
@@ -78,17 +92,64 @@ These functions are internally used by function \code{\link[=analyze]{analyze()}
 not be used elsewhere.
 }
 \details{
-The internal engine relies on \code{\link[base:parse]{base::parse()}} to decompose \R code into
-sequences of \emph{tokens} (single elements of the language). For more information
-on \R tokens, see \code{\link[utils:getParseData]{utils::getParseData()}}.
-}
-\section{Structure}{
-
 The engine has a single entry point: \code{\link[=analyze]{analyze()}}. It assembles individual
-parts described here. It mainly goes through the steps described in section
+parts described here and mainly goes through the steps described in section
 \emph{Note} of the latter.
 
-#FIXME: TO BE COMPLETED.
-}
+\describe{
 
+\item{\code{tokenize()}}{
+This is basically a convenient wrapper function to \code{\link[base:parse]{base::parse()}} and
+\code{\link[utils:getParseData]{utils::getParseData()}}, but handles big character strings differently.
+It uses the tokens and their locations returned by \R's built in parser.
+}
+\item{\code{findBigStrings()}}{
+It traverses a \code{stream} once to identify so-called \emph{big strings}:
+litteral character strings tokens that are truncated and replaced
+by a short description:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{"[4019 chars quoted with '\\"']"  ## or
+"[4019 chars quoted with ''']"
+}\if{html}{\out{</div>}}
+
+The final token depends on its length and on the symbol used to declare
+a litteral character string.
+}
+\item{\code{findCalls()}}{
+It traverses a \code{stream} once to identify all calls to \code{name}. It looks
+for \code{"("} tokens and extracts the \code{SYMBOL_FUNCTION_CALL} token that
+immediately precedes it.
+
+It currently does \strong{not} support function called by \code{\link[base:call]{base::call()}}
+itself or by primitive function \code{\link[base:Paren]{base::(}}. This
+limitation may be lifted in the future.
+}
+\item{\code{findCallEnd()}}{
+It traverses a \code{stream} once starting at \code{start} to find a \code{")"} token
+matching the \code{"("} token found by \code{\link[=findCalls]{findCalls()}}. It stops as soon as the
+latter is detected to minimize the number of required iterations.
+
+Argument \code{start} is arbitrary and does not need to be the index of a
+\code{"("} token. In that case, \code{findCallEnd()} loops through the elements
+of \code{stream} until it encounters a \code{"("} and returns the position of the
+matching \code{")"} token.
+
+If it reaches the end of \code{stream} before detecting a corresponding \code{")"}
+token (or a \code{"("} token if \code{start} does not point to such a token), it
+returns \code{0L}. This is an error signal.
+}
+\item{\code{parseStream()}}{
+This function is a convenient wrapper to \code{\link[base:paste]{base::paste0()}} and
+\code{\link[base:parse]{base::str2lang()}}.
+}
+\item{\code{extractCallArgumentValue()}}{
+It attempts to extract \code{argName} from \code{cl}, a \link[base:call]{call}
+object. If it is not specified, \code{argPos} is extracted instead. An error
+is thrown if both are not possible.
+}
+}
+}
+\author{
+Jean-Mathieu Potvin (\href{mailto:jm@potvin.xyz}{jm@potvin.xyz})
+}
 \keyword{internal}
