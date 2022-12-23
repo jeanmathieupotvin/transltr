@@ -102,7 +102,7 @@ analyze <- function(file = character(1L)) {
 
     if (any(isNotChr)) {
         stopf(
-            "InterfaceError",
+            "TypeError",
             "%s: value passed to argument `text` of `transltr::translate()` must be a litteral character string.",
             locations[isNotChr][[1L]])
     }
@@ -125,7 +125,6 @@ analyze <- function(file = character(1L)) {
 #' *Note* of the latter.
 #'
 #' \describe{
-#'
 #' \item{`tokenize()`}{
 #'   This is basically a convenient wrapper function to [base::parse()] and
 #'   [utils::getParseData()], but handles big character strings differently.
@@ -248,11 +247,7 @@ analyze <- function(file = character(1L)) {
 #'
 #' @keywords internal
 tokenize <- function(file = character(1L)) {
-    assertString(file)
-
-    if (!utils::file_test("-f", file)) {
-        stopf("InterfaceError", "`file` must be an existing file.")
-    }
+    assertExistingFile(file)
 
     # Use R's built-in tokenizer.
     expr    <- parse(file, NULL, keep.source = TRUE)

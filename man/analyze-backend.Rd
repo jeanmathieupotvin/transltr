@@ -97,7 +97,6 @@ parts described here and mainly goes through the steps described in section
 \emph{Note} of the latter.
 
 \describe{
-
 \item{\code{tokenize()}}{
 This is basically a convenient wrapper function to \code{\link[base:parse]{base::parse()}} and
 \code{\link[utils:getParseData]{utils::getParseData()}}, but handles big character strings differently.
