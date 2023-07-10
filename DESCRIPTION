@@ -16,7 +16,7 @@ BugReports: https://github.com/jeanmathieupotvin/transltr/issues/new
 Encoding: UTF-8
 Language: en
 Roxygen: list(markdown = TRUE, r6 = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Suggests:
     covr,
     testthat (>= 3.0.0)
