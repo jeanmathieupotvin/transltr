@@ -1,41 +1,60 @@
-#' Apply a function over recursive elements
+#' Internal tools
 #'
-#' Convenient wrapper functions to [base::.mapply()] and [base::vapply()].
-#' The latter has a predetermined and constant return value compared to its
-#' \pkg{base} equivalent.
+#' Internal utility functions wrapping and/or combining further functions.
+#' They should not be used by end users. This documentation is intended for
+#' developers.
 #'
-#' @param fun Passed to argument `FUN` of [base::.mapply()] and [base::vapply()].
+#' @param fmt passed to function [base::sprintf()]. It is concatenated into
+#'   a single string before.
 #'
-#' @param x Passed to argument `X` of [base::vapply()].
+#' @param fun passed to argument `FUN` of [base::.mapply()] or [base::vapply()].
 #'
-#' @param useNames Passed to argument `USE.NAMES` of [base::vapply()].
+#' @param moreArgs passed to argument `MoreArgs` of [base::.mapply()].
 #'
-#' @param ... Passed to [base::.mapply()] and [base::vapply()].
+#' @param x passed to argument `X` of [base::vapply()].
+#'
+#' @param ... passed to further function(s).
+#'
+#' @details
+#' ## Throw errors
+#'
+#' [stopf()] combines [base::sprintf()] and [base::stop()].
+#'
+#' ## Traverse functions
+#'
+#' [.map()], [.vapply1i()], and [.vapply1c()] respectively wrap
+#' [base::.mapply()] and [base::vapply()]. Their purpose is to
+#' enforce specific arguments.
 #'
 #' @returns
-#' [vapply1i()] returns an integer vector.
+#' * [.stopf()] returns nothing. It is used for its side-effect.
+#' * [.map()] returns a list having the same length as values passed to `...`
+#' * [.vapply1i()] returns an integer vector having the same length as `x`.
+#' * [.vapply1c()] returns a character vector having the same length as `x`.
 #'
-#' [vapply1c()] returns a character vector.
+#' @author Jean-Mathieu Potvin (<jeanmathieupotvin@@ununoctium.dev>)
 #'
-#' [map()] returns a list.
-#'
-#' All outputs always have a length equal to the length of `x`.
-#'
-#' @author Jean-Mathieu Potvin (<jm@@potvin.xyz>)
+#' @rdname utils
 #'
 #' @keywords internal
-map <- function(fun, ..., moreArgs = list()) {
+.stopf <- function(fmt = character(), ...) {
+    stop(sprintf(paste0(fmt, collapse = NULL), ...), call. = FALSE)
+}
+
+#' @rdname utils
+#' @keywords internal
+.map <- function(fun, ..., moreArgs = list()) {
     return(.mapply(fun, list(...), moreArgs))
 }
 
-#' @rdname map
+#' @rdname utils
 #' @keywords internal
-vapply1i <- function(x, fun, ..., useNames = FALSE) {
-    return(vapply(x, fun, NA_integer_, ..., USE.NAMES = useNames))
+.vapply1i <- function(x, fun, ...) {
+    return(vapply(x, fun, NA_integer_, ..., USE.NAMES = FALSE))
 }
 
-#' @rdname map
+#' @rdname utils
 #' @keywords internal
-vapply1c <- function(x, fun, ..., useNames = FALSE) {
-    return(vapply(x, fun, NA_character_, ..., USE.NAMES = useNames))
+.vapply1c <- function(x, fun, ...) {
+    return(vapply(x, fun, NA_character_, ..., USE.NAMES = FALSE))
 }
