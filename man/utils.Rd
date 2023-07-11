@@ -5,6 +5,7 @@
 \alias{.map}
 \alias{.vapply1i}
 \alias{.vapply1c}
+\alias{\%||\%}
 \title{Internal tools}
 \usage{
 .stopf(fmt = character(), ...)
@@ -14,6 +15,8 @@
 .vapply1i(x, fun, ...)
 
 .vapply1c(x, fun, ...)
+
+lhs \%||\% rhs
 }
 \arguments{
 \item{fmt}{passed to function \code{\link[base:sprintf]{base::sprintf()}}. It is concatenated into
@@ -26,6 +29,8 @@ a single string before.}
 \item{moreArgs}{passed to argument \code{MoreArgs} of \code{\link[base:mapply]{base::.mapply()}}.}
 
 \item{x}{passed to argument \code{X} of \code{\link[base:lapply]{base::vapply()}}.}
+
+\item{lhs, rhs}{any \R object.}
 }
 \value{
 \itemize{
@@ -33,6 +38,8 @@ a single string before.}
 \item \code{\link[=.map]{.map()}} returns a list having the same length as values passed to \code{...}
 \item \code{\link[=.vapply1i]{.vapply1i()}} returns an integer vector having the same length as \code{x}.
 \item \code{\link[=.vapply1c]{.vapply1c()}} returns a character vector having the same length as \code{x}.
+\item \code{\link[=.stopf]{\%||\%}} returns \code{rhs} if and only if \code{lhs} is \code{NULL}. Else,
+\code{lhs} is returned.
 }
 }
 \description{
@@ -41,6 +48,9 @@ They should not be used by end users. This documentation is intended for
 developers.
 }
 \details{
+\code{\link[=.stopf]{\%||\%}} is the usual null coalescing operator. It returns its
+right hand-side whenever its left hand-side is \code{NULL}. It is used to enforce
+default values.
 \subsection{Throw errors}{
 
 \code{\link[=stopf]{stopf()}} combines \code{\link[base:sprintf]{base::sprintf()}} and \code{\link[base:stop]{base::stop()}}.

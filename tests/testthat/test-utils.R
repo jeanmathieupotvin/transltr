@@ -35,3 +35,8 @@ test_that(".vapply1c() returns a character", {
     expect_null(names(out))
     expect_identical(out, c("11", "21"))
 })
+
+test_that("%||% works", {
+    expect_identical(NULL %||% 2L, 2L)
+    expect_identical(1L   %||% 2L, 1L)
+})

@@ -13,9 +13,15 @@
 #'
 #' @param x passed to argument `X` of [base::vapply()].
 #'
+#' @param lhs,rhs any \R object.
+#'
 #' @param ... passed to further function(s).
 #'
 #' @details
+#' [`%||%`][.stopf()] is the usual null coalescing operator. It returns its
+#' right hand-side whenever its left hand-side is `NULL`. It is used to enforce
+#' default values.
+#'
 #' ## Throw errors
 #'
 #' [stopf()] combines [base::sprintf()] and [base::stop()].
@@ -31,6 +37,8 @@
 #' * [.map()] returns a list having the same length as values passed to `...`
 #' * [.vapply1i()] returns an integer vector having the same length as `x`.
 #' * [.vapply1c()] returns a character vector having the same length as `x`.
+#' * [`%||%`][.stopf()] returns `rhs` if and only if `lhs` is `NULL`. Else,
+#'   `lhs` is returned.
 #'
 #' @author Jean-Mathieu Potvin (<jeanmathieupotvin@@ununoctium.dev>)
 #'
@@ -57,4 +65,10 @@
 #' @keywords internal
 .vapply1c <- function(x, fun, ...) {
     return(vapply(x, fun, NA_character_, ..., USE.NAMES = FALSE))
+}
+
+#' @rdname utils
+#' @keywords internal
+`%||%` <- function(lhs, rhs) {
+    return(if (is.null(lhs)) rhs else lhs)
 }
