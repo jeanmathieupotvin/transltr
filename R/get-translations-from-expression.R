@@ -63,6 +63,12 @@
 #'   [call][base::call] to [translate()] and `FALSE` othwerwise.
 #'   See Details and Examples for more information.
 #'
+#' @note
+#' The author was inspired by the source code of [tools::xgettext()].
+#' This function convinced him to redesign the previous iteration of
+#' [getTranslationsFromExpression()] (which no longer exists). Many
+#' thanks to the *original author* and `R Core Team`.
+#'
 #' @examples
 #' implicitCall <- call("translate", "hello, world!")
 #' explicitCall <- str2lang("transltr::translate(\"hello, world!\")")
@@ -87,6 +93,8 @@
 #' @author Jean-Mathieu Potvin (<jeanmathieupotvin@@ununoctium.dev>)
 #'
 #' @seealso [sodium::hash()]
+#'
+#' @seealso [tools::xgettext()]
 #'
 #' @rdname get-translations-from-expresssion
 #'

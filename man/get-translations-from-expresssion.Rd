@@ -83,6 +83,12 @@ Implicit calls to \code{\link[=translate]{translate()}} are discouraged because 
 to be a bad coding practice.
 }
 }
+\note{
+The author was inspired by the source code of \code{\link[tools:xgettext]{tools::xgettext()}}.
+This function convinced him to redesign the previous iteration of
+\code{\link[=getTranslationsFromExpression]{getTranslationsFromExpression()}} (which no longer exists). Many
+thanks to the \emph{original author} and \verb{R Core Team}.
+}
 \examples{
 implicitCall <- call("translate", "hello, world!")
 explicitCall <- str2lang("transltr::translate(\"hello, world!\")")
@@ -107,6 +113,8 @@ identical(.getStringId("hello, world!"), "fcb655f3a969048c07294cfa7ef53af4")
 }
 \seealso{
 \code{\link[sodium:hash]{sodium::hash()}}
+
+\code{\link[tools:xgettext]{tools::xgettext()}}
 }
 \author{
 Jean-Mathieu Potvin (\href{mailto:jeanmathieupotvin@ununoctium.dev}{jeanmathieupotvin@ununoctium.dev})
