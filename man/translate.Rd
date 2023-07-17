@@ -6,9 +6,15 @@
 \usage{
 translate(..., lang = "en", translator = NULL)
 }
+\arguments{
+\item{...}{to be implemented.}
+
+\item{lang}{to be implemented.}
+
+\item{translator}{to be implemented.}
+}
 \description{
-Included because required by \code{\link[=findTranslationsInExpression]{findTranslationsInExpression()}}. To be
-implemented.
+To be implemented.
 }
 \author{
 Jean-Mathieu Potvin (\href{mailto:jeanmathieupotvin@ununoctium.dev}{jeanmathieupotvin@ununoctium.dev})

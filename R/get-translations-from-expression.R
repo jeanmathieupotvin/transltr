@@ -1,12 +1,10 @@
 #' Find translations in an expression
 #'
 #' @description
-#' Find and extract strings to be translated at runtime and passed to
-#' [translate()] in an [expression][base::expression] vector. Strings
-#' are automatically concatenated together before being returned.
+#' Find and extract strings passed to [translate()] in an
+#' [expression][base::expression] vector.
 #'
-#' Functions below are considered low-level and should not be used by end
-#' users. This documentation is intended for developers.
+#' Functions described here should not be used by end users.
 #'
 #' @param expr an [expression][base::expression].
 #'
@@ -19,23 +17,22 @@
 #' @param x an \R object to be tested.
 #'
 #' @details
-#' [getTranslationsFromExpression()] is the internal *main* mechanism. All
-#' other functions here are helper functions called by the former.
+#' [getTranslationsFromExpression()] is the internal *main* mechanism. Other
+#' functions here are helper functions called by the former. Extracted strings
+#' (from a single call) are concatenated before being returned.
 #'
 #' Each extracted string is uniquely identified by a string created by
 #' [getStringId()]. Identifiers are considered to be collision-resistant.
 #'
-#' ## Implicit and explicit calls
+#' [isTranslateCall()] detects calls made to [translate()]. There are two
+#' possibilities.
 #'
-#' An [expression][base::expression] may contain [call][base::call] object(s):
-#' a [mode][base::mode] representing an unevaluated function expression applied
-#' to the given arguments.
+#'   1. A call that depends on the [search][base::search()] path is said to be
+#'      *implicit*.
+#'   2. A call that directly refers this package it is said to be *explicit*.
 #'
-#' [isTranslateCall()] detects [calls] made to [translate()]. There are two
-#' possibilities. A call that depends on the [search][base::search()] path is
-#' said to be *implicit*. A call that directly refers this package it is said
-#' to be *explicit*. Implicit calls to [translate()] are discouraged because
-#' they are considered to be a bad coding practice.
+#' Implicit calls to [translate()] are discouraged because they are considered
+#' to be a bad coding practice.
 #'
 #' @returns
 #' * [getTranslationsFromExpression()] returns a named list (possibly empty).
@@ -61,16 +58,18 @@
 #' implicitCall <- str2lang('translate("hello, world!")')
 #' explicitCall <- str2lang('transltr::translate("hello, world!")')
 #'
-#' isTranslateCall(implicitCall) # TRUE
-#' isTranslateCall(explicitCall) # TRUE
+#' transltr:::isTranslateCall(implicitCall) # TRUE
+#' transltr:::isTranslateCall(explicitCall) # TRUE
 #'
 #' expr1 <- str2lang('transltr::translate("hello, ", "world!", lang = "en")')
-#' getTranslationsFromExpression(expr1)
+#' transltr:::getTranslationsFromExpression(expr1)
 #'
 #' expr2 <- str2lang('translate("hello, ", "world!")')
-#' getTranslationsFromExpression(expr2)
+#' transltr:::getTranslationsFromExpression(expr2)
 #'
-#' identical(getStringId("hello, world!"), "fcb655f3a969048c07294cfa7ef53af4")
+#' identical(
+#'     transltr:::getStringId("hello, world!"),
+#'     "fcb655f3a969048c07294cfa7ef53af4") # TRUE
 #'
 #' @author Jean-Mathieu Potvin (<jeanmathieupotvin@@ununoctium.dev>)
 #'
@@ -121,7 +120,7 @@ getStringFromTranslateCall <- function(call, env = new.env()) {
     string <- paste0(dots, collapse = "")
     id     <- getStringId(string)
 
-    # Identical string(s) have same hash/id and
+    # Identical strings have same hash/id and
     # therefore appear once by design in env.
     assign(id, list(string = string, id = id), env)
     return(invisible(env))
@@ -136,13 +135,20 @@ getStringId <- function(string = character(1L)) {
 #' @rdname get-translations-from-expresssion
 #' @keywords internal
 isTranslateCall <- function(x) {
+    # TODO: are checks on valid names required?
     return(
         is.call(x) &&
-        deparse1(x[[1L]]) == "translate" || (
-            is.call(x[[1L]]) &&
-            deparse1(x[[1L]][[1L]]) == "::" &&
-            deparse1(x[[1L]][[2L]]) == "transltr" &&
-            deparse1(x[[1L]][[3L]]) == "translate"
-        )
-    )
+        (.isImplicitTranslateCall(x) || .isExplicitTranslateCall(x)))
+}
+
+.isImplicitTranslateCall <- function(x) {
+    return(deparse1(x[[1L]]) == "translate")
+}
+
+.isExplicitTranslateCall <- function(x) {
+    return(
+        is.call(x[[1L]]) &&
+        deparse1(x[[1L]][[1L]]) == "::" &&
+        deparse1(x[[1L]][[2L]]) == "transltr" &&
+        deparse1(x[[1L]][[3L]]) == "translate")
 }
