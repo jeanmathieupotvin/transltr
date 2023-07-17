@@ -1,12 +1,9 @@
 #' Create a skeleton for the package
 #'
-#' Sections Setup, Creation, and Configuration are kept for reference purposes
-#' and should be considered as read-only. They were ran once to create the
-#' skeleton.
+#' This script was executed once at inception and should be considered as
+#' read-only in normal circumstances.
 #'
-#' Further sections may be re-ran and/or updated.
-#'
-#' @author Jean-Mathieu Potvin (<jm@@potvin.xyz>)
+#' @author Jean-Mathieu Potvin (<jeanmathieupotvin@@ununoctium.dev>)
 #'
 #' @seealso [The usethis package](https://usethis.r-lib.org/)
 NULL
@@ -40,7 +37,7 @@ usethis::create_package("transltr",
             utils::person(
                 given   = "Jean-Mathieu",
                 family  = "Potvin",
-                email   = "jm@potvin.xyz",
+                email   = "jeanmathieupotvin@ununoctium.dev",
                 role    = c("aut", "cre"),
                 comment = c(ORCID = "0000-0002-8237-422X")),
             utils::person(
