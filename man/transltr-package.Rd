@@ -17,7 +17,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Jean-Mathieu Potvin \email{jm@potvin.xyz} (\href{https://orcid.org/0000-0002-8237-422X}{ORCID})
+\strong{Maintainer}: Jean-Mathieu Potvin \email{jeanmathieupotvin@ununoctium.dev} (\href{https://orcid.org/0000-0002-8237-422X}{ORCID})
 
 Other contributors:
 \itemize{
