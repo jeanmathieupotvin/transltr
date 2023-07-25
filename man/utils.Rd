@@ -2,12 +2,15 @@
 % Please edit documentation in R/utils.R
 \name{map}
 \alias{map}
+\alias{vapply1l}
 \alias{vapply1i}
 \alias{vapply1c}
 \alias{\%||\%}
 \title{Internal tools}
 \usage{
 map(fun, ..., moreArgs = list())
+
+vapply1l(x, fun, ...)
 
 vapply1i(x, fun, ...)
 
@@ -30,6 +33,7 @@ lhs \%||\% rhs
 \value{
 \itemize{
 \item \code{\link[=map]{map()}} returns a list having the same length as values passed to \code{...}
+\item \code{\link[=vapply1l]{vapply1l()}} returns a logical vector having the same length as \code{x}.
 \item \code{\link[=vapply1i]{vapply1i()}} returns an integer vector having the same length as \code{x}.
 \item \code{\link[=vapply1c]{vapply1c()}} returns a character vector having the same length as \code{x}.
 \item \code{\link[=stopf]{\%||\%}} returns \code{rhs} if and only if \code{lhs} is \code{NULL}. Else,

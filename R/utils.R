@@ -26,6 +26,7 @@
 #'
 #' @returns
 #' * [map()] returns a list having the same length as values passed to `...`
+#' * [vapply1l()] returns a logical vector having the same length as `x`.
 #' * [vapply1i()] returns an integer vector having the same length as `x`.
 #' * [vapply1c()] returns a character vector having the same length as `x`.
 #' * [`%||%`][stopf()] returns `rhs` if and only if `lhs` is `NULL`. Else,
@@ -40,6 +41,12 @@
 #' @keywords internal
 map <- function(fun, ..., moreArgs = list()) {
     return(.mapply(fun, list(...), moreArgs))
+}
+
+#' @rdname utils
+#' @keywords internal
+vapply1l <- function(x, fun, ...) {
+    return(vapply(x, fun, NA, ..., USE.NAMES = FALSE))
 }
 
 #' @rdname utils
