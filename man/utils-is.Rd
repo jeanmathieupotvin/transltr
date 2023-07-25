@@ -2,12 +2,21 @@
 % Please edit documentation in R/utils-is.R
 \name{isSingleChar}
 \alias{isSingleChar}
+\alias{isSingleIntegerInRange}
 \title{Internal tools: test for specific shapes and values}
 \usage{
 isSingleChar(x)
+
+isSingleIntegerInRange(x, min = -max, max = .Machine$integer.max)
 }
 \arguments{
 \item{x}{any \R object to be tested.}
+
+\item{min}{a single numeric value. Lower inclusive boundary for \code{x}. This
+value is an integer for \code{\link[=isSingleIntegerInRange]{isSingleIntegerInRange()}}.}
+
+\item{max}{a single numeric value. Upper inclusive boundary for \code{x}. This
+value is an integer for \code{\link[=isSingleIntegerInRange]{isSingleIntegerInRange()}}.}
 }
 \value{
 A single logical. \code{TRUE} is returned unless \code{x} fails the underlying
@@ -18,7 +27,12 @@ Check if a value has a specific shape (\link[base:typeof]{type},
 \link[=length]{length}) and/or value (\link[base:NA]{NAs}, boundaries, etc.).
 }
 \details{
-\code{\link[=isSingleChar]{isSingleChar()}} returns \code{TRUE} for any empty or non-empty character string.
+\itemize{
+\item \code{\link[=isSingleChar]{isSingleChar()}} returns \code{TRUE} for any non-NA character string (empty
+or non-empty).
+\item \code{\link[=isSingleIntegerInRange]{isSingleIntegerInRange()}} returns \code{TRUE} for any single, non-NA integer
+value falling in the range \verb{[min, max]}.
+}
 }
 \seealso{
 Other internal tools: 
