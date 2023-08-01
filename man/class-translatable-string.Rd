@@ -167,8 +167,8 @@ Coerce this object to a list.
 }
 
 \subsection{Returns}{
-A named list. Each element is a field of this object. See
-section \strong{Active bindings} above.
+A named list. Each element is a field of this object.
+See section \strong{Active bindings} above.
 }
 }
 }

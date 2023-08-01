@@ -38,14 +38,16 @@ TranslatableString <- R6::R6Class(
         }
     ),
     public = list(
-        #' @description Create a [TranslatableString] object.
+        #' @description
+        #' Create a [TranslatableString] object.
         #'
         #' @param ... values to be concatenated into a single character string.
         #'
         #' @param concat a character string used to concatenate values passed
         #'   to `...`
         #'
-        #' @return A [R6][R6::R6] object of class [TranslatableString].
+        #' @return
+        #' A [R6][R6::R6] object of class [TranslatableString].
         initialize = function(..., concat = " ") {
             if (!isSingleChar(concat)) {
                 stopf(
@@ -63,7 +65,8 @@ TranslatableString <- R6::R6Class(
             return(self)
         },
 
-        #' @description Format this object.
+        #' @description
+        #' Format this object.
         #'
         #' @param signatureLength an integer between `0` and `64`. Desired
         #'   length of `$signature`.
@@ -73,14 +76,15 @@ TranslatableString <- R6::R6Class(
         #'   * Pass any other valid value to use its `signatureLength` first
         #'     characters.
         #'
-        #' @return A named character vector of length 2 containing the
-        #'   following elements:
+        #' @return
+        #' A named character vector of length 2 containing the
+        #' following elements:
         #'
-        #'   \describe{
-        #'     \item{`header`}{a character string containing the
-        #'       `signatureLength` first characters of field `$signature`.}
-        #'     \item{`string`}{current value of field `$string`.}
-        #'   }
+        #' \describe{
+        #'   \item{`header`}{a character string containing the
+        #'     `signatureLength` first characters of field `$signature`.}
+        #'   \item{`string`}{current value of field `$string`.}
+        #' }
         format = function(signatureLength = 64L) {
             if (!isSingleIntegerInRange(signatureLength, 0L, 64L)) {
                 stopf(
@@ -101,21 +105,26 @@ TranslatableString <- R6::R6Class(
             return(c(header = header, string = self$string))
         },
 
-        #' @description Print this object.
+        #' @description
+        #' Print this object.
         #'
         #' @param signatureLength passed to method [`$format()`][TranslatableString].
         #'
-        #' @return This object invisibly.
+        #' @return
+        #' This object invisibly.
         print = function(signatureLength = 64L) {
             cat(self$format(signatureLength)[["header"]], sep = "\n")
             return(self$cat())
         },
 
-        #' @description Print unquoted and formatted value of field `$string`.
+        #' @description
+        #' Print unquoted and formatted value of field `$string`.
         #'
-        #' @details Nothing is printed if `$string` is empty.
+        #' @details
+        #' Nothing is printed if `$string` is empty.
         #'
-        #' @return This object invisibly.
+        #' @return
+        #' This object invisibly.
         cat = function() {
             if (nzchar(string <- self$string)) {
                 cat(strwrap(string, 60L, 1L), sep = "\n ")
@@ -124,18 +133,22 @@ TranslatableString <- R6::R6Class(
             return(invisible(self))
         },
 
-        #' @description Coerce this object to a character.
+        #' @description
+        #' Coerce this object to a character.
         #'
-        #' @return A single character. Current value of field `$string`. It has
-        #'   an attribute named `signature` corresponding to field `$signature`.
+        #' @return
+        #' A single character. Current value of field `$string`. It has
+        #' an attribute named `signature` corresponding to field `$signature`.
         asCharacter = function() {
             return(structure(self$string, signature = self$signature))
         },
 
-        #' @description Coerce this object to a list.
+        #' @description
+        #' Coerce this object to a list.
         #'
-        #' @return A named list. Each element is a field of this object. See
-        #'   section **Active bindings** above.
+        #' @return
+        #' A named list. Each element is a field of this object.
+        #' See section **Active bindings** above.
         asList = function() {
             return(
                 list(
@@ -148,15 +161,17 @@ TranslatableString <- R6::R6Class(
         .tokens = character(),
         .string = character(1L),
 
-        # @description Concatenate multiple values into a single character
-        #   string and sanitize them.
+        # @description
+        # Concatenate multiple values into a single
+        # character string and sanitize them.
         #
         # @param tokens a character. Values to be combined into a single
         #   character string.
         #
         # @param concat a character string used to concatenate `tokens`.
         #
-        # @return A character string.
+        # @return
+        # A character string.
         .sanitize = function(tokens = character(), concat = " ") {
             string <- paste0(tokens, collapse = concat)
             return(gsub("[\n\t\r ]+", " ", string))
