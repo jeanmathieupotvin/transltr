@@ -20,12 +20,13 @@ test_that("isSingleIntegerInRange() returns true for valid single integers", {
 })
 
 test_that("isSingleIntegerInRange() returns false for invalid integers", {
-    # All values below are double values.
     # Integers that overflow or underflow are
     # automatically coerced to double values
     # with a warning not required.
+    maxInteger <- .Machine$integer.max
+
     expect_false(isSingleIntegerInRange(0.0))
-    expect_false(isSingleIntegerInRange(suppressWarnings(.Machine$integer.max  + 1L)))
-    expect_false(isSingleIntegerInRange(suppressWarnings(-.Machine$integer.max - 1L)))
+    expect_false(isSingleIntegerInRange(suppressWarnings(maxInteger  + 1L)))
+    expect_false(isSingleIntegerInRange(suppressWarnings(-maxInteger - 1L)))
     expect_false(isSingleIntegerInRange(NA_integer_))
 })
