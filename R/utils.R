@@ -1,36 +1,14 @@
-#' Internal tools
+#' Other miscellaneous tools
 #'
-#' Utility functions wrapping and/or combining further functions. They should
-#' not be used by end users. This documentation is intended for developers.
-#'
-#' @param fun a function to be applied on each element of `x`. See argument
-#'   `FUN` of [base::mapply()] and/or [base::vapply()].
-#'
-#' @param moreArgs passed to argument `MoreArgs` of [base::mapply()].
-#'
-#' @param x passed to argument `X` of [base::vapply()].
+#' Small miscelleneous functions.
 #'
 #' @param lhs,rhs any \R object.
 #'
-#' @param ... optional arguments to `fun`.
-#'
 #' @details
-#' [`%||%`][stopf()] is the usual null coalescing operator. It returns its
-#' right hand-side whenever its left hand-side is `NULL`. It is used to enforce
-#' default values.
-#'
-#' ## Traverse functions
-#'
-#' [map()], [vapply1i()], and [vapply1c()] respectively wrap [base::.mapply()]
-#' and [base::vapply()]. Their purpose is to enforce specific arguments.
+#' `%||%` is the usual null coalescing operator.
 #'
 #' @returns
-#' * [map()] returns a list having the same length as values passed to `...`
-#' * [vapply1l()] returns a logical vector having the same length as `x`.
-#' * [vapply1i()] returns an integer vector having the same length as `x`.
-#' * [vapply1c()] returns a character vector having the same length as `x`.
-#' * [`%||%`][stopf()] returns `rhs` if and only if `lhs` is `NULL`. Else,
-#'   `lhs` is returned.
+#' `%||%` returns returns `rhs` whenever `lhs` evaluates to `NULL`.
 #'
 #' @author Jean-Mathieu Potvin (<jeanmathieupotvin@@ununoctium.dev>)
 #'
@@ -39,30 +17,12 @@
 #' @rdname utils
 #'
 #' @keywords internal
-map <- function(fun, ..., moreArgs = list()) {
-    return(.mapply(fun, list(...), moreArgs))
+trickRoxyygenTemporarily <- function() {
+    # FIXME: replace by next misc function.
+    return(.NotYetImplemented())
 }
 
 #' @rdname utils
-#' @keywords internal
-vapply1l <- function(x, fun, ...) {
-    return(vapply(x, fun, NA, ..., USE.NAMES = FALSE))
-}
-
-#' @rdname utils
-#' @keywords internal
-vapply1i <- function(x, fun, ...) {
-    return(vapply(x, fun, NA_integer_, ..., USE.NAMES = FALSE))
-}
-
-#' @rdname utils
-#' @keywords internal
-vapply1c <- function(x, fun, ...) {
-    return(vapply(x, fun, NA_character_, ..., USE.NAMES = FALSE))
-}
-
-#' @rdname utils
-#' @keywords internal
 `%||%` <- function(lhs, rhs) {
     return(if (is.null(lhs)) rhs else lhs)
 }
