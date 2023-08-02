@@ -4,26 +4,35 @@
 \alias{TranslatableString}
 \alias{as.list.TranslatableString}
 \alias{as.character.TranslatableString}
+\alias{as.TranslatableString}
 \title{Translatable strings}
 \usage{
 \method{as.list}{TranslatableString}(x, ...)
 
 \method{as.character}{TranslatableString}(x, ...)
+
+as.TranslatableString(x, ...)
 }
 \arguments{
 \item{x}{an \R object.}
 
 \item{...}{further arguments passed to or from other methods.}
 }
+\value{
+\code{\link[=as.TranslatableString]{as.TranslatableString()}} is an S3 generic function returning a
+\link{TranslatableString} object.
+}
 \description{
-Mark strings as being translatable and sanitize them.
+Mark strings as being translatable, sanitize, and hash them.
 }
 \seealso{
-\code{\link[=translate]{translate()}}
+\code{\link[=translate]{translate()}},
+\code{\link[=as.TranslatableString.TranslateCall]{as.TranslatableString.TranslateCall()}}
 }
 \author{
 Jean-Mathieu Potvin (\href{mailto:jeanmathieupotvin@ununoctium.dev}{jeanmathieupotvin@ununoctium.dev})
 }
+\keyword{internal}
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{

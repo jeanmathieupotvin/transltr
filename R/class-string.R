@@ -1,15 +1,20 @@
 #' Translatable strings
 #'
 #' @description
-#' Mark strings as being translatable and sanitize them.
+#' Mark strings as being translatable, sanitize, and hash them.
+#'
+#' @returns
+#' [as.TranslatableString()] is an S3 generic function returning a
+#' [TranslatableString] object.
 #'
 #' @author Jean-Mathieu Potvin (<jeanmathieupotvin@@ununoctium.dev>)
 #'
-#' @seealso [translate()]
+#' @seealso [translate()],
+#'   [as.TranslatableString.TranslateCall()]
 #'
 #' @rdname class-translatable-string
 #'
-#' @export
+#' @keywords internal
 TranslatableString <- R6::R6Class(
     classname    = "TranslatableString",
     inherit      = NULL,
@@ -184,10 +189,16 @@ TranslatableString <- R6::R6Class(
 #' @param x an \R object.
 #'
 #' @param ... further arguments passed to or from other methods.
-#'
-#' @export
-as.list.TranslatableString <- function(x, ...) { return(x$asList()) }
+as.list.TranslatableString <- function(x, ...) {
+    return(x$asList())
+}
 
 #' @rdname class-translatable-string
-#' @export
-as.character.TranslatableString <- function(x, ...) { return(x$asCharacter()) }
+as.character.TranslatableString <- function(x, ...) {
+    return(x$asCharacter())
+}
+
+#' @rdname class-translatable-string
+as.TranslatableString <- function(x, ...) {
+    UseMethod("as.TranslatableString")
+}
