@@ -3,7 +3,7 @@
 \name{isSingleChar}
 \alias{isSingleChar}
 \alias{isSingleIntegerInRange}
-\title{Internal tools: test for specific shapes and values}
+\title{Test for specific shapes and values}
 \usage{
 isSingleChar(x)
 
@@ -19,25 +19,25 @@ value is an integer for \code{\link[=isSingleIntegerInRange]{isSingleIntegerInRa
 value is an integer for \code{\link[=isSingleIntegerInRange]{isSingleIntegerInRange()}}.}
 }
 \value{
-A single logical. \code{TRUE} is returned unless \code{x} fails the underlying
-test.
+A single logical. \code{TRUE} is returned unless \code{x} fails the test.
 }
 \description{
 Check if a value has a specific shape (\link[base:typeof]{type},
 \link[=length]{length}) and/or value (\link[base:NA]{NAs}, boundaries, etc.).
 }
 \details{
-\itemize{
-\item \code{\link[=isSingleChar]{isSingleChar()}} returns \code{TRUE} for any non-NA character string (empty
+\code{\link[=isSingleChar]{isSingleChar()}} returns \code{TRUE} for any non-NA character string (empty
 or non-empty).
-\item \code{\link[=isSingleIntegerInRange]{isSingleIntegerInRange()}} returns \code{TRUE} for any single, non-NA integer
+
+\code{\link[=isSingleIntegerInRange]{isSingleIntegerInRange()}} returns \code{TRUE} for any single, non-NA integer
 value falling in the range \verb{[min, max]}.
-}
 }
 \seealso{
 Other internal tools: 
+\code{\link{isCallToTranslate}()},
 \code{\link{map}()},
-\code{\link{stopf}()}
+\code{\link{stopf}()},
+\code{\link{trickRoxyygenTemporarily}()}
 }
 \author{
 Jean-Mathieu Potvin (\href{mailto:jeanmathieupotvin@ununoctium.dev}{jeanmathieupotvin@ununoctium.dev})

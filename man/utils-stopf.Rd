@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils-stopf.R
 \name{stopf}
 \alias{stopf}
-\title{Internal tools: throw errors}
+\title{Throw errors}
 \usage{
 stopf(..., .concat = " ", .args = list())
 }
@@ -20,8 +20,7 @@ Nothing. \code{\link[=stopf]{stopf()}} is used for its side-effect.
 }
 \description{
 Format an error message and throw an error by combining \code{\link[base:sprintf]{base::sprintf()}}
-and \code{\link[base:stop]{base::stop()}}. It should not be used by end users. This documentation
-is intended for developers.
+and \code{\link[base:stop]{base::stop()}}.
 }
 \details{
 Since they can be be validated at edit time using appropriate unit tests,
@@ -41,8 +40,10 @@ stopf("this is a \%s", "error", "\%s.", .args = list("useful", "message"))
 }
 \seealso{
 Other internal tools: 
+\code{\link{isCallToTranslate}()},
 \code{\link{isSingleChar}()},
-\code{\link{map}()}
+\code{\link{map}()},
+\code{\link{trickRoxyygenTemporarily}()}
 }
 \author{
 Jean-Mathieu Potvin (\href{mailto:jeanmathieupotvin@ununoctium.dev}{jeanmathieupotvin@ununoctium.dev})

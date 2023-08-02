@@ -1,8 +1,7 @@
-#' Internal tools: throw errors
+#' Throw errors
 #'
 #' Format an error message and throw an error by combining [base::sprintf()]
-#' and [base::stop()]. It should not be used by end users. This documentation
-#' is intended for developers.
+#' and [base::stop()].
 #'
 #' @param .concat a character string used to concatenate values passed to `...`
 #'

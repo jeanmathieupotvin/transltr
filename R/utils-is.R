@@ -1,4 +1,4 @@
-#' Internal tools: test for specific shapes and values
+#' Test for specific shapes and values
 #'
 #' Check if a value has a specific shape ([type][base::typeof()],
 #' [length][length()]) and/or value ([NAs][base::NA], boundaries, etc.).
@@ -12,14 +12,14 @@
 #'   value is an integer for [isSingleIntegerInRange()].
 #'
 #' @details
-#' * [isSingleChar()] returns `TRUE` for any non-NA character string (empty
-#'   or non-empty).
-#' * [isSingleIntegerInRange()] returns `TRUE` for any single, non-NA integer
-#'   value falling in the range `[min, max]`.
+#' [isSingleChar()] returns `TRUE` for any non-NA character string (empty
+#' or non-empty).
+#'
+#' [isSingleIntegerInRange()] returns `TRUE` for any single, non-NA integer
+#' value falling in the range `[min, max]`.
 #'
 #' @returns
-#' A single logical. `TRUE` is returned unless `x` fails the underlying
-#' test.
+#' A single logical. `TRUE` is returned unless `x` fails the test.
 #'
 #' @author Jean-Mathieu Potvin (<jeanmathieupotvin@@ununoctium.dev>)
 #'
@@ -33,7 +33,6 @@ isSingleChar <- function(x) {
 }
 
 #' @rdname utils-is
-#' @keywords internal
 isSingleIntegerInRange <- function(x, min = -max, max = .Machine$integer.max) {
     return(is.integer(x) && length(x) == 1L && !is.na(x) && x >= min && x <= max)
 }
