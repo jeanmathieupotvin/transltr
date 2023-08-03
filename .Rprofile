@@ -2,16 +2,18 @@
 #'
 #' This script is automatically executed by R whenever a new session is started.
 #'
-#' @seealso [Startup](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Startup.html)
+#' @seealso [Startup process](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Startup.html)
 
 
 # Attach development packages --------------------------------------------------
 
 
 if (interactive()) {
+    suppressMessages(require(covr))
     suppressMessages(require(devtools))
     suppressMessages(require(microbenchmark))
     suppressMessages(require(usethis))
+    suppressMessages(require(withr))
 }
 
 
@@ -29,11 +31,23 @@ options(
 
 # Create useful aliases and very small helper functions.
 # .mb() : alias for microbenchmark::microbenchmark().
+# .re() : generate coverage report (file COVERAGE) with covr.
 # .rm() : clear global environment, but keep aliases.
 # .tf() : test a particular file. Omit prefix `test-` and file extension.
 
 if (interactive()) {
     .mb <- microbenchmark::microbenchmark
+
+    .re <- function() {
+        on.exit(close(con))
+        con <- file("COVERAGE", "wt", FALSE, "UTF-8")
+        cov <- covr::package_coverage()
+
+        sink(con, type = "message")
+        print(cov)
+        sink(NULL, type = "message")
+        return(invisible())
+    }
 
     .rm <- function() {
         objs <- ls(".GlobalEnv", all.names = TRUE)
