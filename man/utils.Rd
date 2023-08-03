@@ -21,15 +21,7 @@ Small miscelleneous functions.
 \details{
 \verb{\%||\%} is the usual null coalescing operator.
 }
-\seealso{
-Other internal tools: 
-\code{\link{isCallToTranslate}()},
-\code{\link{isSingleChar}()},
-\code{\link{map}()},
-\code{\link{stopf}()}
-}
 \author{
 Jean-Mathieu Potvin (\href{mailto:jeanmathieupotvin@ununoctium.dev}{jeanmathieupotvin@ununoctium.dev})
 }
-\concept{internal tools}
 \keyword{internal}

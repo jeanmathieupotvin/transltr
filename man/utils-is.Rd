@@ -32,15 +32,7 @@ or non-empty).
 \code{\link[=isSingleIntegerInRange]{isSingleIntegerInRange()}} returns \code{TRUE} for any single, non-NA integer
 value falling in the range \verb{[min, max]}.
 }
-\seealso{
-Other internal tools: 
-\code{\link{isCallToTranslate}()},
-\code{\link{map}()},
-\code{\link{stopf}()},
-\code{\link{trickRoxyygenTemporarily}()}
-}
 \author{
 Jean-Mathieu Potvin (\href{mailto:jeanmathieupotvin@ununoctium.dev}{jeanmathieupotvin@ununoctium.dev})
 }
-\concept{internal tools}
 \keyword{internal}

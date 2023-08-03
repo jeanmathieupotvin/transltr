@@ -23,8 +23,6 @@
 #'
 #' @author Jean-Mathieu Potvin (<jeanmathieupotvin@@ununoctium.dev>)
 #'
-#' @family internal tools
-#'
 #' @rdname utils-is
 #'
 #' @keywords internal

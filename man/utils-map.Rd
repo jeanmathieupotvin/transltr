@@ -37,15 +37,7 @@ vapply1c(x, fun, ...)
 \code{\link[=map]{map()}}, \code{\link[=vapply1i]{vapply1i()}}, and \code{\link[=vapply1c]{vapply1c()}} respectively wrap \code{\link[base:mapply]{base::.mapply()}}
 and \code{\link[base:lapply]{base::vapply()}}. Their purpose is to enforce specific arguments.
 }
-\seealso{
-Other internal tools: 
-\code{\link{isCallToTranslate}()},
-\code{\link{isSingleChar}()},
-\code{\link{stopf}()},
-\code{\link{trickRoxyygenTemporarily}()}
-}
 \author{
 Jean-Mathieu Potvin (\href{mailto:jeanmathieupotvin@ununoctium.dev}{jeanmathieupotvin@ununoctium.dev})
 }
-\concept{internal tools}
 \keyword{internal}

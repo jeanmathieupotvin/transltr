@@ -38,15 +38,7 @@ stopf("this is a \%s", "error", "\%s.", .args = list("useful", "message"))
 }
 
 }
-\seealso{
-Other internal tools: 
-\code{\link{isCallToTranslate}()},
-\code{\link{isSingleChar}()},
-\code{\link{map}()},
-\code{\link{trickRoxyygenTemporarily}()}
-}
 \author{
 Jean-Mathieu Potvin (\href{mailto:jeanmathieupotvin@ununoctium.dev}{jeanmathieupotvin@ununoctium.dev})
 }
-\concept{internal tools}
 \keyword{internal}

@@ -12,13 +12,11 @@
 #'
 #' @author Jean-Mathieu Potvin (<jeanmathieupotvin@@ununoctium.dev>)
 #'
-#' @family internal tools
-#'
 #' @rdname utils
 #'
 #' @keywords internal
 trickRoxyygenTemporarily <- function() {
-    # FIXME: replace by next misc function.
+    # FIXME: replace me by next misc function.
     return(.NotYetImplemented())
 }
 
