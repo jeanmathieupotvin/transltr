@@ -189,11 +189,14 @@ TranslatableString <- R6::R6Class(
 #' @param x an \R object.
 #'
 #' @param ... further arguments passed to or from other methods.
+#'
+#' @export
 as.list.TranslatableString <- function(x, ...) {
     return(x$asList())
 }
 
 #' @rdname class-translatable-string
+#' @export
 as.character.TranslatableString <- function(x, ...) {
     return(x$asCharacter())
 }
