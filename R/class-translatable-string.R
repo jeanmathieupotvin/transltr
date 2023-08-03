@@ -4,7 +4,7 @@
 #' Mark strings as being translatable, sanitize, and hash them.
 #'
 #' @returns
-#' [as.TranslatableString()] is an S3 generic function returning a
+#' [as.TranslatableString()] and related methods return a
 #' [TranslatableString] object.
 #'
 #' @author Jean-Mathieu Potvin (<jeanmathieupotvin@@ununoctium.dev>)

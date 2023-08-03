@@ -184,8 +184,12 @@ test_that("$.sanitize() scrubs repeated blank characters", {
 })
 
 
-# S3 methods -------------------------------------------------------------------
+# S3 ---------------------------------------------------------------------------
 
+
+test_that("as.TranslatableString() works", {
+    skip("s3 generic covered by test cases of its methods")
+})
 
 test_that("as.character.TranslatableString() calls $asCharacter()", {
     expect_identical(

@@ -2,16 +2,21 @@
 % Please edit documentation in R/translate.R
 \name{translate}
 \alias{translate}
-\title{Future work}
+\title{Translate text}
 \usage{
-translate(..., lang = "en", translator = NULL)
+translate(..., concat = " ", lang = "en", translator = NULL)
 }
 \arguments{
 \item{...}{to be implemented.}
 
+\item{concat}{to be implemented.}
+
 \item{lang}{to be implemented.}
 
 \item{translator}{to be implemented.}
+}
+\value{
+Nothing. An error is returned by \code{\link[base:notyet]{base::.NotYetImplemented()}}.
 }
 \description{
 To be implemented.
