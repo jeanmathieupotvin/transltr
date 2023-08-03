@@ -94,7 +94,8 @@ usethis::use_build_ignore(escape = TRUE,  files = c(
     ".scripts",
     ".gitignore",
     ".Rprofile",
-    "codecov.yml"))
+    "codecov.yml",
+    "COVERAGE"))
 
 
 # LICENSE ----------------------------------------------------------------------

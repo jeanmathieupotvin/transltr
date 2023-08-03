@@ -10,4 +10,9 @@ NULL
 
 
 usethis::use_package("R", "Depends", min_version ="4.0")
+
+usethis::use_package("R6",     "Imports")
 usethis::use_package("sodium", "Imports")
+
+usethis::use_package("covr",  "Suggests")
+usethis::use_package("withr", "Suggests")
