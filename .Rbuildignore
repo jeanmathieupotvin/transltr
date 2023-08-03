@@ -6,3 +6,4 @@
 ^\.gitignore$
 ^\.Rprofile$
 ^codecov\.yml$
+^COVERAGE$
