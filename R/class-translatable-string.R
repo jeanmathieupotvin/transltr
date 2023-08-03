@@ -14,6 +14,10 @@
 #'
 #' @rdname class-translatable-string
 #'
+#' @importFrom R6 R6Class
+#' @importFrom sodium bin2hex
+#' @importFrom sodium sha256
+#'
 #' @keywords internal
 TranslatableString <- R6::R6Class(
     classname    = "TranslatableString",
