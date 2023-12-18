@@ -1,7 +1,11 @@
+# Ignore by-products stemming from Github workflows.
 .github/*.html
-.local
+
+# Ignore local / temporary files.
+.local/
+
+# Ignore common R side-files.
 .Rproj.user
 .Rhistory
 .RData
 .Renviron
-*.code-workspace
