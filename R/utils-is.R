@@ -26,8 +26,12 @@
 #' @rdname utils-is
 #'
 #' @keywords internal
-isSingleChar <- function(x) {
+isString <- function(x) {
     return(is.character(x) && length(x) == 1L && !is.na(x))
+}
+
+isNonEmptyString <- function(x) {
+    return(isString(x) && nzchar(x))
 }
 
 #' @rdname utils-is

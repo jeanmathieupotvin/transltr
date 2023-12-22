@@ -1,23 +1,27 @@
-#' Translate text
-#'
-#' To be implemented.
-#'
-#' @param concat to be implemented.
-#'
-#' @param lang to be implemented.
-#'
-#' @param translator to be implemented.
-#'
-#' @param ... to be implemented.
-#'
-#' @returns
-#' Nothing. An error is returned by [base::.NotYetImplemented()].
-#'
-#' @author Jean-Mathieu Potvin (<jeanmathieupotvin@@ununoctium.dev>)
-#'
-#' @export
-translate <- function(..., concat = " ", lang = "en", translator = NULL) {
+translate <- function(
+    text = character(),
+    ...,
+    concat  = getDefaultConcat(),
+    lang    = getCurrentLang(),
+    srcLang = getDefaultSrcLang())
+{
     return(.NotYetImplemented())
+}
+
+getDefaultConcat <- function() {
+    return(
+        getOption("transltr.default.concat") %??%
+        Sys.getenv("TRANSLTR_DEFAULT_CONCAT", " ", FALSE))
+}
+
+getCurrentLang <- function() {
+    return(getOption("transltr.default.srcLang") %??% "en")
+}
+
+getDefaultSrcLang <- function() {
+    return(
+        getOption("transltr.default.srcLang") %??%
+        Sys.getenv("TRANSLTR_DEFAULT_SRCLANG", "en", FALSE))
 }
 
 
@@ -59,29 +63,16 @@ translate <- function(..., concat = " ", lang = "en", translator = NULL) {
 #' @rdname translate-internals
 #'
 #' @keywords internal
-isCallToTranslate <- function(x) {
-    # Calling a function with backticks or quotes
-    # is syntactically valid. transltr::translate
-    # and transltr::"translate" are two distinct
-    # calls because translate becomes an argument
-    # of `::`() as a name or a string. Both cases
-    # must be covered.
-    return(
-        is.call(x) && (
-            identical(x[[1L]], quote(translate)) ||
-            identical(x[[1L]], quote(transltr::translate)) ||
-            identical(x[[1L]], quote(transltr::"translate"))))
-}
 
 #' @aliases TranslateCall
 #' @rdname translate-internals
-newTranslateCall <- function(x, ...) {
+.newTranslateCall <- function(x, ...) {
     UseMethod("newTranslateCall")
 }
 
 #' @rdname translate-internals
 #' @export
-newTranslateCall.call <- function(x, ...) {
+.newTranslateCall.call <- function(x, ...) {
     # Validation is deferred to the caller.
     # We expect a call to translate() here.
     class(x) <- c("TranslateCall", class(x))
@@ -90,7 +81,7 @@ newTranslateCall.call <- function(x, ...) {
 
 #' @rdname translate-internals
 #' @export
-newTranslateCall.default <- function(x, ...) {
+.newTranslateCall.default <- function(x, ...) {
     args <- if (missing(x)) list(...) else list(x, ...)
     return(newTranslateCall(do.call(call, c(name = "translate", args))))
 }

@@ -21,6 +21,6 @@ trickRoxyygenTemporarily <- function() {
 }
 
 #' @rdname utils
-`%||%` <- function(lhs, rhs) {
+`%??%` <- function(lhs, rhs) {
     return(if (is.null(lhs)) rhs else lhs)
 }
