@@ -34,13 +34,13 @@
 #' @rdname utils-stopf
 #'
 #' @keywords internal
-stopf <- function(..., .concat = " ", .args = list()) {
-    # collapse works on values within
-    # vectors so c() is required here.
-    fmt <- paste0(c(...), collapse = .concat)
+stopf <- function(str = "", ...) {
+    # Include name of caller function, if any.
+    prefix <- if (!is.null(parentCall <- sys.call(-1L))) {
+        sprintf("in '%s()': ", deparse1(parentCall[[1L]]))
+    }
 
     # Not calling return() here because stop()
     # prevents such a call before it happens.
-    stop(do.call(sprintf, c(fmt = fmt, .args)), call. = FALSE)
+    stop(sprintf(sprintf("%s%s", prefix, str), ...), call. = FALSE)
 }
-

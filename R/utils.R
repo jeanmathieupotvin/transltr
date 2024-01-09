@@ -24,3 +24,11 @@ trickRoxyygenTemporarily <- function() {
 `%??%` <- function(lhs, rhs) {
     return(if (is.null(lhs)) rhs else lhs)
 }
+
+hashString <- function(str = "") {
+    return(sodium::bin2hex(sodium::sha256(charToRaw(str))))
+}
+
+sanitizeString <- function(str = "") {
+    return(gsub("[\n\t\r ]+", " ", str))
+}

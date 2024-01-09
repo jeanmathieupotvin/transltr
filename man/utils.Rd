@@ -2,12 +2,12 @@
 % Please edit documentation in R/utils.R
 \name{trickRoxyygenTemporarily}
 \alias{trickRoxyygenTemporarily}
-\alias{\%||\%}
+\alias{\%??\%}
 \title{Other miscellaneous tools}
 \usage{
 trickRoxyygenTemporarily()
 
-lhs \%||\% rhs
+lhs \%??\% rhs
 }
 \arguments{
 \item{lhs, rhs}{any \R object.}
