@@ -1,0 +1,27 @@
+#' @export
+getLanguage <- function() {
+    return(Sys.getenv("TRANSLTR_LANG", "en", FALSE))
+}
+
+#' @export
+setLanguage <- function(lang = "en") {
+    if (!isNonEmptyString(lang)) {
+        halt("'lang' must be a non-NA and non-empty character string.")
+    }
+
+    return(Sys.setenv(TRANSLTR_LANG = lang))
+}
+
+#' @export
+getSrcLanguage <- function() {
+    return(Sys.getenv("TRANSLTR_SRCLANG", "en", FALSE))
+}
+
+#' @export
+setSrcLanguage <- function(lang = "en") {
+    if (!isNonEmptyString(lang)) {
+        halt("'lang' must be a non-NA and non-empty character string.")
+    }
+
+    return(Sys.setenv(TRANSLTR_SRCLANG = lang))
+}

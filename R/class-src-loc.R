@@ -1,4 +1,4 @@
-newSrcLoc <- function(
+SrcLoc <- function(
     file  = "",
     line1 = 0L,
     col1  = 0L,
@@ -6,25 +6,22 @@ newSrcLoc <- function(
     col2  = 0L)
 {
     if (!isString(file)) {
-        stopf("'file' must be a non-NA character string.")
+        halt("'file' must be a non-NA character string.")
     }
     if (nzchar(file) && (
-        !isSingleIntegerInRange(line1, 1L) ||
-        !isSingleIntegerInRange(col1,  1L) ||
-        !isSingleIntegerInRange(line2, 1L) ||
-        !isSingleIntegerInRange(col2,  1L))) {
-        stopf(
-            "'line1', 'col1', 'line2', and 'col2' must all be",
-            "non-NA integer values of length 1 strictly greater than 0.")
+        !isSingleIntInRange(line1, 1L) ||
+        !isSingleIntInRange(col1,  1L) ||
+        !isSingleIntInRange(line2, 1L) ||
+        !isSingleIntInRange(col2,  1L))) {
+        halt("'line1', 'col1', 'line2', and 'col2' must all be non-NA integer values of length 1 strictly greater than 0.")
     }
 
-    obj <- list(
-        file   = normalizePath(file, .Platform$file.sep, mustWork = FALSE),
-        start  = c(line1, col1),
-        end    = c(line2, col2))
+    file <- normalizePath(file, .Platform$file.sep, FALSE)
+    return(newSrcLoc(file, c(line1, col1), c(line2, col2)))
+}
 
-    class(obj) <- c("SrcLoc", "list")
-    return(obj)
+newSrcLoc <- function(file = "", start = integer(2L), end = integer(2L)) {
+    return(structure(as.list(environment()), class = c("SrcLoc", "list")))
 }
 
 isSrcLoc <- function(x) {
@@ -38,7 +35,8 @@ format.SrcLoc <- function(x, ...) {
     }
 
     return(
-        sprintf("<SrcLoc> '%s': ln %i, col %i @@ ln %i, col %i",
+        sprintf(
+            "<SrcLoc> '%s': ln %i, col %i @@ ln %i, col %i",
             x$file,
             x$start[[1L]],
             x$start[[2L]],

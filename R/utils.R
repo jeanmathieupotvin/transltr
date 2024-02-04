@@ -1,34 +1,47 @@
-#' Other miscellaneous tools
-#'
-#' Small miscelleneous functions.
-#'
-#' @param lhs,rhs any \R object.
-#'
-#' @details
-#' `%||%` is the usual null coalescing operator.
-#'
-#' @returns
-#' `%||%` returns returns `rhs` whenever `lhs` evaluates to `NULL`.
-#'
-#' @author Jean-Mathieu Potvin (<jeanmathieupotvin@@ununoctium.dev>)
-#'
-#' @rdname utils
-#'
-#' @keywords internal
-trickRoxyygenTemporarily <- function() {
-    # FIXME: replace me by next misc function.
-    return(.NotYetImplemented())
+formatNamedValues <- function(..., sep = "  ", indent = 1L) {
+    if (!isString(sep)) {
+        halt("'sep' must be a non-NA character string. It can be empty.")
+    }
+    if (!isSingleIntInRange(indent, 0L)) {
+        halt("'indent' must be a non-NA integer value of length 1 greater than or equal to 0.")
+    }
+
+    if (!is.character(values <- c(...))) {
+        values <- as.character(values)
+    }
+
+    .names <- names(values) %??% character(length(values))
+
+    if (anyNA(.names)) {
+        .names[is.na(.names)] <- ""
+    }
+
+    return(
+        sprintf("%s%s%s%s",
+            strrep(" ", indent),
+            padChr(.names),
+            sep,
+            values))
 }
 
-#' @rdname utils
+trimParsedExpr <- function(expr, width = integer(1L)) {
+    if (!is.language(expr)) {
+        halt("'expr' must be a name, a call, or an expression object.")
+    }
+    if (!isSingleIntInRange(width, 1L)) {
+        halt("'width' must be a non-NA integer value of length 1 greater than or equal to 1.")
+    }
+    if (nchar(expr <- deparse1(expr)) > width) {
+        expr <- sprintf("%s...", strtrim(expr, width))
+    }
+
+    return(expr)
+}
+
+`%?%` <- function(lhs, rhs) {
+    return(if (nzchar(lhs)) lhs else rhs)
+}
+
 `%??%` <- function(lhs, rhs) {
     return(if (is.null(lhs)) rhs else lhs)
-}
-
-hashString <- function(str = "") {
-    return(sodium::bin2hex(sodium::sha256(charToRaw(str))))
-}
-
-sanitizeString <- function(str = "") {
-    return(gsub("[\n\t\r ]+", " ", str))
 }

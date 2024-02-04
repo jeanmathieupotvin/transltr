@@ -23,18 +23,22 @@
 #'
 #' @author Jean-Mathieu Potvin (<jeanmathieupotvin@@ununoctium.dev>)
 #'
-#' @rdname utils-is
+#' @name utils-is
 #'
-#' @keywords internal
-isStr <- function(x) {
+NULL
+
+isString <- function(x) {
     return(is.character(x) && length(x) == 1L && !is.na(x))
 }
 
-isNonEmptyStr <- function(x) {
-    return(isStr(x) && nzchar(x))
+isNonEmptyString <- function(x) {
+    return(isString(x) && nzchar(x))
 }
 
-#' @rdname utils-is
+isSingleLgl <- function(x) {
+    return(is.logical(x) && length(x) == 1L && !is.na(x))
+}
+
 isSingleIntInRange <- function(x, min = -max, max = .Machine$integer.max) {
     return(is.integer(x) && length(x) == 1L && !is.na(x) && x >= min && x <= max)
 }
