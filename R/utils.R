@@ -70,7 +70,7 @@ trimParsedExpr <- function(expr, width = integer(1L)) {
 }
 
 `%?%` <- function(lhs, rhs) {
-    return(if (nzchar(lhs)) lhs else rhs)
+    return(if (length(lhs) && any(nzchar(lhs))) lhs else rhs)
 }
 
 `%??%` <- function(lhs, rhs) {
