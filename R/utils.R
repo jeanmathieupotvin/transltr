@@ -5,14 +5,10 @@ formatNamedValues <- function(..., sep = "  ", indent = 1L) {
     if (!isSingleIntInRange(indent, 0L)) {
         halt("'indent' must be a non-NA integer value of length 1 greater than or equal to 0.")
     }
-
     if (!is.character(values <- c(...))) {
         values <- as.character(values)
     }
-
-    .names <- names(values) %??% character(length(values))
-
-    if (anyNA(.names)) {
+    if (anyNA(.names <- names(values) %??% character(length(values)))) {
         .names[is.na(.names)] <- ""
     }
 
