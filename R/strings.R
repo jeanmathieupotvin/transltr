@@ -6,11 +6,20 @@ sanitizeString <- function(str = "") {
     return(gsub("[\n\t\r ]+", " ", str))
 }
 
-padChr <- function(x = character()) {
+strpad <- function(x = character(), where = c("right", "left")) {
     if (!is.character(x)) {
         halt("'x' must be a character.")
     }
 
-    nchars <- nchar(x)
-    return(paste0(x, strrep(" ", max(nchars) - nchars)))
+    where   <- .match.arg(where)
+    nchars  <- nchar(x)
+    padding <- strrep(" ", max(nchars) - nchars)
+
+    return(
+        switch(where,
+            left  = sprintf("%s%s", padding, x),
+            right = sprintf("%s%s", x, padding)))
+}
+
+.strwrap <- function(x, indent = 0L, width = getOption("width", 80L)) {
 }

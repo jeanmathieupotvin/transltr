@@ -19,7 +19,7 @@ formatNamedValues <- function(..., sep = "  ", indent = 1L) {
     return(
         sprintf("%s%s%s%s",
             strrep(" ", indent),
-            padChr(.names),
+            strpad(.names),
             sep,
             values))
 }
