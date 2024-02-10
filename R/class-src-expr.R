@@ -13,7 +13,7 @@ SrcExpr <- function(str = "", sloc = NULL) {
 
     # FIXME: something's wrong with some expressions. They can't be printed.
     status <- if (inherits(expr, "condition")) class(expr)[[1L]] else "parsed"
-    return(newSrcExpr(expr, status, hashString(str), sloc))
+    return(newSrcExpr(expr, status, strhash(str), sloc))
 }
 
 newSrcExpr <- function(
