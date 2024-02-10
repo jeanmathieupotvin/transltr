@@ -9,6 +9,7 @@ SrcString <- function(str = "", lang = "", sloc = NULL) {
         halt("'sloc' must be NULL or a 'SrcLoc' object.")
     }
 
+    str <- strsanitize(str)
     return(newSrcString(str, strhash(str), lang, sloc))
 }
 
