@@ -42,3 +42,8 @@ print.SrcString <- function(x, ...) {
 asSrcString <- function(x, ...) {
     UseMethod("asSrcString")
 }
+
+#' @export
+asSrcString.SrcTranslation <- function(x, ...) {
+    return(SrcString(paste0(x$text, collapse = x$concat), x$slang, x$sloc))
+}

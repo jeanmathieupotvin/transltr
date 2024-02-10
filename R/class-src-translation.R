@@ -43,8 +43,3 @@ print.SrcTranslation <- function(x, ...) {
     cat("<SrcTranslation>", format(x, ...), sep = "\n")
     return(invisible(x))
 }
-
-#' @export
-asSrcString.SrcTranslation <- function(x, ...) {
-    return(.NotYetImplemented())
-}
