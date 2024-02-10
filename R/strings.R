@@ -22,4 +22,17 @@ strpad <- function(x = character(), where = c("right", "left")) {
 }
 
 .strwrap <- function(x, indent = 0L, width = getOption("width", 80L)) {
+    if (!isSingleIntInRange(indent, 0L)) {
+        halt("'indent' must be a non-NA integer value of length 1 greater than or equal to 0.")
+    }
+    if (!isSingleIntInRange(width, 1L)) {
+        halt("'width' must be a non-NA integer value of length 1 strictly greater than 0.")
+    }
+
+    return(
+        strwrap(x,
+            initial = "\n",
+            indent  = indent + 1L,
+            exdent  = indent + 1L,
+            width   = width))
 }

@@ -27,24 +27,15 @@ asSrcTranslation.SrcExpr <- function(x, ..., .check = TRUE) {
 
 #' @export
 format.SrcTranslation <- function(x, indent = 0L, ...) {
-    if (!isSingleIntInRange(indent, 0L)) {
-        halt("'indent' must be a non-NA integer value of length 1 greater than or equal to 0.")
-    }
+    sloc  <- x$sloc %??% SrcLoc()
+    slang <- x$slang %?% "<none>"
+    text  <- .strwrap(strsanitize(x$text %?% "<empty>"), indent)
+    named <- formatNamedValues(
+        Concat   = sQuote(x$concat, FALSE),
+        Language = slang,
+        Location = format(x$sloc))
 
-    x$sloc <- x$sloc %??% SrcLoc()
-    text   <- strwrap(
-        x$text,
-        indent = indent + 2L,
-        exdent = indent + 2L,
-        width  = getOption("width", 80L))
-
-    return(c(
-        formatNamedValues(
-            Concat   = sQuote(x$concat, FALSE),
-            Language = x$slang %?% "no language specified",
-            Location = format(x$sloc),
-            Text     = if (all(nzchar(text))) "---" else "<empty>"),
-        text))
+    return(c(named, text))
 }
 
 #' @export

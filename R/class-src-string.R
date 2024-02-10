@@ -22,24 +22,15 @@ isSrcString <- function(x) {
 
 #' @export
 format.SrcString <- function(x, indent = 0L, ...) {
-    if (!isSingleIntInRange(indent, 0L)) {
-        halt("'indent' must be a non-NA integer value of length 1 greater than or equal to 0.")
-    }
+    sloc  <- x$sloc %??% SrcLoc()
+    lang  <- x$lang %?% "<none>"
+    str   <- .strwrap(x$str %?% "<empty>", indent)
+    named <- formatNamedValues(
+        Hash     = x$hash,
+        Language = lang,
+        Location = format(sloc))
 
-    x$sloc <- x$sloc %??% SrcLoc()
-    str    <- strwrap(
-        sanitizeString(x$str),
-        indent = indent + 2L,
-        exdent = indent + 2L,
-        width  = getOption("width", 80L))
-
-    return(c(
-        formatNamedValues(
-            Hash     = x$hash,
-            Language = x$lang %?% "no language specified",
-            Location = format(x$sloc),
-            String   = if (nzchar(str)) "---" else "<empty>"),
-        str))
+    return(c(named, str))
 }
 
 #' @export
