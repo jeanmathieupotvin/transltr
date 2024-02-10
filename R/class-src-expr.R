@@ -11,7 +11,6 @@ SrcExpr <- function(str = "", sloc = NULL) {
         error   = \(c) errorCondition(c$message),
         warning = \(c) warningCondition(c$message))
 
-    # FIXME: something's wrong with some expressions. They can't be printed.
     status <- if (inherits(expr, "condition")) class(expr)[[1L]] else "parsed"
     return(newSrcExpr(expr, status, strhash(str), sloc))
 }

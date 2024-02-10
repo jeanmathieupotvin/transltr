@@ -25,9 +25,6 @@ formatNamedValues <- function(..., sep = "  ", indent = 1L) {
 }
 
 trimParsedExpr <- function(expr, width = integer(1L)) {
-    if (!is.language(expr)) {
-        halt("'expr' must be a name, a call, or an expression object.")
-    }
     if (!isSingleIntInRange(width, 1L)) {
         halt("'width' must be a non-NA integer value of length 1 greater than or equal to 1.")
     }
