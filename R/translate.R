@@ -8,15 +8,15 @@ translate <- function(
     parse   = FALSE)
 {
     if (!isSingleLgl(parse)) {
-        halt("'parse' must be a non-NA logical of length 1 ('TRUE' or 'FALSE').")
+        halt("'parse' must be equal to 'TRUE' or 'FALSE'.")
     }
     if (parse) {
         return(
             list(
-                text    = text,
-                concat  = concat,
-                lang    = substitute(lang),
-                srcLang = srcLang))
+                text   = text,
+                concat = concat,
+                lang   = substitute(lang),
+                slang  = srcLang))
     }
 
     return(.NotYetImplemented())

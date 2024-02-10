@@ -4,7 +4,10 @@ newSrcTranslation <- function(
     slang  = "",
     sloc   = NULL)
 {
-    return(structure(as.list(environment()), class = c("SrcTranslation", "list")))
+    return(
+        structure(
+            as.list(environment()),
+            class = c("SrcTranslation", "list")))
 }
 
 isSrcTranslation <- function(x) {
@@ -22,7 +25,7 @@ asSrcTranslation.SrcExpr <- function(x, ..., .check = TRUE) {
     }
 
     args <- parseTranslateCall(x$expr, x$sloc)
-    return(newSrcTranslation(args$text, args$concat, args$srcLang, x$sloc))
+    return(newSrcTranslation(args$text, args$concat, args$slang, x$sloc))
 }
 
 #' @export
