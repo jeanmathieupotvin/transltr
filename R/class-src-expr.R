@@ -19,7 +19,7 @@ SrcExpr <- function(str = "", sloc = NULL) {
 newSrcExpr <- function(
     expr   = expression(),
     status = c("parsed", "error", "warning"),
-    hash   = hashString(),
+    hash   = strhash(),
     sloc   = NULL)
 {
     status <- match.arg(status)

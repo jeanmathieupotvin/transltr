@@ -1,5 +1,5 @@
-hashString <- function(str = "") {
-    return(sodium::bin2hex(sodium::sha256(charToRaw(str))))
+strhash <- function(x = character()) {
+    return(vapply1c(x, \(x) sodium::bin2hex(sodium::sha256(charToRaw(x)))))
 }
 
 sanitizeString <- function(str = "") {
