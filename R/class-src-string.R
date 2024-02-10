@@ -9,7 +9,7 @@ SrcString <- function(str = "", lang = "", sloc = NULL) {
         halt("'sloc' must be NULL or a 'SrcLoc' object.")
     }
 
-    return(newSrcString(str, hashString(str), lang, sloc))
+    return(newSrcString(str, strhash(str), lang, sloc))
 }
 
 newSrcString <- function(str = "", hash = "", lang = "", sloc = NULL) {

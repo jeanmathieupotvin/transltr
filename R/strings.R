@@ -2,8 +2,8 @@ strhash <- function(x = character()) {
     return(vapply1c(x, \(x) sodium::bin2hex(sodium::sha256(charToRaw(x)))))
 }
 
-sanitizeString <- function(str = "") {
-    return(gsub("[\n\t\r ]+", " ", str))
+strsanitize <- function(x = character()) {
+    return(gsub("[\n\t\r ]+", " ", x))
 }
 
 strpad <- function(x = character(), where = c("right", "left")) {
