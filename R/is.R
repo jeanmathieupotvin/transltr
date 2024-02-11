@@ -42,3 +42,11 @@ isSingleLgl <- function(x) {
 isSingleIntInRange <- function(x, min = -max, max = .Machine$integer.max) {
     return(is.integer(x) && length(x) == 1L && !is.na(x) && x >= min && x <= max)
 }
+
+isSingleDblInRange <- function(
+    x,
+    min = .Machine$double.xmin,
+    max = .Machine$double.xmax)
+{
+    return(is.double(x) && length(x) == 1L && !is.na(x) && x >= min && x <= max)
+}
