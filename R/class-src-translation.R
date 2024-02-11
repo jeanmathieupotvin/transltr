@@ -19,7 +19,7 @@ asSrcTranslation <- function(x, ...) {
 }
 
 #' @export
-asSrcTranslation.SrcExpr <- function(x, ..., .check = TRUE) {
+asSrcTranslation.SrcExpr <- function(x, ...) {
     if (x$status != "parsed") {
         halt("$status of SrcExpr 'x' must be 'parsed', not '%s'.", x$status)
     }
