@@ -1,8 +1,8 @@
-extract <- function(path = character(1L)) {
-    file   <- File(path)
+extract <- function(path = character(1L), fsep = c("/", "\\")) {
+    file   <- File(path, fsep)
     tokens <- utils::getParseData(parse(path, keep.source = TRUE), TRUE)
     exprs  <- tokens[tokens$token == "expr", ]
-    slocs  <- map(SrcLoc, moreArgs = list(file = path),
+    slocs  <- map(SrcLoc, moreArgs = list(file = file),
         line1 = exprs$line1,
         col1  = exprs$col1,
         line2 = exprs$line2,
@@ -18,5 +18,6 @@ extract <- function(path = character(1L)) {
         lapply(asSrcTranslation) |>
         lapply(asSrcString)
 
+    names(strings) <- vapply1c(strings, `[[`, i = "hash")
     return(list(file = file, srcStrings = strings))
 }
