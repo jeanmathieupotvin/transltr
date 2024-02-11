@@ -1,10 +1,7 @@
 SrcString <- function(str = "", lang = "", sloc = NULL) {
-    if (!isString(str)) {
-        halt("'str' must be a non-NA character of length 1. It can be empty.")
-    }
-    if (!isString(lang)) {
-        halt("'lang' must be a non-NA character of length 1. It can be empty.")
-    }
+    assertString(str)
+    assertString(lang)
+
     if (!is.null(sloc) && !isSrcLoc(sloc)) {
         halt("'sloc' must be NULL or a 'SrcLoc' object.")
     }

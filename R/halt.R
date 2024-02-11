@@ -20,13 +20,8 @@ halt <- function(str = "", ..., caller = getCallerName(-2L)) {
 }
 
 ConditionMessage <- function(str = "", ..., prefix = "") {
-    if (!isString(str)) {
-        halt("'str' must be a non-NA character string. It can be empty.")
-    }
-    if (!isString(prefix)) {
-        halt("'prefix' must be a non-NA character string. It can be empty.")
-    }
-
+    assertString(str)
+    assertString(prefix)
     return(sprintf(sprintf("%s%s", prefix, str), ...))
 }
 

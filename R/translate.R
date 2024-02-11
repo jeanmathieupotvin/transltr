@@ -7,10 +7,7 @@ translate <- function(
     srcLang = getSrcLanguage(),
     parse   = FALSE)
 {
-    if (!isSingleLgl(parse)) {
-        halt("'parse' must be equal to 'TRUE' or 'FALSE'.")
-    }
-    if (parse) {
+    if (assertSingleLgl(parse)) {
         return(
             list(
                 text   = text,
@@ -18,6 +15,10 @@ translate <- function(
                 lang   = substitute(lang),
                 slang  = srcLang))
     }
+
+    assertString(concat)
+    assertNonEmptyString(lang)
+    assertNonEmptyString(srcLang)
 
     return(.NotYetImplemented())
 }

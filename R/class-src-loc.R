@@ -8,12 +8,11 @@ SrcLoc <- function(
     if (!is.null(file) && !isFile(file)) {
         halt("'file' must be NULL or a File object.")
     }
-    if (!isSingleIntInRange(line1, 1L) ||
-        !isSingleIntInRange(col1,  1L) ||
-        !isSingleIntInRange(line2, 1L) ||
-        !isSingleIntInRange(col2,  1L)) {
-        halt("'line1', 'col1', 'line2', and 'col2' must all be non-NA integer values of length 1 strictly greater than 0.")
-    }
+
+    assertSingleIntInRange(line1, 1L)
+    assertSingleIntInRange(col1,  1L)
+    assertSingleIntInRange(line2, 1L)
+    assertSingleIntInRange(col2,  1L)
 
     return(newSrcLoc(file, c(line1, col1), c(line2, col2)))
 }

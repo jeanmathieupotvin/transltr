@@ -1,7 +1,6 @@
 SrcExpr <- function(str = "", sloc = NULL) {
-    if (!isString(str)) {
-        halt("'str' must be a non-NA character string. It can be empty.")
-    }
+    assertString(str)
+
     if (!is.null(sloc) && !isSrcLoc(sloc)) {
         halt("'sloc' must be NULL or a 'SrcLoc' object.")
     }
@@ -35,12 +34,8 @@ format.SrcExpr <- function(x,
     width  = getOption("width", 80L),
     ...)
 {
-    if (!isSingleIntInRange(indent, 0L)) {
-        halt("'indent' must be a non-NA integer value of length 1 greater than or equal to 0.")
-    }
-    if (!isSingleIntInRange(width, 1L)) {
-        halt("'width' must be a non-NA integer value of length 1 greater than or equal to 1.")
-    }
+    assertSingleIntInRange(indent, 0L)
+    assertSingleIntInRange(width,  1L)
 
     x$sloc <- x$sloc %??% SrcLoc()
 

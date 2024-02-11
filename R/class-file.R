@@ -1,9 +1,6 @@
 File <- function(path = character(1L), fsep = c("/", "\\")) {
-    if (!isNonEmptyString(path)) {
-        halt("'path' must be a non-NA and non-empty character of length 1.")
-    }
-
-    fsep <- .match.arg(fsep)
+    assertString(path)
+    fsep <- assertChoice(fsep)
 
     if (fsep == "/") {
         # Pre-sanitize path that contains \\
@@ -40,7 +37,6 @@ newFile <- function(
     fsep  = c("/", "\\"),
     mtime = Sys.time())
 {
-    fsep <- .match.arg(fsep)
     return(structure(as.list(environment(), TRUE), class = c("File", "list")))
 }
 
@@ -50,9 +46,8 @@ isFile <- function(x) {
 
 #' @export
 format.File <- function(x, utc = FALSE, format = "%A, %Y-%m-%d, %T (%Z)", ...) {
-    if (!isSingleLgl(utc)) {
-        halt("'utc' must be equal to 'TRUE' or 'FALSE'.")
-    }
+    assertSingleLgl(utc)
+    assertNonEmptyString(format)
 
     return(c(
         formatNamedValues(
@@ -91,15 +86,9 @@ hashFile.File <- function(x, ...) {
 #' @export
 hashFile.character <- function(x = "", size = NULL, .validate = TRUE, ...) {
     if (.validate) {
-        if (!isNonEmptyString(x)) {
-            halt("'x' must be a non-NA and non-empty character of length 1.")
-        }
-
         size <- size %??% file.info(x, extra_cols = FALSE)[[1L, "size"]]
-
-        if (!isSingleDblInRange(size, 0L)) {
-            halt("'size' must be a non-NA double (numeric) value of length 1 greater than or equal to 0.")
-        }
+        assertNonEmptyString(x)
+        assertSingleDblInRange(size, 0L)
     }
 
     return(sodium::bin2hex(sodium::sha256(readBin(x, "raw", size))))
@@ -117,10 +106,7 @@ getFileExt.File <- function(x, ...) {
 #' @export
 getFileExt.character <- function(x, .validate = TRUE, ...) {
     if (.validate) {
-        if (!isNonEmptyString(x)) {
-            halt("'x' must be a non-NA and non-empty character of length 1.")
-        }
-
+        assertNonEmptyString(x)
         x <- basename(x)
     }
 
@@ -140,11 +126,8 @@ getFileRelPath.File <- function(x, ...) {
 #' @export
 getFileRelPath.character <- function(x, fsep = c("/", "\\"), .validate = TRUE, ...) {
     if (.validate) {
-        if (!isNonEmptyString(x)) {
-            halt("'x' must be a non-NA and non-empty character of length 1.")
-        }
-
-        fsep <- .match.arg(fsep)
+        assertNonEmptyString(x)
+        fsep <- assertChoice(fsep)
         x    <- normalizePath(x, fsep, FALSE)
     }
 

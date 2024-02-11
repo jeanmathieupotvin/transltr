@@ -5,10 +5,7 @@ getLanguage <- function() {
 
 #' @export
 setLanguage <- function(lang = "en") {
-    if (!isNonEmptyString(lang)) {
-        halt("'lang' must be a non-NA and non-empty character string.")
-    }
-
+    assertNonEmptyString(lang)
     return(Sys.setenv(TRANSLTR_LANG = lang))
 }
 
@@ -19,9 +16,6 @@ getSrcLanguage <- function() {
 
 #' @export
 setSrcLanguage <- function(lang = "en") {
-    if (!isNonEmptyString(lang)) {
-        halt("'lang' must be a non-NA and non-empty character string.")
-    }
-
+    assertNonEmptyString(lang)
     return(Sys.setenv(TRANSLTR_SRCLANG = lang))
 }

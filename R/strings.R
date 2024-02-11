@@ -11,7 +11,7 @@ strpad <- function(x = character(), where = c("right", "left")) {
         halt("'x' must be a character.")
     }
 
-    where   <- .match.arg(where)
+    where   <- assertChoice(where)
     nchars  <- nchar(x)
     padding <- strrep(" ", max(nchars) - nchars)
 
@@ -22,13 +22,8 @@ strpad <- function(x = character(), where = c("right", "left")) {
 }
 
 .strwrap <- function(x, indent = 0L, width = getOption("width", 80L)) {
-    if (!isSingleIntInRange(indent, 0L)) {
-        halt("'indent' must be a non-NA integer value of length 1 greater than or equal to 0.")
-    }
-    if (!isSingleIntInRange(width, 1L)) {
-        halt("'width' must be a non-NA integer value of length 1 strictly greater than 0.")
-    }
-
+    assertSingleIntInRange(indent, 0L)
+    assertSingleIntInRange(width,  1L)
     return(
         strwrap(x,
             initial = "\n",
