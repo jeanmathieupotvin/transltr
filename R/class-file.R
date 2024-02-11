@@ -1,36 +1,47 @@
-File <- function(path = character(1L)) {
+File <- function(path = character(1L), fsep = c("/", "\\")) {
     if (!isNonEmptyString(path)) {
         halt("'path' must be a non-NA and non-empty character of length 1.")
     }
-    if (!utils::file_test("-f", path <- normalizePath(path, "/", FALSE))) {
+
+    fsep <- .match.arg(fsep)
+
+    if (fsep == "/") {
+        # Pre-sanitize path that contains \\
+        # if chosen fsep is / for consistency.
+        path <- gsub("\\\\", "/", path)
+    }
+    if (!utils::file_test("-f", path <- normalizePath(path, fsep, FALSE))) {
         halt("'%s' either does not exist or is not a valid file.", path)
     }
 
-    info   <- file.info(path, extra_cols = FALSE)
-    name   <- basename(path)
-    dir    <- dirname(path)
-    reldir <- gsub(sprintf("%s/", getwd()), "", dirname(path))
+    name <- basename(path)
+    info <- file.info(path, extra_cols = FALSE)
+    size <- info[[1L, "size"]]
 
-    timefmt  <- "%A, %Y-%m-%d, %T (%Z)"
-    ctime    <- format(info$ctime, format = timefmt)
-    mtime    <- format(info$mtime, format = timefmt)
-    ctimeutc <- format(info$ctime, format = timefmt, tz = "UTC")
-    mtimeutc <- format(info$mtime, format = timefmt, tz = "UTC")
-
-    return(newFile(path, name, dir, reldir, ctime, mtime, ctimeutc, mtimeutc))
+    return(
+        newFile(
+            name,
+            getFileExt(name, .validate = FALSE),
+            size,
+            hashFile(path, size, .validate = FALSE),
+            dirname(path),
+            path,
+            fsep,
+            info[[1L, "mtime"]]))
 }
 
 newFile <- function(
-    path     = "",
-    name     = "",
-    dir      = "",
-    reldir   = "",
-    ctime    = "",
-    mtime    = "",
-    ctimeutc = "",
-    mtimeutc = "")
+    name  = "",
+    ext   = "",
+    size  = 0.0,
+    hash  = "",
+    dir   = "",
+    path  = "",
+    fsep  = c("/", "\\"),
+    mtime = Sys.time())
 {
-    return(structure(as.list(environment()), class = c("File", "list")))
+    fsep <- .match.arg(fsep)
+    return(structure(as.list(environment(), TRUE), class = c("File", "list")))
 }
 
 isFile <- function(x) {
@@ -38,19 +49,115 @@ isFile <- function(x) {
 }
 
 #' @export
-format.File <- function(x, ...) {
-    return(
+format.File <- function(x, utc = FALSE, format = "%A, %Y-%m-%d, %T (%Z)", ...) {
+    if (!isSingleLgl(utc)) {
+        halt("'utc' must be equal to 'TRUE' or 'FALSE'.")
+    }
+
+    return(c(
         formatNamedValues(
-            File             = x$name,
-            Path             = x$path,
-            `Directory`      = x$dir,
-            `Rel. Directory` = x$reldir,
-            `Created`        = x$ctime,
-            `Last Modified`  = x$mtime))
+            Name            = x$name,
+            Extension       = x$ext,
+            Size            = sprintf("%1.0f bytes", x$size),
+            Hash            = x$hash,
+            Directory       = x$dir,
+            Path            = x$path,
+            `Last Modified` = format(x$mtime,
+                tz     = if (utc) "UTC" else "",
+                format = format)),
+        formatNamedValues(
+            # Separate fields from useful
+            # values computed on the fly.
+            `---` = "",
+            `Current Working Directory` = getwd(),
+            `Current Relative Path`     = getFileRelPath(x$path))))
 }
 
 #' @export
 print.File <- function(x, ...) {
     cat("<File>", format(x, ...), sep = "\n")
     return(invisible(x))
+}
+
+hashFile <- function(x, ...) {
+    UseMethod("hashFile")
+}
+
+#' @export
+hashFile.File <- function(x, ...) {
+    return(hashFile(x$path, x$size, ...))
+}
+
+#' @export
+hashFile.character <- function(x = "", size = NULL, .validate = TRUE, ...) {
+    if (.validate) {
+        if (!isNonEmptyString(x)) {
+            halt("'x' must be a non-NA and non-empty character of length 1.")
+        }
+
+        size <- size %??% file.info(x, extra_cols = FALSE)[[1L, "size"]]
+
+        if (!isSingleDblInRange(size, 0L)) {
+            halt("'size' must be a non-NA double (numeric) value of length 1 greater than or equal to 0.")
+        }
+    }
+
+    return(sodium::bin2hex(sodium::sha256(readBin(x, "raw", size))))
+}
+
+getFileExt <- function(x, ...) {
+    UseMethod("getFileExt")
+}
+
+#' @export
+getFileExt.File <- function(x, ...) {
+    return(getFileExt(x$path, ...))
+}
+
+#' @export
+getFileExt.character <- function(x, .validate = TRUE, ...) {
+    if (.validate) {
+        if (!isNonEmptyString(x)) {
+            halt("'x' must be a non-NA and non-empty character of length 1.")
+        }
+
+        x <- basename(x)
+    }
+
+    start <- regexpr("\\.(.*?)$", x) + 1L
+    return(substr(x, start, start + attr(start, "match.length")))
+}
+
+getFileRelPath <- function(x, ...) {
+    UseMethod("getFileRelPath")
+}
+
+#' @export
+getFileRelPath.File <- function(x, ...) {
+    return(getFileRelPath(x$path, x$fsep, ...))
+}
+
+#' @export
+getFileRelPath.character <- function(x, fsep = c("/", "\\"), .validate = TRUE, ...) {
+    if (.validate) {
+        if (!isNonEmptyString(x)) {
+            halt("'x' must be a non-NA and non-empty character of length 1.")
+        }
+
+        fsep <- .match.arg(fsep)
+        x    <- normalizePath(x, fsep, FALSE)
+    }
+
+    # If x is not within the current working
+    # directory's scope, we do not attempt to
+    # find x's relative position to it. Such
+    # an operation is tedious and error-prone.
+    # TODO: implement a future robust relative path finder?
+    if (!grepl(wd <- getwd(), x)) {
+        return("<undetermined>")
+    }
+
+    # file.path(wd, "") is an efficient
+    # way to add a trailing slash to wd.
+    return(gsub(file.path(wd, "", fsep = fsep), "", x))
 }
