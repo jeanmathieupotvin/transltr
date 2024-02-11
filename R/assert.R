@@ -76,9 +76,9 @@ assertSingleDblInRange <- function(
 }
 
 # This is a refactoring of base::match.arg() with a transtlr
-# touch on it that enforces single values by defaut. It must
-# be called within a parent function. This is what it means
-# to 'match an argument'.
+# touch that enforces single values by defaut. It must be
+# called within a parent function. This is what it means to
+# 'match an argument'.
 assertChoice <- function(x) {
     stackIndex <- sys.parent()
     formalArgs <- formals(sys.function(stackIndex))
