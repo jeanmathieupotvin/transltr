@@ -16,10 +16,10 @@ halt <- function(str = "", ..., caller = getCallerName(-2L)) {
         ""
     }
 
-    stop(ConditionMessage(str, ..., prefix = prefix), call. = FALSE)
+    stop(ConditionString(str, ..., prefix = prefix), call. = FALSE)
 }
 
-ConditionMessage <- function(str = "", ..., prefix = "") {
+ConditionString <- function(str = "", ..., prefix = "") {
     assertString(str)
     assertString(prefix)
     return(sprintf(sprintf("%s%s", prefix, str), ...))

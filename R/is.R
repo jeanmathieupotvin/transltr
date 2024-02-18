@@ -1,32 +1,3 @@
-#' Test for specific shapes and values
-#'
-#' Check if a value has a specific shape ([type][base::typeof()],
-#' [length][length()]) and/or value ([NAs][base::NA], boundaries, etc.).
-#'
-#' @param x any \R object to be tested.
-#'
-#' @param min a single numeric value. Lower inclusive boundary for `x`. This
-#'   value is an integer for [isSingleIntInRange()].
-#'
-#' @param max a single numeric value. Upper inclusive boundary for `x`. This
-#'   value is an integer for [isSingleIntInRange()].
-#'
-#' @details
-#' [isSingleChar()] returns `TRUE` for any non-NA character string (empty
-#' or non-empty).
-#'
-#' [isSingleIntInRange()] returns `TRUE` for any single, non-NA integer
-#' value falling in the range `[min, max]`.
-#'
-#' @returns
-#' A single logical. `TRUE` is returned unless `x` fails the test.
-#'
-#' @author Jean-Mathieu Potvin (<jeanmathieupotvin@@ununoctium.dev>)
-#'
-#' @name utils-is
-#'
-NULL
-
 isString <- function(x) {
     return(is.character(x) && length(x) == 1L && !is.na(x))
 }
@@ -40,6 +11,10 @@ isSingleLgl <- function(x) {
 }
 
 isSingleIntInRange <- function(x, min = -max, max = .Machine$integer.max) {
+    if (min > max) {
+        halt("'min' must be lower than or equal to 'max'.")
+    }
+
     return(is.integer(x) && length(x) == 1L && !is.na(x) && x >= min && x <= max)
 }
 
@@ -48,5 +23,9 @@ isSingleDblInRange <- function(
     min = .Machine$double.xmin,
     max = .Machine$double.xmax)
 {
+    if (min > max) {
+        halt("'min' must be lower than or equal to 'max'.")
+    }
+
     return(is.double(x) && length(x) == 1L && !is.na(x) && x >= min && x <= max)
 }
