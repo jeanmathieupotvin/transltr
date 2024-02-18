@@ -36,7 +36,7 @@ assertSingleIntInRange <- function(x, min = -max, max = .Machine$integer.max) {
         cl <- match.call()
 
         halt(
-            "'%s' must be a non-NA integer value of length 1 %s.",
+            "'%s' must be a non-NA integer value of length 1%s.",
             deparse(substitute(x)),
             RangeString(cl$min, cl$max),
             caller = getCallerName(-3L))
@@ -54,7 +54,7 @@ assertSingleDblInRange <- function(
         cl <- match.call()
 
         halt(
-            "'%s' must be a non-NA double value of length 1 %s.",
+            "'%s' must be a non-NA double value of length 1%s.",
             deparse(substitute(x)),
             RangeString(cl$min, cl$max),
             caller = getCallerName(-3L))
@@ -98,7 +98,7 @@ assertChoice <- function(x) {
 
 RangeString <- function(min = NULL, max = NULL) {
     strings <- c(
-        if (!is.null(min)) sprintf("greater than or equal to %s", min),
-        if (!is.null(max)) sprintf("lower than or equal to %s",   max))
-    return(paste0(strings, collapse = " and "))
+        if (!is.null(min)) sprintf(" greater than or equal to %s", min),
+        if (!is.null(max)) sprintf(" lower than or equal to %s",   max))
+    return(paste0(strings, collapse = " and"))
 }
