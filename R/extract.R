@@ -1,4 +1,9 @@
-extract <- function(path = character(1L), fsep = c("/", "\\")) {
+extract <- function(..., fsep = c("/", "\\")) {
+    assertChoice(fsep) # slightly more optimal if called here
+    return(lapply(c(...), extract1, fsep = fsep))
+}
+
+extract1 <- function(path = character(1L), fsep = c("/", "\\")) {
     file   <- File(path, fsep)
     tokens <- utils::getParseData(parse(path, keep.source = TRUE), TRUE)
     exprs  <- tokens[tokens$token == "expr", ]
@@ -12,12 +17,12 @@ extract <- function(path = character(1L), fsep = c("/", "\\")) {
     # Only relevant calls are kept before doing so.
     # The chain of coercions performed is as follows:
     # token -> SrcExpr -> SrcTranslation -> SrcString.
-    # SrcLoc objects are carried forward.
     sexprs  <- map(SrcExpr, str = exprs$text, sloc = slocs)
     strings <- sexprs[vapply1l(sexprs, isTranslateCall)] |>
         lapply(asSrcTranslation) |>
         lapply(asSrcString)
 
+    attr(strings, "file") <- file
     names(strings) <- vapply1c(strings, `[[`, i = "hash")
-    return(list(file = file, srcStrings = strings))
+    return(strings)
 }
