@@ -7,11 +7,12 @@ strsanitize <- function(x = character()) {
 }
 
 strpad <- function(x = character(), where = c("right", "left")) {
+    assertChoice(where)
+
     if (!is.character(x)) {
         halt("'x' must be a character.")
     }
 
-    where   <- assertChoice(where)
     nchars  <- nchar(x)
     padding <- strrep(" ", max(nchars) - nchars)
 

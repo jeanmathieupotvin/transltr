@@ -69,36 +69,40 @@ assertSingleDblInRange <- function(
 # 'match an argument'.
 assertChoice <- function(x) {
     stackIndex <- sys.parent()
+    parentEnv  <- sys.frame(stackIndex)
     formalArgs <- formals(sys.function(stackIndex))
     argName    <- as.character(substitute(x))
-    choices    <- eval(formalArgs[[argName]], sys.frame(stackIndex))
+    choices    <- eval(formalArgs[[argName]], parentEnv)
 
     # If arg is identical to choices, this implies
     # user did not specify a specific value and is
     # requesting the default one.
-    if (identical(x, choices)) {
-        return(invisible(choices[[1L]]))
+    choice <- if (identical(x, choices)) {
+        choices[[1L]]
+    } else {
+        if (is.na(matchIndex <- pmatch(x, choices))) {
+            # This creates a numbered list of choices
+            # to be printed as part of the error below.
+            listedChoices <- paste0(
+                sprintf(" [%i] '%s'\n", seq_along(choices), choices),
+                collapse = "")
+
+            halt("'%s' must be equal to one of the listed value below.\n%s",
+                argName,
+                listedChoices,
+                caller = getCallerName(-3L))
+        }
+
+        choices[[matchIndex]]
     }
 
-    if (is.na(matchIndex <- pmatch(x, choices, NA_integer_))) {
-        # This creates a numbered list of choices
-        # to be printed as part of the error below.
-        listedChoices <- paste0(
-            sprintf(" [%i] '%s'\n", seq_along(choices), choices),
-            collapse = "")
-
-        halt("'%s' must be equal to one of the listed value below.\n%s",
-            argName,
-            listedChoices,
-            caller = getCallerName(-3L))
-    }
-
-    return(invisible(choices[[matchIndex]]))
+    return(assign(argName, choice, parentEnv))
 }
 
 RangeString <- function(min = NULL, max = NULL) {
-    strings <- c(
-        if (!is.null(min)) sprintf(" greater than or equal to %s", min),
-        if (!is.null(max)) sprintf(" lower than or equal to %s",   max))
-    return(paste0(strings, collapse = " and"))
+    return(
+        paste0(
+            if (!is.null(min)) sprintf(" greater than or equal to %s", min),
+            if (!is.null(max)) sprintf(" lower than or equal to %s",   max),
+            collapse = " and"))
 }

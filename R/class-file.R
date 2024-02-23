@@ -1,6 +1,6 @@
 File <- function(path = character(1L), fsep = c("/", "\\")) {
     assertString(path)
-    fsep <- assertChoice(fsep)
+    assertChoice(fsep)
 
     if (fsep == "/") {
         # Pre-sanitize path that contains \\
@@ -127,7 +127,7 @@ getFileRelPath.File <- function(x, ...) {
 getFileRelPath.character <- function(x, fsep = c("/", "\\"), .validate = TRUE, ...) {
     if (.validate) {
         assertNonEmptyString(x)
-        fsep <- assertChoice(fsep)
+        assertChoice(fsep)
         x    <- normalizePath(x, fsep, FALSE)
     }
 
@@ -135,7 +135,6 @@ getFileRelPath.character <- function(x, fsep = c("/", "\\"), .validate = TRUE, .
     # directory's scope, we do not attempt to
     # find x's relative position to it. Such
     # an operation is tedious and error-prone.
-    # TODO: implement a future robust relative path finder?
     if (!grepl(wd <- getwd(), x)) {
         return("<undetermined>")
     }
