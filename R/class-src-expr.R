@@ -11,7 +11,7 @@ SrcExpr <- function(str = "", sloc = NULL) {
         warning = \(c) warningCondition(c$message))
 
     status <- if (inherits(expr, "condition")) class(expr)[[1L]] else "parsed"
-    return(newSrcExpr(expr, status, strhash(str), sloc))
+    return(newSrcExpr(expr, status, strhash1(str), sloc))
 }
 
 newSrcExpr <- function(

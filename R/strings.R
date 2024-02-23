@@ -1,5 +1,9 @@
 strhash <- function(x = character()) {
-    return(vapply1c(x, \(x) sodium::bin2hex(sodium::sha256(charToRaw(x)))))
+    return(vapply1c(x, strhash1))
+}
+
+strhash1 <- function(x = character(1L)) {
+    return(sodium::bin2hex(sodium::sha256(charToRaw(x))))
 }
 
 strsanitize <- function(x = character()) {

@@ -7,7 +7,7 @@ SrcString <- function(str = "", lang = "", sloc = NULL) {
     }
 
     str <- strsanitize(str)
-    return(newSrcString(str, strhash(str), lang, sloc))
+    return(newSrcString(str, strhash1(str), lang, sloc))
 }
 
 newSrcString <- function(str = "", hash = "", lang = "", sloc = NULL) {
