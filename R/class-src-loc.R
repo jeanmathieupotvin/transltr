@@ -26,15 +26,19 @@ isSrcLoc <- function(x) {
 }
 
 #' @export
-format.SrcLoc <- function(x, ...) {
+format.SrcLoc <- function(x, class = TRUE, relPath = FALSE, ...) {
     if (is.null(x$file)) {
         return("<SrcLoc> no File specified")
     }
 
+    assertSingleLgl(class)
+    assertSingleLgl(relPath)
+
     return(
         sprintf(
-            "<SrcLoc> '%s': ln %i, col %i @@ ln %i, col %i",
-            x$file$path,
+            "%s'%s': ln %i, col %i @@ ln %i, col %i",
+            if (class) "<SrcLoc> " else "",
+            if (relPath) getFileRelPath(x$file) else x$file$path,
             x$start[[1L]],
             x$start[[2L]],
             x$end[[1L]],

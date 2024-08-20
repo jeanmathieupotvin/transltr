@@ -5,16 +5,11 @@ formatNamedValues <- function(..., sep = "  ", indent = 1L) {
     if (!is.character(values <- c(...))) {
         values <- as.character(values)
     }
-    if (anyNA(.names <- names(values) %??% character(length(values)))) {
-        .names[is.na(.names)] <- ""
+    if (anyNA(names <- names(values) %??% character(length(values)))) {
+        names[is.na(names)] <- ""
     }
 
-    return(
-        sprintf("%s%s%s%s",
-            strrep(" ", indent),
-            strpad(.names),
-            sep,
-            values))
+    return(paste0(strrep(" ", indent), strpad(names), sep, values))
 }
 
 trimParsedExpr <- function(expr, width = integer(1L)) {
@@ -25,6 +20,14 @@ trimParsedExpr <- function(expr, width = integer(1L)) {
     }
 
     return(expr)
+}
+
+formatDateTime <- function(x, utc = FALSE) {
+    assertSingleLgl(utc)
+    return(
+        format(x,
+            tz     = if (utc) "UTC" else "",
+            format = "%A, %Y-%m-%d, %T (%Z)"))
 }
 
 `%?%` <- function(lhs, rhs) {

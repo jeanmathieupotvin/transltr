@@ -3,7 +3,7 @@ extract <- function(..., fsep = c("/", "\\")) {
     return(lapply(c(...), extract1, fsep = fsep))
 }
 
-extract1 <- function(path = character(1L), fsep = c("/", "\\")) {
+extract1 <- function(path = "", fsep = c("/", "\\")) {
     file   <- File(path, fsep)
     tokens <- utils::getParseData(parse(path, keep.source = TRUE), TRUE)
     exprs  <- tokens[tokens$token == "expr", ]

@@ -1,4 +1,4 @@
-File <- function(path = character(1L), fsep = c("/", "\\")) {
+File <- function(path = "", fsep = c("/", "\\")) {
     assertString(path)
     assertChoice(fsep)
 
@@ -44,11 +44,16 @@ isFile <- function(x) {
     return(inherits(x, "File"))
 }
 
-#' @export
-format.File <- function(x, utc = FALSE, format = "%A, %Y-%m-%d, %T (%Z)", ...) {
+formatDateTime <- function(x, utc = FALSE) {
     assertSingleLgl(utc)
-    assertNonEmptyString(format)
+    return(
+        format(x,
+            tz     = if (utc) "UTC" else "",
+            format = "%A, %Y-%m-%d, %T (%Z)"))
+}
 
+#' @export
+format.File <- function(x, utc = FALSE, ...) {
     return(c(
         formatNamedValues(
             Name            = x$name,
@@ -57,9 +62,7 @@ format.File <- function(x, utc = FALSE, format = "%A, %Y-%m-%d, %T (%Z)", ...) {
             Hash            = x$hash,
             Directory       = x$dir,
             Path            = x$path,
-            `Last Modified` = format(x$mtime,
-                tz     = if (utc) "UTC" else "",
-                format = format)),
+            `Last Modified` = formatDateTime(x$mtime, utc)),
         formatNamedValues(
             # Separate fields from useful
             # values computed on the fly.
@@ -128,7 +131,7 @@ getFileRelPath.character <- function(x, fsep = c("/", "\\"), .validate = TRUE, .
     if (.validate) {
         assertNonEmptyString(x)
         assertChoice(fsep)
-        x    <- normalizePath(x, fsep, FALSE)
+        x <- normalizePath(x, fsep, FALSE)
     }
 
     # If x is not within the current working

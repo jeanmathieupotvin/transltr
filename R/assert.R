@@ -9,7 +9,7 @@ assertString <- function(x) {
     return(invisible(x))
 }
 
-assertNonEmptyString <- function(x) {
+assert_non_empty_string <- function(x) {
     if (!isNonEmptyString(x)) {
         halt(
             "'%s' must be a non-NA and non-empty character of length 1.",
