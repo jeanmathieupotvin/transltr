@@ -2,6 +2,10 @@
 #'
 #' This script is automatically executed by R whenever a new session is started.
 #'
+#' @note
+#' Since package testthat uses non-interactive sessions, using interactive()
+#' below allows test runs to run in clean environments.
+#'
 #' @seealso [Startup process](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Startup.html)
 
 
@@ -17,8 +21,6 @@ options(
 # Development tools and utility functions --------------------------------------
 
 
-# Since testthat uses non-interactive sessions, using interactive()
-# below allows test runs to run in clean environments.
 if (interactive()) {
     # Attach development packages.
     suppressMessages(require(covr))
@@ -51,7 +53,7 @@ if (interactive()) {
     # Clear global environment, but keep aliases.
     .rm <- function() {
         objs <- ls(".GlobalEnv", all.names = TRUE)
-        keep    <- c(".mb", ".rm", ".tf")
+        keep <- c(".mb", ".rm", ".tf")
         objs <- objs[-match(keep, objs, 0L)]
 
         return(rm(list = objs, envir = globalenv()))

@@ -7,9 +7,10 @@
 #'   * README.md, and
 #'   * R/transltr-package.R.
 #'
-#' This script is kept mostly for audit purposes. It was previously executed
-#' and all these files already exist. In normal circumstances, they can be
-#' left as is.
+#' @details
+#' This script is kept mostly for audit purposes. It was previously executed,
+#' and all the files it creates already exist. In normal circumstances, they
+#' can be left as is.
 #'
 #' @author Jean-Mathieu Potvin (<jeanmathieupotvin@@ununoctium.dev>)
 #'
