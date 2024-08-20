@@ -1,8 +1,9 @@
 ^\.git$
+^\.gitignore$
 ^\.github$
 ^\.local$
+^\.old$
 ^\.scripts$
-^\.gitignore$
 ^\.Rprofile$
 ^codecov\.yml$
 ^COVERAGE$

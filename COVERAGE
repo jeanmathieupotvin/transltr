@@ -1,8 +1,0 @@
-transltr Coverage: 100.00%
-R/class-translatable-string.R: 100.00%
-R/get-translations-from-expression.R: 100.00%
-R/translate.R: 100.00%
-R/utils-is.R: 100.00%
-R/utils-map.R: 100.00%
-R/utils-stopf.R: 100.00%
-R/utils.R: 100.00%
