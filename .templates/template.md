@@ -6,11 +6,11 @@
     "generated_by": "R package transltr 0.0.1",
     "last_generated": "August 22, 2024 08:00 UTC",
     "hashes": {
-        "algo": "BLAKE2b",
+        "algorithm": "BLAKE2b",
         "size_bytes": 16,
         "hmac_key": null,
         "id_map": {
-            "60ed1cd": "60ed1cd2b78a3448e7fab38d5830e249"
+            "60ed1cd": "60ed1cd2b78a3448e7fab38d5830e249",
             "9bbbb74": "9bbbb7410fa6464a1a6a216919179455"
         }
     }
