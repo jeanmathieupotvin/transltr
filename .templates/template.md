@@ -1,6 +1,9 @@
 ---
 {
+    "project_name": "transltr-template-for-translations",
+    "template_version": 1,
     "source_language": "en",
+    "generated_by": "R package transltr 0.0.1",
     "last_generated": "August 22, 2024 08:00 UTC",
     "hashes": {
         "algo": "BLAKE2b",
