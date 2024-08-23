@@ -1,23 +1,19 @@
 ---
 {
-    "project_name": "transltr-template-for-translations",
     "template_version": 1,
-    "source_language": "en",
     "generated_by": "R package transltr 0.0.1",
     "last_generated": "August 22, 2024 08:00 UTC",
-    "hashes": {
-        "algorithm": "BLAKE2b",
-        "size_bytes": 16,
-        "hmac_key": null,
-        "id_map": {
-            "60ed1cd": "60ed1cd2b78a3448e7fab38d5830e249",
-            "9bbbb74": "9bbbb7410fa6464a1a6a216919179455"
-        }
-    }
+    "source_language": "en",
+    "hash_algorithm": "blake2b",
+    "hash_length": 32,
+    "hashes": [
+        "60ed1cd2b78a3448e7fab38d5830e249",
+        "9bbbb7410fa6464a1a6a216919179455"
+    ]
 }
 ---
 
-# {{60ed1cd}}
+# {{ 60ed1cd2 }}
 
 ## en
 
@@ -58,7 +54,7 @@ la biblioteca de una sola habitación.
 とにかく行きました。黒いオープンカーに乗っている間、彼女の髪は風にさらされていました。
 で 真実を知りたくて、彼はワンルームの図書館に入った
 
-# {{9bbbb74}}
+# {{ 9bbbb741 }}
 
 ## en
 
