@@ -3,7 +3,13 @@
     "template_version": 1,
     "generated_by": "R package transltr 0.0.1",
     "last_generated": "August 22, 2024 08:00 UTC",
-    "source_language": "en",
+    "language_source": "en",
+    "language_keys": {
+        "en": "English",
+        "fr": "Français",
+        "es": "Español",
+        "jp": "日本語"
+    },
     "hash_algorithm": "blake2b",
     "hash_length": 32,
     "hashes": [
