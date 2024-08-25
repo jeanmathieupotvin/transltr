@@ -31,7 +31,7 @@ extract_translations_header <- function(x = character()) {
         h_length <- 0L
     } else if (na_count == 1L) {
         # A single missing separator is a formatting error.
-        stopf("header is invalid. It misses a separator ('---').")
+        stops("header is invalid because it misses a separator ('---').")
     } else {
         # Else, we extract whatever is between both separators.
         h_range  <- seq.int(sep_pos[[1L]], sep_pos[[2L]], 1L)
@@ -40,11 +40,9 @@ extract_translations_header <- function(x = character()) {
 
     # A non-empty header must span at
     # least 3 lines. Else, it is empty.
-    h_raw <- if (h_length > 2L) x[h_range[-c(1L, h_length)]] else "{}"
-
     return(
         list(
-            raw    = h_raw,
+            raw    = if (h_length > 2L) x[h_range[-c(1L, h_length)]] else "{}",
             range  = h_range,
             length = h_length))
 }
