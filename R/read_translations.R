@@ -1,13 +1,11 @@
-file_path <- ".templates/v1-example.md"
-
 read_translations_file <- function(file_path = "") {
     file_path  <- ".templates/v1-example.md"
     src_lines  <- readLines(file_path, encoding = "UTF-8")
     src_head   <- extract_src_translations_header(src_lines)
+    src_blocks <- extract_src_translations_blocks(src_lines)
+
     header <- parse_src_translations_header(src_head$src)
 
-    x <- src_lines[-src_head$range]
-    src_trans <- extract_translations(src_lines[-src_head$range])
     return(invisible())
 }
 
@@ -62,10 +60,13 @@ new_translations_header <- function(...) {
 # Translations -----------------------------------------------------------------
 
 
-extract_translations <- function(x = character()) {
-    # The regular expression below matches
-    # Markdown H1 titles with this format:
-    # '# <line start><spaces>{{ <alphanumeric characters> }}<spaces><line end>'.
+extract_src_translations_blocks <- function(x = character()) {
+    # Each block starts with a Markdown H1
+    # title having this standard format:
+    # '# <line start>{{<alphanumeric characters>}}<line end>'.
+    # Space(s) may be added before and/or after '{{' and '}}'.
+
+    # Blocks are identified with the following regular expression.
     # ^            : matches start of line
     # \\#          : matches character # literally
     # [ ]+         : matches one or more space characters
@@ -76,10 +77,18 @@ extract_translations <- function(x = character()) {
     # $            : matches end of line
     b_start <- grep("^\\#[ ]+\\{\\{[ ]*[a-zA-Z0-9]+[ ]*\\}\\}[ ]*$", x)
 
+    # Each block starts at an index within b_start
+    # and ends just before the next one. The last
+    # block ends at the end of the vector/file.
+    b_end   <- tail(c(b_start - 1L, length(x)), length(b_start))
+    b_range <- .mapply(seq.int, list(b_start, b_end), list())
 
-    b_start
+    return(lapply(b_range, \(i) {
+        list(
+            src    = x[i],
+            range  = i,
+            length = length(i))
+    }))
 }
 
-split_translations_blocks <- function(x = character()) {
-
-}
+parse_src_translations_blocks <- function(...) {}
