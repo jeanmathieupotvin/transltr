@@ -1,9 +1,10 @@
 file_path <- ".templates/v1-example.md"
 
 read_translations_file <- function(file_path = "") {
-    src_lines <- readLines(file_path, encoding = "UTF-8")
-    src_head  <- extract_translations_header(src_lines)
-    header    <- parse_translations_header(src_head$raw)
+    file_path  <- ".templates/v1-example.md"
+    src_lines  <- readLines(file_path, encoding = "UTF-8")
+    src_head   <- extract_src_translations_header(src_lines)
+    header <- parse_src_translations_header(src_head$src)
 
     x <- src_lines[-src_head$range]
     src_trans <- extract_translations(src_lines[-src_head$range])
@@ -14,7 +15,7 @@ read_translations_file <- function(file_path = "") {
 # Header -----------------------------------------------------------------------
 
 
-extract_translations_header <- function(x = character()) {
+extract_src_translations_header <- function(x = character()) {
     # Header starts and ends with 3 dashes that
     # must be on separate lines. Whatever is in
     # between is the actual contents to parse.
@@ -42,12 +43,12 @@ extract_translations_header <- function(x = character()) {
     # least 3 lines. Else, it is empty.
     return(
         list(
-            raw    = if (h_length > 2L) x[h_range[-c(1L, h_length)]] else "{}",
+            src    = if (h_length > 2L) x[h_range[-c(1L, h_length)]] else "{}",
             range  = h_range,
             length = h_length))
 }
 
-parse_translations_header <- function(x = character()) {
+parse_src_translations_header <- function(x = character()) {
     return(
         new_translations_header(
             jsonlite::parse_json(x, simplifyVector = TRUE)))
