@@ -80,19 +80,27 @@ extract_src_translations_blocks <- function(x = character()) {
     return(lapply(indices, \(i) x[i]))
 }
 
+extract_src_translations <- function(x = character()) {
+    # Each translation starts with a Markdown H2
+    # title having this standard format:
+    # '## <any language key>'.
+    # The language key enclosed by double brackets
+    # is always ignored because it is provided for
+    # convenience only. The actual text in source
+    # scripts is used instead.
+
+    # Translations are identified with the following regular expression.
+    # ^            : matches start of line
+    # \\#          : matches character # literally
+    # [ ]*         : matches one or more space characters
+    # .+           : matches any character (one or more)
+    start <- grep("^\\#\\#[ ]*.+", x)
 
     # Each block starts at an index within b_start
     # and ends just before the next one. The last
     # block ends at the end of the vector/file.
-    b_end   <- tail(c(b_start - 1L, length(x)), length(b_start))
-    b_range <- .mapply(seq.int, list(b_start, b_end), list())
+    end     <- tail(c(start - 1L, length(x)), length(start))
+    indices <- .mapply(seq.int, list(start, end), list())
 
-    return(lapply(b_range, \(i) {
-        list(
-            src    = x[i],
-            range  = i,
-            length = length(i))
-    }))
+    return(lapply(indices, \(i)  x[i]))
 }
-
-parse_src_translations_blocks <- function(...) {}
