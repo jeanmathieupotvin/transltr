@@ -36,7 +36,7 @@ extract_src_translations_header <- function(x = character()) {
     # Else, it is empty. "{}" is returned if header
     # is empty because jsonlite::parse_json() throws
     # an error when parsing an empty string.
-    n_indices <- length(n_indices)
+    n_indices <- length(indices)
     return(if (n_indices > 2L) x[indices[-c(1L, n_indices)]] else "{}")
 }
 
