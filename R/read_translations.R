@@ -22,28 +22,22 @@ extract_src_translations_header <- function(x = character()) {
     # Whatever comes after is ignored.
     sep_pos  <- grep("^---$", x)[c(1L, 2L)]
     na_count <- sum(is.na(sep_pos))
+    indices  <- switch(na_count + 1L,
+        # Case 1: na_count = 0: there is a header.
+        seq.int(sep_pos[[1L]], sep_pos[[2L]]),
+        # Case 2: na_count = 1: missing separator is treated as a formatting error.
+        stops(
+            "header's format is invalid. It misses a separator ('---'). ",
+            "Each separator must be on its own line to be detected."),
+        # Case 3: na_count = 2: there is no header at all.
+        stops("a header is always required. Regenerate the underlying file."))
 
-    if (na_count == 2L) {
-        # If both separators are missing, then
-        # we consider there is no header at all.
-        h_range  <- 0L
-        h_length <- 0L
-    } else if (na_count == 1L) {
-        # A single missing separator is a formatting error.
-        stops("header is invalid because it misses a separator ('---').")
-    } else {
-        # Else, we extract whatever is between both separators.
-        h_range  <- seq.int(sep_pos[[1L]], sep_pos[[2L]], 1L)
-        h_length <- length(h_range)
-    }
-
-    # A non-empty header must span at
-    # least 3 lines. Else, it is empty.
-    return(
-        list(
-            src    = if (h_length > 2L) x[h_range[-c(1L, h_length)]] else "{}",
-            range  = h_range,
-            length = h_length))
+    # A non-empty header must span at least 3 lines.
+    # Else, it is empty. "{}" is returned if header
+    # is empty because jsonlite::parse_json() throws
+    # an error when parsing an empty string.
+    n_indices <- length(n_indices)
+    return(if (n_indices > 2L) x[indices[-c(1L, n_indices)]] else "{}")
 }
 
 parse_src_translations_header <- function(x = character()) {
