@@ -66,10 +66,20 @@ extract_src_translations_blocks <- function(x = character()) {
     # [ ]+         : matches one or more space characters
     # \\{          : matches character { literally
     # [ ]*         : matches zero or more space characters
-    # [a-zA-Z0-9]+ : matches any alphanumeric (English) character (one or more)
+    # [a-zA-Z0-9]+ : matches any hexadecimal character (one or more)
     # \\}          : matches character } literally
     # $            : matches end of line
-    b_start <- grep("^\\#[ ]+\\{\\{[ ]*[a-zA-Z0-9]+[ ]*\\}\\}[ ]*$", x)
+    start <- grep("^\\#[ ]+\\{\\{[ ]*[a-fA-F0-9]+[ ]*\\}\\}[ ]*$", x)
+
+    # Each block starts at an index within b_start
+    # and ends just before the next one. The last
+    # block ends at the end of the vector/file.
+    end     <- tail(c(start - 1L, length(x)), length(start))
+    indices <- .mapply(seq.int, list(start, end), list())
+
+    return(lapply(indices, \(i) x[i]))
+}
+
 
     # Each block starts at an index within b_start
     # and ends just before the next one. The last
