@@ -1,21 +1,20 @@
 ---
 {
-    "template_version": 1,
-    "generated_by": "R package transltr 0.0.1",
-    "last_generated": "August 22, 2024 08:00 UTC",
-    "language_source": "en",
+    "_template_version": 1,
+    "_generated_by": "R package transltr 0.0.1",
+    "_generated_on": "August 22, 2024 08:00 UTC",
+    "_hash_algorithm": "blake2b",
+    "_hash_length": 32,
+    "_hashes": [
+        "60ed1cd2b78a3448e7fab38d5830e249",
+        "9bbbb7410fa6464a1a6a216919179455"
+    ],
     "language_keys": {
         "en": "English",
         "fr": "Français",
         "es": "Español",
         "jp": "日本語"
-    },
-    "hash_algorithm": "blake2b",
-    "hash_length": 32,
-    "hashes": [
-        "60ed1cd2b78a3448e7fab38d5830e249",
-        "9bbbb7410fa6464a1a6a216919179455"
-    ]
+    }
 }
 ---
 
