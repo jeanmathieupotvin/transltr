@@ -72,13 +72,16 @@ hopes of finding out the truth, he entered the one-room library.
 ## fr
 
 Lors du repiquage des plants, des théières confites faciliteront la tâche. Le
-Le Dogue Allemand ressemblait plus à un cheval qu'à un chien. Je veux acheter
-une combinaison mais je sais que ça ne me conviendra pas. Les devoirs scolaires
-compliqués ont obligé les parents à essayer pour aider leurs enfants assez
-confus. Il ne voulait pas aller chez le dentiste, et pourtant il y est allé
-quand même. Ses cheveux étaient balayés par le vent alors qu'elle roulait dans
-la décapotable noire. Dans Dans l'espoir de découvrir la vérité, il entra dans
-la bibliothèque d'une seule pièce.
+Le Dogue Allemand ressemblait plus à un cheval qu'à un chien.
+
+Je veux acheter une combinaison mais je sais que ça ne me conviendra pas. Les
+devoirs scolaires compliqués ont obligé les parents à essayer pour aider leurs
+enfants assez confus. Il ne voulait pas aller chez le dentiste, et pourtant il
+y est allé quand même.
+
+Ses cheveux étaient balayés par le vent alors qu'elle
+roulait dans la décapotable noire. Dans Dans l'espoir de découvrir la vérité,
+il entra dans la bibliothèque d'une seule pièce.
 
 ## es
 
