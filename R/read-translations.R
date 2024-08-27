@@ -4,7 +4,8 @@ read_translations_file <- function(file_path = "") {
     src_head   <- extract_src_translations_header(src_lines)
     src_blocks <- extract_src_translations_blocks(src_lines)
 
-    header <- parse_src_translations_header(src_head$src)
+    header <- parse_src_translations_header(src_head)
+    blocks <- lapply(src_blocks, parse_src_translations_block)
 
     return(invisible())
 }
@@ -25,7 +26,7 @@ extract_src_translations_header <- function(x = character()) {
     indices  <- switch(na_count + 1L,
         # Case 1: na_count = 0: there is a header.
         seq.int(sep_pos[[1L]], sep_pos[[2L]]),
-        # Case 2: na_count = 1: missing separator is treated as a formatting error.
+        # Case 2: na_count = 1: missing separator is treated as a format error.
         stops(
             "header's format is invalid. It misses a separator ('---'). ",
             "Each separator must be on its own line to be detected."),
@@ -41,13 +42,13 @@ extract_src_translations_header <- function(x = character()) {
 }
 
 parse_src_translations_header <- function(x = character()) {
-    return(
-        new_translations_header(
-            jsonlite::parse_json(x, simplifyVector = TRUE)))
-}
+    fields <- jsonlite::parse_json(x, simplifyVector = TRUE)
 
-new_translations_header <- function(...) {
-    return(structure(list(...), class = c("TranslationsHeader", "list")))
+    # JSON objects are parsed as named lists by
+    # default. In the case of language_keys, it
+    # is better to work with a named character.
+    fields$language_keys <- unlist(fields$language_keys)
+    return(do.call(translations_header, fields))
 }
 
 
@@ -103,4 +104,13 @@ extract_src_translations <- function(x = character()) {
     indices <- .mapply(seq.int, list(start, end), list())
 
     return(lapply(indices, \(i)  x[i]))
+}
+
+parse_src_translations_block <- function(x = character()) {
+    id <- parse_src_translation_block_id(x[[1L]])
+}
+
+parse_src_translation_block_id <- function(x = character(1L)) {
+    start <- regexpr("[a-fA-F0-9]+", x)
+    return(substr(x, start, start + attr(start, "match.length") - 1L))
 }
