@@ -1,5 +1,7 @@
 ---
 {
+    "project": "transltr",
+    "description": "An example of a translation Markdown file (version 1)",
     "_template_version": 1,
     "_generated_by": "R package transltr 0.0.1",
     "_generated_on": "August 22, 2024 08:00 UTC",
@@ -52,6 +54,7 @@ the same source.
   under the same language(s).
 * Internal information is enclosed by `{{` and `}}`.
   **Never attempt to modify whatever they contain.**
+* Spaces before and after titles (`#` and `##`) are discarded.
 
 Spaces are treated according to what Markdown prescribes.
 
