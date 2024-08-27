@@ -1,16 +1,16 @@
 ---
 {
-    "project": "transltr",
-    "description": "An example of a translation Markdown file (version 1)",
-    "_template_version": 1,
-    "_generated_by": "R package transltr 0.0.1",
-    "_generated_on": "August 22, 2024 08:00 UTC",
-    "_hash_algorithm": "blake2b",
-    "_hash_length": 32,
-    "_hashes": [
+    ".template_version": 1,
+    ".generated_by": "R package transltr 0.0.1",
+    ".generated_on": "August 22, 2024 08:00 UTC",
+    ".hash_algorithm": "blake2b",
+    ".hash_length": 32,
+    ".hashes": [
         "60ed1cd2b78a3448e7fab38d5830e249",
         "9bbbb7410fa6464a1a6a216919179455"
     ],
+    "project": "transltr",
+    "description": "An example of a translation Markdown file (version 1)",
     "language_keys": {
         "en": "English",
         "fr": "Français",
@@ -32,10 +32,10 @@ The file is divided into a header and a set of blocks.
 
 ## Header
 
-This file has a JSON header enclosed by a pair of `---`.
+This file has a JSON header enclosed by a pair of three dashes (`---`).
 
 * The header is mandatory.
-* Fields whose names begin with `_` are managed internally.
+* Fields whose names begin with a dot are managed internally.
 * You may add further custom fields to the header.
 * Field `language_keys` is initially created by `transltr`, but developers
   may add further keys to it.
