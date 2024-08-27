@@ -1,52 +1,77 @@
-assert_chr <- function(x, accept_empty = FALSE) {
+assert_chr <- function(
+    x            = character(),
+    accept_empty = FALSE,
+    throw_error  = TRUE)
+{
     if (!is_chr(x, accept_empty)) {
-        stopf(
+        err_msg <- sprintf(
             "'%s' must be a character vector of non-NA values.",
             deparse(substitute(x)))
+
+        if (throw_error) stops(err_msg)
+        return(err_msg)
     }
 
-    return(invisible(x))
+    return("")
 }
 
-assert_int1 <- function(x) {
+assert_int1 <- function(x = 0L, throw_error = TRUE) {
     if (!is_int1(x)) {
-        stopf(
+        err_msg <- sprintf(
             "'%s' must be a non-NA integer of length 1.",
             deparse(substitute(x)))
+
+        if (throw_error) stops(err_msg)
+        return(err_msg)
     }
 
-    return(invisible(x))
+    return("")
 }
 
-assert_chr1 <- function(x, accept_empty_string = FALSE) {
+assert_chr1 <- function(
+    x                   = "",
+    accept_empty_string = FALSE,
+    throw_error         = TRUE)
+{
     if (!is_chr1(x, accept_empty_string)) {
-        stopf(
+        err_msg <- sprintf(
             "'%s' must be a non-NA character of length 1.%s",
             deparse(substitute(x)),
-            if (accept_empty_string) " It can be empty." else "")
+            if (accept_empty_string) " It can be empty an empty string." else "")
+
+        if (throw_error) stops(err_msg)
+        return(err_msg)
     }
 
-    return(invisible(x))
+    return("")
 }
 
-assert_names <- function(x, accept_empty_names = FALSE, accept_na_names = FALSE) {
+assert_names <- function(
+    x,
+    accept_empty_names = FALSE,
+    accept_na_names    = FALSE,
+    throw_error        = TRUE)
+{
     if (!is_named(x, accept_empty_names, accept_na_names)) {
-        stopf(
+        err_msg <- sprintf(
             "'%s' must have valid names. They cannot be NULL.%s%s",
             deparse(substitute(x)),
-            if (accept_empty_names) " They can be empty."       else "",
-            if (accept_na_names)    " They can be NA values." else "")
+            if (accept_empty_names) " They can be empty strings." else "",
+            if (accept_na_names)    " They can be NA values."     else "")
+
+        if (throw_error) stops(err_msg)
+        return(err_msg)
     }
 
-    return(invisible(x))
+    return("")
 }
 
 # This is a refactoring of base::match.arg().
-assert_choice <- function(x, quote_values = FALSE) {
+assert_choice <- function(x, quote_values = FALSE, throw_error = TRUE) {
     i_stack   <- sys.parent()
     parent    <- sys.frame(i_stack)
     a_formals <- formals(sys.function(i_stack))
-    a_name    <- as.character(substitute(x))
+    a_name    <- deparse(substitute(x))
     a_values  <- eval(a_formals[[a_name]], parent)
 
     # If arg is identical to a_values, this implies
@@ -54,18 +79,20 @@ assert_choice <- function(x, quote_values = FALSE) {
     # requesting the default one.
     a_value <- if (identical(x, a_values)) {
         a_values[[1L]]
-    } else {
-        if (is.na(i_match <- pmatch(x, a_values))) {
-            stopf(
-                "'%s' must be equal to %s.",
-                a_name,
-                to_string(a_values, quote_values))
-        }
+    } else if (is.na(i_match <- pmatch(x, a_values))) {
+        err_msg <- sprintf(
+            "'%s' must be equal to %s.",
+            a_name,
+            to_string(a_values, quote_values))
 
+        if (throw_error) stops(err_msg)
+        return(err_msg)
+    } else {
         a_values[[i_match]]
     }
 
-    return(assign(a_name, a_value, parent))
+    assign(a_name, a_value, parent)
+    return("")
 }
 
 
