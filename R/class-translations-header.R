@@ -37,28 +37,6 @@ translations_header <- function(
     }
 
     return(
-        new_translations_header(
-            .template_version,
-            .generated_by,
-            .generated_on,
-            .hash_algorithm,
-            .hash_length,
-            .hashes,
-            language_keys,
-            ...))
-}
-
-new_translations_header <- function(
-    .template_version,
-    .generated_by,
-    .generated_on,
-    .hash_algorithm,
-    .hash_length,
-    .hashes,
-    language_keys,
-    ...)
-{
-    return(
         structure(
             list(
                 .template_version = .template_version,
@@ -70,4 +48,8 @@ new_translations_header <- function(
                 language_keys     = language_keys,
                 ...),
             class = c("TranslationsHeader", "list")))
+}
+
+is_translation_header <- function(x) {
+    return(inherits(x, "TranslationsHeader"))
 }
