@@ -9,16 +9,12 @@ read_translations <- function(file_path = "") {
 }
 
 
-# Header -----------------------------------------------------------------------
+# Internal extraction and parsing mechanisms -----------------------------------
 
 
 extract_src_translations_header <- function(x = character()) {
-    # Header starts and ends with 3 dashes that
-    # must be on separate lines. Whatever is in
-    # between is the actual contents to parse.
-
-    # We only process the first pair of separators.
-    # Whatever comes after is ignored.
+    # We process the first pair of
+    # separators and ignore the rest.
     sep_pos  <- grep("^---$", x)[c(1L, 2L)]
     na_count <- sum(is.na(sep_pos))
     indices  <- switch(na_count + 1L,
@@ -32,9 +28,9 @@ extract_src_translations_header <- function(x = character()) {
         stops("a header is always required. Regenerate the underlying file."))
 
     # A non-empty header must span at least 3 lines.
-    # Else, it is empty. "{}" is returned if header
-    # is empty because jsonlite::parse_json() throws
-    # an error when parsing an empty string.
+    # Else, it is empty and {} is returned. This is
+    # because jsonlite::parse_json() throws an error
+    # when parsing an empty string.
     n_indices <- length(indices)
     return(if (n_indices > 2L) x[indices[-c(1L, n_indices)]] else "{}")
 }
@@ -49,17 +45,9 @@ parse_src_translations_header <- function(x = character()) {
     return(do.call(translations_header, fields))
 }
 
-
-# Translations -----------------------------------------------------------------
-
-
 extract_src_translations_blocks <- function(x = character()) {
-    # Each block starts with a Markdown H1
-    # title having this standard format:
-    # '# <line start>{{<alphanumeric characters>}}<line end>'.
-    # Space(s) may be added before and/or after '{{' and '}}'.
-
     # Blocks are identified with the following regular expression.
+    # It identifies a Markdown H1 title enclosed in {{ }}.
     # ^            : matches start of line
     # \\#          : matches character # literally
     # [ ]+         : matches one or more space characters
@@ -79,36 +67,6 @@ extract_src_translations_blocks <- function(x = character()) {
     return(lapply(indices, \(i) x[i]))
 }
 
-extract_src_translations <- function(x = character()) {
-    # Each translation starts with a Markdown H2
-    # title having this standard format:
-    # '## <any language key>'.
-    # The language key enclosed by double brackets
-    # is always ignored because it is provided for
-    # convenience only. The actual text in source
-    # scripts is used instead.
-
-    # Translations are identified with the following regular expression.
-    # ^    : matches start of line
-    # \\#  : matches character # literally
-    # [ ]* : matches one or more space characters
-    # .+   : matches any character (one or more)
-    start <- grep("^\\#\\#[ \t]*.+$", x)
-
-    # Each block starts at an index within b_start
-    # and ends just before the next one. The last
-    # block ends at the end of the vector/file.
-    end     <- tail(c(start - 1L, length(x)), length(start))
-    indices <- .mapply(seq.int, list(start, end), list())
-
-    return(lapply(indices, \(i)  x[i]))
-}
-
-parse_src_translations_blocks <- function(src_blocks = list()) {
-    blocks <- lapply(src_blocks, parse_src_translations_block)
-    return(new_translation_env(blocks))
-}
-
 parse_src_translations_block <- function(x = character()) {
     id        <- parse_src_translation_block_id(x[[1L]])
     src_trans <- extract_src_translations(x)
@@ -125,16 +83,22 @@ parse_src_translation_block_id <- function(x = character(1L)) {
     return(substr(x, start, start + attr(start, "match.length") - 1L))
 }
 
-parse_src_lang <- function(x = character(1L)) {
-    # Brackets are disallowed. They are reserved for
-    # the source language's key which is always ignored.
-    if (grepl("[{}]+", x)) {
-        return(NULL)
-    }
+extract_src_translations <- function(x = character()) {
+    # Translations are identified with the following regular expression.
+    # It identifies a Markdown H2 title possibly enclosed in {{ }}.
+    # ^    : matches start of line
+    # \\#  : matches character # literally
+    # [ ]* : matches one or more space characters
+    # .+   : matches any character (one or more)
+    start <- grep("^\\#\\#[ \t]*.+$", x)
 
-    # Remove all spaces and Markdown H2 tokens (##).
-    # What remains is the user's language key.
-    return(gsub("[ \t#]*", "", x))
+    # Each block starts at an index within b_start
+    # and ends just before the next one. The last
+    # block ends at the end of the vector/file.
+    end     <- tail(c(start - 1L, length(x)), length(start))
+    indices <- .mapply(seq.int, list(start, end), list())
+
+    return(lapply(indices, \(i)  x[i]))
 }
 
 parse_src_translation <- function(x = character()) {
@@ -156,5 +120,14 @@ parse_src_translation <- function(x = character()) {
     return(new_translation(lang, paste0(x, collapse = "\n")))
 }
 
+parse_src_lang <- function(x = character(1L)) {
+    # Brackets are disallowed. They are reserved for
+    # the source language's key which is always ignored.
+    if (grepl("[{}]+", x)) {
+        return(NULL)
+    }
+
+    # Remove all spaces and Markdown H2 title token
+    # (##). What remains is the user's language key.
     return(gsub("[ \t#]*", "", x))
 }
