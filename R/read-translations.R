@@ -156,28 +156,5 @@ parse_src_translation <- function(x = character()) {
     return(new_translation(lang, paste0(x, collapse = "\n")))
 }
 
-new_translation <- function(lang = "", text = "") {
-    return(
-        structure(
-            list(lang = lang, text = text),
-            class = c("Translation", "list")))
-}
-
-new_translation_block <- function(id = "", translations = list()) {
-    names(translations) <- vapply_1c(translations, `[[`, i = "lang")
-    return(
-        structure(
-            list(id = id, translations = translations),
-            class = c("TranslationsBlock", "list")))
-}
-
-new_translation_env <- function(
-    header = translations_header(),
-    blocks = list())
-{
-    names(blocks) <- vapply_1c(blocks, `[[`, i = "id")
-    env <- list2env(blocks)
-
-    assign()
-    return(structure(env, class = c("TranslationsEnvironment", "list")))
+    return(gsub("[ \t#]*", "", x))
 }
