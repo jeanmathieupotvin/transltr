@@ -1,13 +1,11 @@
 read_translations_file <- function(file_path = "") {
-    file_path  <- ".templates/v1-example.md"
     src_lines  <- readLines(file_path, encoding = "UTF-8")
     src_head   <- extract_src_translations_header(src_lines)
     src_blocks <- extract_src_translations_blocks(src_lines)
 
     header <- parse_src_translations_header(src_head)
-    blocks <- lapply(src_blocks, parse_src_translations_block)
-
-    return(invisible())
+    blocks <- parse_src_translations_blocks(src_blocks)
+    return(TranslationsEnv(header = header, env = env))
 }
 
 
@@ -70,7 +68,7 @@ extract_src_translations_blocks <- function(x = character()) {
     # [a-zA-Z0-9]+ : matches any hexadecimal character (one or more)
     # \\}          : matches character } literally
     # $            : matches end of line
-    start <- grep("^\\#[ ]+\\{\\{[ ]*[a-fA-F0-9]+[ ]*\\}\\}[ ]*$", x)
+    start <- grep("^\\#[ \t]+\\{\\{[ \t]*[a-fA-F0-9]+[ \t]*\\}\\}[ \t]*$", x)
 
     # Each block starts at an index within b_start
     # and ends just before the next one. The last
@@ -91,11 +89,11 @@ extract_src_translations <- function(x = character()) {
     # scripts is used instead.
 
     # Translations are identified with the following regular expression.
-    # ^            : matches start of line
-    # \\#          : matches character # literally
-    # [ ]*         : matches one or more space characters
-    # .+           : matches any character (one or more)
-    start <- grep("^\\#\\#[ ]*.+", x)
+    # ^    : matches start of line
+    # \\#  : matches character # literally
+    # [ ]* : matches one or more space characters
+    # .+   : matches any character (one or more)
+    start <- grep("^\\#\\#[ \t]*.+$", x)
 
     # Each block starts at an index within b_start
     # and ends just before the next one. The last
@@ -106,11 +104,80 @@ extract_src_translations <- function(x = character()) {
     return(lapply(indices, \(i)  x[i]))
 }
 
+parse_src_translations_blocks <- function(src_blocks = list()) {
+    blocks <- lapply(src_blocks, parse_src_translations_block)
+    return(new_translation_env(blocks))
+}
+
 parse_src_translations_block <- function(x = character()) {
-    id <- parse_src_translation_block_id(x[[1L]])
+    id        <- parse_src_translation_block_id(x[[1L]])
+    src_trans <- extract_src_translations(x)
+
+    # Drop NULL block (source language's block).
+    trans <- lapply(src_trans, parse_src_translation)
+    trans <- trans[!vapply_1l(trans, is.null)]
+
+    return(new_translation_block(id, trans))
 }
 
 parse_src_translation_block_id <- function(x = character(1L)) {
     start <- regexpr("[a-fA-F0-9]+", x)
     return(substr(x, start, start + attr(start, "match.length") - 1L))
+}
+
+parse_src_lang <- function(x = character(1L)) {
+    # Brackets are disallowed. They are reserved for
+    # the source language's key which is always ignored.
+    if (grepl("[{}]+", x)) {
+        return(NULL)
+    }
+
+    # Remove all spaces and Markdown H2 tokens (##).
+    # What remains is the user's language key.
+    return(gsub("[ \t#]*", "", x))
+}
+
+parse_src_translation <- function(x = character()) {
+    # Source translation is always ignored and
+    # discarded, because the underlying source
+    # text (as written in the code) is used at
+    # runtime for efficiency.
+    if (is.null(lang <- parse_src_lang(x[[1L]]))) {
+        return(NULL)
+    }
+
+    # Remove lang from x and all superfluous spaces
+    # before and after contents (any non-empty lines).
+    # Spaces intertwined within contents are kept.
+    x     <- x[-1L]
+    is_nz <- which(nzchar(x))
+    x     <- x[seq.int(min(is_nz), max(is_nz))]
+
+    return(new_translation(lang, paste0(x, collapse = "\n")))
+}
+
+new_translation <- function(lang = "", text = "") {
+    return(
+        structure(
+            list(lang = lang, text = text),
+            class = c("Translation", "list")))
+}
+
+new_translation_block <- function(id = "", translations = list()) {
+    names(translations) <- vapply_1c(translations, `[[`, i = "lang")
+    return(
+        structure(
+            list(id = id, translations = translations),
+            class = c("TranslationsBlock", "list")))
+}
+
+new_translation_env <- function(
+    header = translations_header(),
+    blocks = list())
+{
+    names(blocks) <- vapply_1c(blocks, `[[`, i = "id")
+    env <- list2env(blocks)
+
+    assign()
+    return(structure(env, class = c("TranslationsEnvironment", "list")))
 }
