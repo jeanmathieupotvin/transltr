@@ -3,7 +3,7 @@ to_string <- function(x, ...) {
 }
 
 to_string.default <- function(x, quote_values = FALSE, ...) {
-    x <- as.character(x)
+    x <- as.character(x, ...)
 
     if (quote_values) {
         x <- sprintf("'%s'", x)
