@@ -1,4 +1,4 @@
-read_translations_file <- function(file_path = "") {
+read_translations <- function(file_path = "") {
     src_lines  <- readLines(file_path, encoding = "UTF-8")
     src_head   <- extract_src_translations_header(src_lines)
     src_blocks <- extract_src_translations_blocks(src_lines)
