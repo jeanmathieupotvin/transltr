@@ -38,3 +38,4 @@ usethis::use_description(
             translated messages, and seamlessly use them."))
 
 usethis::use_testthat()
+usethis::use_package("R6")
