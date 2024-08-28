@@ -1,11 +1,24 @@
-read_translations <- function(file_path = "") {
-    src_lines  <- readLines(file_path, encoding = "UTF-8")
+read_translations <- function(file_path = "", encoding = "UTF-8") {
+    assert_chr1(file_path)
+    assert_chr1(encoding)
+
+    if (!utils::file_test("-f", file_path) ||
+        !utils::file_test("-r", file_path)) {
+        stops(
+            "'file_path' either does not exist, ",
+            "is a directory, or is not readable.")
+    }
+
+    file_con <- file(file_path, "r", encoding = encoding)
+    on.exit(close(file_con, "r"))
+
+    src_lines  <- readLines(file_con,  encoding = encoding)
     src_head   <- extract_src_translations_header(src_lines)
     src_blocks <- extract_src_translations_blocks(src_lines)
 
     header <- parse_src_translations_header(src_head)
-    blocks <- parse_src_translations_blocks(src_blocks)
-    return(TranslationsEnv(header = header, env = env))
+    blocks <- lapply(src_blocks, parse_src_translations_block)
+    return(translations_env(header, blocks))
 }
 
 
