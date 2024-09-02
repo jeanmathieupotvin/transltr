@@ -204,12 +204,14 @@ assert_match <- function(
     return(err_msg)
 }
 
-# This is a refactoring of base::match.arg().
 assert_arg <- function(
     x,
     quote_values = FALSE,
     throw_error  = TRUE)
 {
+    # What follows is a (partial) refactoring of base::match.arg().
+    # Many thanks to the original authors.
+    err_msg   <- ""
     i_stack   <- sys.parent()
     parent    <- sys.frame(i_stack)
     x_formals <- formals(sys.function(i_stack))
@@ -218,21 +220,20 @@ assert_arg <- function(
 
     # If arg's value (which is x) is identical to x_choices,
     # this means that the user did not choose a value and is
-    # requesting the default one.
-    x_value <- if (identical(x, x_choices)) {
-        x_choices[[1L]]
-    } else if (is.na(i_match <- pmatch(x, x_choices))) {
-        err_msg <- sprintf(
-            "'%s' must be equal to %s.",
-            x_name,
-            to_string(x_choices, quote_values))
-
-        if (throw_error) stops(err_msg)
-        return(err_msg)
-    } else {
-        x_choices[[i_match]]
+    # requesting the default one. Just like base::match.arg()
+    # the first value extracted from the formal argument is
+    # returned.
+    if (identical(x, x_choices)) {
+        assign(x_name, x_choices[[1L]], parent)
+        return("")
     }
 
-    assign(x_name, x_value, parent)
-    return("")
+    return(
+        assert_match(
+            x,
+            choices       = x_choices,
+            allow_partial = TRUE,
+            quote_values  = quote_values,
+            throw_error   = throw_error,
+            x_name        = x_name))
 }
