@@ -59,7 +59,7 @@ from_src_header_version_1 <- function(
     assert_chr1(generated_on)
     assert_arg(hash_algorithm, TRUE)
     assert_int1(hash_length)
-    assert_in_range(
+    assert_between(
         hash_length,
         hash_length_range[["min"]],
         hash_length_range[["max"]])
