@@ -3,7 +3,7 @@ to_string <- function(x, ...) {
 }
 
 #' @export
-to_string.default <- function(x, quote_values = FALSE, last_sep = ", or ", ...) {
+to_string.default <- function(x, quote_values = FALSE, last_sep = " or ", ...) {
     x <- as.character(x, ...)
 
     if (quote_values) {
@@ -15,7 +15,7 @@ to_string.default <- function(x, quote_values = FALSE, last_sep = ", or ", ...) 
 
     return(
         paste0(
-            paste0(head(x, -1L), collapse = ", "),
+            paste0(utils::head(x, -1L), collapse = ", "),
             last_sep,
-            tail(x, 1L)))
+            utils::tail(x, 1L)))
 }
