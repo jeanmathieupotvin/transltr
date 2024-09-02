@@ -18,7 +18,7 @@ is_list <- function(x, allow_empty = FALSE) {
     return(is.list(x) && (length(x) || allow_empty))
 }
 
-is_in_range <- function(x, min = -Inf, max = Inf) {
+is_between <- function(x, min = -Inf, max = Inf) {
     return(is.numeric(x) && length(x) == 1L && !is.na(x) && x >= min && x <= max)
 }
 
@@ -125,8 +125,7 @@ assert_list <- function(
     return(err_msg)
 }
 
-# FIXME: design a better way to generate a clean err_msg from min and max.
-assert_in_range <- function(
+assert_between <- function(
     x,
     min         = -Inf,
     max         = Inf,
@@ -135,17 +134,25 @@ assert_in_range <- function(
 {
     err_msg <- ""
 
-    if (!is_in_range(x, min, max)) {
-        browser()
+    if (!is_between(x, min, max)) {
+        is_inf <- is.infinite(c(min, max))
 
-        range_str <- sprintf("")
-        is.infinite(min) # (-Inf,
-        is.infinite(max) # Inf)
-
-        err_msg <- sprintf(
-            "'%s' must be a non-NA numeric value (integer or double) in the range [%f, %f].",
-            x_name,
-            min, max)
+        # The range printed as part of the error
+        # message can be missing or equal to
+        # [value, value],
+        # (-Inf, value], or
+        # [value, Inf).
+        err_msg <- if (!all(is_inf)) {
+            sprintf(
+                "'%s' must be a non-NA numeric value in the range %s%s, %s%s.",
+                x_name,
+                if (is_inf[[1L]]) "(" else "[",
+                as.character(min),
+                as.character(max),
+                if (is_inf[[2L]]) ")" else "]")
+        } else {
+            sprintf("'%s' must be a non-NA numeric value.", x_name)
+        }
 
         if (throw_error) stops(err_msg)
     }
