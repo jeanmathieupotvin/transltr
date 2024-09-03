@@ -29,3 +29,26 @@ test_that("vapply_1c() returns a character vector", {
     expect_type(test_out, "character")
     expect_length(test_out, length(test_vec))
 })
+
+
+# stops() ----------------------------------------------------------------------
+
+
+test_that("stops() does not return the call as part of the error message", {
+    expect_error(stops())
+    expect_snapshot(error = TRUE, {
+        wrap_stops <- \() stops("this is an error message.")
+        wrap_stops()
+    })
+})
+
+
+# stopf() ----------------------------------------------------------------------
+
+
+test_that("stopf() works", {
+    expect_error(stopf())
+    expect_snapshot(
+        stopf("this '%s' becomes part of the error message.", "placeholder"),
+        error = TRUE)
+})

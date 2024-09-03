@@ -26,6 +26,7 @@ better for readability.
 \seealso{
 Other utility functions: 
 \code{\link{\%??\%}()},
+\code{\link{stops}()},
 \code{\link{vapply_1l}()}
 }
 \concept{utility functions}

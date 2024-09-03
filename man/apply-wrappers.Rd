@@ -29,6 +29,7 @@ safety.
 \seealso{
 Other utility functions: 
 \code{\link{\%??\%}()},
+\code{\link{stops}()},
 \code{\link{utc}()}
 }
 \concept{utility functions}
