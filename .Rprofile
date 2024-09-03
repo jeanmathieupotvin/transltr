@@ -53,7 +53,7 @@ if (interactive()) {
     # Clear global environment, but keep aliases.
     .rm <- function() {
         objs <- ls(".GlobalEnv", all.names = TRUE)
-        keep <- c(".mb", ".rm", ".tf")
+        keep <- c(".mb", ".re", ".rm", ".tf")
         objs <- objs[-match(keep, objs, 0L)]
 
         return(rm(list = objs, envir = globalenv()))
