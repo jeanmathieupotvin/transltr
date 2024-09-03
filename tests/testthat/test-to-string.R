@@ -1,9 +1,17 @@
 test_vec <- c(1L, 2L, 3L)
 
+
+# to_string() ------------------------------------------------------------------
+
+
 test_that("to_string() generic function works", {
     expect_type(to_string(1L), "character")
     expect_length(to_string(1L), 1L)
 })
+
+
+# to_string.default() ----------------------------------------------------------
+
 
 test_that("to_string.default() returns a character", {
     test_out <- to_string(test_vec)
