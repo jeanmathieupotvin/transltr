@@ -28,7 +28,8 @@ safety.
 }
 \seealso{
 Other utility functions: 
-\code{\link{\%??\%}()}
+\code{\link{\%??\%}()},
+\code{\link{utc}()}
 }
 \concept{utility functions}
 \keyword{internal}

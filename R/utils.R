@@ -21,6 +21,7 @@
     return(if (is.null(lhs)) rhs else lhs)
 }
 
+
 #' Safe apply wrappers
 #'
 #' These functions wrap a function of the [`*apply()`][base::lapply()]
