@@ -31,6 +31,7 @@ error messages.
 \seealso{
 Other utility functions: 
 \code{\link{\%??\%}()},
+\code{\link{to_string}()},
 \code{\link{utc}()},
 \code{\link{vapply_1l}()}
 }

@@ -27,6 +27,7 @@ better for readability.
 Other utility functions: 
 \code{\link{\%??\%}()},
 \code{\link{stops}()},
+\code{\link{to_string}()},
 \code{\link{vapply_1l}()}
 }
 \concept{utility functions}

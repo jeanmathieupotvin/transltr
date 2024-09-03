@@ -29,7 +29,7 @@
 #'
 #' @param choices A [vector][base::vector] of valid candidates for `x`.
 #'
-#' @param quote_values Should `choices` be quoted by single quotation marks?
+#' @param quote_values Should `choices` be quoted with single quotation marks?
 #'
 #' @param allow_empty Should empty vectors of length 0 be considered as
 #'   valid values?

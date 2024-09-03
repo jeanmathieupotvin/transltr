@@ -30,6 +30,7 @@ safety.
 Other utility functions: 
 \code{\link{\%??\%}()},
 \code{\link{stops}()},
+\code{\link{to_string}()},
 \code{\link{utc}()}
 }
 \concept{utility functions}

@@ -1,6 +1,5 @@
 #' Get current date and time
 #'
-#' @description
 #' Get the current Coordinated Universal Time (UTC).
 #'
 #' @details

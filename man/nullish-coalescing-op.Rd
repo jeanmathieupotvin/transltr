@@ -26,6 +26,7 @@ The actual description of the operator was taken from
 \seealso{
 Other utility functions: 
 \code{\link{stops}()},
+\code{\link{to_string}()},
 \code{\link{utc}()},
 \code{\link{vapply_1l}()}
 }

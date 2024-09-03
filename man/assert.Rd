@@ -111,7 +111,7 @@ by \code{\link[=stops]{stops()}}.}
 
 \item{x_name}{The underlying name of \code{x}.}
 
-\item{quote_values}{Should \code{choices} be quoted by single quotation marks?}
+\item{quote_values}{Should \code{choices} be quoted with single quotation marks?}
 }
 \value{
 \code{\link[=is_chr]{is_chr()}},
