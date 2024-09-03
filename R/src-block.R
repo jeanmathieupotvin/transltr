@@ -21,13 +21,13 @@ extract_src_blocks <- function(x = character()) {
 }
 
 from_src_block <- function(x = character()) {
-    id        <- from_src_block_id(x[[1L]])
+    hash      <- from_src_block_hash(x[[1L]])
     src_trans <- extract_src_translations(x)
     trans     <- lapply(src_trans, from_src_translation)
-    return(new_block(id, unlist(trans)))
+    return(new_block(hash, unlist(trans)))
 }
 
-from_src_block_id <- function(x = character(1L)) {
+from_src_block_hash <- function(x = character(1L)) {
     start <- regexpr("[a-fA-F0-9]+", x)
     return(substr(x, start, start + attr(start, "match.length") - 1L))
 }
