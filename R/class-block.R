@@ -1,11 +1,3 @@
-new_translation <- function(lang = "", text = "") {
-    assert_chr1(lang)
-    assert_chr1(text)
-
-    names(text) <- lang
-    return(text)
-}
-
 new_block <- function(id = "", translations = character()) {
     assert_chr1(id)
     assert_chr(translations)

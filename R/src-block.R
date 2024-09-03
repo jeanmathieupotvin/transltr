@@ -66,7 +66,9 @@ from_src_translation <- function(x = character()) {
     is_nz <- which(nzchar(x))
     x     <- x[seq.int(min(is_nz), max(is_nz))]
 
-    return(new_translation(lang, paste0(x, collapse = "\n")))
+    text        <- paste0(x, collapse = "\n")
+    names(text) <- lang
+    return(text)
 }
 
 from_src_lang <- function(x = character(1L)) {
