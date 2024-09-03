@@ -182,7 +182,7 @@ test_that("is_match() exactly matches x by default", {
 # assert_chr() -----------------------------------------------------------------
 
 
-test_that("assert_chr() returns an empty character string if x is valid", {
+test_that("assert_chr() returns an empty character if x is valid", {
     expect_identical(assert_chr("a"), "")
 })
 
@@ -213,7 +213,7 @@ test_that("assert_chr() sets argument's name", {
 # assert_chr1() ----------------------------------------------------------------
 
 
-test_that("assert_chr1() returns an empty character string if x is valid", {
+test_that("assert_chr1() returns an empty character if x is valid", {
     expect_identical(assert_chr1("a"), "")
 })
 
@@ -244,7 +244,7 @@ test_that("assert_chr1() sets argument's name", {
 # assert_int1() ----------------------------------------------------------------
 
 
-test_that("assert_int1() returns an empty character string if x is valid", {
+test_that("assert_int1() returns an empty character if x is valid", {
     expect_identical(assert_int1(1L), "")
 })
 
@@ -277,7 +277,7 @@ test_that("assert_int1() sets argument's name", {
 # assert_list() ----------------------------------------------------------------
 
 
-test_that("assert_list() returns an empty character string if x is valid", {
+test_that("assert_list() returns an empty character if x is valid", {
     expect_identical(assert_list(list(1L)), "")
 })
 
@@ -308,7 +308,7 @@ test_that("assert_list() sets argument's name", {
 # assert_between() ------------------------------------------------------------
 
 
-test_that("assert_between() returns an empty character string if x is valid", {
+test_that("assert_between() returns an empty character if x is valid", {
     expect_identical(assert_between(1L), "")
 })
 
@@ -347,7 +347,7 @@ test_that("assert_between() sets argument's name", {
 # assert_names() ---------------------------------------------------------------
 
 
-test_that("assert_names() returns an empty character string if x is valid", {
+test_that("assert_names() returns an empty character if x is valid", {
     expect_identical(assert_names(list()), "")
     expect_identical(assert_names(list(a = 1L)), "")
 })
@@ -393,7 +393,7 @@ test_that("assert_names() sets argument's name", {
 # assert_match() ---------------------------------------------------------------
 
 
-test_that("assert_match() returns an empty character string if x is valid", {
+test_that("assert_match() returns an empty character if x is valid", {
     expect_identical(assert_match(1L, c(1L, 2L)), "")
 })
 
@@ -438,7 +438,7 @@ test_that("assert_match() sets argument's name", {
 # assert_arg() -----------------------------------------------------------------
 
 
-test_that("assert_arg() returns an empty character string if x is valid", {
+test_that("assert_arg() returns an empty character if x is valid", {
     expect_identical(wrap_assert_arg(1L), "")
 })
 
