@@ -80,7 +80,6 @@ stops <- function(...) {
 }
 
 #' @rdname stop
-#' @family utility functions
 #' @keywords internal
 stopf <- function(fmt = "", ...) {
     stops(sprintf(fmt, ...))

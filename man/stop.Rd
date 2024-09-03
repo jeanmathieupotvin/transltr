@@ -33,11 +33,6 @@ Other utility functions:
 \code{\link{\%??\%}()},
 \code{\link{utc}()},
 \code{\link{vapply_1l}()}
-
-Other utility functions: 
-\code{\link{\%??\%}()},
-\code{\link{utc}()},
-\code{\link{vapply_1l}()}
 }
 \concept{utility functions}
 \keyword{internal}
