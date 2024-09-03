@@ -28,7 +28,7 @@ by \code{", "}, except for the last one. Argument \code{last_sep} is used for it
 This is an alternative to \code{\link[base:toString]{base::toString()}} that provides greater
 flexiblity. It is used internally to construct more meaningful error
 messages. It drops argument \code{width} because it is not useful in the
-context of package \pkg{transltr}.
+context of package \code{\link{transltr}}.
 }
 \seealso{
 Other utility functions: 

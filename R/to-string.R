@@ -3,7 +3,7 @@
 #' This is an alternative to [base::toString()] that provides greater
 #' flexiblity. It is used internally to construct more meaningful error
 #' messages. It drops argument `width` because it is not useful in the
-#' context of package \pkg{transltr}.
+#' context of package [`transltr`][transltr].
 #'
 #' @param x An object to be converted.
 #'
