@@ -13,12 +13,10 @@ extract_src_header <- function(x = character()) {
         # Case 3: na_count = 2: there is no header at all.
         stops("a header is always required. Regenerate the underlying file."))
 
-    # A non-empty header must span at least 3 lines.
-    # Else, it is empty and {} is returned. This is
-    # because jsonlite::parse_json() throws an error
-    # when parsing an empty string.
+    # A non-empty header must span at least 3
+    # lines. Else, it must be empty by design.
     n_indices <- length(indices)
-    return(if (n_indices > 2L) x[indices[-c(1L, n_indices)]] else "{}")
+    return(if (n_indices > 2L) x[indices[-c(1L, n_indices)]] else "")
 }
 
 from_src_header <- function(x = character()) {
