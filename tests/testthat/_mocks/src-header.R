@@ -1,14 +1,19 @@
 #' Mock source headers
 #'
 #' These dummy sources headers are used to test the behavior of
-#' [extract_src_header()] and [from_src_header()] regardless of
-#' the underlying template's version.
+#' [extract_src_header()] and [from_src_header()], including
+#' lower-level `from_src_header_version_*()` functions.
 #'
-#' This script is currently used by `tests/testthat/test-src-header.R`.
+#' Some objects are only used to test whether YAML headers are extracted
+#' appropriately by [extract_src_header()] or not. They are derived from
+#' template's version 1. However, the actual contents is irrelevant for
+#' [extract_src_header()] and some fields were removed to keep this script
+#' as succint as possible.
 #'
 #' @usage
-#' ## Within concerned test scripts
-#' source(file.path("_mocks", "src-header.R"))
+#' ## Within test script `tests/testthat/test-src-header.R`
+#' current_wd <- if (is_testing()) "." else file.path("tests", "testthat")
+#' source(file.path(current_wd, "_mocks", "src-header.R"), environment())
 #'
 #' @note
 #' The objects' names are purposely verbose to improve readability
@@ -17,7 +22,7 @@
 NULL
 
 
-# Mock headers used to test multiple functions ---------------------------------
+# Mock headers for multiple functions ------------------------------------------
 
 
 mock_src_header_v1_minimal <- c(
@@ -25,7 +30,7 @@ mock_src_header_v1_minimal <- c(
     "---",
     "template_version: 1",
     "generated_by: R package transltr 0.0.1",
-    "generated_on: August 22, 2024 @ 08:00 UTC",
+    "generated_on: August 22, 2024 @ 08:00 (UTC)",
     "hash_algorithm: blake2b",
     "hash_length: 32",
     "hashes:",
@@ -33,16 +38,10 @@ mock_src_header_v1_minimal <- c(
     "language_keys:",
     "    en: English",
     "---",
-    ""
-)
+    "")
 
 
-# Mock headers used to test extract_src_header() -------------------------------
-
-
-# These mock headers are used to test whether YAML headers are extracted
-# appropriately or not. They are derived from template's version 1, but
-# this is irrelevant to extract_src_header(). Some fields were removed.
+# extract_src_header() ---------------------------------------------------------
 
 
 mock_src_header_with_comments <- c(
@@ -51,7 +50,7 @@ mock_src_header_with_comments <- c(
     "template_version: 1",
     "# A comment that may give further details on a field",
     "generated_by: R package transltr 0.0.1",
-    "generated_on: August 22, 2024 @ 08:00 UTC",
+    "generated_on: August 22, 2024 @ 08:00 (UTC)",
     "hash_algorithm: blake2b",
     "hash_length: 32",
     "hashes:",
@@ -61,62 +60,55 @@ mock_src_header_with_comments <- c(
     "    en: English",
     "    jp: 日本語",
     "---",
-    ""
-)
+    "")
 
 mock_src_header_no_sep_start <- c(
     "template_version: 1",
     "generated_by: R package transltr 0.0.1",
-    "generated_on: August 22, 2024 @ 08:00 UTC",
+    "generated_on: August 22, 2024 @ 08:00 (UTC)",
     "hash_algorithm: blake2b",
     "hash_length: 32",
-    "---"
-)
+    "---")
 
 mock_src_header_no_sep_end <- c(
     "---",
     "template_version: 1",
     "generated_by: R package transltr 0.0.1",
-    "generated_on: August 22, 2024 @ 08:00 UTC",
+    "generated_on: August 22, 2024 @ 08:00 (UTC)",
     "hash_algorithm: blake2b",
-    "hash_length: 32"
-)
+    "hash_length: 32")
 
-mock_src_header_no_header <- c(
-    "",
-    "")
+mock_src_header_no_header <- c("# no header", "")
 
 
-# Mock headers used to test from_src_header() ----------------------------------
+# from_src_header() ------------------------------------------------------------
 
 
 mock_src_header_duplicated_map_key <- c(
     "---",
     "generated_by: R package transltr 0.0.1",
-    "generated_on: August 22, 2024 @ 08:00 UTC",
+    "generated_on: August 22, 2024 @ 08:00 (UTC)",
     "hash_algorithm: blake2b",
     "hash_length: 32",
     "language_keys:",
     "    en: English",
     "    en: French",
-    "---"
-)
+    "---")
 
 mock_src_header_no_template_version <- c(
     "---",
     "generated_by: R package transltr 0.0.1",
-    "generated_on: August 22, 2024 @ 08:00 UTC",
+    "generated_on: August 22, 2024 @ 08:00 (UTC)",
     "hash_algorithm: blake2b",
     "hash_length: 32",
     "hashes:",
     "    - \"60ed1cd2b78a3448e7fab38d5830e249\"",
     "language_keys:",
     "    en: English",
-    "---"
-)
+    "---")
 
 
-# Mock headers used to test from_src_header_version_1() ------------------------
+# from_src_header_version_1() --------------------------------------------------
 
 
 mock_src_header_v1 <- c(
@@ -124,7 +116,7 @@ mock_src_header_v1 <- c(
     "---",
     "template_version: 1",
     "generated_by: R package transltr 0.0.1",
-    "generated_on: August 22, 2024 @ 08:00 UTC",
+    "generated_on: August 22, 2024 @ 08:00 (UTC)",
     "hash_algorithm: blake2b",
     "hash_length: 32",
     "hashes:",
@@ -134,8 +126,7 @@ mock_src_header_v1 <- c(
     "    en: English",
     "    fr: Français",
     "---",
-    ""
-)
+    "")
 
 mock_src_header_v1_with_further_fields <- c(
     "",
@@ -144,7 +135,7 @@ mock_src_header_v1_with_further_fields <- c(
     "description: An example of a translation Markdown file (version 1)",
     "template_version: 1",
     "generated_by: R package transltr 0.0.1",
-    "generated_on: August 22, 2024 @ 08:00 UTC",
+    "generated_on: August 22, 2024 @ 08:00 (UTC)",
     "hash_algorithm: blake2b",
     "hash_length: 32",
     "hashes:",
@@ -154,5 +145,4 @@ mock_src_header_v1_with_further_fields <- c(
     "    en: English",
     "    fr: Français",
     "---",
-    ""
-)
+    "")
