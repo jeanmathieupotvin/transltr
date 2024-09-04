@@ -37,5 +37,13 @@ usethis::use_description(
             be translated in an application, organize their corresponding
             translated messages, and seamlessly use them."))
 
-usethis::use_testthat()
+usethis::use_testthat(parallel = FALSE)
 usethis::use_package("R6")
+usethis::use_package("utils")
+usethis::use_package("yaml")
+
+usethis::use_package("covr",           "Suggests")
+usethis::use_package("devtools",       "Suggests")
+usethis::use_package("microbenchmark", "Suggests")
+usethis::use_package("usethis",        "Suggests")
+usethis::use_package("withr",          "Suggests")

@@ -23,11 +23,14 @@ options(
 
 if (interactive()) {
     # Attach development packages.
-    suppressMessages(require(covr))
-    suppressMessages(require(devtools))
-    suppressMessages(require(microbenchmark))
-    suppressMessages(require(usethis))
-    suppressMessages(require(withr))
+    suppressMessages({
+        require(covr)
+        require(devtools)
+        require(microbenchmark)
+        require(testthat)
+        require(usethis)
+        require(withr)
+    })
 
     # Create a shorter alias for microbenchmark::microbenchmark().
     .mb <- microbenchmark::microbenchmark
