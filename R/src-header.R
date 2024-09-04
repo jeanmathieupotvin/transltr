@@ -20,7 +20,19 @@ extract_src_header <- function(x = character()) {
 }
 
 from_src_header <- function(x = character()) {
-    fields <- yaml::yaml.load(x, as.named.list = TRUE, merge.warning = TRUE)
+    .cond_callback <- \(cond) {
+        stopf(
+            "header could not be read. The parser returned this error:\n! %s.",
+            cond$message)
+    }
+
+    fields <- tryCatch(error = .cond_callback, warning = .cond_callback, {
+        yaml::yaml.load(x,
+            # eval.expr is always disallowed for better security.
+            eval.expr     = FALSE,
+            as.named.list = TRUE,
+            merge.warning = TRUE)
+    })
 
     # Validate actual template_version.
     # Discard it afterwards so that it
@@ -37,13 +49,13 @@ from_src_header <- function(x = character()) {
 }
 
 from_src_header_version_1 <- function(
-    template_version = 0L,
-    generated_by     = "",
-    generated_on     = "",
+    template_version = 1L,
+    generated_by     = get_generated_by(),
+    generated_on     = get_generated_on(),
     hash_algorithm   = get_hash_algorithms(),
-    hash_length      = 0L,
+    hash_length      = 32L,
     hashes           = character(),
-    language_keys    = character(),
+    language_keys    = list(en = "English"),
     ...)
 {
     # YAML maps are parsed as named lists by
@@ -51,16 +63,18 @@ from_src_header_version_1 <- function(
     # it is better to have a named character.
     language_keys <- unlist(language_keys)
 
-    hash_length_range <- get_hash_length_range(hash_algorithm)
-
     assert_chr1(generated_by)
     assert_chr1(generated_on)
     assert_arg(hash_algorithm, TRUE)
     assert_int1(hash_length)
+
+    hash_length_range <- get_hash_length_range(hash_algorithm)
+
     assert_between(
         hash_length,
         hash_length_range[["min"]],
         hash_length_range[["max"]])
+
     assert_chr(hashes, TRUE)
     assert_chr(language_keys, TRUE)
     assert_names(language_keys)
@@ -72,13 +86,14 @@ from_src_header_version_1 <- function(
         stops("all 'hashes' must have a length equal to 'hash_length'.")
     }
 
-    # Fields template_version, generated_by, and generated_on
-    # are dropped because they are not required by class Translator.
     return(
         list(
-            hash_algorithm = hash_algorithm,
-            hash_length    = hash_length,
-            hashes         = hashes,
-            language_keys  = language_keys,
-            further_fields = further_fields))
+            template_version = 1L,
+            generated_by     = generated_by,
+            generated_on     = generated_on,
+            hash_algorithm   = hash_algorithm,
+            hash_length      = hash_length,
+            hashes           = hashes,
+            language_keys    = language_keys,
+            further_fields   = further_fields))
 }
