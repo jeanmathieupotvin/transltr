@@ -4,6 +4,8 @@
 #' [extract_src_header()] and [from_src_header()] regardless of
 #' the underlying template's version.
 #'
+#' This script is currently used by `tests/testthat/test-src-header.R`.
+#'
 #' @usage
 #' ## Within concerned test scripts
 #' source(file.path("_mocks", "src-header.R"))
@@ -14,7 +16,128 @@
 #'
 NULL
 
-mock_src_header <- c(
+
+# Mock headers used to test multiple functions ---------------------------------
+
+
+mock_src_header_v1_minimal <- c(
+    "",
+    "---",
+    "template_version: 1",
+    "generated_by: R package transltr 0.0.1",
+    "generated_on: August 22, 2024 @ 08:00 UTC",
+    "hash_algorithm: blake2b",
+    "hash_length: 32",
+    "hashes:",
+    "    - \"60ed1cd2b78a3448e7fab38d5830e249\"",
+    "language_keys:",
+    "    en: English",
+    "---",
+    ""
+)
+
+
+# Mock headers used to test extract_src_header() -------------------------------
+
+
+# These mock headers are used to test whether YAML headers are extracted
+# appropriately or not. They are derived from template's version 1, but
+# this is irrelevant to extract_src_header(). Some fields were removed.
+
+
+mock_src_header_with_comments <- c(
+    "# A comment to be ignored that says the header starts here",
+    "---",
+    "template_version: 1",
+    "# A comment that may give further details on a field",
+    "generated_by: R package transltr 0.0.1",
+    "generated_on: August 22, 2024 @ 08:00 UTC",
+    "hash_algorithm: blake2b",
+    "hash_length: 32",
+    "hashes:",
+    "    - \"60ed1cd2b78a3448e7fab38d5830e249\"",
+    "    - \"9bbbb7410fa6464a1a6a216919179455\"",
+    "language_keys:",
+    "    en: English",
+    "    jp: 日本語",
+    "---",
+    ""
+)
+
+mock_src_header_no_sep_start <- c(
+    "template_version: 1",
+    "generated_by: R package transltr 0.0.1",
+    "generated_on: August 22, 2024 @ 08:00 UTC",
+    "hash_algorithm: blake2b",
+    "hash_length: 32",
+    "---"
+)
+
+mock_src_header_no_sep_end <- c(
+    "---",
+    "template_version: 1",
+    "generated_by: R package transltr 0.0.1",
+    "generated_on: August 22, 2024 @ 08:00 UTC",
+    "hash_algorithm: blake2b",
+    "hash_length: 32"
+)
+
+mock_src_header_no_header <- c(
+    "",
+    "")
+
+
+# Mock headers used to test from_src_header() ----------------------------------
+
+
+mock_src_header_duplicated_map_key <- c(
+    "---",
+    "generated_by: R package transltr 0.0.1",
+    "generated_on: August 22, 2024 @ 08:00 UTC",
+    "hash_algorithm: blake2b",
+    "hash_length: 32",
+    "language_keys:",
+    "    en: English",
+    "    en: French",
+    "---"
+)
+
+mock_src_header_no_template_version <- c(
+    "---",
+    "generated_by: R package transltr 0.0.1",
+    "generated_on: August 22, 2024 @ 08:00 UTC",
+    "hash_algorithm: blake2b",
+    "hash_length: 32",
+    "hashes:",
+    "    - \"60ed1cd2b78a3448e7fab38d5830e249\"",
+    "language_keys:",
+    "    en: English",
+    "---"
+)
+
+
+# Mock headers used to test from_src_header_version_1() ------------------------
+
+
+mock_src_header_v1 <- c(
+    "",
+    "---",
+    "template_version: 1",
+    "generated_by: R package transltr 0.0.1",
+    "generated_on: August 22, 2024 @ 08:00 UTC",
+    "hash_algorithm: blake2b",
+    "hash_length: 32",
+    "hashes:",
+    "    - \"60ed1cd2b78a3448e7fab38d5830e249\"",
+    "    - \"9bbbb7410fa6464a1a6a216919179455\"",
+    "language_keys:",
+    "    en: English",
+    "    fr: Français",
+    "---",
+    ""
+)
+
+mock_src_header_v1_with_further_fields <- c(
     "",
     "---",
     "project: transltr",
@@ -30,63 +153,6 @@ mock_src_header <- c(
     "language_keys:",
     "    en: English",
     "    fr: Français",
-    "    es: Español",
-    "    jp: 日本語",
     "---",
     ""
-)
-
-mock_src_header_no_sep_end <- c(
-    "---",
-    "template_version: 1",
-    "generated_by: R package transltr 0.0.1",
-    "generated_on: August 22, 2024 @ 08:00 UTC",
-    "hash_algorithm: blake2b",
-    "hash_length: 32",
-    "hashes:",
-    "    - \"60ed1cd2b78a3448e7fab38d5830e249\"",
-    "language_keys:",
-    "    en: English"
-)
-
-mock_src_header_no_sep_start <- c(
-    "template_version: 1",
-    "generated_by: R package transltr 0.0.1",
-    "generated_on: August 22, 2024 @ 08:00 UTC",
-    "hash_algorithm: blake2b",
-    "hash_length: 32",
-    "hashes:",
-    "    - \"60ed1cd2b78a3448e7fab38d5830e249\"",
-    "language_keys:",
-    "    en: English",
-    "---"
-)
-
-mock_src_header_no_header <- c("", "")
-
-mock_src_header_duplicated_map_key <- c(
-    "---",
-    "generated_by: R package transltr 0.0.1",
-    "generated_on: August 22, 2024 @ 08:00 UTC",
-    "hash_algorithm: blake2b",
-    "hash_length: 32",
-    "hashes:",
-    "    - \"60ed1cd2b78a3448e7fab38d5830e249\"",
-    "language_keys:",
-    "    en: English",
-    "    en: French",
-    "---"
-)
-
-mock_src_header_v1_no_template_version <- c(
-    "---",
-    "generated_by: R package transltr 0.0.1",
-    "generated_on: August 22, 2024 @ 08:00 UTC",
-    "hash_algorithm: blake2b",
-    "hash_length: 32",
-    "hashes:",
-    "    - \"60ed1cd2b78a3448e7fab38d5830e249\"",
-    "language_keys:",
-    "    en: English",
-    "---"
 )

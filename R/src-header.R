@@ -8,7 +8,7 @@ extract_src_header <- function(x = character()) {
         seq.int(sep_pos[[1L]], sep_pos[[2L]]),
         # Case 2: na_count = 1: missing separator is treated as a format error.
         stops(
-            "header's format is invalid. It misses a separator ('---'). ",
+            "header's format is invalid. It misses a separator ('---').\n",
             "Each separator must be on its own line to be detected."),
         # Case 3: na_count = 2: there is no header at all.
         stops("a header is always required. Regenerate the underlying file."))
