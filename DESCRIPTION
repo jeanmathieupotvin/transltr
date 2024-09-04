@@ -28,3 +28,15 @@ Imports:
     R6,
     utils,
     yaml
+Collate: 
+    'assert.R'
+    'class-block.R'
+    'class-translator.R'
+    'read-translations.R'
+    'src-block.R'
+    'src-header.R'
+    'to-string.R'
+    'transltr-package.R'
+    'utc.R'
+    'transltr-params.R'
+    'utils.R'

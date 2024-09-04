@@ -28,3 +28,10 @@
       Error:
       ! 'hash_algorithm' must be equal to 'blake2b'.
 
+# get_generated_by() returns expected value
+
+    Code
+      get_generated_by()
+    Output
+      [1] "R package transltr 0.0.1"
+

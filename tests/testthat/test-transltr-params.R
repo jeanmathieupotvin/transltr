@@ -28,3 +28,21 @@ test_that("get_hash_length_range() validates hash_algorith,", {
     expect_error(get_hash_length_range("error"))
     expect_snapshot(get_hash_length_range("error"), error = TRUE)
 })
+
+
+# get_generated_by() -----------------------------------------------------------
+
+
+test_that("get_generated_by() returns expected value", {
+    current_ver          <- as.character(utils::packageVersion("transltr"))
+    expeted_generated_by <- sprintf("R package transltr %s", current_ver)
+
+    expect_identical(get_generated_by(), expeted_generated_by)
+    expect_snapshot(get_generated_by())
+})
+
+
+# get_generated_on() -----------------------------------------------------------
+
+
+# See script tests/testthat/test-utc.R.
