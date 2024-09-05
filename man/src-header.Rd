@@ -21,18 +21,18 @@ from_src_header_version_1(
 )
 }
 \arguments{
-\item{x}{A character vector of source lines.}
+\item{x}{A character vector of source (unparsed) text lines.}
 
-\item{template_version}{An integer. The source Markdown file's format
+\item{template_version}{An integer. The translations source file's format
 version. See \code{\link[=get_template_versions]{get_template_versions()}} for available versions.}
 
-\item{generated_by}{A character string. How did the source Markdown file
-was generated? This will most likely be a version of the package, but
-any other mechanism is fine. Package \code{\link{transltr}} embraces
+\item{generated_by}{A character string. How did the translations source
+file was generated? This will most likely be a version of the package,
+but any other mechanism is fine. Package \code{\link{transltr}} embraces
 portability. See \code{\link[=get_generated_by]{get_generated_by()}} for more information.}
 
-\item{generated_on}{A character string. When was the source Markdown file
-generated? See \code{\link[=get_generated_on]{get_generated_on()}} for the actual format.}
+\item{generated_on}{A character string. When was the translations source
+file generated? See \code{\link[=get_generated_on]{get_generated_on()}} for the actual format.}
 
 \item{hash_algorithm}{A character string. The algorithm to use when
 hashing and identifying source texts that requires translation. It
@@ -70,9 +70,9 @@ contains parsed (and valid) values of its arguments. It also returns
 a \code{further_fields} element which is a named list constructed from \code{...}.
 }
 \description{
-Extract headers from source Markdown files that contain translations
-formatted according to what \code{\link{transltr}} prescribes. Parse
-their contents and validate it.
+Extract headers from \emph{translations source files}, parse their contents,
+and validate it. These are Markdown files containing translations and
+metadata formatted according to what \code{\link{transltr}} prescribes.
 }
 \details{
 Package \code{\link{transltr}} stores translations and relevent metadata
@@ -82,8 +82,8 @@ a \href{https://yaml.org/}{YAML} header. While it is strongly recommended to
 keep that header at the very top of the file, it can be anywhere within it.
 \subsection{General structure}{
 
-Source Markdown files are divided into two parts: the \strong{header} and the
-actual \strong{translations}. Its general structure is as follows.
+Translations source files are divided into two parts: the \strong{header}
+and the actual \strong{translations}. Its general structure is as follows.
 
 \if{html}{\out{<div class="sourceCode plain">}}\preformatted{# File start
 ---

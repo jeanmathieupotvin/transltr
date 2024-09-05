@@ -1,5 +1,4 @@
-transltr Coverage: 69.08%
-R/class-translator.R: 0.00%
+transltr Coverage: 82.65%
 R/read-translations.R: 0.00%
 R/src-block.R: 0.00%
 R/assert.R: 100.00%
