@@ -1,6 +1,6 @@
 #' Mock source headers
 #'
-#' These dummy sources headers are used to test the behavior of
+#' These dummy source headers are used to test the behavior of
 #' [extract_src_header()] and [from_src_header()], including
 #' lower-level `from_src_header_version_*()` functions.
 #'

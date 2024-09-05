@@ -1,6 +1,6 @@
 ---
 project: transltr
-description: An example of a translation Markdown file (version 1)
+description: An example of a translations source file (version 1)
 template_version: 1
 generated_by: R package transltr 0.0.1
 generated_on: August 22, 2024 @ 08:00 UTC

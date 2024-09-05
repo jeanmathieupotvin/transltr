@@ -1,8 +1,8 @@
 #' Extract, parse, and validate source headers
 #'
-#' Extract headers from source Markdown files that contain translations
-#' formatted according to what [`transltr`][transltr] prescribes. Parse
-#' their contents and validate it.
+#' Extract headers from *translations source files*, parse their contents,
+#' and validate it. These are Markdown files containing translations and
+#' metadata formatted according to what [`transltr`][transltr] prescribes.
 #'
 #' @details
 #' Package [`transltr`][transltr] stores translations and relevent metadata
@@ -13,8 +13,8 @@
 #'
 #' ## General structure
 #'
-#' Source Markdown files are divided into two parts: the **header** and the
-#' actual **translations**. Its general structure is as follows.
+#' Translations source files are divided into two parts: the **header**
+#' and the actual **translations**. Its general structure is as follows.
 #'
 #' ```plain
 #' # File start
@@ -59,7 +59,7 @@
 #' Further fields may appear anywhere within the header (there is no preferred
 #' order).
 #'
-#' @param x A character vector of source lines.
+#' @param x A character vector of source (unparsed) text lines.
 #'
 #' @param ... Further custom fields. They must always be named.
 #'
