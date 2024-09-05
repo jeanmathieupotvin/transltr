@@ -81,22 +81,6 @@
       Error:
       ! 'hash_length' must be a non-NA numeric value in the range [8, 32].
 
-# from_src_header_version_1() validates argument hashes
-
-    Code
-      from_src_header_version_1(hashes = 1L)
-    Condition
-      Error:
-      ! 'hashes' must be a character vector of non-NA values.
-
----
-
-    Code
-      from_src_header_version_1(hash_algorithm = "blake2b", hash_length = 8L, hashes = "a")
-    Condition
-      Error:
-      ! all 'hashes' must have a length equal to 'hash_length'.
-
 # from_src_header_version_1() validates argument language_keys
 
     Code
@@ -117,9 +101,8 @@
 
     Code
       from_src_header_version_1(template_version = 1L, generated_by = "R package transltr 0.0.1",
-        generated_on = "August 22, 2024 @ 08:00 (UTC)", language_keys = list(en = "English",
-          fr = "Français"), hash_algorithm = "blake2b", hash_length = 32L, hashes = c(
-          "60ed1cd2b78a3448e7fab38d5830e249", "9bbbb7410fa6464a1a6a216919179455"), 1L)
+        generated_on = "August 22, 2024 @ 08:00 (UTC)", hash_algorithm = "blake2b",
+        hash_length = 32L, language_keys = list(en = "English", fr = "Français"), 1L)
     Condition
       Error:
       ! all further fields (custom user's fields) must be named.

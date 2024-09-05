@@ -54,7 +54,6 @@ from_src_header_version_1 <- function(
     generated_on     = get_generated_on(),
     hash_algorithm   = get_hash_algorithms(),
     hash_length      = 32L,
-    hashes           = character(),
     language_keys    = list(en = "English"),
     ...)
 {
@@ -66,24 +65,15 @@ from_src_header_version_1 <- function(
     assert_chr1(generated_by)
     assert_chr1(generated_on)
     assert_arg(hash_algorithm, TRUE)
-    assert_int1(hash_length)
-
-    hash_length_range <- get_hash_length_range(hash_algorithm)
-
-    assert_between(
-        hash_length,
-        hash_length_range[["min"]],
-        hash_length_range[["max"]])
-
-    assert_chr(hashes, TRUE)
     assert_chr(language_keys, TRUE)
     assert_names(language_keys)
+    assert_int1(hash_length)
+
+    length_range <- get_hash_length_range(hash_algorithm)
+    assert_between(hash_length, length_range[["min"]], length_range[["max"]])
 
     if (!is_named(further_fields <- list(...))) {
         stops("all further fields (custom user's fields) must be named.")
-    }
-    if (length(hashes) && any(nchar(hashes) != hash_length)) {
-        stops("all 'hashes' must have a length equal to 'hash_length'.")
     }
 
     return(
@@ -93,7 +83,6 @@ from_src_header_version_1 <- function(
             generated_on     = generated_on,
             hash_algorithm   = hash_algorithm,
             hash_length      = hash_length,
-            hashes           = hashes,
             language_keys    = language_keys,
             further_fields   = further_fields))
 }

@@ -6,9 +6,6 @@ generated_by: R package transltr 0.0.1
 generated_on: August 22, 2024 @ 08:00 UTC
 hash_algorithm: blake2b
 hash_length: 32
-hashes:
-    - "60ed1cd2b78a3448e7fab38d5830e249"
-    - "9bbbb7410fa6464a1a6a216919179455"
 language_keys:
     en: English
     fr: Français
@@ -35,7 +32,6 @@ dashes (`---`). It is mandatory and must contain the following fields.
 | `generated_on`     | String               |
 | `hash_algorithm`   | String               |
 | `hash_length`      | Integer              |
-| `hashes`           | Sequence of strings  |
 | `language_keys`    | Map (string: string) |
 
 You may add further fields to the header.
@@ -57,7 +53,12 @@ the same source.
 
 Spaces are treated according to what Markdown prescribes.
 
-# {{ 60ed1cd2 }}
+# {{ 60ed1cd2b78a3448e7fab38d5830e249 }}
+
+| Source script     | Start                | End                  |
+| ----------------- | -------------------- |--------------------- |
+| `R/my-script-1.R` | `line 14, column 08` | `line 18, column 22` |
+| `R/utils.R`       | `line 03, column 02` | `line 24, column 78` |
 
 ## {{ en }}
 
@@ -101,7 +102,12 @@ la biblioteca de una sola habitación.
 とにかく行きました。黒いオープンカーに乗っている間、彼女の髪は風にさらされていました。
 で 真実を知りたくて、彼はワンルームの図書館に入った
 
-# {{ 9bbbb741 }}
+# {{ 9bbbb7410fa6464a1a6a216919179455 }}
+
+| Source script     | Start                | End                  |
+| ----------------- | -------------------- |--------------------- |
+| `R/my-script-1.R` | `line 14, column 08` | `line 18, column 22` |
+| `R/utils.R`       | `line 03, column 02` | `line 24, column 78` |
 
 ## {{ en }}
 
