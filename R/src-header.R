@@ -1,3 +1,103 @@
+#' Extract, parse, and validate source headers
+#'
+#' Extract headers from source Markdown files that contain translations
+#' formatted according to what [`transltr`][transltr] prescribes. Parse
+#' their contents and validate it.
+#'
+#' @details
+#' Package [`transltr`][transltr] stores translations and relevent metadata
+#' into a single plain Markdown file. As such, it follows the usual syntax
+#' of [CommonMark](https://commonmark.org/) with one exception: it requires
+#' a [YAML](https://yaml.org/) header. While it is strongly recommended to
+#' keep that header at the very top of the file, it can be anywhere within it.
+#'
+#' ## General structure
+#'
+#' Source Markdown files are divided into two parts: the **header** and the
+#' actual **translations**. Its general structure is as follows.
+#'
+#' ```plain
+#' # File start
+#' ---
+#' Header
+#' ---
+#' # Empty line(s)
+#' Translations
+#' # File end
+#' ```
+#'
+#' The YAML header must always be enclosed by a pair of separators (three
+#' consecutive dashes) located on separate lines. In-line headers are
+#' disallowed for better readability.
+#'
+#' ## Template versions
+#'
+#' Since the format may change in the future, multiple ones may need to be
+#' supported on a long-term basis. Therefore, the header always requires a
+#' `template_version` field that specifies required header fields and how
+#' translations are structured.
+#'
+#' ## Template version 1
+#'
+#' This version enforces `7` mandatory header fields. As long as they have
+#' keys (names), users may add any further fields to this list. A valid example
+#' is provided below.
+#'
+#' ```yaml
+#' template_version: 1
+#' generated_by: R package transltr 0.0.1
+#' generated_on: August 22, 2024 @ 08:00 UTC
+#' hash_algorithm: blake2b
+#' hash_length: 32
+#' language_keys:
+#'     en: English
+#'     fr: Français
+#'     es: Español
+#'     jp: 日本語
+#' ```
+#'
+#' Further fields may appear anywhere within the header (there is no preferred
+#' order).
+#'
+#' @param x A character vector of source lines.
+#'
+#' @param ... Further custom fields. They must always be named.
+#'
+#' @template param-template-version
+#'
+#' @template param-generated-by
+#'
+#' @template param-generated-on
+#'
+#' @template param-hash-algorithm
+#'
+#' @template param-hash-length
+#'
+#' @template param-language-keys
+#'
+#' @returns
+#' [extract_src_header()] returns a character vector representing source
+#' YAML lines ready to be parsed as an \R list by [from_src_header()].
+#'
+#' [from_src_header()] returns a named list. Its contents depends on the
+#' underlying (parsed) `template_version` value.
+#'
+#' [from_src_header_version_1()] returns a named list of length 7 that
+#' contains parsed (and valid) values of its arguments. It also returns
+#' a `further_fields` element which is a named list constructed from `...`.
+#'
+#' @note
+#' Note that [from_src_header_version_1()] assumes `template_version` is
+#' always equal to `1` and ignores any value passed to it. The argument is
+#' included to ease the implementation of [from_src_header()]. The latter
+#' is in charge of validating it.
+#'
+# TODO: Update @seealso with further mechanisms when they are implemented.
+#' @seealso [extract_src_blocks()], [from_src_block()]
+#'
+#' @rdname src-header
+#' @family source header mechanisms
+#' @keywords internal
 extract_src_header <- function(x = character()) {
     # We process the first pair of
     # separators and ignore the rest.
@@ -19,6 +119,8 @@ extract_src_header <- function(x = character()) {
     return(if (n_indices > 2L) x[indices[-c(1L, n_indices)]] else "")
 }
 
+#' @rdname src-header
+#' @keywords internal
 from_src_header <- function(x = character()) {
     .cond_callback <- \(cond) {
         stopf(
@@ -34,20 +136,30 @@ from_src_header <- function(x = character()) {
             merge.warning = TRUE)
     })
 
-    # Validate actual template_version.
-    # Discard it afterwards so that it
-    # is not treated as a custom field.
-    assert_match(
-        fields$template_version,
-        get_template_versions(),
-        x_name = "template_version")
+    template_version <- fields$template_version
+    assert_match(template_version, get_template_versions())
 
-    # If we ever have to support multiple templates,
-    # we will choose a parser by calling switch() on
-    # template_version value (extracted from fields).
-    return(do.call(from_src_header_version_1, fields))
+    # No need to add a default case because
+    # template_version is valid (see above).
+    return(
+        switch(
+            template_version,
+            do.call(from_src_header_version_1, fields)))
 }
 
+#' @usage
+#' ## Called internally by from_src_header()
+#' from_src_header_version_1(
+#'   template_version = 1L,
+#'   generated_by     = get_generated_by(),
+#'   generated_on     = get_generated_on(),
+#'   hash_algorithm   = get_hash_algorithms(),
+#'   hash_length      = 32L,
+#'   language_keys    = list(en = "English")
+#' )
+#'
+#' @rdname src-header
+#' @keywords internal
 from_src_header_version_1 <- function(
     template_version = 1L,
     generated_by     = get_generated_by(),
@@ -69,6 +181,8 @@ from_src_header_version_1 <- function(
     assert_names(language_keys)
     assert_int1(hash_length)
 
+    # Check that hash_length matches what
+    # the chosen hashing algorithm expects.
     length_range <- get_hash_length_range(hash_algorithm)
     assert_between(hash_length, length_range[["min"]], length_range[["max"]])
 

@@ -3,8 +3,7 @@
 #' Helper functions that return valid values for various parameters and
 #' components of package [`transltr`][transltr].
 #'
-#' @param hash_algorithm An algorithm to use for hashing purposes. It must
-#'   be a value returned by [get_hash_algorithms()].
+#' @template param-hash-algorithm
 #'
 #' @details
 #' From the users' perspective, the hash length correspond to the number of

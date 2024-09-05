@@ -1,0 +1,2 @@
+#' @param generated_on A character string. When was the source Markdown file
+#'   generated? See [get_generated_on()] for the actual format.

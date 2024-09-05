@@ -19,8 +19,9 @@ get_generated_by()
 get_generated_on()
 }
 \arguments{
-\item{hash_algorithm}{An algorithm to use for hashing purposes. It must
-be a value returned by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}.}
+\item{hash_algorithm}{A character string. The algorithm to use when
+hashing and identifying source texts that requires translation. It
+must be a value returned by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}.}
 }
 \value{
 \code{\link[=get_template_versions]{get_template_versions()}} returns an integer vector.
