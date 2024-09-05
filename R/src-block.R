@@ -20,6 +20,12 @@ extract_src_blocks <- function(x = character()) {
     return(lapply(indices, \(i) x[i]))
 }
 
+from_src_blocks <- function(src_blocks = list()) {
+    blocks        <- lapply(src_blocks, from_src_block)
+    names(blocks) <- vapply_1c(blocks, getElement, name = "hash")
+    return(blocks)
+}
+
 from_src_block <- function(x = character()) {
     hash      <- from_src_block_hash(x[[1L]])
     src_trans <- extract_src_translations(x)
@@ -55,26 +61,27 @@ from_src_translation <- function(x = character()) {
     # discarded, because the underlying source
     # text (as written in the code) is used at
     # runtime for efficiency.
-    if (is.null(lang <- from_src_lang(x[[1L]]))) {
+    if (is.null(lang_key <- from_src_language_key(x[[1L]]))) {
         return(NULL)
     }
 
     # Remove lang from x and all superfluous spaces
-    # before and after contents (any non-empty lines).
+    # before and after contents (non-empty lines).
     # Spaces intertwined within contents are kept.
     x     <- x[-1L]
     is_nz <- which(nzchar(x))
     x     <- x[seq.int(min(is_nz), max(is_nz))]
 
     text        <- paste0(x, collapse = "\n")
-    names(text) <- lang
+    names(text) <- lang_key
     return(text)
 }
 
-from_src_lang <- function(x = character(1L)) {
-    # Brackets are are reserved for the source
-    # language's key which is always ignored.
-    # Remove all spaces and Markdown H2 title token
-    # (##). What remains is the user's language key.
-    return(if (grepl("[{}]+", x)) NULL else gsub("[ \t#]*", "", x))
+from_src_language_key <- function(x = character(1L)) {
+    # We extract the language key by removing all
+    # spaces and Markdown H2 title token (##). If
+    # we detect brackets in the token, then NULL
+    # is returned to signal it should be ignored.
+    # This value makes it easy to drop with c().
+    return(if (grepl("[{}]+", x[[1L]])) NULL else gsub("[ \t#]*", "", x))
 }
