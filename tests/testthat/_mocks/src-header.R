@@ -11,9 +11,8 @@
 #' as succint as possible.
 #'
 #' @usage
-#' ## Within test script `tests/testthat/test-src-header.R`
-#' current_wd <- if (is_testing()) "." else file.path("tests", "testthat")
-#' source(file.path(current_wd, "_mocks", "src-header.R"), environment())
+#' ## Expected usage in tests/testthat/test-src-header.R
+#' source(get_mock_path("src-header"), environment())
 #'
 #' @note
 #' The objects' names are purposely verbose to improve readability

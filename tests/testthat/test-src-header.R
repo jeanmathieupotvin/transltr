@@ -1,6 +1,5 @@
 # Load mock source headers in the current testing environment.
-current_wd <- if (is_testing()) "." else file.path("tests", "testthat")
-source(file.path(current_wd, "_mocks", "src-header.R"), environment())
+source(get_mock_path("src-header"), environment())
 
 
 # extract_src_header() ---------------------------------------------------------
