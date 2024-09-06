@@ -4,12 +4,9 @@
 #' [base::writeLines()]. They further validate their arguments, normalize
 #' file paths, and re-encode inputs to `UTF-8` before reading and writing.
 #'
-#' @param path A character string. A path to a file to read text from
-#'   or write text to.
+#' @template param-path
 #'
-#' @param encoding A character string. The file's underlying encoding.
-#'   In almost all cases, this should be `UTF-8`. Text supplied in other
-#'   encodings is internally re-encoded to `UTF-8` for portability.
+#' @template param-encoding
 #'
 #' @param x A character vector. Lines of text to write.
 #'

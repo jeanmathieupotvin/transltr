@@ -74,61 +74,6 @@ Extract headers from \emph{translations source files}, parse their contents,
 and validate it. These are Markdown files containing translations and
 metadata formatted according to what \code{\link{transltr}} prescribes.
 }
-\details{
-Package \code{\link{transltr}} stores translations and relevent metadata
-into a single plain Markdown file. As such, it follows the usual syntax
-of \href{https://commonmark.org/}{CommonMark} with one exception: it requires
-a \href{https://yaml.org/}{YAML} header. While it is strongly recommended to
-keep that header at the very top of the file, it can be anywhere within it.
-\subsection{General structure}{
-
-Translations source files are divided into two parts: the \strong{header}
-and the actual \strong{translations}. Its general structure is as follows.
-
-\if{html}{\out{<div class="sourceCode plain">}}\preformatted{# File start
----
-Header
----
-# Empty line(s)
-Translations
-# File end
-}\if{html}{\out{</div>}}
-
-The YAML header must always be enclosed by a pair of separators (three
-consecutive dashes) located on separate lines. In-line headers are
-disallowed for better readability.
-}
-
-\subsection{Template versions}{
-
-Since the format may change in the future, multiple ones may need to be
-supported on a long-term basis. Therefore, the header always requires a
-\code{template_version} field that specifies required header fields and how
-translations are structured.
-}
-
-\subsection{Template version 1}{
-
-This version enforces \code{7} mandatory header fields. As long as they have
-keys (names), users may add any further fields to this list. A valid example
-is provided below.
-
-\if{html}{\out{<div class="sourceCode yaml">}}\preformatted{template_version: 1
-generated_by: R package transltr 0.0.1
-generated_on: August 22, 2024 @ 08:00 UTC
-hash_algorithm: blake2b
-hash_length: 32
-language_keys:
-    en: English
-    fr: Français
-    es: Español
-    jp: 日本語
-}\if{html}{\out{</div>}}
-
-Further fields may appear anywhere within the header (there is no preferred
-order).
-}
-}
 \note{
 Note that \code{\link[=from_src_header_version_1]{from_src_header_version_1()}} assumes \code{template_version} is
 always equal to \code{1} and ignores any value passed to it. The argument is
@@ -136,7 +81,9 @@ included to ease the implementation of \code{\link[=from_src_header]{from_src_he
 is in charge of validating it.
 }
 \seealso{
-\code{\link[=extract_src_blocks]{extract_src_blocks()}}, \code{\link[=from_src_block]{from_src_block()}}
+\code{\link[=read_translations]{read_translations()}},
+\code{\link[=extract_src_blocks]{extract_src_blocks()}},
+\code{\link[=from_src_block]{from_src_block()}}
 }
 \concept{source header mechanisms}
 \keyword{internal}

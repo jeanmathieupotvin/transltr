@@ -1,0 +1,1 @@
+../../../.templates/v1-example.md
