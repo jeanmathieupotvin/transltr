@@ -1,4 +1,4 @@
-mock_template_v1_path <- get_mock_path("translations-io-v1", "md")
+mock_template_v1_path <- get_mock_path("src-translations-v1", "md")
 
 
 # read_translations() ----------------------------------------------------------

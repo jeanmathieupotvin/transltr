@@ -15,8 +15,7 @@
 #'
 #' [write_text()] is not yet implemented and throws an error.
 #'
-#' @rdname file-io
-#' @family io
+#' @rdname io-text
 #' @keywords internal
 read_text <- function(path = "", encoding = "UTF-8") {
     assert_chr1(path)
@@ -43,7 +42,7 @@ read_text <- function(path = "", encoding = "UTF-8") {
 }
 
 # TODO: implement write_text() when write_translations() is being implemented.
-#' @rdname file-io
+#' @rdname io-text
 #' @keywords internal
 write_text <- function(x, path = "") {
     return(.NotYetImplemented())

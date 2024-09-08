@@ -1,5 +1,5 @@
-mock_file_utf8_path  <- get_mock_path("file-io-utf8",  "txt")
-mock_file_eucjp_path <- get_mock_path("file-io-eucjp", "txt")
+mock_file_utf8_path  <- get_mock_path("io-text-utf8",  "txt")
+mock_file_eucjp_path <- get_mock_path("io-text-eucjp", "txt")
 
 
 # read_text() ------------------------------------------------------------------

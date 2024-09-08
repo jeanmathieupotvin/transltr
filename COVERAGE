@@ -1,11 +1,12 @@
-transltr Coverage: 100.00%
+transltr Coverage: 99.11%
+R/class-translator.R: 0.00%
 R/assert.R: 100.00%
 R/class-block.R: 100.00%
-R/file-io.R: 100.00%
+R/io-text.R: 100.00%
 R/src-block.R: 100.00%
 R/src-header.R: 100.00%
+R/src-translations.R: 100.00%
 R/to-string.R: 100.00%
-R/translations-io.R: 100.00%
 R/transltr-params.R: 100.00%
 R/utc.R: 100.00%
 R/utils.R: 100.00%

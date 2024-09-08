@@ -7,8 +7,8 @@
 #' generate an error and can be part of the file itself.
 #'
 #' @usage
-#' ## Expected usage in tests/testthat/test-file-io.R
-#' read_text(get_mock_path("file-io-eucjp", "txt"))
+#' ## Expected usage in tests/testthat/test-io-text.R
+#' read_text(get_mock_path("io-text-eucjp", "txt"))
 #'
 #' @note
 #' This header is included in the output of [read_text()]. Since it only

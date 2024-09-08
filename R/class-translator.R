@@ -17,4 +17,3 @@ is_translator <- function() {
 #' @rdname class-translator
 #' @export
 Translator <- R6::R6Class("Translator")
-

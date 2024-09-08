@@ -23,8 +23,7 @@
 #'
 #' [write_translations()] is not yet implemented and throws an error.
 #'
-#' @rdname translations-io
-#' @family source translations mechanisms
+#' @rdname src-translations
 #' @export
 read_translations <- function(path = "", encoding = "UTF-8") {
     src_lines <- read_text(path, encoding = encoding)
@@ -36,7 +35,7 @@ read_translations <- function(path = "", encoding = "UTF-8") {
     return(list(header = header, blocks = blocks))
 }
 
-#' @rdname translations-io
+#' @rdname src-translations
 #' @export
 write_translations <- function(x, path = "", readme = TRUE) {
     return(.NotYetImplemented())
