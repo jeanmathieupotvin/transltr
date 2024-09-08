@@ -5,11 +5,7 @@
 #' source files.
 #'
 #' @details
-#' Package [`transltr`][transltr] stores translations and relevent metadata
-#' into a *translations source file*.
-#'
-# TODO: implement code block that can read the README and import contents
-# here directly. This avoids duplication in the source code.
+#' Placeholder.
 #'
 #' @template param-path
 #'

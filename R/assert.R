@@ -83,17 +83,17 @@
 #' ## Here is a guard clause that checks whether an input is a character
 #' ## string. While this works fine, having to deal with many similar
 #' ## structures across the whole project is cumbersome.
-#' if (is.character(x) && length(x) == 1L && nzchar(x) && !is.na(x))) {
+#' if (!is.character(x) || length(x) != 1L || !nzchar(x) || is.na(x)) {
 #'     stop("'x' must be a must be a non-NA and non-empty character of length 1.")
 #' }
 #'
 #' ## The call to if () can be simplified with is_chr1().
-#' if (is_chr1(x, allow_empty_string = FALSE)) {
+#' if (!transltr:::is_chr1(x, allow_empty_string = FALSE)) {
 #'     stop("'x' must be a must be a non-NA and non-empty character of length 1.")
 #' }
 #'
 #' ## The whole structure can be replaced by a single call to assert_chr1().
-#' assert_chr1(x)
+#' transltr:::assert_chr1(x)
 #'
 #' @rdname assert
 #' @family is
@@ -296,7 +296,7 @@ assert_between <- function(
 #' @rdname assert
 #' @family assert
 #' @keywords internal
-assert_names <- function(
+assert_named <- function(
     x,
     allow_empty_names = FALSE,
     allow_na_names    = FALSE,

@@ -17,7 +17,8 @@ from_src_header_version_1(
   generated_on     = get_generated_on(),
   hash_algorithm   = get_hash_algorithms(),
   hash_length      = 32L,
-  language_keys    = list(en = "English")
+  language_keys    = list(en = "English"),
+  ...
 )
 }
 \arguments{

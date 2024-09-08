@@ -2,6 +2,7 @@
 % Please edit documentation in R/class-block.R
 \name{new_block}
 \alias{new_block}
+\alias{Block}
 \alias{is_block}
 \title{Translations blocks}
 \usage{
@@ -28,9 +29,9 @@ these two elements: the values of \code{hash} and \code{translations}.
 \code{\link[=is_block]{is_block()}} returns a logical.
 }
 \description{
-The \link{Block} class is an internal class that encapsulates a collection
-of translations of the same source text identified by a reproducible
-hash. Users typically never directly interact with \link{Block} objects.
+The \code{\link{Block}} class is an internal class that encapsulates a
+collection of translations of the same source text identified by a
+reproducible hash.
 }
 \note{
 \code{\link[=new_block]{new_block()}} does not generate hashes. This must be done before creating
@@ -50,7 +51,7 @@ translations <- c(
     es        = "¡Hola Mundo!",
     `jp-utf8` = "こんにちは世界！")
 
-my_block <- new_block(hash, translations)
+my_block <- transltr:::new_block(hash, translations)
 
 }
 \keyword{internal}

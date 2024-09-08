@@ -25,7 +25,7 @@ encodings is internally re-encoded to \code{UTF-8} for portability.}
 \code{\link[=write_text]{write_text()}} is not yet implemented and throws an error.
 }
 \description{
-\code{\link[=read_file]{read_file()}} and \code{\link[=write_file]{write_file()}} respectively wrap \code{\link[base:readLines]{base::readLines()}} and
+\code{\link[=read_text]{read_text()}} and \code{\link[=write_text]{write_text()}} respectively wrap \code{\link[base:readLines]{base::readLines()}} and
 \code{\link[base:writeLines]{base::writeLines()}}. They further validate their arguments, normalize
 file paths, and re-encode inputs to \code{UTF-8} before reading and writing.
 }

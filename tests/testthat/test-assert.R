@@ -344,49 +344,49 @@ test_that("assert_between() sets argument's name", {
 })
 
 
-# assert_names() ---------------------------------------------------------------
+# assert_named() ---------------------------------------------------------------
 
 
-test_that("assert_names() returns an empty character if x is valid", {
-    expect_identical(assert_names(list()), "")
-    expect_identical(assert_names(list(a = 1L)), "")
+test_that("assert_named() returns an empty character if x is valid", {
+    expect_identical(assert_named(list()), "")
+    expect_identical(assert_named(list(a = 1L)), "")
 })
 
-test_that("assert_names() throws an error by default if x is invalid", {
-    expect_error(assert_names(list(1L)))
+test_that("assert_named() throws an error by default if x is invalid", {
+    expect_error(assert_named(list(1L)))
 })
 
-test_that("assert_names() adapts its error message(s)", {
+test_that("assert_named() adapts its error message(s)", {
     expect_identical(
-        assert_names(list(1L), throw_error = FALSE),
+        assert_named(list(1L), throw_error = FALSE),
         "'list(1L)' must have names.")
     expect_identical(
-        assert_names(list(1L), allow_empty_names = TRUE, throw_error = FALSE),
+        assert_named(list(1L), allow_empty_names = TRUE, throw_error = FALSE),
         "'list(1L)' must have names. They can be empty strings.")
     expect_identical(
-        assert_names(list(1L), allow_na_names = TRUE, throw_error = FALSE),
+        assert_named(list(1L), allow_na_names = TRUE, throw_error = FALSE),
         "'list(1L)' must have names. They can be NA values.")
     expect_identical(
-        assert_names(list(1L),
+        assert_named(list(1L),
             allow_empty_names = TRUE,
             allow_na_names    = TRUE,
             throw_error       = FALSE),
         "'list(1L)' must have names. They can be empty strings. They can be NA values.")
 
-    expect_snapshot(assert_names(list(1L)),                           error = TRUE)
-    expect_snapshot(assert_names(list(1L), allow_empty_names = TRUE), error = TRUE)
-    expect_snapshot(assert_names(list(1L), allow_na_names    = TRUE), error = TRUE)
+    expect_snapshot(assert_named(list(1L)),                           error = TRUE)
+    expect_snapshot(assert_named(list(1L), allow_empty_names = TRUE), error = TRUE)
+    expect_snapshot(assert_named(list(1L), allow_na_names    = TRUE), error = TRUE)
     expect_snapshot(error = TRUE,
-        assert_names(list(1L),
+        assert_named(list(1L),
             allow_empty_names = TRUE,
             allow_na_names    = TRUE))
 })
 
-test_that("assert_names() sets argument's name", {
+test_that("assert_named() sets argument's name", {
     my_x <- 1L
 
-    expect_match(assert_names(my_x, throw_error = FALSE),               "^'my_x'")
-    expect_match(assert_names(my_x, throw_error = FALSE, x_name = "x"), "^'x'")
+    expect_match(assert_named(my_x, throw_error = FALSE),               "^'my_x'")
+    expect_match(assert_named(my_x, throw_error = FALSE, x_name = "x"), "^'x'")
 })
 
 

@@ -1,6 +1,7 @@
 Package: transltr
 Title: A general purpose translator for R
 Version: 0.0.1
+License: MIT + file LICENSE
 Authors@R: c(
     person("Jean-Mathieu", "Potvin", , "jeanmathieupotvin@ununoctium.dev", role = c("aut", "cre")),
     person("Jérôme", "Lavoué", , "jerome.lavoue@umontreal.ca", role = c("ctb", "fnd", "rev"),
@@ -9,7 +10,6 @@ Authors@R: c(
 Description: A collection of translation mechanisms. Detect messages to be
     be translated in an application, organize their corresponding
     translated messages, and seamlessly use them.
-License: MIT + LICENSE
 URL: https://github.com/jeanmathieupotvin/transltr
 BugReports: https://github.com/jeanmathieupotvin/transltr/issues/new
 Encoding: UTF-8
@@ -28,9 +28,10 @@ Imports:
     R6,
     utils,
     yaml
-Collate: 
+Collate:
     'assert.R'
     'class-block.R'
+    'class-translator.R'
     'file-io.R'
     'src-block.R'
     'src-header.R'

@@ -101,7 +101,8 @@ from_src_header <- function(x = character()) {
 #'   generated_on     = get_generated_on(),
 #'   hash_algorithm   = get_hash_algorithms(),
 #'   hash_length      = 32L,
-#'   language_keys    = list(en = "English")
+#'   language_keys    = list(en = "English"),
+#'   ...
 #' )
 #'
 #' @rdname src-header
@@ -124,7 +125,7 @@ from_src_header_version_1 <- function(
     assert_chr1(generated_on)
     assert_arg(hash_algorithm, TRUE)
     assert_chr(language_keys, TRUE)
-    assert_names(language_keys)
+    assert_named(language_keys)
     assert_int1(hash_length)
 
     # Check that hash_length matches what

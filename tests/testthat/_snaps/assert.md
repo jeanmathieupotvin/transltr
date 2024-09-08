@@ -87,10 +87,10 @@
       Error:
       ! '1L' must be a non-NA numeric value in the range [2, 3].
 
-# assert_names() adapts its error message(s)
+# assert_named() adapts its error message(s)
 
     Code
-      assert_names(list(1L))
+      assert_named(list(1L))
     Condition
       Error:
       ! 'list(1L)' must have names.
@@ -98,7 +98,7 @@
 ---
 
     Code
-      assert_names(list(1L), allow_empty_names = TRUE)
+      assert_named(list(1L), allow_empty_names = TRUE)
     Condition
       Error:
       ! 'list(1L)' must have names. They can be empty strings.
@@ -106,7 +106,7 @@
 ---
 
     Code
-      assert_names(list(1L), allow_na_names = TRUE)
+      assert_named(list(1L), allow_na_names = TRUE)
     Condition
       Error:
       ! 'list(1L)' must have names. They can be NA values.
@@ -114,7 +114,7 @@
 ---
 
     Code
-      assert_names(list(1L), allow_empty_names = TRUE, allow_na_names = TRUE)
+      assert_named(list(1L), allow_empty_names = TRUE, allow_na_names = TRUE)
     Condition
       Error:
       ! 'list(1L)' must have names. They can be empty strings. They can be NA values.

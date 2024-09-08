@@ -1,6 +1,6 @@
 #' Low-level text input and output
 #'
-#' [read_file()] and [write_file()] respectively wrap [base::readLines()] and
+#' [read_text()] and [write_text()] respectively wrap [base::readLines()] and
 #' [base::writeLines()]. They further validate their arguments, normalize
 #' file paths, and re-encode inputs to `UTF-8` before reading and writing.
 #'

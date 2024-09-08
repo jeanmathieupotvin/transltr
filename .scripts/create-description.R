@@ -14,7 +14,6 @@ usethis::use_description(
         Package     = "transltr",
         Title       = "A general purpose translator for R",
         Version     = "0.0.1",
-        License     = "MIT + LICENSE",
         Language    = "en",
         Encoding    = "UTF-8",
         Roxygen     = "list(markdown = TRUE, r6 = TRUE)",
@@ -36,6 +35,8 @@ usethis::use_description(
             A collection of translation mechanisms. Detect messages to be
             be translated in an application, organize their corresponding
             translated messages, and seamlessly use them."))
+
+usethis::use_mit_license("Jean-Mathieu Potvin")
 
 usethis::use_testthat(parallel = FALSE)
 usethis::use_package("R6")

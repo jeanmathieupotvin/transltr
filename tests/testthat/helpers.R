@@ -20,20 +20,20 @@ get_mock_path <- function(name = "", ext = "R") {
     assert_chr1(name)
     assert_chr1(ext)
 
-    # This is not 100% safe, but it
-    # is enough for our purposes.
-    curr_wd <- getwd()
-    mock_wd <- if (grepl("testthat", curr_wd)) {
-        curr_wd
+    file_name <- paste0(name, ".", ext, collapse = NULL)
+
+    # This is not 100% safe but it should be enough for
+    # most circumstances. We construct a relative path
+    # from the current (working) directory to _mocks/.
+    rel_test_dir <- if (endsWith(wd <- getwd(), "testthat")) {
+        file.path(".", "_mocks")
     } else {
-        file.path("tests", "testthat")
+        file.path("tests", "testthat", "_mocks")
     }
 
     # normalizePath() is not super
-    # useful, but a little safer.
-    path <- normalizePath(
-        file.path(mock_wd, "_mocks", paste0(name, ".", ext, collapse = NULL)),
-        mustWork = FALSE)
+    # useful, but still a little safer.
+    path <- normalizePath(file.path(rel_test_dir, file_name), mustWork = FALSE)
 
     # We do not check whether the file is readable
     # or not because we (sometimes) need to create
