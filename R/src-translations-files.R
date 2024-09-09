@@ -47,26 +47,26 @@
 #'
 #' ## Blocks
 #'
-#' A TSF contains one or more blocks. Each source text that requires translation
-#' has a corresponding block. Blocks are structured as regular Markdown sections
-#' and have four components.
+#' A TSF contains one or more blocks. Each source text that must be translated
+#' has a corresponding block. Blocks are mutually independent and are parsed
+#' individually. They are not required to contain translations under the same
+#' language(s). How they are structured depends on the underlying values of
+#' header's field `template_version`. See sections below.
+#'
+#' A block always has at least four components.
 #'
 #' 1. The **source text** to be translated.
 #'
 #' 2. A **reproducible hash** generated from the source text. It is used as a
 #'    unique identifier for the underlying block.
 #'
-#' 3. The location of the source text in the project. Since the same source
+#' 3. The **location** of the source text in the project. Since the same source
 #'    text can be reused multiple times, it may have multiple locations.
 #'
-#' 4. One or more translations of the source text. Each translation has a
-#'    corresponding *language key*. See section *Language keys* below.
+#' 4. One or more **translations** of the source text. Each translation has
+#'    a corresponding *language key*. See section *Language keys* below.
 #'
-#' How blocks are structured depends on the underlying `template_version`.
-#' See sections below.
-#'
-#' Finally, blocks are mutually independent and are parsed individually. They
-#' are not required to contain translations under the same language(s).
+#' Each block is parsed as a [`Block`][Block] object internally.
 #'
 #' @section Language keys:
 #' Package [`transltr`][transltr] uses so-called *language keys* to uniquely
@@ -98,14 +98,14 @@
 #' There are `6` mandatory header fields. They must be left as is. Users may
 #' only modify and/or add further entries to `language_keys`.
 #'
-#' | **Field**          | **YAML type** | **R type**              | **Example**                                           |
-#' | ------------------ | ------------- | ----------------------- | ----------------------------------------------------- |
-#' | `template_version` | Integer       | `integer(1)`            | `1`                                                   |
-#' | `generated_by`     | String        | `character(1)`          | `R package transltr 0.0.1`                            |
-#' | `generated_on`     | String        | `character(1)`          | `August 22, 2024 @ 08:00 UTC`                         |
-#' | `hash_algorithm`   | String        | `character(1)`          | `blake2b`                                             |
-#' | `hash_length`      | Integer       | `integer(1)`            | `32`                                                  |
-#' | `language_keys`    | Map           | named<br/>`character()` | `fr: Français`<br/>`language-key: full-language-name` |
+#' | **Field**          | **YAML type** | **R type**                | **Example**                                           |
+#' | ------------------ | ------------- | ------------------------- | ----------------------------------------------------- |
+#' | `template_version` | Integer       | `integer(1)`              | `1`                                                   |
+#' | `generated_by`     | String        | `character(1)`            | `R package transltr 0.0.1`                            |
+#' | `generated_on`     | String        | `character(1)`            | `August 22, 2024 @ 08:00 UTC`                         |
+#' | `hash_algorithm`   | String        | `character(1)`            | `blake2b`                                             |
+#' | `hash_length`      | Integer       | `integer(1)`              | `32`                                                  |
+#' | `language_keys`    | Map           | `character()`<br/>(Named) | `fr: Français`<br/>`language-key: full-language-name` |
 #'
 #' ## Blocks
 #'
@@ -153,7 +153,8 @@
 #'   [extract_src_header()],
 #'   [from_src_header()],
 #'   [extract_src_blocks()],
-#'   [from_src_block()]
+#'   [from_src_block()],
+#'   [new_block()]
 #'
 #' @rdname src-translations-files
 #' @name Translations Source Files

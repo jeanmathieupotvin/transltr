@@ -55,24 +55,24 @@ sections below.
 
 \subsection{Blocks}{
 
-A TSF contains one or more blocks. Each source text that requires translation
-has a corresponding block. Blocks are structured as regular Markdown sections
-and have four components.
+A TSF contains one or more blocks. Each source text that must be translated
+has a corresponding block. Blocks are mutually independent and are parsed
+individually. They are not required to contain translations under the same
+language(s). How they are structured depends on the underlying values of
+header's field \code{template_version}. See sections below.
+
+A block always has at least four components.
 \enumerate{
 \item The \strong{source text} to be translated.
 \item A \strong{reproducible hash} generated from the source text. It is used as a
 unique identifier for the underlying block.
-\item The location of the source text in the project. Since the same source
+\item The \strong{location} of the source text in the project. Since the same source
 text can be reused multiple times, it may have multiple locations.
-\item One or more translations of the source text. Each translation has a
-corresponding \emph{language key}. See section \emph{Language keys} below.
+\item One or more \strong{translations} of the source text. Each translation has
+a corresponding \emph{language key}. See section \emph{Language keys} below.
 }
 
-How blocks are structured depends on the underlying \code{template_version}.
-See sections below.
-
-Finally, blocks are mutually independent and are parsed individually. They
-are not required to contain translations under the same language(s).
+Each block is parsed as a \code{\link{Block}} object internally.
 }
 }
 
@@ -112,7 +112,7 @@ only modify and/or add further entries to \code{language_keys}.\tabular{llll}{
    \code{generated_on} \tab String \tab \code{character(1)} \tab \verb{August 22, 2024 @ 08:00 UTC} \cr
    \code{hash_algorithm} \tab String \tab \code{character(1)} \tab \code{blake2b} \cr
    \code{hash_length} \tab Integer \tab \code{integer(1)} \tab \code{32} \cr
-   \code{language_keys} \tab Map \tab named\if{html}{\out{<br/>}}\code{character()} \tab \code{fr: Français}\if{html}{\out{<br/>}}\code{language-key: full-language-name} \cr
+   \code{language_keys} \tab Map \tab \code{character()}\if{html}{\out{<br/>}}(Named) \tab \code{fr: Français}\if{html}{\out{<br/>}}\code{language-key: full-language-name} \cr
 }
 
 }
@@ -165,5 +165,6 @@ from source scripts.
 \code{\link[=extract_src_header]{extract_src_header()}},
 \code{\link[=from_src_header]{from_src_header()}},
 \code{\link[=extract_src_blocks]{extract_src_blocks()}},
-\code{\link[=from_src_block]{from_src_block()}}
+\code{\link[=from_src_block]{from_src_block()}},
+\code{\link[=new_block]{new_block()}}
 }
