@@ -10,10 +10,6 @@
 #'
 #' @param x An object of class [`Translator`][Translator].
 #'
-#' @param readme A logical. Should a `README` Markdown file also be generated?
-#'   It contains portable instructions and details on translations source files.
-#'   If `TRUE`, it is generated in the same directory as `path`.
-#'
 #' @returns
 #' [read_translations()] returns a [`Translator`][Translator] object if `path`
 #' points to a valid translations source file.
@@ -36,6 +32,6 @@ read_translations <- function(path = "", encoding = "UTF-8") {
 
 #' @rdname src-translations
 #' @export
-write_translations <- function(x, path = "", readme = TRUE) {
+write_translations <- function(x, path = "") {
     return(.NotYetImplemented())
 }

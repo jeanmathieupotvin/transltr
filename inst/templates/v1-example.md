@@ -1,4 +1,7 @@
 ---
+# This is a transltr translations source File.
+# Visit https://transltr.ununoctium.dev/tsf (TBD) for more information.
+#
 # Further fields.
 project: transltr
 description: An example of a translations source file (version 1)

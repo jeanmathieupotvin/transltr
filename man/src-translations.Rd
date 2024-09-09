@@ -7,7 +7,7 @@
 \usage{
 read_translations(path = "", encoding = "UTF-8")
 
-write_translations(x, path = "", readme = TRUE)
+write_translations(x, path = "")
 }
 \arguments{
 \item{path}{A character string. A path to a file to read text from
@@ -18,10 +18,6 @@ In almost all cases, this should be \code{UTF-8}. Text supplied in other
 encodings is internally re-encoded to \code{UTF-8} for portability.}
 
 \item{x}{An object of class \code{\link{Translator}}.}
-
-\item{readme}{A logical. Should a \code{README} Markdown file also be generated?
-It contains portable instructions and details on translations source files.
-If \code{TRUE}, it is generated in the same directory as \code{path}.}
 }
 \value{
 \code{\link[=read_translations]{read_translations()}} returns a \code{\link{Translator}} object if \code{path}

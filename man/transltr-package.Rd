@@ -8,6 +8,18 @@
 \description{
 A collection of translation mechanisms. Detect messages to be be translated in an application, organize their corresponding translated messages, and seamlessly use them.
 }
+\section{Getting started}{
+
+Placeholder for future documentation.
+}
+
+\section{Bugs and feedback}{
+
+You may submit feedback, ideas, and bugs by creating an
+\href{https://github.com/jeanmathieupotvin/transltr/issues/new}{issue on GitHub}.
+Your help is appreciated.
+}
+
 \seealso{
 Useful links:
 \itemize{
