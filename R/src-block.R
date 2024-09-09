@@ -2,6 +2,12 @@
 #'
 #' Placeholder for future documentation.
 #'
+#' @seealso [Translations Source Files],
+#'   [read_translations()],
+#'   [write_translations()],
+#'   [extract_src_header()],
+#'   [from_src_header()]
+#'
 #' @rdname src-blocks
 #' @family source blocks mechanisms
 #' @keywords internal

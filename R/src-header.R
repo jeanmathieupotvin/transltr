@@ -4,6 +4,10 @@
 #' and validate it. These are Markdown files containing translations and
 #' metadata formatted according to what [`transltr`][transltr] prescribes.
 #'
+#' Source headers extracted from *translations source files* are parsed as
+#' named lists. There is no dedicated class for them, unlike *source blocks*
+#' which are parsed as [`Block`][Block] objects.
+#'
 #' @param x A character vector of source (unparsed) text lines.
 #'
 #' @param ... Further custom fields. They must always be named.
@@ -37,7 +41,9 @@
 #' included to ease the implementation of [from_src_header()]. The latter
 #' is in charge of validating it.
 #'
-#' @seealso [read_translations()],
+#' @seealso [Translations Source Files],
+#'   [read_translations()],
+#'   [write_translations()],
 #'   [extract_src_blocks()],
 #'   [from_src_block()]
 #'

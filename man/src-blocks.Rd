@@ -27,5 +27,12 @@ from_src_language_key(x = character(1L))
 \description{
 Placeholder for future documentation.
 }
+\seealso{
+\link{Translations Source Files},
+\code{\link[=read_translations]{read_translations()}},
+\code{\link[=write_translations]{write_translations()}},
+\code{\link[=extract_src_header]{extract_src_header()}},
+\code{\link[=from_src_header]{from_src_header()}}
+}
 \concept{source blocks mechanisms}
 \keyword{internal}

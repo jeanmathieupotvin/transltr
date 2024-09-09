@@ -1,11 +1,8 @@
 #' Read and write translations source files
 #'
-#' Read translations source files and parse them as [`Translator`][Translator]
-#' objects, or convert [`Translator`][Translator] objects back to translations
-#' source files.
-#'
-#' @details
-#' Placeholder.
+#' Read [Translations Source Files] and parse them as [`Translator`][Translator]
+#' objects, or convert [`Translator`][Translator] objects back to
+#' [Translations Source Files].
 #'
 #' @template param-path
 #'
@@ -22,6 +19,8 @@
 #' points to a valid translations source file.
 #'
 #' [write_translations()] is not yet implemented and throws an error.
+#'
+#' @seealso [Translations Source Files]
 #'
 #' @rdname src-translations
 #' @export

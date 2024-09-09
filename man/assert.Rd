@@ -151,7 +151,7 @@ time. The \verb{assert_*()} family solves these challenges by encapsulating
 guard clause into simple semantic functions. See Examples below.
 
 By convention, \link[base:NA]{NA} values are \strong{always} disallowed. This is
-because \link{transltr} rarely uses them.
+because \code{\link{transltr}} rarely uses them.
 }
 \note{
 \code{\link[=assert_arg]{assert_arg()}} is a refactoring of \code{\link[base:match.arg]{base::match.arg()}} and relies on

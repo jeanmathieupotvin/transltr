@@ -75,6 +75,11 @@ Extract headers from \emph{translations source files}, parse their contents,
 and validate it. These are Markdown files containing translations and
 metadata formatted according to what \code{\link{transltr}} prescribes.
 }
+\details{
+Source headers extracted from \emph{translations source files} are parsed as
+named lists. There is no dedicated class for them, unlike \emph{source blocks}
+which are parsed as \code{\link{Block}} objects.
+}
 \note{
 Note that \code{\link[=from_src_header_version_1]{from_src_header_version_1()}} assumes \code{template_version} is
 always equal to \code{1} and ignores any value passed to it. The argument is
@@ -82,7 +87,9 @@ included to ease the implementation of \code{\link[=from_src_header]{from_src_he
 is in charge of validating it.
 }
 \seealso{
+\link{Translations Source Files},
 \code{\link[=read_translations]{read_translations()}},
+\code{\link[=write_translations]{write_translations()}},
 \code{\link[=extract_src_blocks]{extract_src_blocks()}},
 \code{\link[=from_src_block]{from_src_block()}}
 }

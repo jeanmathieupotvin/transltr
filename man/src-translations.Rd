@@ -30,10 +30,10 @@ points to a valid translations source file.
 \code{\link[=write_translations]{write_translations()}} is not yet implemented and throws an error.
 }
 \description{
-Read translations source files and parse them as \code{\link{Translator}}
-objects, or convert \code{\link{Translator}} objects back to translations
-source files.
+Read \link{Translations Source Files} and parse them as \code{\link{Translator}}
+objects, or convert \code{\link{Translator}} objects back to
+\link{Translations Source Files}.
 }
-\details{
-Placeholder.
+\seealso{
+\link{Translations Source Files}
 }

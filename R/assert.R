@@ -17,7 +17,7 @@
 #' guard clause into simple semantic functions. See Examples below.
 #'
 #' By convention, [NA][base::NA] values are **always** disallowed. This is
-#' because [transltr] rarely uses them.
+#' because [`transltr`][transltr] rarely uses them.
 #'
 #' @param x An object to be tested.
 #'

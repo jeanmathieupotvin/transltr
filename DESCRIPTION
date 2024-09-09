@@ -35,6 +35,7 @@ Collate:
     'io-text.R'
     'src-block.R'
     'src-header.R'
+    'src-translations-files.R'
     'src-translations.R'
     'to-string.R'
     'transltr-package.R'
