@@ -67,6 +67,7 @@ test_that("format() returns a character string", {
 
 
 test_that("print() returns its argument invisibly", {
+    withr::local_output_sink(tempfile())
     expect_invisible(print(test_loc))
     expect_identical(print(test_loc), test_loc)
 })
