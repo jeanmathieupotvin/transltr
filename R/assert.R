@@ -50,7 +50,9 @@
 #'   by [stops()].
 #'
 #' @returns
+#' [is_int()],
 #' [is_chr()],
+#' [is_lgl1()],
 #' [is_int1()],
 #' [is_chr1()],
 #' [is_list()],
@@ -58,7 +60,9 @@
 #' [is_named()], and
 #' [is_match()] all return a logical value.
 #'
+#' [assert_int()],
 #' [assert_chr()],
+#' [assert_lgl1()],
 #' [assert_int1()],
 #' [assert_chr1()],
 #' [assert_list()],
@@ -98,8 +102,22 @@
 #' @rdname assert
 #' @family is
 #' @keywords internal
+is_int <- function(x, allow_empty = FALSE) {
+    return(is.integer(x) && (length(x) || allow_empty) && !anyNA(x))
+}
+
+#' @rdname assert
+#' @family is
+#' @keywords internal
 is_chr <- function(x, allow_empty = FALSE) {
     return(is.character(x) && (length(x) || allow_empty) && !anyNA(x))
+}
+
+#' @rdname assert
+#' @family is
+#' @keywords internal
+is_lgl1 <- function(x) {
+    return(is.logical(x) && length(x) == 1L && !is.na(x))
 }
 
 #' @rdname assert
@@ -168,6 +186,29 @@ is_match <- function(x, choices, allow_partial = FALSE) {
 #' @rdname assert
 #' @family assert
 #' @keywords internal
+assert_int <- function(
+    x,
+    allow_empty = FALSE,
+    throw_error = TRUE,
+    x_name      = deparse(substitute(x)))
+{
+    err_msg <- ""
+
+    if (!is_int(x, allow_empty)) {
+        err_msg <- sprintf(
+            "'%s' must be a%s integer vector of non-NA values.",
+            x_name,
+            if (allow_empty) "" else " non-empty")
+
+        if (throw_error) stops(err_msg)
+    }
+
+    return(err_msg)
+}
+
+#' @rdname assert
+#' @family assert
+#' @keywords internal
 assert_chr <- function(
     x,
     allow_empty = FALSE,
@@ -181,6 +222,27 @@ assert_chr <- function(
             "'%s' must be a%s character vector of non-NA values.",
             x_name,
             if (allow_empty) "" else " non-empty")
+
+        if (throw_error) stops(err_msg)
+    }
+
+    return(err_msg)
+}
+
+#' @rdname assert
+#' @family assert
+#' @keywords internal
+assert_lgl1 <- function(
+    x,
+    throw_error = TRUE,
+    x_name      = deparse(substitute(x)))
+{
+    err_msg <- ""
+
+    if (!is_lgl1(x)) {
+        err_msg <- sprintf(
+            "'%s' must be a non-NA logical of length 1 ('TRUE' or 'FALSE').",
+            x_name)
 
         if (throw_error) stops(err_msg)
     }

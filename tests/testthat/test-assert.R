@@ -18,11 +18,31 @@ wrap_assert_arg_alt <- function(my_x = c(1L, 2L)) {
 }
 
 
+# is_int() ---------------------------------------------------------------------
+
+
+test_that("is_int() returns a logical", {
+    expect_true(is_int(1L))
+    expect_true(is_int(integer(2L)))
+    expect_false(is_int("1"))
+})
+
+test_that("is_int() disallows empty vectors by default", {
+    expect_false(is_int(integer()))
+    expect_true(is_int(integer(), allow_empty = TRUE))
+})
+
+test_that("is_int() disallows NAs", {
+    expect_false(is_int(NA_integer_))
+})
+
+
 # is_chr() ---------------------------------------------------------------------
 
 
 test_that("is_chr() returns a logical", {
     expect_true(is_chr(""))
+    expect_true(is_chr(character(2L)))
     expect_false(is_chr(1L))
 })
 
@@ -33,6 +53,25 @@ test_that("is_chr() disallows empty vectors by default", {
 
 test_that("is_chr() disallows NAs", {
     expect_false(is_chr(NA_character_))
+})
+
+
+# is_lgl1() --------------------------------------------------------------------
+
+
+test_that("is_lgl1() returns a logical", {
+    expect_true(is_lgl1(TRUE))
+    expect_true(is_lgl1(FALSE))
+    expect_false(is_lgl1(1L))
+})
+
+test_that("is_lgl1() disallows any length not equal to 1", {
+    expect_false(is_lgl1(logical()))
+    expect_false(is_lgl1(logical(2L)))
+})
+
+test_that("is_lgl1() disallows NAs", {
+    expect_false(is_lgl1(NA))
 })
 
 
@@ -50,7 +89,7 @@ test_that("is_int1() disallows any length not equal to 1", {
 })
 
 test_that("is_int1() disallows NAs", {
-    expect_false(is_int1(NA))
+    expect_false(is_int1(NA_integer_))
 })
 
 
@@ -179,6 +218,39 @@ test_that("is_match() exactly matches x by default", {
 })
 
 
+# assert_int() -----------------------------------------------------------------
+
+
+test_that("assert_int() returns an empty character if x is valid", {
+    expect_identical(assert_int(1L), "")
+})
+
+test_that("assert_int() throws an error by default if x is invalid", {
+    expect_error(assert_int("1"))
+})
+
+test_that("assert_int() adapts its error message(s)", {
+    expect_identical(
+        assert_int(1.0, throw_error = FALSE),
+        "'1' must be a non-empty integer vector of non-NA values.")
+
+    # assert_int() does not adapt its error message.
+    # It is constant. But we snapshot it anyway with
+    # a comment for consistency.
+    expect_snapshot(error = TRUE, {
+        "Error message of assert_int() is constant."
+        assert_int(1.0)
+    })
+})
+
+test_that("assert_int() sets argument's name", {
+    my_x <- "1"
+
+    expect_match(assert_int(my_x, throw_error = FALSE),               "^'my_x'")
+    expect_match(assert_int(my_x, throw_error = FALSE, x_name = "x"), "^'x'")
+})
+
+
 # assert_chr() -----------------------------------------------------------------
 
 
@@ -210,34 +282,36 @@ test_that("assert_chr() sets argument's name", {
 })
 
 
-# assert_chr1() ----------------------------------------------------------------
+# assert_lgl1() ----------------------------------------------------------------
 
 
-test_that("assert_chr1() returns an empty character if x is valid", {
-    expect_identical(assert_chr1("a"), "")
+test_that("assert_lgl1() returns an empty character if x is valid", {
+    expect_identical(assert_lgl1(TRUE), "")
 })
 
-test_that("assert_chr1() throws an error by default if x is invalid", {
-    expect_error(assert_chr1(1L))
+test_that("assert_lgl1() throws an error by default if x is invalid", {
+    expect_error(assert_lgl1(1L))
 })
 
-test_that("assert_chr1() adapts its error message(s)", {
+test_that("assert_lgl1() adapts its error message(s)", {
     expect_identical(
-        assert_chr1(1L, throw_error = FALSE),
-        "'1L' must be a non-NA and non-empty character of length 1.")
-    expect_identical(
-        assert_chr1(1L, allow_empty_string = TRUE, throw_error = FALSE),
-        "'1L' must be a non-NA character of length 1.")
+        assert_lgl1(1.0, throw_error = FALSE),
+        "'1' must be a non-NA logical of length 1 ('TRUE' or 'FALSE').")
 
-    expect_snapshot(assert_chr1(1L),                            error = TRUE)
-    expect_snapshot(assert_chr1(1L, allow_empty_string = TRUE), error = TRUE)
+    # assert_lgl1() does not adapt its error message.
+    # It is constant. But we snapshot it anyway with
+    # a comment for consistency.
+    expect_snapshot(error = TRUE, {
+        "Error message of assert_lgl1() is constant."
+        assert_lgl1(1.0)
+    })
 })
 
-test_that("assert_chr1() sets argument's name", {
-    my_x <- 1L
+test_that("assert_lgl1() sets argument's name", {
+    my_x <- 1.0
 
-    expect_match(assert_chr1(my_x, throw_error = FALSE),               "^'my_x'")
-    expect_match(assert_chr1(my_x, throw_error = FALSE, x_name = "x"), "^'x'")
+    expect_match(assert_lgl1(my_x, throw_error = FALSE),               "^'my_x'")
+    expect_match(assert_lgl1(my_x, throw_error = FALSE, x_name = "x"), "^'x'")
 })
 
 
@@ -274,6 +348,37 @@ test_that("assert_int1() sets argument's name", {
 })
 
 
+# assert_chr1() ----------------------------------------------------------------
+
+
+test_that("assert_chr1() returns an empty character if x is valid", {
+    expect_identical(assert_chr1("a"), "")
+})
+
+test_that("assert_chr1() throws an error by default if x is invalid", {
+    expect_error(assert_chr1(1L))
+})
+
+test_that("assert_chr1() adapts its error message(s)", {
+    expect_identical(
+        assert_chr1(1L, throw_error = FALSE),
+        "'1L' must be a non-NA and non-empty character of length 1.")
+    expect_identical(
+        assert_chr1(1L, allow_empty_string = TRUE, throw_error = FALSE),
+        "'1L' must be a non-NA character of length 1.")
+
+    expect_snapshot(assert_chr1(1L),                            error = TRUE)
+    expect_snapshot(assert_chr1(1L, allow_empty_string = TRUE), error = TRUE)
+})
+
+test_that("assert_chr1() sets argument's name", {
+    my_x <- 1L
+
+    expect_match(assert_chr1(my_x, throw_error = FALSE),               "^'my_x'")
+    expect_match(assert_chr1(my_x, throw_error = FALSE, x_name = "x"), "^'x'")
+})
+
+
 # assert_list() ----------------------------------------------------------------
 
 
@@ -305,7 +410,7 @@ test_that("assert_list() sets argument's name", {
 })
 
 
-# assert_between() ------------------------------------------------------------
+# assert_between() -------------------------------------------------------------
 
 
 test_that("assert_between() returns an empty character if x is valid", {

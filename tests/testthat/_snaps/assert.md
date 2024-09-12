@@ -1,3 +1,12 @@
+# assert_int() adapts its error message(s)
+
+    Code
+      # Error message of assert_int() is constant.
+      assert_int(1)
+    Condition
+      Error:
+      ! '1' must be a non-empty integer vector of non-NA values.
+
 # assert_chr() adapts its error message(s)
 
     Code
@@ -14,6 +23,24 @@
       Error:
       ! '1L' must be a character vector of non-NA values.
 
+# assert_lgl1() adapts its error message(s)
+
+    Code
+      # Error message of assert_lgl1() is constant.
+      assert_lgl1(1)
+    Condition
+      Error:
+      ! '1' must be a non-NA logical of length 1 ('TRUE' or 'FALSE').
+
+# assert_int1() adapts its error message(s)
+
+    Code
+      # Error message of assert_int1() is constant.
+      assert_int1(1)
+    Condition
+      Error:
+      ! '1' must be a non-NA integer of length 1.
+
 # assert_chr1() adapts its error message(s)
 
     Code
@@ -29,15 +56,6 @@
     Condition
       Error:
       ! '1L' must be a non-NA character of length 1.
-
-# assert_int1() adapts its error message(s)
-
-    Code
-      # Error message of assert_int1() is constant.
-      assert_int1(1)
-    Condition
-      Error:
-      ! '1' must be a non-NA integer of length 1.
 
 # assert_list() adapts its error message(s)
 
