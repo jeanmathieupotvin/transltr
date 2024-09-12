@@ -1,14 +1,15 @@
-hash <- "test-hash"
-text <- "Hello, world!"
-key  <- "en"
-locs <- list(
-    location("file1", 1L, 2L, 3L, 4L),
-    location("file2", 5L, 6L, 7L, 8L))
-trans <- c(
-    fr = "Bonjour, monde!",
-    es = "¡Hola, mundo!")
+test_block <- block(
+    hash <- "test-hash",
+    text <- "Hello, world!",
+    key  <- "en",
+    locs <- list(
+        location("file1", 1L, 2L, 3L, 4L),
+        location("file2", c(1L, 2L), c(3L, 4L), c(5L, 6L), c(7L, 8L))),
+    trans <- c(
+        fr = "Bonjour, monde!",
+        es = "¡Hola, mundo!"))
 
-test_block <- block(hash, text, key, locs, trans)
+fmt_block <- format(test_block)
 
 
 # block() ----------------------------------------------------------------------
@@ -74,15 +75,27 @@ test_that("is_block() works", {
 
 
 test_that("format() returns a character string", {
-    block_lines <- format(test_block)
+    # This test block is a little bit
+    # fragile, but hardcoding expected
+    # values is much more simpler.
 
-    expect_type(block_lines, "character")
-    expect_length(block_lines, 5L)
-    expect_identical(block_lines[[1L]], "Hash     : test-hash")
-    expect_identical(block_lines[[2L]], "Text     : Hello, world!")
-    expect_identical(block_lines[[3L]], "Text key : en")
-    expect_identical(block_lines[[4L]], "Lang keys: 'en', 'fr', 'es'")
-    expect_identical(block_lines[[5L]], "Locations:\n - file1: ln 1, col 2 @ ln 3, col 4\n - file2: ln 5, col 6 @ ln 7, col 8")
+    expect_type(fmt_block, "character")
+    expect_identical(fmt_block[[1L]], "<Block>")
+    expect_identical(fmt_block[[2L]], "  Hash     : test-hash")
+    expect_identical(fmt_block[[3L]], "  Text     : Hello, world!")
+    expect_identical(fmt_block[[4L]], "  Text key : en")
+    expect_identical(fmt_block[[5L]], "  Lang keys: 'en', 'fr', 'es'")
+})
+
+test_that("format() includes formatted Location objects in the output", {
+    # We remove the extra padding to ease the comparison.
+    # We want to check all format.Location() outputs are
+    # included in the output.
+    fmt_locs       <- lapply(test_block$locations, format)
+    fmt_locs_block <- gsub("^ {2}", "", fmt_block[6L:12L])
+
+    expect_identical(fmt_locs_block[1L:3L], fmt_locs[[1L]])
+    expect_identical(fmt_locs_block[4L:7L], fmt_locs[[2L]])
 })
 
 

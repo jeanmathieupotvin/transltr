@@ -59,12 +59,16 @@
     Code
       print(test_block)
     Output
-      <Block> 
-      Hash     : test-hash
-      Text     : Hello, world!
-      Text key : en
-      Lang keys: 'en', 'fr', 'es'
-      Locations:
-       - file1: ln 1, col 2 @ ln 3, col 4
-       - file2: ln 5, col 6 @ ln 7, col 8
+      <Block>
+        Hash     : test-hash
+        Text     : Hello, world!
+        Text key : en
+        Lang keys: 'en', 'fr', 'es'
+        <Location>
+          'file1':
+            - line 1, column 2 @ line 3, column 4
+        <Location>
+          'file2':
+            - line 1, column 3 @ line 5, column 7
+            - line 2, column 4 @ line 6, column 8
 

@@ -75,7 +75,6 @@ block <- function(
     .texts        <- c(text, translations)
     names(.texts) <- c(text_key, names(translations))
 
-
     return(
         structure(
             list(
@@ -97,25 +96,23 @@ is_block <- function(x) {
 #' @rdname class-block
 #' @export
 format.Block <- function(x, ...) {
+    location_lines <- paste0("  ", unlist(lapply(x$locations, format)))
+
     # Restructuring x allows us to
     # call paste0() only once below.
     x <- list(
-        "Hash     : "  = x$hash,
-        "Text     : "  = x$text,
-        "Text key : "  = x$text_key,
-        "Lang keys: "  = to_string(names(x$.texts), TRUE, ", "),
-        "Locations:\n" = paste0(
-            " - ",
-            vapply_1c(x$locations, format),
-            collapse = "\n"))
+        "<Block>",
+        "  Hash     : "  = x$hash,
+        "  Text     : "  = x$text,
+        "  Text key : "  = x$text_key,
+        "  Lang keys: "  = to_string(names(x$.texts), TRUE, ", "))
 
-    return(paste0(names(x), x))
-
+    return(c(paste0(names(x), x), location_lines))
 }
 
 #' @rdname class-block
 #' @export
 print.Block <- function(x, ...) {
-    cat("<Block> ", format(x, ...), sep = "\n")
+    cat(format(x, ...), sep = "\n")
     return(invisible(x))
 }
