@@ -1,17 +1,20 @@
 #' Source locations
 #'
-#' An internal class that represents source locations. A *source location* is a
-#' a range of source lines of a given source script. As such, it may reference
-#' anything.
+#' An internal class to represent source locations.
+#'
+#' A *source location* is a line/column range within any text file.
+#' [`Location`][Location] objects may refer multiple distinct ranges within
+#' the same source script. This is why arguments `line1`, `col1`, `line2`, and
+#' `col2` accept integer vectors (and not only scalar values).
 #'
 #' @param path A non-empty and non-[NA][base::NA] character string. The
 #'   underlying source file.
 #'
-#' @param line1,col1 A non-[NA][base::NA] integer. The (inclusive) starting
-#'   point of what is being referenced.
+#' @param line1,col1 A non-empty integer vector of non-[NA][base::NA] values.
+#'   The (inclusive) starting point(s) of what is being referenced.
 #'
-#' @param line2,col2 A non-[NA][base::NA] integer. The (inclusive) end of what
-#'   is being referenced.
+#' @param line2,col2 A non-empty integer vector of non-[NA][base::NA] values.
+#'   The (inclusive) end(s) of what is being referenced.
 #'
 #' @param x Any \R object. Obviously, an object of class [`Location`][Location]
 #'   for the S3 methods defined here.
@@ -44,14 +47,19 @@ location <- function(
     col2  = 1L)
 {
     assert_chr1(path)
-    assert_int1(line1)
-    assert_int1(col1)
-    assert_int1(line2)
-    assert_int1(col2)
-    assert_between(line1, 1L)
-    assert_between(col1,  1L)
-    assert_between(line2, 1L)
-    assert_between(col2,  1L)
+    assert_int(line1)
+    assert_int(col1)
+    assert_int(line2)
+    assert_int(col2)
+
+    if (!all(vapply_1l(c(line1, line2, col1, col2), is_between, min = 1L))) {
+        stops(
+            "all values passed to 'line1', 'col1', 'line2', and 'col2' ",
+            "must be non-NA numeric values in the range [1, Inf).")
+    }
+    if (!all(length(line1) == c(length(col1), length(line2), length(col2)))) {
+        stops("line1', 'col1', 'line2', and 'col2' must all have the same length.")
+    }
 
     return(
         structure(
@@ -73,12 +81,27 @@ is_location <- function(x) {
 #' @rdname class-location
 #' @export
 format.Location <- function(x, ...) {
-    return(do.call(sprintf, c(fmt = "%s: ln %i, col %i @ ln %i, col %i", x)))
+    # Format of elements in a printf style.
+    # We use a base padding of 2 spaces.
+    fmt_path   <- "  '%s':"
+    fmt_ranges <- "    - line %s, column %s @ line %s, column %s"
+
+    # Align ranges by components for
+    # nice outputs when printing.
+    integers <- x[c("line1", "col1", "line2", "col2")]
+    chars    <- lapply(integers, encodeString, width = NULL, justify = "right")
+
+    # Integers are converted to strings when
+    # padded below. We use %s instead of %i.
+    return(c(
+        "<Location>",
+        sprintf(fmt_path, x$path),
+        do.call(sprintf, c(fmt = fmt_ranges, chars))))
 }
 
 #' @rdname class-location
 #' @export
 print.Location <- function(x, ...) {
-    cat("<Location> ", format(x, ...), "\n", sep = "")
+    cat(format(x, ...), sep = "\n")
     return(invisible(x))
 }

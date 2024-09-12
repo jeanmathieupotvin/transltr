@@ -20,11 +20,11 @@ is_location(x)
 \item{path}{A non-empty and non-\link[base:NA]{NA} character string. The
 underlying source file.}
 
-\item{line1, col1}{A non-\link[base:NA]{NA} integer. The (inclusive) starting
-point of what is being referenced.}
+\item{line1, col1}{A non-empty integer vector of non-\link[base:NA]{NA} values.
+The (inclusive) starting point(s) of what is being referenced.}
 
-\item{line2, col2}{A non-\link[base:NA]{NA} integer. The (inclusive) end of what
-is being referenced.}
+\item{line2, col2}{A non-empty integer vector of non-\link[base:NA]{NA} values.
+The (inclusive) end(s) of what is being referenced.}
 
 \item{x}{Any \R object. Obviously, an object of class \code{\link{Location}}
 for the S3 methods defined here.}
@@ -43,9 +43,13 @@ for the S3 methods defined here.}
 \code{\link[=print.Location]{print.Location()}} returns argument \code{x} invisibly.
 }
 \description{
-An internal class that represents source locations. A \emph{source location} is a
-a range of source lines of a given source script. As such, it may reference
-anything.
+An internal class to represent source locations.
+}
+\details{
+A \emph{source location} is a line/column range within any text file.
+\code{\link{Location}} objects may refer multiple distinct ranges within
+the same source script. This is why arguments \code{line1}, \code{col1}, \code{line2}, and
+\code{col2} accept integer vectors (and not only scalar values).
 }
 \note{
 \code{\link[=location]{location()}} is mostly used to restructure information returned by
