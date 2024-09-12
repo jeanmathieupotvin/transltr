@@ -61,7 +61,7 @@
 #'    unique identifier for the underlying block.
 #'
 #' 3. The **location** of the source text in the project. Since the same source
-#'    text can be reused multiple times, it may have multiple locations.
+#'    text can be reused multiple times, it **may have multiple locations**.
 #'
 #' 4. One or more **translations** of the source text. Each translation has
 #'    a corresponding *language key*. See section *Language keys* below.
@@ -114,10 +114,7 @@
 #' ```md
 #' # {{ source-text-reproducible-hash }}
 #'
-#' | Source script | Start              | End                |
-#' | ------------- | -------------------|------------------- |
-#' | `...`         | `line X, column X` | `line X, column X` |
-#' | `...`         | `line X, column X` | `line X, column X` |
+#' Source text location(s).
 #'
 #' ## {{ source-language-key }}
 #'
@@ -140,7 +137,8 @@
 #'
 #' There are three **important rules to follow**.
 #'
-#' * Never manually modify information enclosed by `{{` and `}}`.
+#' * Never manually modify sections whose names are enclosed by
+#'   `` `{{ `` and `` }}` ``.
 #'
 #' * Never manually add further (new) blocks. They are generated automatically
 #'   from source scripts.

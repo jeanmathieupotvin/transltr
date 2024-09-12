@@ -67,7 +67,7 @@ A block always has at least four components.
 \item A \strong{reproducible hash} generated from the source text. It is used as a
 unique identifier for the underlying block.
 \item The \strong{location} of the source text in the project. Since the same source
-text can be reused multiple times, it may have multiple locations.
+text can be reused multiple times, it \strong{may have multiple locations}.
 \item One or more \strong{translations} of the source text. Each translation has
 a corresponding \emph{language key}. See section \emph{Language keys} below.
 }
@@ -123,10 +123,7 @@ Blocks are structured according to this template.
 
 \if{html}{\out{<div class="sourceCode md">}}\preformatted{# \{\{ source-text-reproducible-hash \}\}
 
-| Source script | Start              | End                |
-| ------------- | -------------------|------------------- |
-| `...`         | `line X, column X` | `line X, column X` |
-| `...`         | `line X, column X` | `line X, column X` |
+Source text location(s).
 
 ## \{\{ source-language-key \}\}
 
@@ -150,7 +147,8 @@ Spaces before and after titles (\verb{#} and \verb{##}) are ignored.
 
 There are three \strong{important rules to follow}.
 \itemize{
-\item Never manually modify information enclosed by \verb{\{\{} and \verb{\}\}}.
+\item Never manually modify sections whose names are enclosed by
+\verb{`\{\{} and \verb{\}\}`}.
 \item Never manually add further (new) blocks. They are generated automatically
 from source scripts.
 \item Ensure all language keys have a corresponding entry in  header's field

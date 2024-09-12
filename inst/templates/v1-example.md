@@ -22,14 +22,16 @@ language_keys:
     jp: 日本語
 ---
 
-# {{ 60ed1cd2b78a3448e7fab38d5830e249 }}
+# `{{ 60ed1cd2b78a3448e7fab38d5830e249 }}`
 
-| **Source script** | **Start**            | **End**              |
-| ----------------- | -------------------- |--------------------- |
-| `R/my-script-1.R` | `line 14, column 08` | `line 18, column 22` |
-| `R/utils.R`       | `line 03, column 02` | `line 24, column 78` |
+`file1`:
+  - line  1, column   2 @ line    3, column  4224
+  - line 24, column 434 @ line 3421, column 35972
 
-## {{ en }}
+`file2`:
+  - line 5, column 6 @ line 7, column 8
+
+## `{{ en }}`
 
 When transplanting seedlings, candied teapots will make the task easier. The
 Great Dane looked more like a horse than a dog. I want to buy a onesie but
@@ -71,14 +73,12 @@ la biblioteca de una sola habitación.
 とにかく行きました。黒いオープンカーに乗っている間、彼女の髪は風にさらされていました。
 で 真実を知りたくて、彼はワンルームの図書館に入った
 
-# {{ 9bbbb7410fa6464a1a6a216919179455 }}
+# `{{ 9bbbb7410fa6464a1a6a216919179455 }}`
 
-| **Source script** | **Start**            | **End**              |
-| ----------------- | -------------------- |--------------------- |
-| `R/my-script-1.R` | `line 14, column 08` | `line 18, column 22` |
-| `R/utils.R`       | `line 03, column 02` | `line 24, column 78` |
+`file1`:
+  - line  1, column   2 @ line    3, column  4224
 
-## {{ en }}
+## `{{ en }}`
 
 Hello, world!
 
