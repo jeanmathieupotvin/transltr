@@ -15,3 +15,43 @@
       Error:
       ! this 'placeholder' becomes part of the error message.
 
+# strip_empty_strings() validates argument x
+
+    Code
+      strip_empty_strings(1L)
+    Condition
+      Error:
+      ! 'x' must be a character vector of non-NA values.
+
+# strip_empty_strings() validates argument which
+
+    Code
+      strip_empty_strings(which = "error")
+    Condition
+      Error:
+      ! 'which' must be equal to 'both', 'leading' or 'trailing'.
+
+# strip_chars() validates argument x
+
+    Code
+      strip_chars(1L)
+    Condition
+      Error:
+      ! 'x' must be a character vector of non-NA values.
+
+# strip_chars() validates argument chars
+
+    Code
+      strip_chars(chars = 1L)
+    Condition
+      Error:
+      ! 'chars' must be a character vector of non-NA values.
+
+---
+
+    Code
+      strip_chars("a", "aa")
+    Condition
+      Error:
+      ! 'chars' must only contain individual characters.
+

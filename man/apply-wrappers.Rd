@@ -30,6 +30,8 @@ safety.
 Other utility functions: 
 \code{\link{\%??\%}()},
 \code{\link{stops}()},
+\code{\link{strip_chars}()},
+\code{\link{strip_empty_strings}()},
 \code{\link{to_string}()},
 \code{\link{utc}()}
 }
