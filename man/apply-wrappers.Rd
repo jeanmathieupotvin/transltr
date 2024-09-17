@@ -2,10 +2,13 @@
 % Please edit documentation in R/utils.R
 \name{vapply_1l}
 \alias{vapply_1l}
+\alias{vapply_1i}
 \alias{vapply_1c}
 \title{Safe apply wrappers}
 \usage{
 vapply_1l(x, fun, ...)
+
+vapply_1i(x, fun, ...)
 
 vapply_1c(x, fun, ...)
 }
@@ -18,8 +21,10 @@ vapply_1c(x, fun, ...)
 It later passes them to \code{fun}.}
 }
 \value{
-\code{\link[=vapply_1l]{vapply_1l()}} and \code{\link[=vapply_1c]{vapply_1c()}} respectively return a logical and a
-character vector of the same length as \code{x}. Names are always discarded.
+\code{\link[=vapply_1l]{vapply_1l()}},
+\code{\link[=vapply_1l]{vapply_1l()}}, and
+\code{\link[=vapply_1c]{vapply_1c()}} respectively return a logical, an integer, and a character
+vector having the same length as \code{x}. Names are always discarded.
 }
 \description{
 These functions wrap a function of the \code{\link[base:lapply]{*apply()}}

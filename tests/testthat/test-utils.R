@@ -16,6 +16,20 @@ test_that("vapply_1l() returns a logical vector", {
 
     expect_type(test_out, "logical")
     expect_length(test_out, length(test_vec))
+    expect_named(test_vec, NULL)
+})
+
+
+# vapply_1i() ------------------------------------------------------------------
+
+
+test_that("vapply_1i() returns a logical vector", {
+    test_vec <- c(1L, 2L, 3L)
+    test_out <- vapply_1i(test_vec, `+`, e2 = 0L)
+
+    expect_type(test_out, "integer")
+    expect_length(test_out, length(test_vec))
+    expect_named(test_vec, NULL)
 })
 
 
@@ -28,6 +42,7 @@ test_that("vapply_1c() returns a character vector", {
 
     expect_type(test_out, "character")
     expect_length(test_out, length(test_vec))
+    expect_named(test_vec, NULL)
 })
 
 

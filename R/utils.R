@@ -36,14 +36,22 @@
 #'   It later passes them to `fun`.
 #'
 #' @returns
-#' [vapply_1l()] and [vapply_1c()] respectively return a logical and a
-#' character vector of the same length as `x`. Names are always discarded.
+#' [vapply_1l()],
+#' [vapply_1l()], and
+#' [vapply_1c()] respectively return a logical, an integer, and a character
+#' vector having the same length as `x`. Names are always discarded.
 #'
 #' @rdname apply-wrappers
 #' @family utility functions
 #' @keywords internal
 vapply_1l <- function(x, fun, ...) {
     return(vapply(x, fun, NA, ..., USE.NAMES = FALSE))
+}
+
+#' @rdname apply-wrappers
+#' @keywords internal
+vapply_1i <- function(x, fun, ...) {
+    return(vapply(x, fun, NA_integer_, ..., USE.NAMES = FALSE))
 }
 
 #' @rdname apply-wrappers
