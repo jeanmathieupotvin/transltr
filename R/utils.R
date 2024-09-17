@@ -1,27 +1,3 @@
-#' Nullish coalescing operator
-#'
-#' The nullish coalescing (`%??%`) operator is a logical operator that
-#' returns its right-hand side operand when its left-hand side operand
-#' is null and otherwise returns its left-hand side operand.
-#'
-#' @param lhs Any \R object. Left-hand side operand.
-#'
-#' @param rhs Any \R object. Right-hand side operand.
-#'
-#' @returns Argument `rhs` if `lhs` is `NULL`, and `lhs` otherwise.
-#'
-#' @note
-#' The actual description of the operator was taken from
-#' [mdn web docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing).
-#'
-#' @rdname nullish-coalescing-op
-#' @family utility functions
-#' @keywords internal
-`%??%` <- function(lhs, rhs) {
-    return(if (is.null(lhs)) rhs else lhs)
-}
-
-
 #' Safe apply wrappers
 #'
 #' These functions wrap a function of the [`*apply()`][base::lapply()]

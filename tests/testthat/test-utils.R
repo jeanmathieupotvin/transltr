@@ -1,12 +1,3 @@
-# %??% -------------------------------------------------------------------------
-
-
-test_that("nullish coalescing special operator %??% works", {
-    expect_identical(NULL %??% 1L, 1L)
-    expect_identical(1L %??% 2L,   1L)
-})
-
-
 # vapply_1l() ------------------------------------------------------------------
 
 

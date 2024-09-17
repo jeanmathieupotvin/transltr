@@ -25,7 +25,6 @@ transltr:::strip_chars(c("{{a}}", "`b`", "##  c"), c("{", "}", "`", "#", " ")) #
 }
 \seealso{
 Other utility functions: 
-\code{\link{\%??\%}()},
 \code{\link{stops}()},
 \code{\link{strip_empty_strings}()},
 \code{\link{to_string}()},

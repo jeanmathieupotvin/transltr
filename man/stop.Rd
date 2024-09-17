@@ -30,7 +30,6 @@ error messages.
 }
 \seealso{
 Other utility functions: 
-\code{\link{\%??\%}()},
 \code{\link{strip_chars}()},
 \code{\link{strip_empty_strings}()},
 \code{\link{to_string}()},
