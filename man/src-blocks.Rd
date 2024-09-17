@@ -2,27 +2,12 @@
 % Please edit documentation in R/src-block.R
 \name{extract_src_blocks}
 \alias{extract_src_blocks}
-\alias{from_src_blocks}
-\alias{from_src_block}
-\alias{from_src_block_hash}
-\alias{extract_src_translations}
-\alias{from_src_translation}
-\alias{from_src_language_key}
+\alias{tokenize_src_block}
 \title{Placeholder}
 \usage{
 extract_src_blocks(x = character())
 
-from_src_blocks(src_blocks = list())
-
-from_src_block(x = character())
-
-from_src_block_hash(x = character(1L))
-
-extract_src_translations(x = character())
-
-from_src_translation(x = character())
-
-from_src_language_key(x = character(1L))
+tokenize_src_block(x = character())
 }
 \description{
 Placeholder for future documentation.

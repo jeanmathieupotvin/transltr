@@ -97,13 +97,18 @@ is_block <- function(x) {
 #' @export
 format.Block <- function(x, ...) {
     location_lines <- paste0("  ", unlist(lapply(x$locations, format)))
+    text <- if (nchar(txt <- x$text) > 64L) {
+        paste0(strtrim(txt, 64L), "...")
+    } else {
+        txt
+    }
 
     # Restructuring x allows us to
     # call paste0() only once below.
     x <- list(
         "<Block>",
         "  Hash     : "  = x$hash,
-        "  Text     : "  = x$text,
+        "  Text     : "  = text,
         "  Text key : "  = x$text_key,
         "  Lang keys: "  = to_string(names(x$.texts), TRUE, ", "))
 

@@ -42,7 +42,7 @@ hopes of finding out the truth, he entered the one-room library.
 
 ## fr
 
-Lors du repiquage des plants, des théières confites faciliteront la tâche. Le
+Lors du repiquage des plants, des théières confites faciliteront la tâche.
 Le Dogue Allemand ressemblait plus à un cheval qu'à un chien.
 
 Je veux acheter une combinaison mais je sais que ça ne me conviendra pas. Les
