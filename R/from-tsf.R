@@ -8,8 +8,17 @@
 #'   [extract_src_header()],
 #'   [from_src_header()]
 #'
-#' @rdname src-blocks
-#' @family source blocks mechanisms
+#' @rdname from-tsf
+#' @family translations source files mechanisms
+#' @keywords internal
+from_tsf <- function(x = character()) {
+    src_parts <- split_tsf(x)
+    header    <- from_src_header(src_parts$HEADER)
+    blocks    <- from_src_blocks(src_parts$BLOCKS, header$template_version)
+    return(list(header = header, blocks = blocks))
+}
+
+#' @rdname from-tsf
 #' @keywords internal
 split_tsf <- function(x = character()) {
     assert_chr(x, TRUE)
@@ -21,6 +30,36 @@ split_tsf <- function(x = character()) {
             BLOCKS = x_split[-1L]))
 }
 
+#' @rdname from-tsf
+#' @keywords internal
+from_src_header <- function(x = character()) {
+    .cond_callback <- \(cond) {
+        stopf(
+            "header could not be read. The parser returned this error:\n! %s.",
+            cond$message)
+    }
+
+    fields <- tryCatch(error = .cond_callback, warning = .cond_callback, {
+        yaml::yaml.load(x,
+            # eval.expr is always disallowed for better security.
+            eval.expr     = FALSE,
+            as.named.list = TRUE,
+            merge.warning = TRUE)
+    })
+
+    template_version <- fields$template_version
+    assert_match(template_version, get_template_versions())
+
+    # No need to add a default case because
+    # template_version is valid (see above).
+    return(
+        switch(
+            template_version,
+            do.call(from_src_header_v1, fields)))
+}
+
+#' @rdname from-tsf
+#' @keywords internal
 from_src_blocks <- function(
     blocks           = list(),
     template_version = get_template_versions())
@@ -29,17 +68,73 @@ from_src_blocks <- function(
     return(
         switch(
             template_version,
-            from_src_blocks_version_1(blocks)))
+            from_src_blocks_v1(blocks)))
 }
 
-from_src_blocks_version_1 <- function(blocks = list()) {
-    blocks_t <- lapply(blocks, tokenize_src_block_version_1)
-    return(lapply(blocks_t, parse_src_block_version_1))
-}
-
-#' @rdname src-blocks
+#' @usage
+#' from_src_header_v1(
+#'   template_version = 1L,
+#'   generated_by     = get_generated_by(),
+#'   generated_on     = get_generated_on(),
+#'   hash_algorithm   = get_hash_algorithms(),
+#'   hash_length      = 32L,
+#'   language_keys    = list(en = "English"),
+#'   ...
+#' )
+#'
+#' @rdname from-tsf
 #' @keywords internal
-tokenize_src_block_version_1 <- function(x = character()) {
+from_src_header_v1 <- function(
+    template_version = 1L,
+    generated_by     = get_generated_by(),
+    generated_on     = get_generated_on(),
+    hash_algorithm   = get_hash_algorithms(),
+    hash_length      = 32L,
+    language_keys    = list(en = "English"),
+    ...)
+{
+    # YAML maps are parsed as named lists by
+    # default. In the case of language_keys,
+    # it is better to have a named character.
+    language_keys <- unlist(language_keys)
+
+    assert_chr1(generated_by)
+    assert_chr1(generated_on)
+    assert_arg(hash_algorithm, TRUE)
+    assert_chr(language_keys, TRUE)
+    assert_named(language_keys)
+    assert_int1(hash_length)
+
+    # Check that hash_length matches what
+    # the chosen hashing algorithm expects.
+    length_range <- get_hash_length_range(hash_algorithm)
+    assert_between(hash_length, length_range[["min"]], length_range[["max"]])
+
+    if (!is_named(further_fields <- list(...))) {
+        stops("all further fields (custom user's fields) must be named.")
+    }
+
+    return(
+        list(
+            template_version = 1L,
+            generated_by     = generated_by,
+            generated_on     = generated_on,
+            hash_algorithm   = hash_algorithm,
+            hash_length      = hash_length,
+            language_keys    = language_keys,
+            further_fields   = further_fields))
+}
+
+#' @rdname from-tsf
+#' @keywords internal
+from_src_blocks_v1 <- function(blocks = list()) {
+    blocks_t <- lapply(blocks, tokenize_src_block_v1)
+    return(lapply(blocks_t, from_src_block_v1))
+}
+
+#' @rdname from-tsf
+#' @keywords internal
+tokenize_src_block_v1 <- function(x = character()) {
     assert_chr(x, TRUE)
 
     # Add 1 more (NULL) slot to
@@ -116,7 +211,9 @@ tokenize_src_block_version_1 <- function(x = character()) {
     return(t_x[-1L])
 }
 
-parse_src_block_version_1 <- function(tokens = list()) {
+#' @rdname from-tsf
+#' @keywords internal
+from_src_block_v1 <- function(tokens = list()) {
     t_split   <- split(tokens, vapply_1c(tokens, `[[`, i = "subtype"))
     t_hash    <- t_split$TITLE_HASH[[1L]]
     t_key_src <- t_split$TITLE_KEY_SRC[[1L]]
@@ -125,23 +222,27 @@ parse_src_block_version_1 <- function(tokens = list()) {
     a_t_txt   <- t_split[grepl("^TXT_TRL_", names(t_split))]
     a_t_loc   <- t_split[grepl("^LOC_SRC_", names(t_split))]
 
-    translations        <- lapply(a_t_txt, parse_src_block_txt_version_1)
-    names(translations) <- lapply(a_key_txt, parse_src_block_title_version_1)
+    translations        <- lapply(a_t_txt, from_src_block_txt_v1)
+    names(translations) <- lapply(a_key_txt, from_src_block_title_v1)
 
     return(
         block(
-            hash         = parse_src_block_title_version_1(t_hash),
-            text         = parse_src_block_txt_version_1(a_src_txt),
-            text_key     = parse_src_block_title_version_1(t_key_src),
-            locations    = lapply(a_t_loc, parse_src_block_loc_version_1),
+            hash         = from_src_block_title_v1(t_hash),
+            text         = from_src_block_txt_v1(a_src_txt),
+            text_key     = from_src_block_title_v1(t_key_src),
+            locations    = lapply(a_t_loc, from_src_block_loc_v1),
             translations = translations))
 }
 
-parse_src_block_title_version_1 <- function(token = src_block_line_token("TITLE_HASH")) {
+#' @rdname from-tsf
+#' @keywords internal
+from_src_block_title_v1 <- function(token = src_block_line_token("TITLE_HASH")) {
     return(gsub("[#`{} \t]+", "", token$value))
 }
 
-parse_src_block_txt_version_1 <- function(tokens = list()) {
+#' @rdname from-tsf
+#' @keywords internal
+from_src_block_txt_v1 <- function(tokens = list()) {
     t_vals <- vapply_1c(tokens, `[[`, i = "value")
     text   <- strip_empty_strings(t_vals)
 
@@ -160,26 +261,32 @@ parse_src_block_txt_version_1 <- function(tokens = list()) {
     return(paste0(text, collapse = ""))
 }
 
-parse_src_block_loc_version_1 <- function(tokens = list()) {
+#' @rdname from-tsf
+#' @keywords internal
+from_src_block_loc_v1 <- function(tokens = list()) {
     t_types <- vapply_1c(tokens, `[[`, i = "type")
     t_file  <- tokens[t_types == "LOC_SRC_PATH"][[1L]]
     t_rngs  <- tokens[t_types == "LOC_SRC_RNG"]
-    l_rngs  <- lapply(t_rngs, parse_src_block_loc_range_version_1)
+    l_rngs  <- lapply(t_rngs, from_src_block_loc_range_v1)
 
     return(
         location(
-            path  = parse_src_block_loc_path_version_1(t_file),
+            path  = from_src_block_loc_path_v1(t_file),
             line1 = vapply_1i(l_rngs, `[[`, i = "line1"),
             col1  = vapply_1i(l_rngs, `[[`, i = "col1"),
             line2 = vapply_1i(l_rngs, `[[`, i = "line2"),
             col2  = vapply_1i(l_rngs, `[[`, i = "col2")))
 }
 
-parse_src_block_loc_path_version_1 <- function(token = src_block_token("LOC_SRC_PATH")) {
+#' @rdname from-tsf
+#' @keywords internal
+from_src_block_loc_path_v1 <- function(token = src_block_token("LOC_SRC_PATH")) {
     return(gsub("[` \t]+|:$", "", token$value))
 }
 
-parse_src_block_loc_range_version_1 <- function(token = src_block_token("LOC_SRC_RNG")) {
+#' @rdname from-tsf
+#' @keywords internal
+from_src_block_loc_range_v1 <- function(token = src_block_token("LOC_SRC_RNG")) {
     t_value <- token$value
 
     # Extract raw digits from string.
@@ -202,6 +309,8 @@ parse_src_block_loc_range_version_1 <- function(token = src_block_token("LOC_SRC
     return(ints)
 }
 
+#' @rdname from-tsf
+#' @keywords internal
 src_block_line_token <- function(
     type = c(
         "NULL",

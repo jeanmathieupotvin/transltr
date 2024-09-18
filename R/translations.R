@@ -21,14 +21,12 @@
 #' @rdname src-translations
 #' @export
 read_translations <- function(path = "", encoding = "UTF-8") {
-    src_lines <- read_text(path, encoding = encoding)
-    src_parts <- split_tsf(src_lines)
-    header    <- from_src_header(src_parts$HEADER)
-    blocks    <- from_src_blocks(src_parts$BLOCKS, header$template_version)
+    tsf_lines  <- read_text(path, encoding = encoding)
+    # tsf_parsed <- from_tsf(tsf_lines)
 
     # TODO: call Translator$new() once class is implemented.
     # Output below is temporary and for debugging purposes.
-    return(list(header = header, blocks = blocks))
+    return(from_tsf(tsf_lines))
 }
 
 #' @rdname src-translations

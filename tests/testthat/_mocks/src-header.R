@@ -100,7 +100,7 @@ mock_src_header_no_template_version <- c(
     "---")
 
 
-# from_src_header_version_1() --------------------------------------------------
+# from_src_header_v1() ---------------------------------------------------------
 
 
 mock_src_header_v1 <- c(
