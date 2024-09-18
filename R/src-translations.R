@@ -22,8 +22,9 @@
 #' @export
 read_translations <- function(path = "", encoding = "UTF-8") {
     src_lines <- read_text(path, encoding = encoding)
-    header    <- from_src_header(extract_src_header(src_lines))
-    blocks    <- from_src_blocks(extract_src_blocks(src_lines))
+    src_parts <- split_tsf(src_lines)
+    header    <- from_src_header(src_parts$HEADER)
+    blocks    <- from_src_blocks(src_parts$BLOCKS, header$template_version)
 
     # TODO: call Translator$new() once class is implemented.
     # Output below is temporary and for debugging purposes.

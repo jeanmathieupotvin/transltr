@@ -32,6 +32,7 @@ Collate:
     'assert.R'
     'class-block.R'
     'class-location.R'
+    'class-token.R'
     'class-translator.R'
     'io-text.R'
     'src-block.R'
