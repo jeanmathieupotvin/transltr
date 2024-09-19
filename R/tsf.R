@@ -35,15 +35,13 @@
 #' ## Header
 #'
 #' The header contains metadata required for parsing purposes. You may also add
-#' further fields to the header in no preferred order. It must be enclosed by a
-#' pair of separators (three consecutive dashes) located on separate lines.
-#' In-line headers are disallowed for better readability.
+#' further fields to the header in no preferred order. It should be enclosed by
+#' a pair of separators (three consecutive dashes) located on separate lines.
 #'
-#' The inner contents (what is between the separators) is always formatted
-#' according to what the [YAML](https://yaml.org/) format prescribes. What it
-#' *must* contain depends on the underlying `template_version`. This field is
-#' mandatory no matter the version and is used for parsing purposes. See
-#' sections below.
+#' The contents is always formatted according to what [YAML](https://yaml.org/)
+#' prescribes. What it *must* include depends on the `template_version`. This
+#' field is mandatory no matter the version and is used for parsing purposes.
+#' See sections below.
 #'
 #' ## Blocks
 #'
@@ -148,12 +146,11 @@
 #'
 #' @seealso [read_translations()],
 #'   [write_translations()],
-#'   [extract_src_header()],
-#'   [from_src_header()],
-#'   [extract_src_blocks()],
-#'   [from_src_block()],
+#'   [from_tsf()],
+#    TODO: transform this comment into #' once implemented.
+#    [to_tsf()],
 #'   [new_block()]
 #'
-#' @rdname src-translations-files
+#' @rdname tsf
 #' @name Translations Source Files
 NULL

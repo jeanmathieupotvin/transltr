@@ -3,29 +3,32 @@
 \name{from_tsf}
 \alias{from_tsf}
 \alias{split_tsf}
-\alias{from_src_header}
-\alias{from_src_blocks}
-\alias{from_src_header_v1}
-\alias{from_src_blocks_v1}
-\alias{tokenize_src_block_v1}
-\alias{from_src_block_v1}
-\alias{from_src_block_title_v1}
-\alias{from_src_block_txt_v1}
-\alias{from_src_block_loc_v1}
-\alias{from_src_block_loc_path_v1}
-\alias{from_src_block_loc_range_v1}
-\alias{src_block_line_token}
-\title{Placeholder}
+\alias{from_tsf_header}
+\alias{from_tsf_blocks}
+\alias{from_tsf_header_v1}
+\alias{from_tsf_blocks_v1}
+\alias{from_tsf_block_v1}
+\alias{from_tsf_block_title_v1}
+\alias{from_tsf_block_txt_v1}
+\alias{from_tsf_block_loc_v1}
+\alias{from_tsf_block_loc_path_v1}
+\alias{from_tsf_block_loc_range_v1}
+\alias{tokenize_tsf_block_v1}
+\alias{tokenize_tsf_block_line_v1}
+\title{Convert translation source files back to R objects}
 \usage{
 from_tsf(x = character())
 
 split_tsf(x = character())
 
-from_src_header(x = character())
+from_tsf_header(x = character())
 
-from_src_blocks(blocks = list(), template_version = get_template_versions())
+from_tsf_blocks(
+  src_blocks = list(),
+  template_version = get_template_versions()
+)
 
-from_src_header_v1(
+from_tsf_header_v1(
   template_version = 1L,
   generated_by     = get_generated_by(),
   generated_on     = get_generated_on(),
@@ -35,38 +38,128 @@ from_src_header_v1(
   ...
 )
 
-from_src_blocks_v1(blocks = list())
+from_tsf_blocks_v1(src_blocks = list())
 
-tokenize_src_block_v1(x = character())
+from_tsf_block_v1(tokens = list())
 
-from_src_block_v1(tokens = list())
+from_tsf_block_title_v1(token = tsf_block_line_token("TITLE_HASH"))
 
-from_src_block_title_v1(token = src_block_line_token("TITLE_HASH"))
+from_tsf_block_txt_v1(tokens = list())
 
-from_src_block_txt_v1(tokens = list())
+from_tsf_block_loc_v1(tokens = list())
 
-from_src_block_loc_v1(tokens = list())
+from_tsf_block_loc_path_v1(token = src_block_token("LOC_SRC_PATH"))
 
-from_src_block_loc_path_v1(token = src_block_token("LOC_SRC_PATH"))
+from_tsf_block_loc_range_v1(token = src_block_token("LOC_SRC_RNG"))
 
-from_src_block_loc_range_v1(token = src_block_token("LOC_SRC_RNG"))
+tokenize_tsf_block_v1(x = character())
 
-src_block_line_token(
-  type = c("NULL", "TITLE_HASH", "TITLE_KEY_SRC", "TITLE_KEY_TXT", "LOC_SRC_PATH",
-    "LOC_SRC_RNG", "TXT"),
-  value = "",
-  subtype = NULL
-)
+tokenize_tsf_block_line_v1(x = character(1L))
+}
+\arguments{
+\item{x}{A character vector of source (unparsed) text lines. There is one
+exception: \code{\link[=tokenize_tsf_block_line_v1]{tokenize_tsf_block_line_v1()}} expects a character string.}
+
+\item{src_blocks}{A list of character vector of source (unparsed) text lines.
+Each element represents a different source \code{\link{Block}} object.}
+
+\item{template_version}{An integer. The translations source file's format
+version. See \code{\link[=get_template_versions]{get_template_versions()}} for available versions.}
+
+\item{generated_by}{A character string. How did the translations source
+file was generated? This will most likely be a version of the package,
+but any other mechanism is fine. Package \code{\link{transltr}} embraces
+portability. See \code{\link[=get_generated_by]{get_generated_by()}} for more information.}
+
+\item{generated_on}{A character string. When was the translations source
+file generated? See \code{\link[=get_generated_on]{get_generated_on()}} for the actual format.}
+
+\item{hash_algorithm}{A character string. The algorithm to use when
+hashing and identifying source texts that requires translation. It
+must be a value returned by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}.}
+
+\item{hash_length}{An integer. The desired number of hexadecimal characters
+to use when generating hashes with \code{hash_algorithm}. The length must
+comply with what the latter prescribes. See \code{\link[=get_hash_length_range]{get_hash_length_range()}} for
+more information.}
+
+\item{language_keys}{A named list of character strings, or a named character
+vector. It can be empty.
+\itemize{
+\item The values are \emph{languages}. For example, \code{"English"}, \code{"Français"},
+\code{"日本語"}, etc.
+\item The names are \emph{keys} that uniquely identify corresponding languages.
+As such, they are referred to as \emph{language keys}. For example,
+\code{en}, \code{fr}, \code{jp}, etc.
+}
+
+Users retain full control over names and keys, and are free to use
+whatever makes sense to them.}
+
+\item{...}{Further header custom fields. They must always be named.}
+
+\item{tokens}{A list of \code{\link[=new_block_line_token]{SrcBlockLineToken}}
+objects. Some functions such as \code{\link[=from_tsf_block_txt_v1]{from_tsf_block_txt_v1()}} expect these
+tokens to be of the same type.}
+
+\item{token}{A \code{\link[=new_block_line_token]{SrcBlockLineToken}} object.}
+}
+\value{
+\code{\link[=from_tsf]{from_tsf()}} returns a named list of length containing two elements:
+\code{header} and \code{blocks}. These respectively are the output of
+\code{\link[=from_tsf_header]{from_tsf_header()}} and \code{\link[=from_tsf_blocks]{from_tsf_blocks()}}.
+
+\code{\link[=from_tsf_header]{from_tsf_header()}} returns a named list. Its contents depends on the
+underlying (parsed) \code{template_version} value. See below.
+
+\code{\link[=from_tsf_header_v1]{from_tsf_header_v1()}} returns a named list of length 7 containing the
+arguments passed to it and an additional \code{further_fields} element. The
+latter is a named list holding arguments passed to \code{...}.
 }
 \description{
-Placeholder for future documentation.
+A collection of \strong{internal} mechanisms to convert a \link{Translations Source File}
+back into a proper \R object. Its contents is split, tokenized, parsed, and
+validated according to an underlying \code{template_version}. Typical users should
+always use \code{\link[=read_translations]{read_translations()}} instead.
+}
+\details{
+All functions above follow an implicit top-down hierarchy. Conceptually,
+they each break a \link{Translations Source File} into smaller components and
+eventually convert them to \R objects (if they are valid).
+
+\code{\link[=from_tsf]{from_tsf()}} is the main function that converts a vector of source lines into
+a list containing a header (a named list) and a list of \code{\link{Block}}
+objects. It relies on \code{\link[=split_tsf]{split_tsf()}} to separate source header lines from
+source blocks, and on \code{\link[=from_tsf_header]{from_tsf_header()}} and \code{\link[=from_tsf_blocks]{from_tsf_blocks()}} to
+actually convert these source lines into \R objects.
+\subsection{Header}{
+
+Since the header is just a set of YAML lines, \code{\link[=from_tsf_header]{from_tsf_header()}} defers
+the parsing step to \code{\link[yaml:yaml.load]{yaml::yaml.load()}}. Parsed values are validated by
+\code{\link[=from_tsf_header]{from_tsf_header_v*()}} subfunctions.
+}
+
+\subsection{Blocks}{
+
+Blocks consists of (at least) five main components formatted as Markdown
+text. They are trickier to parse and validate compared to headers because
+they are more complex by design.
+
+The highest-level functions are \code{\link[=from_tsf_blocks_v1]{from_tsf_blocks_v*()}}.
+They all are vectorized versions of \code{\link[=from_tsf_block_v1]{from_tsf_block_v*()}}.
+
+\strong{BOOKMARK -> TOKENIZATION.}
+}
+}
+\note{
+\code{\link[=from_tsf_header_v1]{from_tsf_header_v1()}} assumes \code{template_version} is always equal to
+\code{1} and ignores any value passed to it. The argument is included to ease the
+implementation of \code{\link[=from_tsf_header]{from_tsf_header()}}.
 }
 \seealso{
 \link{Translations Source Files},
 \code{\link[=read_translations]{read_translations()}},
-\code{\link[=write_translations]{write_translations()}},
-\code{\link[=extract_src_header]{extract_src_header()}},
-\code{\link[=from_src_header]{from_src_header()}}
+\code{\link[=write_translations]{write_translations()}}
 }
 \concept{translations source files mechanisms}
 \keyword{internal}
