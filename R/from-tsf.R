@@ -186,7 +186,7 @@
 #'
 #' @seealso [Translations Source Files],
 #'   [read_translations()],
-#'   [write_translations()]
+#'   [tsf_block_line_token()]
 #'
 #' @rdname from-tsf
 #' @family translations source files mechanisms

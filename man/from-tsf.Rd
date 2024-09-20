@@ -258,7 +258,7 @@ implementation of \code{\link[=from_tsf_header]{from_tsf_header()}}.
 \seealso{
 \link{Translations Source Files},
 \code{\link[=read_translations]{read_translations()}},
-\code{\link[=write_translations]{write_translations()}}
+\code{\link[=tsf_block_line_token]{tsf_block_line_token()}}
 }
 \concept{translations source files mechanisms}
 \keyword{internal}
