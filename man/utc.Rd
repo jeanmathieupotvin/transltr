@@ -25,8 +25,8 @@ better for readability.
 }
 \seealso{
 Other utility functions: 
+\code{\link{split_ul}()},
 \code{\link{stops}()},
-\code{\link{strip_chars}()},
 \code{\link{strip_empty_strings}()},
 \code{\link{to_string}()},
 \code{\link{vapply_1l}()}

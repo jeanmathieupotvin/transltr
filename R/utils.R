@@ -70,6 +70,25 @@ stopf <- function(fmt = "", ...) {
 }
 
 
+#' Divide into Groups
+#'
+#' [split_ul()] wraps [base::split()] and returns an **u**nnamed **l**ist.
+#'
+#' @param ... Potential arguments passed to [base::split()].
+#'
+#' @returns
+#' A list. See [base::split()] for further information.
+#'
+#' @rdname split-ul
+#' @family utility functions
+#' @keywords internal
+split_ul <- function(...) {
+    x <- split(...)
+    names(x) <- NULL
+    return(x)
+}
+
+
 #' Strip leading and trailing empty strings
 #'
 #' Strip leading and/or trailing superfluous empty elements from a character
@@ -117,39 +136,4 @@ strip_empty_strings <- function(
     start  <- if (which == "trailing") 1L        else min(nz_pos)
     end    <- if (which == "leading")  length(x) else max(nz_pos)
     return(x[seq.int(start, end, 1L)])
-}
-
-
-#' Strip specific characters
-#'
-#' Strip specific (individual) characters from a character vector.
-#'
-#' @param x A character vector. It can be empty.
-#'
-#' @param chars A character vector. It can be empty. If not, it may only contain
-#'   single-character elements.
-#'
-#' @returns A character vector having the same length as `x`.
-#'
-#' @examples
-#' transltr:::strip_chars("abc") # "abc"
-#' transltr:::strip_chars(c("{{a}}", "`b`", "##  c"), c("{", "}", "`", "#", " ")) # c("a", "b", "c")
-#'
-#' @rdname strip-chars
-#' @family utility functions
-#' @keywords internal
-strip_chars <- function(x = character(), chars = character()) {
-    assert_chr(x, TRUE)
-    assert_chr(chars, TRUE)
-
-    if (!length(chars) || !length(x)) {
-        return(x)
-    }
-    if (!all(nchar(chars) == 1L)) {
-        stops("'chars' must only contain individual characters.")
-    }
-
-    xchars    <- strsplit(x, NULL)
-    xstripped <- lapply(strsplit(x, NULL), \(x) x[is.na(match(x, chars))])
-    return(vapply_1c(xstripped, paste0, collapse = ""))
 }

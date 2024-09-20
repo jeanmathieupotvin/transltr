@@ -35,8 +35,8 @@ transltr:::strip_empty_strings(x, "trailing") # c("", "", "a", "b", "", "c", "")
 }
 \seealso{
 Other utility functions: 
+\code{\link{split_ul}()},
 \code{\link{stops}()},
-\code{\link{strip_chars}()},
 \code{\link{to_string}()},
 \code{\link{utc}()},
 \code{\link{vapply_1l}()}

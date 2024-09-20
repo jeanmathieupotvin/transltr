@@ -31,27 +31,3 @@
       Error:
       ! 'which' must be equal to 'both', 'leading' or 'trailing'.
 
-# strip_chars() validates argument x
-
-    Code
-      strip_chars(1L)
-    Condition
-      Error:
-      ! 'x' must be a character vector of non-NA values.
-
-# strip_chars() validates argument chars
-
-    Code
-      strip_chars(chars = 1L)
-    Condition
-      Error:
-      ! 'chars' must be a character vector of non-NA values.
-
----
-
-    Code
-      strip_chars("a", "aa")
-    Condition
-      Error:
-      ! 'chars' must only contain individual characters.
-
