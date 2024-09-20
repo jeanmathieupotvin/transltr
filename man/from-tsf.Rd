@@ -30,11 +30,11 @@ from_tsf_blocks(
 
 from_tsf_header_v1(
   template_version = 1L,
-  generated_by     = get_generated_by(),
-  generated_on     = get_generated_on(),
-  hash_algorithm   = get_hash_algorithms(),
-  hash_length      = 32L,
-  language_keys    = list(en = "English"),
+  generated_by,
+  generated_on,
+  hash_algorithm,
+  hash_length,
+  language_keys,
   ...
 )
 
@@ -102,53 +102,152 @@ whatever makes sense to them.}
 objects. Some functions such as \code{\link[=from_tsf_block_txt_v1]{from_tsf_block_txt_v1()}} expect these
 tokens to be of the same type.}
 
-\item{token}{A \code{\link[=new_block_line_token]{SrcBlockLineToken}} object.}
+\item{token}{A single \code{\link[=new_block_line_token]{SrcBlockLineToken}} object.}
 }
 \value{
-\code{\link[=from_tsf]{from_tsf()}} returns a named list of length containing two elements:
-\code{header} and \code{blocks}. These respectively are the output of
-\code{\link[=from_tsf_header]{from_tsf_header()}} and \code{\link[=from_tsf_blocks]{from_tsf_blocks()}}.
+This section is split according to the top-down hierarchy explained above.
+
+\code{\link[=from_tsf]{from_tsf()}} returns a named list of length 3 containing the following
+elements:
+
+\describe{
+\item{\code{header}}{The output of \code{\link[=from_tsf_header]{from_tsf_header()}}.}
+\item{\code{blocks}}{The output of \code{\link[=from_tsf_blocks]{from_tsf_blocks()}}.}
+\item{\code{rest}}{Remaining source lines, in order. These lines are not
+part of the header or any block. They are ignored and included as is.
+}
+}
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{---
+}\if{html}{\out{</div>}}
+
+\code{\link[=split_tsf]{split_tsf()}} returns a named list of length 3 containing the following
+elements:
+
+\describe{
+\item{\code{header}}{A character vector. The source lines of the header.}
+\item{\code{blocks}}{A list of character vector. Each element holds the source
+lines of one block.}
+\item{\code{rest}}{Remaining source lines, in order. These are lines that are
+not part of the header or any block. They are ignored and included as is.
+}
+}
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{---
+}\if{html}{\out{</div>}}
 
 \code{\link[=from_tsf_header]{from_tsf_header()}} returns a named list. Its contents depends on the
-underlying (parsed) \code{template_version} value. See below.
+underlying \code{template_version} value.
+
+\code{\link[=from_tsf_blocks]{from_tsf_blocks()}} returns a list containing \code{\link{Block}} objects.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{---
+}\if{html}{\out{</div>}}
 
 \code{\link[=from_tsf_header_v1]{from_tsf_header_v1()}} returns a named list of length 7 containing the
-arguments passed to it and an additional \code{further_fields} element. The
-latter is a named list holding arguments passed to \code{...}.
+values of its arguments along with a \code{further_fields} element. The latter
+is a named list holding values passed to \code{...}.
+
+\code{\link[=from_tsf_blocks_v1]{from_tsf_blocks_v1()}} returns a list containing \code{\link{Block}} objects.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{---
+}\if{html}{\out{</div>}}
+
+\code{\link[=from_tsf_block_v1]{from_tsf_block_v1()}} returns a \code{\link{Block}} object.
+
+\code{\link[=from_tsf_block_title_v1]{from_tsf_block_title_v1()}} and \code{\link[=from_tsf_block_txt_v1]{from_tsf_block_txt_v1()}} returns a
+character vector.
+
+\code{\link[=from_tsf_block_loc_v1]{from_tsf_block_loc_v1()}} returns a \code{\link{Location}} object.
+
+\code{\link[=from_tsf_block_loc_path_v1]{from_tsf_block_loc_path_v1()}} returns a character string.
+
+\code{\link[=from_tsf_block_loc_range_v1]{from_tsf_block_loc_range_v1()}} returns a named integer vector of length
+4 containing the following elements: \code{line1}, \code{col1}, \code{line2}, and \code{col2}.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{---
+}\if{html}{\out{</div>}}
+
+\code{\link[=tokenize_tsf_block_v1]{tokenize_tsf_block_v1()}} returns a list of
+\code{\link[=tsf_block_line_token]{SrcBlockLineToken}} objects. Its order matches
+the implicit order of argument \code{x}. Its length will typically be strictly
+less than the length of \code{x} because superfluous empty lines are dropped.
+
+\code{\link[=tokenize_tsf_block_line_v1]{tokenize_tsf_block_line_v1()}} returns a single
+\code{\link[=tsf_block_line_token]{SrcBlockLineToken}} object.
 }
 \description{
-A collection of \strong{internal} mechanisms to convert a \link{Translations Source File}
-back into a proper \R object. Its contents is split, tokenized, parsed, and
+A collection of \strong{internal} mechanisms to convert \link{Translations Source Files}
+back into proper \R objects. Its contents is split, tokenized, parsed, and
 validated according to an underlying \code{template_version}. Typical users should
 always use \code{\link[=read_translations]{read_translations()}} instead.
 }
 \details{
 All functions above follow an implicit top-down hierarchy. Conceptually,
-they each break a \link{Translations Source File} into smaller components and
-eventually convert them to \R objects (if they are valid).
+they break a \link{Translations Source File} into smaller components and
+eventually convert them to \R objects. \code{\link[=from_tsf]{from_tsf()}} is the entry point as
+the main function in charge of the conversion. It relies on \code{\link[=split_tsf]{split_tsf()}}
+to separate header's source lines from blocks' source lines, and on
+\code{\link[=from_tsf_header]{from_tsf_header()}} and \code{\link[=from_tsf_blocks]{from_tsf_blocks()}} to actually convert these source
+lines into \R objects.
 
-\code{\link[=from_tsf]{from_tsf()}} is the main function that converts a vector of source lines into
-a list containing a header (a named list) and a list of \code{\link{Block}}
-objects. It relies on \code{\link[=split_tsf]{split_tsf()}} to separate source header lines from
-source blocks, and on \code{\link[=from_tsf_header]{from_tsf_header()}} and \code{\link[=from_tsf_blocks]{from_tsf_blocks()}} to
-actually convert these source lines into \R objects.
+\if{html}{\out{<div class="sourceCode">}}\preformatted{from_tsf()
+  -> split_tsf()
+  -> from_tsf_header()
+  -> from_tsf_blocks()
+}\if{html}{\out{</div>}}
 \subsection{Header}{
 
-Since the header is just a set of YAML lines, \code{\link[=from_tsf_header]{from_tsf_header()}} defers
-the parsing step to \code{\link[yaml:yaml.load]{yaml::yaml.load()}}. Parsed values are validated by
-\code{\link[=from_tsf_header]{from_tsf_header_v*()}} subfunctions.
+Since the header is just a set of YAML lines, \code{\link[=from_tsf_header]{from_tsf_header()}} parses
+them with \code{\link[yaml:yaml.load]{yaml::yaml.load()}}. Parsed values are validated and transformed
+by \code{\link[=from_tsf_header]{from_tsf_header_v*()}} subfunctions.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{from_tsf_header()
+  -> from_tsf_header_v*()
+}\if{html}{\out{</div>}}
 }
 
 \subsection{Blocks}{
 
 Blocks consists of (at least) five main components formatted as Markdown
-text. They are trickier to parse and validate compared to headers because
+text. They are trickier to parse and validate (compared to headers) because
 they are more complex by design.
 
 The highest-level functions are \code{\link[=from_tsf_blocks_v1]{from_tsf_blocks_v*()}}.
-They all are vectorized versions of \code{\link[=from_tsf_block_v1]{from_tsf_block_v*()}}.
+They are all vectorized versions of \code{\link[=from_tsf_block_v1]{from_tsf_block_v*()}}
+which converts a single set of source lines into a \code{\link{Block}} object.
 
-\strong{BOOKMARK -> TOKENIZATION.}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{from_tsf_blocks()
+  -> from_tsf_blocks_v*()
+       -> tokenize_tsf_block_v*()
+            -> tokenize_tsf_block_line_v*()
+            -> tsf_block_line_token()
+       -> from_tsf_block_v*()
+            -> from_tsf_block_title_v*()
+            -> from_tsf_block_txt_v*()
+            -> from_tsf_block_loc_v*()
+                 -> from_tsf_block_loc_path_v*()
+                 -> from_tsf_block_loc_range_v*()
+}\if{html}{\out{</div>}}
+
+To ease the conversion and validation processes, source lines are first
+tokenized. It is important to note that unlike typical tokenizers,
+\code{\link[=tokenize_tsf_block_v1]{tokenize_tsf_block_v*()}} tokenizes whole lines.
+In the context of a TSF, source lines are the smallest units of meaningful
+data (most of the time) and tokenizing them is \emph{enough} for the purposes of
+\code{\link{transltr}}. Future versions of the package may introduce a more
+formal tokenization process.
+
+There are three main converters.
+\itemize{
+\item \code{\link[=from_tsf_block_title_v1]{from_tsf_block_title_v*()}} converts Markdown
+(H2) titles to proper language keys. See subsection \emph{Language Keys} of
+\link{Translations Source Files} for more information.
+\item \code{\link[=from_tsf_block_txt_v1]{from_tsf_block_txt_v*()}} converts Markdown
+text to proper \R character strings.
+\item \code{\link[=from_tsf_block_loc_v1]{from_tsf_block_loc_v*()}} converts Markdown
+text to \code{\link{Location}} objects.
+}
 }
 }
 \note{
