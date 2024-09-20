@@ -1,4 +1,4 @@
-#' Convert translation source files back to R objects
+#' Convert Translation Source Files Back to R Objects
 #'
 #' A collection of **internal** mechanisms to convert [Translations Source Files]
 #' back into proper \R objects. Its contents is split, tokenized, parsed, and

@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{split_ul}
 \alias{split_ul}
-\title{Divide into Groups}
+\title{Divide Into Groups}
 \usage{
 split_ul(...)
 }

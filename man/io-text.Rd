@@ -3,7 +3,7 @@
 \name{read_text}
 \alias{read_text}
 \alias{write_text}
-\title{Low-level text input and output}
+\title{Low-level Text Input and Output}
 \usage{
 read_text(path = "", encoding = "UTF-8")
 

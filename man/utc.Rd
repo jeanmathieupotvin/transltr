@@ -2,7 +2,7 @@
 % Please edit documentation in R/utc.R
 \name{utc}
 \alias{utc}
-\title{Get current date and time}
+\title{Get Current Date and Time}
 \usage{
 utc()
 }

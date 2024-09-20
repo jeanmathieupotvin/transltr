@@ -1,4 +1,4 @@
-#' Get current date and time
+#' Get Current Date and Time
 #'
 #' Get the current Coordinated Universal Time (UTC).
 #'

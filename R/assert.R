@@ -1,4 +1,4 @@
-#' Test objects
+#' Test Objects
 #'
 #' @description
 #' Functions below internally streamline usage of defensive programming

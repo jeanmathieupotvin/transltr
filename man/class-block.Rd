@@ -6,7 +6,7 @@
 \alias{is_block}
 \alias{format.Block}
 \alias{print.Block}
-\title{Translations blocks}
+\title{Translations Blocks}
 \usage{
 block(
   hash = "",

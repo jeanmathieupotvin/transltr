@@ -1,4 +1,4 @@
-#' Safe apply wrappers
+#' Safe Apply Wrappers
 #'
 #' These functions wrap a function of the [`*apply()`][base::lapply()]
 #' family and enforce various values for convenience and additional
@@ -37,7 +37,7 @@ vapply_1c <- function(x, fun, ...) {
 }
 
 
-#' Throw errors
+#' Throw Errors
 #'
 #' @description
 #' [stops()] is equivalent to `stop(..., call. = FALSE)`. It removes calls
@@ -70,7 +70,7 @@ stopf <- function(fmt = "", ...) {
 }
 
 
-#' Divide into Groups
+#' Divide Into Groups
 #'
 #' [split_ul()] wraps [base::split()] and returns an **u**nnamed **l**ist.
 #'
@@ -89,7 +89,7 @@ split_ul <- function(...) {
 }
 
 
-#' Strip leading and trailing empty strings
+#' Strip Leading and Trailing Empty Strings
 #'
 #' Strip leading and/or trailing superfluous empty elements from a character
 #' vector, keeping only non-empty elements and empty strings intertwined with

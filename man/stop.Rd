@@ -3,7 +3,7 @@
 \name{stops}
 \alias{stops}
 \alias{stopf}
-\title{Throw errors}
+\title{Throw Errors}
 \usage{
 stops(...)
 

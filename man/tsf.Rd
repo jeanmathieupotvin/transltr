@@ -93,7 +93,7 @@ names.
 }\if{html}{\out{</div>}}
 }
 
-\section{Template version 1}{
+\section{Template Version \code{1}}{
 
 
 This is the current default version.

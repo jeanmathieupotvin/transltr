@@ -1,12 +1,15 @@
+#' transltr: A General Purpose Translator for R
+#'
 # TODO: write this section once class Translator, find_translations(), and
 # set_translator() are implemented.
-#' @section Getting started:
+#' @section Getting Started:
 #' Placeholder for future documentation.
 #'
-#' @section Bugs and feedback:
+#' @section Bugs and Feedback:
 #' You may submit feedback, ideas, and bugs by creating an
 #' [issue on GitHub](https://github.com/jeanmathieupotvin/transltr/issues/new).
 #' Your help is appreciated.
+#'
 #' @keywords internal
 "_PACKAGE"
 

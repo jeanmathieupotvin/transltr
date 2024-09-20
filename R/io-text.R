@@ -1,4 +1,4 @@
-#' Low-level text input and output
+#' Low-level Text Input and Output
 #'
 #' [read_text()] and [write_text()] respectively wrap [base::readLines()] and
 #' [base::writeLines()]. They further validate their arguments, normalize

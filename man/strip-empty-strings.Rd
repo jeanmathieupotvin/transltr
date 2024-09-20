@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{strip_empty_strings}
 \alias{strip_empty_strings}
-\title{Strip leading and trailing empty strings}
+\title{Strip Leading and Trailing Empty Strings}
 \usage{
 strip_empty_strings(x = character(), which = c("both", "leading", "trailing"))
 }

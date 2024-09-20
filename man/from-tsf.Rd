@@ -15,7 +15,7 @@
 \alias{from_tsf_block_loc_range_v1}
 \alias{tokenize_tsf_block_v1}
 \alias{tokenize_tsf_block_line_v1}
-\title{Convert translation source files back to R objects}
+\title{Convert Translation Source Files Back to R Objects}
 \usage{
 from_tsf(x = character())
 

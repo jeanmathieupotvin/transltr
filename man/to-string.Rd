@@ -3,7 +3,7 @@
 \name{to_string}
 \alias{to_string}
 \alias{to_string.default}
-\title{Convert an R object to a character string}
+\title{Convert an R Object to a Character String}
 \usage{
 to_string(x, ...)
 

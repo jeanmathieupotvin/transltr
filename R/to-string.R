@@ -1,4 +1,4 @@
-#' Convert an R object to a character string
+#' Convert an R Object to a Character String
 #'
 #' This is an alternative to [base::toString()] that provides greater
 #' flexiblity. It is used internally to construct more meaningful error

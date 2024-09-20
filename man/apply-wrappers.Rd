@@ -4,7 +4,7 @@
 \alias{vapply_1l}
 \alias{vapply_1i}
 \alias{vapply_1c}
-\title{Safe apply wrappers}
+\title{Safe Apply Wrappers}
 \usage{
 vapply_1l(x, fun, ...)
 

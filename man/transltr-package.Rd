@@ -4,16 +4,16 @@
 \name{transltr-package}
 \alias{transltr}
 \alias{transltr-package}
-\title{transltr: A general purpose translator for R}
+\title{transltr: A General Purpose Translator for R}
 \description{
 A collection of translation mechanisms. Detect messages to be be translated in an application, organize their corresponding translated messages, and seamlessly use them.
 }
-\section{Getting started}{
+\section{Getting Started}{
 
 Placeholder for future documentation.
 }
 
-\section{Bugs and feedback}{
+\section{Bugs and Feedback}{
 
 You may submit feedback, ideas, and bugs by creating an
 \href{https://github.com/jeanmathieupotvin/transltr/issues/new}{issue on GitHub}.

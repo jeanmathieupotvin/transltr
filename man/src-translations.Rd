@@ -3,7 +3,7 @@
 \name{read_translations}
 \alias{read_translations}
 \alias{write_translations}
-\title{Read and write translations source files}
+\title{Read and Write Translations Source Files}
 \usage{
 read_translations(path = "", encoding = "UTF-8")
 

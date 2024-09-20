@@ -1,4 +1,4 @@
-#' Source locations
+#' Source Locations
 #'
 #' An internal class to represent source locations.
 #'

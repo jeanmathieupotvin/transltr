@@ -20,7 +20,7 @@
 \alias{assert_named}
 \alias{assert_match}
 \alias{assert_arg}
-\title{Test objects}
+\title{Test Objects}
 \usage{
 is_int(x, allow_empty = FALSE)
 

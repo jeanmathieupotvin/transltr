@@ -1,4 +1,4 @@
-#' Translations blocks
+#' Translations Blocks
 #'
 #' An internal class that encapsulates translations of the same source text.
 #'

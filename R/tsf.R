@@ -86,7 +86,7 @@
 #'   ...
 #' ```
 #'
-#' @section Template version 1:
+#' @section Template Version `1`:
 #'
 #' This is the current default version.
 #'

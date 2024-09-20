@@ -6,7 +6,7 @@
 \alias{is_location}
 \alias{format.Location}
 \alias{print.Location}
-\title{Source locations}
+\title{Source Locations}
 \usage{
 location(path = tempfile(), line1 = 1L, col1 = 1L, line2 = 1L, col2 = 1L)
 

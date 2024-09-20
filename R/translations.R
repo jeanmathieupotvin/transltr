@@ -1,4 +1,4 @@
-#' Read and write translations source files
+#' Read and Write Translations Source Files
 #'
 #' Read [Translations Source Files] and parse them as [`Translator`][Translator]
 #' objects, or convert [`Translator`][Translator] objects back to
@@ -22,11 +22,11 @@
 #' @export
 read_translations <- function(path = "", encoding = "UTF-8") {
     tsf_lines  <- read_text(path, encoding = encoding)
-    # tsf_parsed <- from_tsf(tsf_lines)
+    tsf_parsed <- from_tsf(tsf_lines)
 
     # TODO: call Translator$new() once class is implemented.
     # Output below is temporary and for debugging purposes.
-    return(from_tsf(tsf_lines))
+    return(from_tsf(tsf_lines)[c("header", "blocks")])
 }
 
 #' @rdname src-translations
