@@ -66,13 +66,16 @@ tsf_block_line_token <- function(
     value   = "",
     subtype = NULL)
 {
+    subtype <- subtype %||% type
+
     assert_arg(type, TRUE)
     assert_chr1(value, TRUE)
-    assert_chr1(subtype <- subtype %||% type, TRUE)
+    assert_chr1(subtype, TRUE)
+
     return(
         token(
             type,
             value,
             subtype = subtype,
-            super   = "SrcBlockLineToken"))
+            .super  = "SrcBlockLineToken"))
 }
