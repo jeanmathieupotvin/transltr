@@ -87,6 +87,19 @@ test_that("format() returns a character string", {
     expect_identical(fmt_block[[5L]], "  Lang keys: 'en', 'fr', 'es'")
 })
 
+test_that("format() truncates text if it cannot fit on a single line", {
+    long_text <- paste(
+        "This is a very long and very boring character string written in",
+        "such a way that it contains more than 64 individual characters",
+        "and therefore cannot fit on a single line. This will trigger the",
+        "underlying truncation logic of format.Block().",
+        sep = " ")
+
+    block <- block(hash, long_text, key, locs, trans)
+    expect_match(format(block)[[3L]], "\\.\\.\\.$")
+    expect_identical(nchar(format(block)[[3L]]), 80L)
+})
+
 test_that("format() includes formatted Location objects in the output", {
     # We remove the extra padding to ease the comparison.
     # We want to check all format.Location() outputs are
