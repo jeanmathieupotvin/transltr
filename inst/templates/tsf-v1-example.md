@@ -84,7 +84,7 @@ Lorem Ipsum のバージョンを含む
 # `{{ 9bbbb7410fa6464a1a6a216919179455 }}`
 
 `file1`:
-  - line  1, column   2 @ line    3, column  4224
+  - line 1, column 2 @ line 3, column 4
 
 ## `{{ en }}`
 
