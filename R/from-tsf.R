@@ -517,9 +517,9 @@ tokenize_tsf_block_line_v1 <- function(x = character(1L)) {
 
 
 .TSF_SRC_BLOCK_LINE_TOKEN_PATTERNS <- c(
-    TITLE_HASH     = "^\\#[ \t]*`\\{\\{",
-    TITLE_KEY_SRC  = "^\\#\\#[ \t]*`\\{\\{",
-    TITLE_KEY_TXT  = "^\\#\\#",
-    LOC_SRC_PATH   = "^`(.*?)`:$",
-    LOC_SRC_RNG    = "^[ \t]*-[ \t]*line[ \t]+[0-9]+,[ \t]*column[ \t]+[0-9]+ @ line[ \t]+[0-9]+,[ \t]*column[ \t]+[0-9]+$",
-    TXT            = "")
+    TITLE_HASH    = "^\\#[ \t]*`\\{\\{[ \t]*(.*?)\\}\\}`[ \t]*$",
+    TITLE_KEY_SRC = "^\\#\\#[ \t]*`\\{\\{[ \t]*(.*?)\\}\\}`[ \t]*",
+    TITLE_KEY_TXT = "^\\#\\#",
+    LOC_SRC_PATH  = "^`(.*?)`:$",
+    LOC_SRC_RNG   = "^[ \t]*-[ \t]*line[ \t]+[0-9]+,[ \t]*column[ \t]+[0-9]+[ \t]+@[ \t]+line[ \t]+[0-9]+,[ \t]*column[ \t]+[0-9]+$",
+    TXT           = "")
