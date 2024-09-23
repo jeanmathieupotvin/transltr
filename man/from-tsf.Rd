@@ -48,9 +48,9 @@ from_tsf_block_txt_v1(tokens = list())
 
 from_tsf_block_loc_v1(tokens = list())
 
-from_tsf_block_loc_path_v1(token = src_block_token("LOC_SRC_PATH"))
+from_tsf_block_loc_path_v1(token = tsf_block_line_token("LOC_SRC_PATH"))
 
-from_tsf_block_loc_range_v1(token = src_block_token("LOC_SRC_RNG"))
+from_tsf_block_loc_range_v1(token = tsf_block_line_token("LOC_SRC_RNG"))
 
 tokenize_tsf_block_v1(x = character())
 
@@ -98,11 +98,11 @@ whatever makes sense to them.}
 
 \item{...}{Further header custom fields. They must always be named.}
 
-\item{tokens}{A list of \code{\link[=new_block_line_token]{SrcBlockLineToken}}
+\item{tokens}{A list of \code{\link[=tsf_block_line_token]{BlockLineToken}}
 objects. Some functions such as \code{\link[=from_tsf_block_txt_v1]{from_tsf_block_txt_v1()}} expect these
 tokens to be of the same type.}
 
-\item{token}{A single \code{\link[=new_block_line_token]{SrcBlockLineToken}} object.}
+\item{token}{A single \code{\link[=tsf_block_line_token]{BlockLineToken}} object.}
 }
 \value{
 This section is split according to the top-down hierarchy explained above.
@@ -169,12 +169,13 @@ character vector.
 }\if{html}{\out{</div>}}
 
 \code{\link[=tokenize_tsf_block_v1]{tokenize_tsf_block_v1()}} returns a list of
-\code{\link[=tsf_block_line_token]{SrcBlockLineToken}} objects. Its order matches
-the implicit order of argument \code{x}. Its length will typically be strictly
-less than the length of \code{x} because superfluous empty lines are dropped.
+\code{\link[=tsf_block_line_token]{BlockLineToken}} objects. Its order matches
+the implicit order of argument \code{x}. Its length is equal to the length of
+\code{x}. \code{NULL} tokens are preserved even though they are (typically) never
+useful.
 
 \code{\link[=tokenize_tsf_block_line_v1]{tokenize_tsf_block_line_v1()}} returns a single
-\code{\link[=tsf_block_line_token]{SrcBlockLineToken}} object.
+\code{\link[=tsf_block_line_token]{BlockLineToken}} object.
 }
 \description{
 A collection of \strong{internal} mechanisms to convert \link{Translations Source Files}

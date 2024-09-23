@@ -41,7 +41,7 @@ automatically set equal to \code{type} for convenience.}
 arguments \code{type} and \code{value}. It will further contain fields that were
 passed to \code{...}.
 
-\code{\link[=tsf_block_line_token]{tsf_block_line_token()}} returns a named list of class \code{SrcBlockLineToken}
+\code{\link[=tsf_block_line_token]{tsf_block_line_token()}} returns a named list of class \code{BlockLineToken}
 containing the values of argument \code{type}, \code{value}, and \code{subtype}.
 }
 \description{

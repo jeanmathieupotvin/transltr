@@ -84,11 +84,11 @@
 #'
 #' @param ... Further header custom fields. They must always be named.
 #'
-#' @param tokens A list of [`SrcBlockLineToken`][new_block_line_token()]
+#' @param tokens A list of [`BlockLineToken`][tsf_block_line_token()]
 #'   objects. Some functions such as [from_tsf_block_txt_v1()] expect these
 #'   tokens to be of the same type.
 #'
-#' @param token A single [`SrcBlockLineToken`][new_block_line_token()] object.
+#' @param token A single [`BlockLineToken`][tsf_block_line_token()] object.
 #'
 #' @template param-template-version
 #'
@@ -172,12 +172,13 @@
 #' ```
 #'
 #' [tokenize_tsf_block_v1()] returns a list of
-#' [`SrcBlockLineToken`][tsf_block_line_token()] objects. Its order matches
-#' the implicit order of argument `x`. Its length will typically be strictly
-#' less than the length of `x` because superfluous empty lines are dropped.
+#' [`BlockLineToken`][tsf_block_line_token()] objects. Its order matches
+#' the implicit order of argument `x`. Its length is equal to the length of
+#' `x`. `NULL` tokens are preserved even though they are (typically) never
+#' useful.
 #'
 #' [tokenize_tsf_block_line_v1()] returns a single
-#' [`SrcBlockLineToken`][tsf_block_line_token()] object.
+#' [`BlockLineToken`][tsf_block_line_token()] object.
 #'
 #' @note
 #' [from_tsf_header_v1()] assumes `template_version` is always equal to
@@ -401,27 +402,29 @@ from_tsf_block_loc_v1 <- function(tokens = list()) {
 
 #' @rdname from-tsf
 #' @keywords internal
-from_tsf_block_loc_path_v1 <- function(token = src_block_token("LOC_SRC_PATH")) {
+from_tsf_block_loc_path_v1 <- function(token = tsf_block_line_token("LOC_SRC_PATH")) {
     return(gsub("[` \t]+|:$", "", token$value))
 }
 
 #' @rdname from-tsf
 #' @keywords internal
-from_tsf_block_loc_range_v1 <- function(token = src_block_token("LOC_SRC_RNG")) {
+from_tsf_block_loc_range_v1 <- function(token = tsf_block_line_token("LOC_SRC_RNG")) {
     t_value <- token$value
 
-    # Extract raw digits from string.
-    start <- gregexpr("([0-9]+)", t_value)[[1L]]
-    strs  <- substring(t_value, start, start + attr(start, "match.length") - 1L)
+    # Extract raw digits. It is easier
+    # to remove the starting dash,
+    # blank characters, and then
+    # strip the remaining tokens.
+    strs <- strsplit(gsub("^[ \t]*-|[ \t]*", "", t_value), "line|column|@|,")[[1L]]
 
     # Attempt to parse raw digits as integers.
     # Warnings are superfluous because an error
     # is thrown below if something goes wrong.
-    ints <- suppressWarnings(as.integer(strs))
+    ints <- suppressWarnings(as.integer(strs[nzchar(strs)]))
 
-    if (length(ints) != 4L || anyNA(ints)) {
+    if (length(ints) != 4L || anyNA(ints) || !all(ints > 0L)) {
         stopf(
-            "the following source location's range could not be read:\n'%s'.",
+            "the following source location's range could not be converted:\n'%s'.",
             gsub("^[ \t]+- ", "", token$value))
     }
 
@@ -469,7 +472,7 @@ tokenize_tsf_block_v1 <- function(x = character()) {
 
         # Only empty lines that are part of TXT hunks
         # matter. Others are tokenized as NULL.
-        #if (!nzchar(x_i) && t_prev$type != "TXT") next
+        if (!nzchar(x_i) && t_prev$type != "TXT") next
 
         x_type <- tokenize_tsf_block_line_v1(x_i)
 
@@ -523,3 +526,5 @@ tokenize_tsf_block_line_v1 <- function(x = character(1L)) {
     LOC_SRC_PATH  = "^`(.*?)`:$",
     LOC_SRC_RNG   = "^[ \t]*-[ \t]*line[ \t]+[0-9]+,[ \t]*column[ \t]+[0-9]+[ \t]+@[ \t]+line[ \t]+[0-9]+,[ \t]*column[ \t]+[0-9]+$",
     TXT           = "")
+
+.TSF_SRC_BLOCK_LOC_RNG <- paste("[ \t]*", "@", ",", "-[ \t]*line", "column", "line", sep = "|")

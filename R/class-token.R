@@ -24,7 +24,7 @@
 #' arguments `type` and `value`. It will further contain fields that were
 #' passed to `...`.
 #'
-#' [tsf_block_line_token()] returns a named list of class `SrcBlockLineToken`
+#' [tsf_block_line_token()] returns a named list of class `BlockLineToken`
 #' containing the values of argument `type`, `value`, and `subtype`.
 #'
 #' @seealso [tokenize_tsf_block_v1()],
@@ -66,10 +66,10 @@ tsf_block_line_token <- function(
     value   = "",
     subtype = NULL)
 {
-    subtype <- subtype %||% type
-
     assert_arg(type, TRUE)
     assert_chr1(value, TRUE)
+
+    subtype <- subtype %||% type
     assert_chr1(subtype, TRUE)
 
     return(
@@ -77,5 +77,5 @@ tsf_block_line_token <- function(
             type,
             value,
             subtype = subtype,
-            .super  = "SrcBlockLineToken"))
+            .super  = "BlockLineToken"))
 }

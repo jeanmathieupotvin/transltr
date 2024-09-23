@@ -24,12 +24,12 @@ test_that("token() passes argument .super to class vector", {
 # tsf_block_line_token() -------------------------------------------------------
 
 
-test_that("tsf_block_line_token() returns a S3 object of class SrcBlockLineToken", {
+test_that("tsf_block_line_token() returns a S3 object of class BlockLineToken", {
     token <- tsf_block_line_token("NULL", "value", "subtype")
 
     expect_type(token, "list")
     expect_length(token, 3L)
-    expect_s3_class(token, c("SrcBlockLineToken", "Token"))
+    expect_s3_class(token, c("BlockLineToken", "Token"))
     expect_identical(token$type, "NULL")
     expect_identical(token$subtype, "subtype")
     expect_identical(token$value, "value")
