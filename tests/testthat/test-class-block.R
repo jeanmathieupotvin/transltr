@@ -1,4 +1,4 @@
-test_block <- block(
+block <- block(
     hash <- "test-hash",
     text <- "Hello, world!",
     key  <- "en",
@@ -9,23 +9,23 @@ test_block <- block(
         fr = "Bonjour, monde!",
         es = "¡Hola, mundo!"))
 
-fmt_block <- format(test_block)
+fmt_block <- format(block)
 
 
 # block() ----------------------------------------------------------------------
 
 
 test_that("block() returns a S3 object of class Block", {
-    expect_s3_class(test_block, "Block")
-    expect_type(test_block, "list")
-    expect_length(test_block, 6L)
-    expect_identical(test_block$hash, hash)
-    expect_identical(test_block$text, text)
-    expect_identical(test_block$text_key, key)
-    expect_identical(test_block$locations, locs)
-    expect_identical(test_block$translations, trans)
-    expect_identical(test_block$.texts, c(text, trans), ignore_attr = "names")
-    expect_named(test_block$.texts, c(key, names(trans)))
+    expect_s3_class(block, "Block")
+    expect_type(block, "list")
+    expect_length(block, 6L)
+    expect_identical(block$hash, hash)
+    expect_identical(block$text, text)
+    expect_identical(block$text_key, key)
+    expect_identical(block$locations, locs)
+    expect_identical(block$translations, trans)
+    expect_identical(block$.texts, c(text, trans), ignore_attr = "names")
+    expect_named(block$.texts, c(key, names(trans)))
 })
 
 test_that("block() validates argument hash", {
@@ -66,7 +66,7 @@ test_that("block() silently coerces argument translations to a vector", {
 
 
 test_that("is_block() works", {
-    expect_true(is_block(test_block))
+    expect_true(is_block(block))
     expect_false(is_block(1L))
 })
 
@@ -104,7 +104,7 @@ test_that("format() includes formatted Location objects in the output", {
     # We remove the extra padding to ease the comparison.
     # We want to check all format.Location() outputs are
     # included in the output.
-    fmt_locs       <- lapply(test_block$locations, format)
+    fmt_locs       <- lapply(block$locations, format)
     fmt_locs_block <- gsub("^ {2}", "", fmt_block[6L:12L])
 
     expect_identical(fmt_locs_block[1L:3L], fmt_locs[[1L]])
@@ -117,11 +117,11 @@ test_that("format() includes formatted Location objects in the output", {
 
 test_that("print() returns its argument invisibly", {
     withr::local_output_sink(tempfile())
-    expect_invisible(print(test_block))
-    expect_identical(print(test_block), test_block)
+    expect_invisible(print(block))
+    expect_identical(print(block), block)
 })
 
 test_that("print() works", {
-    expect_output(print(test_block), "^<Block>")
-    expect_snapshot(print(test_block))
+    expect_output(print(block), "^<Block>")
+    expect_snapshot(print(block))
 })

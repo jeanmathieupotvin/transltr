@@ -34,10 +34,10 @@ test_that("get_hash_length_range() validates hash_algorith,", {
 
 
 test_that("get_generated_by() returns expected value", {
-    current_ver          <- as.character(utils::packageVersion("transltr"))
-    expeted_generated_by <- sprintf("R package transltr %s", current_ver)
+    ver <- as.character(utils::packageVersion("transltr"))
+    exp <- sprintf("R package transltr %s", ver)
 
-    expect_identical(get_generated_by(), expeted_generated_by)
+    expect_identical(get_generated_by(), exp)
     expect_snapshot(get_generated_by())
 })
 

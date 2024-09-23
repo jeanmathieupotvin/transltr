@@ -15,17 +15,17 @@ test_that("read_text() returns a character vector", {
 test_that("read_text() validates argument path", {
     # Creates a directory within tempdir() and
     # an empty file within this subdirectory.
-    test_dir  <- withr::local_tempdir(pattern  = "a-test-directory")
-    test_file <- withr::local_tempfile(pattern = "a-non-readable-file")
+    temp_dir  <- withr::local_tempdir(pattern  = "a-test-directory")
+    temp_file <- withr::local_tempfile(pattern = "a-non-readable-file")
 
     # Mark the file as being a binary executable.
     # This makes it non-readable.
-    Sys.chmod(test_file, "711")
+    Sys.chmod(temp_file, "711")
 
     expect_error(read_text(1L))
     expect_error(read_text("a-non-existent-file.txt"))
-    expect_error(read_text(test_dir))
-    expect_error(read_text(test_file))
+    expect_error(read_text(temp_dir))
+    expect_error(read_text(temp_file))
 
     expect_snapshot(read_text(1L), error = TRUE)
     expect_snapshot(read_text("a-non-existent-file.txt"), error = TRUE)

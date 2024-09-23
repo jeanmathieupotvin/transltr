@@ -57,7 +57,7 @@
 # print() works
 
     Code
-      print(test_block)
+      print(block)
     Output
       <Block>
         Hash     : test-hash

@@ -4,21 +4,21 @@ path <- "tests/testthat/my-test-file"
 
 # We use extreme dummy ranges to test whether
 # values are appropriately padded or not by format().
-test_loc <- location(path, c(1L, 11L), c(22L, 222L), c(10L, 3333L), c(1L, 4L))
+loc <- location(path, c(1L, 11L), c(22L, 222L), c(10L, 3333L), c(1L, 4L))
 
 
 # location() -------------------------------------------------------------------
 
 
 test_that("location() returns a S3 object of class Location", {
-    expect_s3_class(test_loc, "Location")
-    expect_type(test_loc, "list")
-    expect_length(test_loc, 5L)
-    expect_identical(test_loc$path, path)
-    expect_identical(test_loc$line1, c(1L, 11L))
-    expect_identical(test_loc$col1,  c(22L, 222L))
-    expect_identical(test_loc$line2, c(10L, 3333L))
-    expect_identical(test_loc$col2,  c(1L, 4L))
+    expect_s3_class(loc, "Location")
+    expect_type(loc, "list")
+    expect_length(loc, 5L)
+    expect_identical(loc$path, path)
+    expect_identical(loc$line1, c(1L, 11L))
+    expect_identical(loc$col1,  c(22L, 222L))
+    expect_identical(loc$line2, c(10L, 3333L))
+    expect_identical(loc$col2,  c(1L, 4L))
 })
 
 test_that("location() validates argument path", {
@@ -76,7 +76,7 @@ test_that("format() returns a character", {
     # This test block is a little bit
     # fragile, but hardcoding expected
     # values is much more simpler.
-    fmt_loc <- format(test_loc)
+    fmt_loc <- format(loc)
 
     expect_type(fmt_loc, "character")
     expect_length(fmt_loc, 4L)
@@ -92,11 +92,11 @@ test_that("format() returns a character", {
 
 test_that("print() returns its argument invisibly", {
     withr::local_output_sink(tempfile())
-    expect_invisible(print(test_loc))
-    expect_identical(print(test_loc), test_loc)
+    expect_invisible(print(loc))
+    expect_identical(print(loc), loc)
 })
 
 test_that("print() works", {
-    expect_output(print(test_loc), "^<Location>")
-    expect_snapshot(print(test_loc))
+    expect_output(print(loc), "^<Location>")
+    expect_snapshot(print(loc))
 })

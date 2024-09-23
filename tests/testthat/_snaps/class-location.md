@@ -81,7 +81,7 @@
 # print() works
 
     Code
-      print(test_loc)
+      print(loc)
     Output
       <Location>
         'tests/testthat/my-test-file':
