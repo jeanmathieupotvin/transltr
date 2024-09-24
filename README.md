@@ -22,7 +22,7 @@ implementations.
 * Uses Markdown files instead of PO (Portable Object) files for translations.
 
 * Markdown files are easily sharable, maintainable, and modifiable, even by
-non-technical collaborators such as professional translators
+non-technical collaborators such as professional translators.
 
 * Easier API compared to `base::gettext()`.
 
@@ -30,7 +30,7 @@ non-technical collaborators such as professional translators
 
 * Uses only two carefully chosen dependencies: packages `R6` and `yaml`.
 
-* Fast speed
+* Fast speed.
 
 ## Installation
 
