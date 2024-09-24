@@ -193,14 +193,14 @@
 #' @family translations source files mechanisms
 #' @keywords internal
 from_tsf <- function(x = character()) {
-    src_parts <- split_tsf(x)
-    header    <- from_tsf_header(src_parts$header)
-    blocks    <- from_tsf_blocks(src_parts$blocks, header$template_version)
+    x_split <- split_tsf(x)
+    header  <- from_tsf_header(x_split$header)
+    blocks  <- from_tsf_blocks(x_split$blocks, header$template_version)
     return(
         list(
             header = header,
             blocks = blocks,
-            rest   = src_parts$rest))
+            rest   = x_split$rest))
 }
 
 #' @rdname from-tsf
@@ -210,7 +210,11 @@ split_tsf <- function(x = character()) {
 
     x_grps  <- cumsum(grepl(.TSF_SRC_BLOCK_LINE_TOKEN_PATTERNS[["TITLE_HASH"]], x))
     x_split <- split_ul(x, x_grps)
-    rest    <- paste0(x_split[[1L]], collapse = "\n")
+
+    # Concatenating lines into a single string
+    # makes it much easier to detect single line
+    # headers. These are ugly but permitted here.
+    rest <- paste0(x_split[[1L]], collapse = "\n")
 
     if (anyNA(h_pos <- gregexpr("---", rest)[[1L]][c(1L, 2L)])) {
         stops("invalid or missing header. A separator could be missing.")
@@ -294,7 +298,7 @@ from_tsf_header_v1 <- function(
     if (any(is_miss <- is.na(match(args_f, args_c)))) {
         stopf(
             "incomplete header. These fields are required but missing: %s.",
-            to_string(args_f[is_miss], TRUE, ", "))
+            to_string(args_f[is_miss], TRUE, ", and "))
     }
 
     # YAML maps are parsed as named lists by
@@ -346,6 +350,7 @@ from_tsf_block_v1 <- function(tokens = list()) {
 
     translations        <- lapply(a_t_txt,   from_tsf_block_txt_v1)
     names(translations) <- lapply(a_key_txt, from_tsf_block_title_v1)
+    names(a_t_loc)      <- NULL
 
     return(
         block(
