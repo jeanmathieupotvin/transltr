@@ -2,7 +2,8 @@
 .github/*.html
 
 # Ignore local / temporary files.
-.local/
+# Place all temporary files there.
+.local
 
 # Ignore common R side-files.
 .Rproj.user

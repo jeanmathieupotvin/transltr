@@ -2,19 +2,11 @@
 #'
 #' This script is automatically executed by R whenever a new session is started.
 #'
+#' @note
+#' Since package testthat uses non-interactive sessions, using interactive()
+#' below allows test runs to run in clean environments.
+#'
 #' @seealso [Startup process](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Startup.html)
-
-
-# Attach development packages --------------------------------------------------
-
-
-if (interactive()) {
-    suppressMessages(require(covr))
-    suppressMessages(require(devtools))
-    suppressMessages(require(microbenchmark))
-    suppressMessages(require(usethis))
-    suppressMessages(require(withr))
-}
 
 
 # Global options ---------------------------------------------------------------
@@ -26,18 +18,24 @@ options(
     warnPartialMatchAttr   = TRUE)
 
 
-# Miscellaneous development utilities ------------------------------------------
+# Development tools and utility functions --------------------------------------
 
-
-# Create useful aliases and very small helper functions.
-# .mb() : alias for microbenchmark::microbenchmark().
-# .re() : generate coverage report (file COVERAGE) with covr.
-# .rm() : clear global environment, but keep aliases.
-# .tf() : test a particular file. Omit prefix `test-` and file extension.
 
 if (interactive()) {
+    # Attach development packages.
+    suppressMessages({
+        require(covr)
+        require(devtools)
+        require(microbenchmark)
+        require(testthat)
+        require(usethis)
+        require(withr)
+    })
+
+    # Create a shorter alias for microbenchmark::microbenchmark().
     .mb <- microbenchmark::microbenchmark
 
+    # Generate a plain text coverage report (file COVERAGE) with covr.
     .re <- function() {
         on.exit(close(con))
         con <- file("COVERAGE", "wt", FALSE, "UTF-8")
@@ -49,16 +47,18 @@ if (interactive()) {
         return(invisible())
     }
 
-    .rm <- function() {
-        objs <- ls(".GlobalEnv", all.names = TRUE)
-        keep    <- c(".mb", ".rm", ".tf")
-        objs <- objs[-match(keep, objs, 0L)]
-
-        return(rm(list = objs, envir = globalenv()))
-    }
-
+    # Test a particular file. Omit prefix `test-` and file extension.
     .tf <- function(file = character(1L)) {
         path <- file.path("tests", "testthat", sprintf("test-%s.R", file))
         return(testthat::test_file(path))
+    }
+
+    # Clear global environment, but keep aliases.
+    .rm <- function() {
+        objs <- ls(".GlobalEnv", all.names = TRUE)
+        keep <- c(".mb", ".re", ".rm", ".tf")
+        objs <- objs[-match(keep, objs, 0L)]
+
+        return(rm(list = objs, envir = globalenv()))
     }
 }

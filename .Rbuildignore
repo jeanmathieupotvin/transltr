@@ -1,8 +1,12 @@
 ^\.git$
+^\.gitignore$
 ^\.github$
 ^\.local$
 ^\.scripts$
-^\.gitignore$
+^\.clocignore$
 ^\.Rprofile$
 ^codecov\.yml$
 ^COVERAGE$
+^LICENSE\.md$
+^man-roxygen$
+^STATISTICS\.md$
