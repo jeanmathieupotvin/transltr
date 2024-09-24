@@ -52,7 +52,7 @@ get_hash_length_range <- function(hash_algorithm = get_hash_algorithms()) {
 #' @rdname transltr-params
 #' @keywords internal
 get_generated_by <- function() {
-    return("R package transltr 0.0.1")
+    return("R package transltr 0.0.1.9001")
 }
 
 #' @include utc.R

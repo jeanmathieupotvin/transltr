@@ -12,8 +12,8 @@ usethis::use_description(
     check_name = TRUE,
     fields     = list(
         Package     = "transltr",
-        Title       = "A general purpose translator for R",
-        Version     = "0.0.1",
+        Title       = "A framework to support many languages in any R application",
+        Version     = "0.0.1.9001",
         Language    = "en",
         Encoding    = "UTF-8",
         Roxygen     = "list(markdown = TRUE, r6 = TRUE)",
@@ -32,9 +32,12 @@ usethis::use_description(
                 role    = c("ctb", "fnd", "rev"),
                 comment = c(ORCID = "0000-0003-4950-5475")))',
         Description = "
-            A collection of translation mechanisms. Detect messages to be
-            be translated in an application, organize their corresponding
-            translated messages, and seamlessly use them."))
+            An internationalization framework that enables full support of
+            many languages in any R application. Detect text to translate
+            within a project. Import and manage translations with a
+            user-friendly interface. Easily export source text that requires
+            translation to a plain text format that fosters collaboration with
+            other non-technical and external collaborators."))
 
 usethis::use_mit_license("Jean-Mathieu Potvin")
 
