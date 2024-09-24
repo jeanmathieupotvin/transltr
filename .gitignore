@@ -2,12 +2,8 @@
 .github/*.html
 
 # Ignore local / temporary files.
+# Place all temporary files there.
 .local
-.temp
-
-# Ignore unused or deprecated artifacts.
-# These may be kept temporarily for convenience.
-.old
 
 # Ignore common R side-files.
 .Rproj.user

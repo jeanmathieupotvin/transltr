@@ -1,6 +1,5 @@
 ./.github/*
-./.old/*
-./.temp/*
+./.local/*
 ./.clocignore
 ./.gitignore
 ./.Rbuildignore

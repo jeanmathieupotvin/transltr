@@ -2,9 +2,7 @@
 ^\.gitignore$
 ^\.github$
 ^\.local$
-^\.old$
 ^\.scripts$
-^\.temp$
 ^\.clocignore$
 ^\.Rprofile$
 ^codecov\.yml$
