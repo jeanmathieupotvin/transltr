@@ -4,6 +4,7 @@
 #'   * .codecov.yml,
 #'   * .github/*,
 #'   * LICENSE,
+#'   * LICENSE.md,
 #'   * README.md, and
 #'   * R/transltr-package.R.
 #'
