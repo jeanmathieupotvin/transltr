@@ -9,3 +9,9 @@
 
 This package is currently in a pre-alpha stage. This file will be updated
 later when it reaches a certain level of maturity.
+
+# Proposed architecture
+
+This diagram gives an overview of how the package will work once completed.
+
+![](man/figures/architecture-overview-user.drawio.png)
