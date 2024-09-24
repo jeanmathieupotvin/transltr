@@ -5,6 +5,7 @@
 ^\.old$
 ^\.scripts$
 ^\.temp$
+^\.clocignore$
 ^\.Rprofile$
 ^codecov\.yml$
 ^COVERAGE$
