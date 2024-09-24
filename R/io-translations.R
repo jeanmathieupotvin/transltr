@@ -18,18 +18,18 @@
 #'
 #' @seealso [Translations Source Files]
 #'
-#' @rdname src-translations
+#' @rdname io-translations
 #' @export
 read_translations <- function(path = "", encoding = "UTF-8") {
-    tsf_lines  <- read_text(path, encoding = encoding)
-    tsf_parsed <- from_tsf(tsf_lines)
+    tsf_raw    <- read_text(path, encoding = encoding)
+    tsf_parsed <- from_tsf(tsf_raw)
 
     # TODO: call Translator$new() once class is implemented.
     # Output below is temporary and for debugging purposes.
-    return(from_tsf(tsf_lines)[c("header", "blocks")])
+    return(tsf_parsed[c("header", "blocks")])
 }
 
-#' @rdname src-translations
+#' @rdname io-translations
 #' @export
 write_translations <- function(x, path = "") {
     return(.NotYetImplemented())
