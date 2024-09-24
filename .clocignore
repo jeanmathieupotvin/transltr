@@ -1,0 +1,11 @@
+./.github/*
+./.old/*
+./.temp/*
+./.clocignore
+./.gitignore
+./.Rbuildignore
+./codecov.yml
+./COVERAGE
+./LICENCE.md
+./NEWS.md
+./README.md
