@@ -137,3 +137,10 @@ strip_empty_strings <- function(
     end    <- if (which == "leading")  length(x) else max(nz_pos)
     return(x[seq.int(start, end, 1L)])
 }
+
+
+# `%||%` was introduced in R 4.4.0. We redefine it here for
+# convenience (and for earlier versions of R) until further
+# notice as an undocumented and internal operator. To avoid
+# naming collisions, we rename it `%??%`.
+`%??%` <- function(x, y) if (is.null(x)) y else x

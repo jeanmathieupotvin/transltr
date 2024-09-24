@@ -106,3 +106,13 @@ test_that("strip_empty_strings() returns empty character vector if all elements 
     expect_identical(strip_empty_strings(""), character(0L))
     expect_identical(strip_empty_strings(c("", "", "")), character(0L))
 })
+
+
+# `%??%` -----------------------------------------------------------------------
+
+
+test_that("operator %??% works", {
+    expect_null(NULL %??% NULL)
+    expect_identical(NULL %??% 1L, 1L)
+    expect_identical(1L %??% NULL, 1L)
+})

@@ -69,10 +69,7 @@ tsf_block_line_token <- function(
 {
     assert_arg(type, TRUE)
     assert_chr1(value, TRUE)
-
-    subtype <- subtype %||% type
-    assert_chr1(subtype, TRUE)
-
+    assert_chr1(subtype <- subtype %??% type, TRUE, x_name = "subtype")
     return(
         token(
             type,
