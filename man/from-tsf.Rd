@@ -185,12 +185,13 @@ always use \code{\link[=read_translations]{read_translations()}} instead.
 }
 \details{
 All functions above follow an implicit top-down hierarchy. Conceptually,
-they break a \link{Translations Source File} into smaller components and
-eventually convert them to \R objects. \code{\link[=from_tsf]{from_tsf()}} is the entry point as
-the main function in charge of the conversion. It relies on \code{\link[=split_tsf]{split_tsf()}}
-to separate header's source lines from blocks' source lines, and on
-\code{\link[=from_tsf_header]{from_tsf_header()}} and \code{\link[=from_tsf_blocks]{from_tsf_blocks()}} to actually convert these source
-lines into \R objects.
+they break a \link[=Translations Source Files]{Translations Source File} into
+smaller components and eventually convert them to \R objects.
+
+\code{\link[=from_tsf]{from_tsf()}} is the entry point as the main function in charge of the
+conversion. It relies on \code{\link[=split_tsf]{split_tsf()}} to separate header's source lines
+from blocks' source lines, and on \code{\link[=from_tsf_header]{from_tsf_header()}} and \code{\link[=from_tsf_blocks]{from_tsf_blocks()}}
+to actually convert these source lines into \R objects.
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{from_tsf()
   -> split_tsf()

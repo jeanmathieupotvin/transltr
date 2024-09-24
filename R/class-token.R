@@ -30,6 +30,7 @@
 #' @seealso [tokenize_tsf_block_v1()],
 #'   [tokenize_tsf_block_line_v1()]
 #'
+#' @aliases Token
 #' @rdname class-token
 #' @keywords internal
 token <- function(type = NULL, value = NULL, ..., .super = NULL) {
@@ -40,7 +41,7 @@ token <- function(type = NULL, value = NULL, ..., .super = NULL) {
 }
 
 #' @usage
-#' tsf_block_line_token <- function(
+#' tsf_block_line_token(
 #'   type = c(
 #'     "NULL",
 #'     "TITLE_HASH",

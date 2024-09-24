@@ -7,12 +7,13 @@
 #'
 #' @details
 #' All functions above follow an implicit top-down hierarchy. Conceptually,
-#' they break a [Translations Source File] into smaller components and
-#' eventually convert them to \R objects. [from_tsf()] is the entry point as
-#' the main function in charge of the conversion. It relies on [split_tsf()]
-#' to separate header's source lines from blocks' source lines, and on
-#' [from_tsf_header()] and [from_tsf_blocks()] to actually convert these source
-#' lines into \R objects.
+#' they break a [Translations Source File][Translations Source Files] into
+#' smaller components and eventually convert them to \R objects.
+#'
+#' [from_tsf()] is the entry point as the main function in charge of the
+#' conversion. It relies on [split_tsf()] to separate header's source lines
+#' from blocks' source lines, and on [from_tsf_header()] and [from_tsf_blocks()]
+#' to actually convert these source lines into \R objects.
 #'
 #' ```
 #' from_tsf()

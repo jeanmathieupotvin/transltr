@@ -160,5 +160,5 @@ from source scripts.
 \code{\link[=read_translations]{read_translations()}},
 \code{\link[=write_translations]{write_translations()}},
 \code{\link[=from_tsf]{from_tsf()}},
-\code{\link[=new_block]{new_block()}}
+\code{\link[=block]{block()}}
 }

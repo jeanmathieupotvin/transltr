@@ -2,12 +2,13 @@
 % Please edit documentation in R/class-token.R
 \name{token}
 \alias{token}
+\alias{Token}
 \alias{tsf_block_line_token}
 \title{Create Tokens}
 \usage{
 token(type = NULL, value = NULL, ..., .super = NULL)
 
-tsf_block_line_token <- function(
+tsf_block_line_token(
   type = c(
     "NULL",
     "TITLE_HASH",

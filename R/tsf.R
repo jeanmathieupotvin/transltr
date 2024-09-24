@@ -152,7 +152,7 @@
 #'   [from_tsf()],
 #    TODO: transform this comment into #' once implemented.
 #    [to_tsf()],
-#'   [new_block()]
+#'   [block()]
 #'
 #' @rdname tsf
 #' @name Translations Source Files
