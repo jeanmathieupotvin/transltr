@@ -1,18 +1,34 @@
-# TODO: add notes on margin of 80 chars.
-# TODO: add notes on bad token types. Only useful for values.
-# TODO: add notes on the fact that we rely on the top-down hierarchy of functions to trust that underlying inputs are what we expect.
-# TODO: distinct tests blocks complement each other.
+#' Testing from_tsf()
+#'
+#' @details
+#' This function leverage many lower-level functions all closely tied and meant
+#' to be used within a certain hierarchy already explained in R/from-tsf.R. The
+#' tests below indirectly leverage this hierarchy and assume input(s) stemming
+#' from higher levels are valid. They strictly test the logic they encapsulate
+#' and therefore, distinct test_that() expressions may complement each other.
+#'
+#' For the sake of readability and conciseness, some parts of the script break
+#' the usual rule of thumb of keeping lines shorter than 80 characters.
+#'
+#' For simplicity and whenever possible, tsf_block_line_token() only assigns a
+#' value (and never a type or subtype). This is because many subfunctions only
+#' use the value. Doing so keeps the logic more succinct and lets developers
+#' focus on what matters for testing purposes.
+NULL
+
+
+mock_tsf_v1                  <- read_text(get_mock_path("tsf-v1", "md"))
+mock_tsf_v1_head             <- read_text(get_mock_path("tsf-v1-head", "md"))
+mock_tsf_v1_block_hello      <- read_text(get_mock_path("tsf-v1-block-hello", "md"))
+mock_tsf_v1_block_lorem      <- read_text(get_mock_path("tsf-v1-block-lorem", "md"))
+mock_tsf_v1_block_lorem_text <- read_text(get_mock_path("tsf-v1-block-lorem-text", "md"))
 
 # _t suffix stands for tokens.
-# _p suffix stands for parsed.
-mock_tsf_v1                    <- read_text(get_mock_path("tsf-v1", "md"))
-mock_tsf_v1_head               <- read_text(get_mock_path("tsf-v1-head", "md"))
-mock_tsf_v1_block_hello        <- read_text(get_mock_path("tsf-v1-block-hello", "md"))
 mock_tsf_v1_block_hello_t      <- tokenize_tsf_block_v1(mock_tsf_v1_block_hello)
-mock_tsf_v1_block_lorem        <- read_text(get_mock_path("tsf-v1-block-lorem", "md"))
 mock_tsf_v1_block_lorem_t      <- tokenize_tsf_block_v1(mock_tsf_v1_block_lorem)
-mock_tsf_v1_block_lorem_text   <- read_text(get_mock_path("tsf-v1-block-lorem-text", "md"))
 mock_tsf_v1_block_lorem_text_t <- tokenize_tsf_block_v1(mock_tsf_v1_block_lorem_text)
+
+# _p suffix stands for parsed.
 mock_tsf_v1_block_lorem_text_p <- from_tsf_block_txt_v1(mock_tsf_v1_block_lorem_text_t)
 
 
@@ -459,20 +475,23 @@ test_that("from_tsf_block_v1() returns a S3 object of class Block", {
 test_that("from_tsf_block_txt_v1() returns a character string", {
     expect_identical(
         expected = "h1-title",
-        from_tsf_block_title_v1(tsf_block_line_token(value = "# `{{ h1-title }}`")))
+        from_tsf_block_title_v1(
+            tsf_block_line_token(value = "# `{{ h1-title }}`")))
 })
 
 test_that("from_tsf_block_txt_v1() properly tokenizes strings", {
     expect_identical(
         expected = "h2-title",
-        from_tsf_block_title_v1(tsf_block_line_token(value = "##\t`{{ h2-title }}`")))
+        from_tsf_block_title_v1(
+            tsf_block_line_token(value = "##\t`{{ h2-title }}`")))
 
     # Individual char tokens are also stripped
     # from the title because in the context of
     # transltr they should not be used.
     expect_identical(
         expected = "h2-title-with--chars",
-        from_tsf_block_title_v1(tsf_block_line_token(value = "##\t`{{ h2-title-with-#{}`-chars }}`")))
+        from_tsf_block_title_v1(
+            tsf_block_line_token(value = "##\t`{{ h2-title-with-#{}`-chars }}`")))
 })
 
 
