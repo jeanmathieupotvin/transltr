@@ -51,7 +51,7 @@ More to come later. See the proposed architecture below. You may also read
 
 This diagram gives an overview of how the package will work once completed.
 
-![](man/figures/architecture-overview-user.drawio.png)
+![](man/figures/architecture-overview-user.png)
 
 ## Bugs and feedback
 
