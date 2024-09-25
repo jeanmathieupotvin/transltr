@@ -10,3 +10,6 @@
 .Rhistory
 .RData
 .Renviron
+
+# Ignore draw.io backup files.
+*.drawio.bkp
