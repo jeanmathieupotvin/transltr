@@ -52,7 +52,9 @@ location <- function(
     assert_int(line2)
     assert_int(col2)
 
-    if (!all(vapply_1l(c(line1, line2, col1, col2), is_between, min = 1L))) {
+    lc_vec <- c(line1, col1, line2, col2)
+
+    if (!all(lc_vec >= 1L)) {
         stops(
             "all values passed to 'line1', 'col1', 'line2', and 'col2' ",
             "must be non-NA numeric values in the range [1, Inf).")
@@ -61,15 +63,25 @@ location <- function(
         stops("line1', 'col1', 'line2', and 'col2' must all have the same length.")
     }
 
-    return(
-        structure(
-            list(
-                path  = path,
-                line1 = line1,
-                col1  = col1,
-                line2 = line2,
-                col2  = col2),
-            class = c("Location", "list")))
+    out <- if (length(line1) > 1L) {
+        # Remove duplicate ranges and sort the
+        # remaining ones by their natural order.
+        lc <- matrix(lc_vec,
+            ncol     = 4L,
+            dimnames = list(NULL, c("line1", "col1", "line2", "col2")))
+        lc <- lc[order(line1, col1, line2, col2), ][!duplicated(lc), ]
+        c(path = path, apply(lc, 2L, identity, simplify = FALSE))
+    } else {
+        list(
+            path  = path,
+            line1 = line1,
+            col1  = col1,
+            line2 = line2,
+            col2  = col2)
+    }
+
+    class(out) <- c("Location", "list")
+    return(out)
 }
 
 #' @rdname class-location
@@ -81,22 +93,29 @@ is_location <- function(x) {
 #' @rdname class-location
 #' @export
 format.Location <- function(x, ...) {
-    # Format of elements in a printf style.
-    # We use a base padding of 2 spaces.
-    fmt_path   <- "  '%s':"
-    fmt_ranges <- "    - line %s, column %s @ line %s, column %s"
-
     # Align ranges by components for
-    # nice outputs when printing.
-    integers <- x[c("line1", "col1", "line2", "col2")]
-    chars    <- lapply(integers, encodeString, width = NULL, justify = "right")
+    # nicer outputs when printing.
+    ints   <- x[c("line1", "col1", "line2", "col2")]
+    chars  <- lapply(ints, encodeString, width = NULL, justify = "right")
+    ranges <- sprintf(
+        "line %s, column %s @ line %s, column %s",
+        chars[[1L]],
+        chars[[2L]],
+        chars[[3L]],
+        chars[[4L]])
 
-    # Integers are converted to strings when
-    # padded below. We use %s instead of %i.
-    return(c(
-        "<Location>",
-        sprintf(fmt_path, x$path),
-        do.call(sprintf, c(fmt = fmt_ranges, chars))))
+    x_str <- if (length(ranges) > 1L) {
+        c("<Location>",
+          "  Path  : " = x$path,
+          "  Ranges: " = "",
+          sprintf("    [%i] %s", seq_along(ranges), ranges))
+    } else {
+        c("<Location>",
+          "  Path : " = x$path,
+          "  Range: " = ranges)
+    }
+
+    return(paste0(names(x_str), x_str))
 }
 
 #' @rdname class-location
@@ -104,4 +123,40 @@ format.Location <- function(x, ...) {
 print.Location <- function(x, ...) {
     cat(format(x, ...), sep = "\n")
     return(invisible(x))
+}
+
+#' @rdname class-location
+#' @export
+c.Location <- function(...) {
+    if (...length() < 2L) {
+        return(..1)
+    }
+    if (!all(vapply_1l(locs <- list(...), is_location))) {
+        stops("values passed to '...' must all be 'Location' objects.")
+    }
+
+    paths <- vapply_1c(locs, `[[`, i = "path")
+
+    if (!all(paths[[1L]] == paths[-1L])) {
+        stops("all 'path' must be equal in order to combine multiple 'Location' objects.")
+    }
+
+    return(
+        location(
+            path  = paths[[1L]],
+            line1 = unlist(lapply(locs, `[[`, i = "line1")),
+            col1  = unlist(lapply(locs, `[[`, i = "col1")),
+            line2 = unlist(lapply(locs, `[[`, i = "line2")),
+            col2  = unlist(lapply(locs, `[[`, i = "col2"))))
+}
+
+#' @rdname class-location
+#' @export
+merge_locations <- function(...) {
+    if (!all(vapply_1l(locs <- list(...), is_location))) {
+        stops("values passed to '...' must all be 'Location' objects.")
+    }
+
+    groups <- split_ul(locs, vapply_1c(locs, `[[`, i = "path"))
+    return(lapply(groups, \(group) do.call(c, group)))
 }
