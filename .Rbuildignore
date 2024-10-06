@@ -5,6 +5,7 @@
 ^\.scripts$
 ^\.clocignore$
 ^\.Rprofile$
+^\.Rprof\.out$
 ^codecov\.yml$
 ^COVERAGE$
 ^LICENSE\.md$

@@ -6,6 +6,7 @@
 .local
 
 # Ignore common R side-files.
+.Rprof.out
 .Rproj.user
 .Rhistory
 .RData

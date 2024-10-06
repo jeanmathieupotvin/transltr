@@ -40,7 +40,6 @@ if (interactive()) {
         on.exit(close(con))
         con <- file("COVERAGE", "wt", FALSE, "UTF-8")
         cov <- covr::package_coverage()
-
         sink(con, type = "message")
         print(cov)
         sink(NULL, type = "message")
@@ -48,17 +47,39 @@ if (interactive()) {
     }
 
     # Test a particular file. Omit prefix `test-` and file extension.
-    .tf <- function(file = character(1L)) {
+    .tf <- function(file = "") {
         path <- file.path("tests", "testthat", sprintf("test-%s.R", file))
         return(testthat::test_file(path))
+    }
+
+    # Profile R code.
+    # Call .pf() to start the profiler and .pf(NULL) to stop it.
+    .pf <- function(file = ".Rprof.out") {
+        return(
+            Rprof(
+                filename         = file,
+                interval         = 0.01,
+                memory.profiling = TRUE,
+                line.profiling   = TRUE))
+    }
+
+    # View results stemming from R profiler.
+    .sp <- function(file = ".Rprof.out") {
+        out <- summaryRprof(
+            filename  = file,
+            chunksize = 5000,
+            memory    = "both",
+            lines     = "show")$by.line
+
+        View(out, "R Profiler Results")
+        return(invisible(out))
     }
 
     # Clear global environment, but keep aliases.
     .rm <- function() {
         objs <- ls(".GlobalEnv", all.names = TRUE)
-        keep <- c(".mb", ".re", ".rm", ".tf")
+        keep <- c(".mb", ".pf", ".re", ".rm", ".sp", ".tf")
         objs <- objs[-match(keep, objs, 0L)]
-
         return(rm(list = objs, envir = globalenv()))
     }
 }
