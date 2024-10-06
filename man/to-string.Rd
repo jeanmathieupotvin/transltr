@@ -7,7 +7,7 @@
 \usage{
 to_string(x, ...)
 
-\method{to_string}{default}(x, quote_values = FALSE, last_sep = " or ", ...)
+\method{to_string}{default}(x, quote_values = FALSE, last_sep = ", or ", ...)
 }
 \arguments{
 \item{x}{An object to be converted.}
