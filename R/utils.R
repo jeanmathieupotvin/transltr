@@ -138,6 +138,41 @@ strip_empty_strings <- function(
     return(x[seq.int(start, end, 1L)])
 }
 
+left_pad_strings <- function(x = character(), len = NULL, pad = " ") {
+    # This is useful if a NULL was passed to x.
+    if (!length(x)) {
+        return(character())
+    }
+
+    assert_chr(x, TRUE)
+    assert_chr1(pad)
+
+    if (nchar(pad) != 1L) {
+        stops("'pad' must be a single character.")
+    }
+
+    nchars <- nchar(x)
+    len    <- len %??% max(nchars)
+
+    assert_int1(len)
+    assert_between(len, 0L)
+    return(paste0(strrep(pad, pmax(len - nchars, 0L)), x))
+}
+
+trim_strings <- function(x = character(), width = 80L) {
+    assert_int1(width)
+    assert_between(width, 3L)
+
+    to_trim    <- nchar(x) > width
+    x[to_trim] <- paste0(strtrim(x[to_trim], width - 3L), "...")
+    return(x)
+}
+
+sanitize_strings <- function(x = character(), concat = " ") {
+    assert_chr1(concat)
+    return(gsub("[ \t]{2,}|^\n", "", paste0(x, collapse = concat)))
+}
+
 
 # `%||%` was introduced in R 4.4.0. We redefine it here for
 # convenience (and for earlier versions of R) until further
