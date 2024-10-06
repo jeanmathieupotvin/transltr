@@ -4,7 +4,7 @@
 \alias{translate}
 \title{Placeholder}
 \usage{
-translate()
+translate(..., lang = get_language(), concat = " ", key = "en")
 }
 \description{
 Placeholder for future function \code{\link[=translate]{translate()}}.
