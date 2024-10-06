@@ -49,43 +49,152 @@
 #' instances of the class. This is because [`Block`][Block] is just a semantic
 #' container.
 #'
-#' @aliases Block
 #' @rdname class-block
 #' @keywords internal
-block <- function(
-    hash         = "",
-    text         = "",
-    text_key     = "",
-    locations    = list(),
-    translations = character())
-{
-    assert_chr1(hash)
-    assert_chr1(text)
-    assert_chr1(text_key)
-    assert_list(locations)
-
-    if (!all(vapply_1l(locations, is_location))) {
-        stops("'locations' must only contain 'Location' objects.")
-    }
-
-    translations <- unlist(translations)
-    assert_chr(translations)
-    assert_named(translations)
-
-    .texts        <- c(text, translations)
-    names(.texts) <- c(text_key, names(translations))
-
-    return(
-        structure(
-            list(
-                hash         = hash,
-                text         = text,
-                text_key     = text_key,
-                locations    = locations,
-                translations = translations,
-                .texts       = .texts),
-            class = c("Block", "list")))
+block <- function(source_key = "", ...) {
+    block <- Block$new()
+    dots  <- list(...)
+    do.call(block$set_translations, dots[vapply_1l(dots, is.character)])
+    do.call(block$set_locations,    dots[vapply_1l(dots, is_location)])
+    block$source_key <- source_key
+    return(block)
 }
+
+#' @rdname class-block
+#' @keywords internal
+Block <- R6::R6Class("Block",
+    lock_class   = TRUE,
+    lock_objects = TRUE,
+    private      = list(
+        .sha1         = "<unset>",
+        .source_key   = "<unset>",
+        .translations = NULL,
+        .locations    = list(),
+        .hash         = \(key = "", text = "") {
+            return(digest::sha1(charToRaw(sprintf("%s:%s", key, text))))
+        }
+    ),
+    active = list(
+        hash = \(value) {
+            if (!missing(value)) {
+                stops("'hash' cannot be manually overwritten. Set '$source_key' instead.")
+            }
+
+            return(private$.sha1)
+        },
+        source_key = \(value) {
+            if (!missing(value)) {
+                assert_chr1(value)
+                assert_match(value, self$keys, quote_values = TRUE)
+                private$.source_key <- value
+                private$.sha1       <- private$.hash(value, self$get_translation(value))
+            }
+
+            return(private$.source_key)
+        },
+        source_text = \(value) {
+            if (!missing(value)) {
+                stops(
+                    "'source_text' cannot be manually overwritten. Set '$source_key' instead. ",
+                    "You may add a new translation before if required.")
+            }
+
+            return(self$get_translation(private$.source_key))
+        },
+        keys = \(value) {
+            if (!missing(value)) {
+                stops(
+                    "'keys' cannot be manually overwritten.\n",
+                    "You may add a key with method '$set_translation()'.\n",
+                    "You may remove a key with method '$rm_translation()'.")
+            }
+
+            keys <- sort(names(private$.translations))
+            attr(keys, "source_key") <- private$.source_key
+            return(keys)
+        },
+        translations = \(value) {
+            if (!missing(value)) {
+                stops(
+                    "'translations' cannot be manually overwritten.\n",
+                    "You may add a translation with method '$set_translation()'.\n",
+                    "You may remove a translation with method '$rm_translation()'.")
+            }
+
+            translations <- as.list(private$.translations, sorted = TRUE)
+            storage.mode(translations) <- "character"
+            return(translations)
+        },
+        locations = \(value) {
+            if (!missing(value)) {
+                stops(
+                    "You may add a location with method '$set_location()'.\n",
+                    "You may remove a location with method '$rm_location()'.")
+            }
+
+            return(private$.locations)
+        }
+    ),
+    public = list(
+        initialize = \() {
+            private$.translations <- new.env(parent = emptyenv())
+            return(self)
+        },
+        get_translation = \(key = "") {
+            assert_chr1(key)
+            return(private$.translations[[key]])
+        },
+        set_translation = \(key = "", text = "") {
+            assert_chr1(key)
+            assert_chr1(text, TRUE)
+            private$.translations[[key]] <- text
+            return(invisible(TRUE))
+        },
+        set_translations = \(...) {
+            if (!...length()) {
+                return(invisible(TRUE))
+            }
+            if (!is_named(locs <- list(...))) {
+                stops("values passed to '...' must all have names ('key' = 'text').")
+            }
+
+            trans <- list(...)
+            assert_named(trans, x_name = "...")
+            list2env(trans, envir = private$.translations)
+            return(invisible(TRUE))
+        },
+        set_locations = \(...) {
+            if (!...length()) {
+                return(invisible(TRUE))
+            }
+
+            locs <- c(private$.locations, list(...))
+            private$.locations <- do.call(merge_locations, locs)
+            return(invisible(TRUE))
+        },
+        rm_translation = \(key = "") {
+            assert_chr1(key)
+
+            if (key == private$.source_key) {
+                stopf("'%s' is the current 'source_key'. Set a new one before removing it.", key)
+            }
+
+            rm(key, envir = private$.translations)
+            return(
+                invisible(
+                    exists(key,
+                        private$.translations,
+                        mode     = "character",
+                        inherits = FALSE)))
+        },
+        rm_location = \(path = "") {
+            assert_chr1(path)
+            paths <- vapply_1c(private$.locations, `[[`, i = "path")
+            private$.locations[paths == path] <- NULL
+            return(invisible(TRUE))
+        }
+    )
+)
 
 #' @rdname class-block
 #' @keywords internal
@@ -96,23 +205,34 @@ is_block <- function(x) {
 #' @rdname class-block
 #' @export
 format.Block <- function(x, ...) {
-    location_lines <- paste0("  ", unlist(lapply(x$locations, format)))
-    text <- if (nchar(txt <- x$text) > 64L) {
-        paste0(strtrim(txt, 64L), "...")
+    trans_strs <- if (length(trans <- x$translations)) {
+        # We want a total width of 80 chars, ignoring
+        # non-ASCII chars that may have width > 1.
+        # This yields 80 chars
+        #     minus 4 spaces for indentation
+        #     minus X spaces for padded keys
+        #     minus 2 chars for the separator (': ').
+        keys  <- left_pad_strings(names(trans))
+        trans <- trim_strings(trans, 74L - max(nchar(keys), 0L))
+        c("  Translations: ", sprintf("    %s: %s", keys, trans))
     } else {
-        txt
+        c("  Translations: " = "<none>")
     }
 
-    # Restructuring x allows us to
-    # call paste0() only once below.
-    x <- list(
-        "<Block>",
-        "  Hash     : "  = x$hash,
-        "  Text     : "  = text,
-        "  Text key : "  = x$text_key,
-        "  Lang keys: "  = to_string(names(x$.texts), TRUE, ", "))
+    locs_strs <- if (length(locs <- x$locations)) {
+        c("  Locations: ", sprintf("    %s", unlist(lapply(locs, format))))
+    } else {
+        c("  Locations   : " = "<none>")
+    }
 
-    return(c(paste0(names(x), x), location_lines))
+    x_str <- c(
+        "<Block>",
+        "  Hash        : " = x$hash,
+        "  Source key  : " = x$source_key,
+        trans_strs,
+        locs_strs)
+
+    return(paste0(names(x_str), x_str))
 }
 
 #' @rdname class-block
@@ -120,4 +240,66 @@ format.Block <- function(x, ...) {
 print.Block <- function(x, ...) {
     cat(format(x, ...), sep = "\n")
     return(invisible(x))
+}
+
+#' @rdname class-block
+#' @export
+c.Block <- function(...) {
+    if (...length() < 2L) {
+        return(..1)
+    }
+    if (!all(vapply_1l(blocks <- list(...), is_block))) {
+        stops("values passed to '...' must all be 'Block' objects.")
+    }
+
+    hashes <- vapply_1c(blocks, `[[`, i = "hash")
+
+    # Checking hashes simultaneously
+    # checks source_key and source_text.
+    if (!all(hashes[[1L]] == hashes[-1L])) {
+        stops("all 'hash' must be equal in order to combine multiple 'Block' objects.")
+    }
+
+    trans <- unlist(lapply(blocks, `[[`, i = "translations"))
+    locs  <- unlist(lapply(blocks, `[[`, i = "locations"), FALSE)
+    do.call(..1$set_translations, as.list(trans))
+    do.call(..1$set_locations, locs)
+    return(..1)
+}
+
+#' @rdname class-block
+#' @keywords internal
+as_block <- function(x, ...) {
+    UseMethod("as_block")
+}
+
+#' @rdname class-block
+#' @export
+as_block.call <- function(x, location = location(), ...) {
+    suppressWarnings(strings <- as.character(x$`...`))
+
+    if (!is_chr1(x$key) || !is_chr1(x$concat) || !is.character(strings)) {
+        stops(
+            "values passed to arguments 'key', 'concat', and '...' of ",
+            "'translate()' must all be literal non-empty character strings.\n",
+            "Otherwise, they cannot be safely evaluated before runtime.\n",
+            paste0(format(location), collapse = "\n"))
+    }
+
+    blk <- Block$new()
+    blk$set_translation(x$key, sanitize_strings(strings, x$concat))
+    blk$set_locations(location)
+    blk$source_key <- x$key
+    return(blk)
+}
+
+#' @rdname class-block
+#' @export
+merge_blocks <- function(...) {
+    if (!all(vapply_1l(blocks <- list(...), is_block))) {
+        stops("values passed to '...' must all be 'Block' objects.")
+    }
+
+    groups <- split_ul(blocks, vapply_1c(blocks, `[[`, i = "hash"))
+    return(lapply(groups, \(group) do.call(c, group)))
 }
