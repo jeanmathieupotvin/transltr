@@ -6,21 +6,27 @@
 \alias{is_block}
 \alias{format.Block}
 \alias{print.Block}
+\alias{c.Block}
+\alias{as_block}
+\alias{as_block.call}
+\alias{merge_blocks}
 \title{Translations Blocks}
 \usage{
-block(
-  hash = "",
-  text = "",
-  text_key = "",
-  locations = list(),
-  translations = character()
-)
+block(source_key = "", ...)
 
 is_block(x)
 
 \method{format}{Block}(x, ...)
 
 \method{print}{Block}(x, ...)
+
+\method{c}{Block}(...)
+
+as_block(x, ...)
+
+\method{as_block}{call}(x, location = location(), ...)
+
+merge_blocks(...)
 }
 \arguments{
 \item{hash}{A non-empty and non-\link[base:NA]{NA} character string. A
@@ -74,3 +80,97 @@ instances of the class. This is because \code{\link{Block}} is just a semantic
 container.
 }
 \keyword{internal}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-Block-new}{\code{Block$new()}}
+\item \href{#method-Block-get_translation}{\code{Block$get_translation()}}
+\item \href{#method-Block-set_translation}{\code{Block$set_translation()}}
+\item \href{#method-Block-set_translations}{\code{Block$set_translations()}}
+\item \href{#method-Block-set_locations}{\code{Block$set_locations()}}
+\item \href{#method-Block-rm_translation}{\code{Block$rm_translation()}}
+\item \href{#method-Block-rm_location}{\code{Block$rm_location()}}
+\item \href{#method-Block-clone}{\code{Block$clone()}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Block-new"></a>}}
+\if{latex}{\out{\hypertarget{method-Block-new}{}}}
+\subsection{Method \code{new()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Block$new()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Block-get_translation"></a>}}
+\if{latex}{\out{\hypertarget{method-Block-get_translation}{}}}
+\subsection{Method \code{get_translation()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Block$get_translation(key = "")}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Block-set_translation"></a>}}
+\if{latex}{\out{\hypertarget{method-Block-set_translation}{}}}
+\subsection{Method \code{set_translation()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Block$set_translation(key = "", text = "")}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Block-set_translations"></a>}}
+\if{latex}{\out{\hypertarget{method-Block-set_translations}{}}}
+\subsection{Method \code{set_translations()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Block$set_translations(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Block-set_locations"></a>}}
+\if{latex}{\out{\hypertarget{method-Block-set_locations}{}}}
+\subsection{Method \code{set_locations()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Block$set_locations(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Block-rm_translation"></a>}}
+\if{latex}{\out{\hypertarget{method-Block-rm_translation}{}}}
+\subsection{Method \code{rm_translation()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Block$rm_translation(key = "")}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Block-rm_location"></a>}}
+\if{latex}{\out{\hypertarget{method-Block-rm_location}{}}}
+\subsection{Method \code{rm_location()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Block$rm_location(path = "")}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Block-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-Block-clone}{}}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Block$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

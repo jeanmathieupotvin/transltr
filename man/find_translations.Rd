@@ -4,7 +4,7 @@
 \alias{find_translations}
 \title{Placeholder}
 \usage{
-find_translations()
+find_translations(path = getwd(), encoding = "UTF-8")
 }
 \description{
 Placeholder for future function \code{\link[=find_translations]{find_translations()}}.

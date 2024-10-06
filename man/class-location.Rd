@@ -6,6 +6,8 @@
 \alias{is_location}
 \alias{format.Location}
 \alias{print.Location}
+\alias{c.Location}
+\alias{merge_locations}
 \title{Source Locations}
 \usage{
 location(path = tempfile(), line1 = 1L, col1 = 1L, line2 = 1L, col2 = 1L)
@@ -15,6 +17,10 @@ is_location(x)
 \method{format}{Location}(x, ...)
 
 \method{print}{Location}(x, ...)
+
+\method{c}{Location}(...)
+
+merge_locations(...)
 }
 \arguments{
 \item{path}{A non-empty and non-\link[base:NA]{NA} character string. The
