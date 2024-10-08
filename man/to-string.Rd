@@ -31,12 +31,8 @@ messages. It drops argument \code{width} because it is not useful in the
 context of package \code{\link{transltr}}.
 }
 \seealso{
-Other utility functions: 
-\code{\link{split_ul}()},
-\code{\link{stops}()},
-\code{\link{strip_empty_strings}()},
-\code{\link{utc}()},
-\code{\link{vapply_1l}()}
+Other string functions: 
+\code{\link{strip_empty_strings}()}
 }
-\concept{utility functions}
+\concept{string functions}
 \keyword{internal}

@@ -43,6 +43,7 @@ Collate:
     'io-translations.R'
     'set-language.R'
     'set-translator.R'
+    'strings.R'
     'to-string.R'
     'translate.R'
     'transltr-package.R'

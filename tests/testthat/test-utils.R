@@ -72,42 +72,6 @@ test_that("split_ul() works", {
 })
 
 
-# strip_empty_strings() --------------------------------------------------------
-
-
-test_that("strip_empty_strings() returns a character vector", {
-    expect_type(strip_empty_strings(), "character")
-    expect_length(strip_empty_strings(), 0L)
-})
-
-test_that("strip_empty_strings() validates argument x", {
-    expect_error(strip_empty_strings(1L))
-    expect_snapshot(strip_empty_strings(1L), error = TRUE)
-})
-
-test_that("strip_empty_strings() validates argument which", {
-    expect_error(strip_empty_strings(which = "error"))
-    expect_snapshot(strip_empty_strings(which = "error"), error = TRUE)
-})
-
-test_that("strip_empty_strings() removes leading and trailing empty elements", {
-    chr_vec <- c("", "", "a", "b", "", "c", "")
-
-    expect_identical(strip_empty_strings(chr_vec),             c("a", "b", "", "c"))
-    expect_identical(strip_empty_strings(chr_vec, "leading"),  c("a", "b", "", "c", ""))
-    expect_identical(strip_empty_strings(chr_vec, "trailing"), c("", "", "a", "b", "", "c"))
-})
-
-test_that("strip_empty_strings() returns empty character vector if it is empty", {
-    expect_identical(strip_empty_strings(character(0L)), character(0L))
-})
-
-test_that("strip_empty_strings() returns empty character vector if all elements are empty strings", {
-    expect_identical(strip_empty_strings(""), character(0L))
-    expect_identical(strip_empty_strings(c("", "", "")), character(0L))
-})
-
-
 # `%??%` -----------------------------------------------------------------------
 
 

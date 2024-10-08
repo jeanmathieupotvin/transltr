@@ -35,8 +35,6 @@ safety.
 Other utility functions: 
 \code{\link{split_ul}()},
 \code{\link{stops}()},
-\code{\link{strip_empty_strings}()},
-\code{\link{to_string}()},
 \code{\link{utc}()}
 }
 \concept{utility functions}

@@ -19,7 +19,7 @@
 #'   by `", "`, except for the last one. Argument `last_sep` is used for it.
 #'
 #' @rdname to-string
-#' @family utility functions
+#' @family string functions
 #' @keywords internal
 to_string <- function(x, ...) {
     UseMethod("to_string")
