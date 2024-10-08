@@ -69,7 +69,7 @@ location <- function(
         lc <- matrix(lc_vec,
             ncol     = 4L,
             dimnames = list(NULL, c("line1", "col1", "line2", "col2")))
-        lc <- lc[order(line1, col1, line2, col2), ][!duplicated(lc), ]
+        lc <- lc[order(line1, col1, line2, col2), ][!duplicated(lc), , drop = FALSE]
         c(path = path, apply(lc, 2L, identity, simplify = FALSE))
     } else {
         list(
@@ -92,7 +92,17 @@ is_location <- function(x) {
 
 #' @rdname class-location
 #' @export
-format.Location <- function(x, ...) {
+format.Location <- function(x, how = c("long", "short"), ...) {
+    assert_arg(how)
+    return(
+        switch(how,
+            long  = format_long_location(x, ...),
+            short = format_short_location(x, ...)))
+}
+
+#' @rdname class-location
+#' @keywords internal
+format_long_location <- function(x, ...) {
     # Align ranges by components for
     # nicer outputs when printing.
     ints   <- x[c("line1", "col1", "line2", "col2")]
@@ -116,6 +126,25 @@ format.Location <- function(x, ...) {
     }
 
     return(paste0(names(x_str), x_str))
+}
+
+#' @rdname class-location
+#' @keywords internal
+format_short_location <- function(x, ...) {
+    if (length(x$line1) > 1L) {
+        stops(
+            "'line1', 'col1', 'line2', and 'col2' must all have ",
+            "a length equal to 1 in order to use the 'short' format.")
+    }
+
+    return(
+        sprintf(
+            "'%s': ln %s, col %s @ ln %s, col %s",
+            x$path,
+            x$line1,
+            x$col1,
+            x$line2,
+            x$col2))
 }
 
 #' @rdname class-location
