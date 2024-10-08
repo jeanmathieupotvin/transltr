@@ -51,13 +51,13 @@
 #'
 #' @rdname class-block
 #' @keywords internal
-block <- function(source_key = "", ...) {
-    block <- Block$new()
-    dots  <- list(...)
-    do.call(block$set_translations, dots[vapply_1l(dots, is.character)])
-    do.call(block$set_locations,    dots[vapply_1l(dots, is_location)])
-    block$source_key <- source_key
-    return(block)
+block <- function(source_key = "", ..., hash_algorithm = get_hash_algorithms()) {
+    blk  <- Block$new(hash_algorithm)
+    dots <- list(...)
+    do.call(blk$set_translations, dots[vapply_1l(dots, is.character)])
+    do.call(blk$set_locations,    dots[vapply_1l(dots, is_location)])
+    blk$source_key <- source_key
+    return(blk)
 }
 
 #' @rdname class-block
@@ -65,38 +65,60 @@ block <- function(source_key = "", ...) {
 Block <- R6::R6Class("Block",
     lock_class   = TRUE,
     lock_objects = TRUE,
+    cloneable    = FALSE,
     private      = list(
-        .sha1         = "<unset>",
+        .hash         = "<unset>",
+        .hash_algo    = "<unset>",
         .source_key   = "<unset>",
         .translations = NULL,
         .locations    = list(),
-        .hash         = \(key = "", text = "") {
-            return(digest::sha1(charToRaw(sprintf("%s:%s", key, text))))
+        .hash_do      = \(key = "", text = "") {
+            x <- sprintf("%s:%s", key, text)
+            return(
+                switch(private$.hash_algo,
+                    sha1 = digest::sha1(charToRaw(x)),
+                    utf8 = as.character(sum(cumsum(utf8ToInt(x)))),
+                    NULL))
         }
     ),
     active = list(
         hash = \(value) {
             if (!missing(value)) {
-                stops("'hash' cannot be manually overwritten. Set '$source_key' instead.")
+                stops("'hash' cannot be manually overwritten. Set 'source_key' instead.")
             }
 
-            return(private$.sha1)
+            return(private$.hash)
+        },
+        hash_algorithm = \(value) {
+            if (!missing(value)) {
+                assert_match(value,
+                    choices      = get_hash_algorithms(),
+                    quote_values = TRUE,
+                    x_name       = "hash_algorithm")
+
+                key <- private$.source_key
+                private$.hash_algo <- value
+                private$.hash      <- private$.hash_do(key, self$get_translation(key))
+            }
+
+            return(private$.hash_algo)
         },
         source_key = \(value) {
             if (!missing(value)) {
                 assert_chr1(value)
-                assert_match(value, self$keys, quote_values = TRUE)
+                assert_match(value, self$keys,
+                    quote_values = TRUE,
+                    x_name       = "source_key")
+
                 private$.source_key <- value
-                private$.sha1       <- private$.hash(value, self$get_translation(value))
+                private$.hash       <- private$.hash_do(value, self$get_translation(value))
             }
 
             return(private$.source_key)
         },
         source_text = \(value) {
             if (!missing(value)) {
-                stops(
-                    "'source_text' cannot be manually overwritten. Set '$source_key' instead. ",
-                    "You may add a new translation before if required.")
+                stops("'source_text' cannot be manually overwritten. Set 'source_key' instead.")
             }
 
             return(self$get_translation(private$.source_key))
@@ -105,8 +127,8 @@ Block <- R6::R6Class("Block",
             if (!missing(value)) {
                 stops(
                     "'keys' cannot be manually overwritten.\n",
-                    "You may add a key with method '$set_translation()'.\n",
-                    "You may remove a key with method '$rm_translation()'.")
+                    "You may add a key with method 'set_translation()'.\n",
+                    "You may remove a key with method 'rm_translation()'.")
             }
 
             keys <- sort(names(private$.translations))
@@ -117,8 +139,8 @@ Block <- R6::R6Class("Block",
             if (!missing(value)) {
                 stops(
                     "'translations' cannot be manually overwritten.\n",
-                    "You may add a translation with method '$set_translation()'.\n",
-                    "You may remove a translation with method '$rm_translation()'.")
+                    "You may add a translation with method 'set_translation()'.\n",
+                    "You may remove a translation with method 'rm_translation()'.")
             }
 
             translations <- as.list(private$.translations, sorted = TRUE)
@@ -128,15 +150,20 @@ Block <- R6::R6Class("Block",
         locations = \(value) {
             if (!missing(value)) {
                 stops(
-                    "You may add a location with method '$set_location()'.\n",
-                    "You may remove a location with method '$rm_location()'.")
+                    "You may add a location with method 'set_location()'.\n",
+                    "You may remove a location with method 'rm_location()'.")
             }
 
             return(private$.locations)
         }
     ),
     public = list(
-        initialize = \() {
+        initialize = \(hash_algorithm = get_hash_algorithms()) {
+            assert_arg(hash_algorithm, TRUE)
+
+            # self$hash_algorithm is not used here
+            # because source translation is not set.
+            private$.hash_algo    <- hash_algorithm
             private$.translations <- new.env(parent = emptyenv())
             return(self)
         },
@@ -205,6 +232,9 @@ is_block <- function(x) {
 #' @rdname class-block
 #' @export
 format.Block <- function(x, ...) {
+    # For translations and locations, we print
+    # FIELD: <none> if either field is empty.
+
     trans_strs <- if (length(trans <- x$translations)) {
         # We want a total width of 80 chars, ignoring
         # non-ASCII chars that may have width > 1.
@@ -222,14 +252,17 @@ format.Block <- function(x, ...) {
     locs_strs <- if (length(locs <- x$locations)) {
         c("  Locations: ", sprintf("    %s", unlist(lapply(locs, format))))
     } else {
-        c("  Locations   : " = "<none>")
+        c("  Locations: " = "<none>")
     }
 
     x_str <- c(
         "<Block>",
-        "  Hash        : " = x$hash,
-        "  Source key  : " = x$source_key,
+        "  Hash      : " = x$hash,
+        "  Algorithm : " = x$hash_algorithm,
+        "  Source Key: " = x$source_key,
+        "  -------------------------------------------------------------------",
         trans_strs,
+        "  -------------------------------------------------------------------",
         locs_strs)
 
     return(paste0(names(x_str), x_str))
@@ -254,8 +287,8 @@ c.Block <- function(...) {
 
     hashes <- vapply_1c(blocks, `[[`, i = "hash")
 
-    # Checking hashes simultaneously
-    # checks source_key and source_text.
+    # Checking hashes simultaneously checks equality
+    # of hash_algorithm, source_key and source_text.
     if (!all(hashes[[1L]] == hashes[-1L])) {
         stops("all 'hash' must be equal in order to combine multiple 'Block' objects.")
     }
@@ -275,18 +308,21 @@ as_block <- function(x, ...) {
 
 #' @rdname class-block
 #' @export
-as_block.call <- function(x, location = location(), ...) {
+as_block.call <- function(x,
+    location       = location(),
+    hash_algorithm = get_hash_algorithms(), ...)
+{
     suppressWarnings(strings <- as.character(x$`...`))
 
     if (!is_chr1(x$key) || !is_chr1(x$concat) || !is.character(strings)) {
         stops(
-            "values passed to arguments 'key', 'concat', and '...' of ",
-            "'translate()' must all be literal non-empty character strings.\n",
-            "Otherwise, they cannot be safely evaluated before runtime.\n",
-            paste0(format(location), collapse = "\n"))
+            "in script ", format(location, "short"), ".\n",
+            "Values passed to 'key' and 'concat' must be non-empty literal character strings.\n",
+            "Values passed to '...' must all be literal character strings. They can be empty.\n",
+            "Otherwise, they cannot be safely evaluated before runtime.")
     }
 
-    blk <- Block$new()
+    blk <- Block$new(hash_algorithm)
     blk$set_translation(x$key, sanitize_strings(strings, x$concat))
     blk$set_locations(location)
     blk$source_key <- x$key
@@ -295,10 +331,13 @@ as_block.call <- function(x, location = location(), ...) {
 
 #' @rdname class-block
 #' @export
-merge_blocks <- function(...) {
+merge_blocks <- function(..., hash_algorithm = get_hash_algorithms()) {
     if (!all(vapply_1l(blocks <- list(...), is_block))) {
         stops("values passed to '...' must all be 'Block' objects.")
     }
+
+    assert_arg(hash_algorithm)
+    lapply(blocks, \(blk) blk$hash_algorithm <- hash_algorithm)
 
     groups <- split_ul(blocks, vapply_1c(blocks, `[[`, i = "hash"))
     return(lapply(groups, \(group) do.call(c, group)))

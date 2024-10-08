@@ -12,7 +12,7 @@
 \alias{merge_blocks}
 \title{Translations Blocks}
 \usage{
-block(source_key = "", ...)
+block(source_key = "", ..., hash_algorithm = get_hash_algorithms())
 
 is_block(x)
 
@@ -24,9 +24,9 @@ is_block(x)
 
 as_block(x, ...)
 
-\method{as_block}{call}(x, location = location(), ...)
+\method{as_block}{call}(x, location = location(), hash_algorithm = get_hash_algorithms(), ...)
 
-merge_blocks(...)
+merge_blocks(..., hash_algorithm = get_hash_algorithms())
 }
 \arguments{
 \item{hash}{A non-empty and non-\link[base:NA]{NA} character string. A
@@ -90,7 +90,6 @@ container.
 \item \href{#method-Block-set_locations}{\code{Block$set_locations()}}
 \item \href{#method-Block-rm_translation}{\code{Block$rm_translation()}}
 \item \href{#method-Block-rm_location}{\code{Block$rm_location()}}
-\item \href{#method-Block-clone}{\code{Block$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -98,7 +97,7 @@ container.
 \if{latex}{\out{\hypertarget{method-Block-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Block$new()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Block$new(hash_algorithm = get_hash_algorithms())}\if{html}{\out{</div>}}
 }
 
 }
@@ -155,22 +154,5 @@ container.
 \if{html}{\out{<div class="r">}}\preformatted{Block$rm_location(path = "")}\if{html}{\out{</div>}}
 }
 
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Block-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-Block-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Block$clone(deep = FALSE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
 }
 }

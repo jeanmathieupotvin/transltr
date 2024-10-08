@@ -35,7 +35,7 @@ get_template_versions <- function() {
 #' @rdname transltr-params
 #' @keywords internal
 get_hash_algorithms <- function() {
-    return("blake2b")
+    return(c("sha1", "utf8"))
 }
 
 #' @rdname transltr-params
