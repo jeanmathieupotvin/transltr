@@ -63,8 +63,7 @@ location <- function(
     assert_int(line2)
     assert_int(col2)
 
-    lc_vec   <- c(line1, col1, line2, col2)
-    lc_names <- c("line1", "col1", "line2", "col2")
+    lc_vec <- c(line1, col1, line2, col2)
 
     if (!all(lc_vec >= 1L)) {
         stops(
@@ -75,20 +74,23 @@ location <- function(
         stops("line1', 'col1', 'line2', and 'col2' must all have the same length.")
     }
 
-    out <- if (length(line1) > 1L) {
-        # Remove duplicate ranges and sort the
+    if (length(line1) > 1L) {
+        # Remove duplicated ranges and sort the
         # remaining ones by their natural order.
-        lc <- matrix(lc_vec, ncol = 4L, dimnames = list(NULL, lc_names))
-        lc <- lc[order(line1, col1, line2, col2), ][!duplicated(lc), , drop = FALSE]
-        c(path = path, apply(lc, 2L, identity, simplify = FALSE))
-    } else {
-        list(
-            path  = path,
-            line1 = line1,
-            col1  = col1,
-            line2 = line2,
-            col2  = col2)
+        lc    <- matrix(lc_vec, ncol = 4L)
+        lc    <- lc[order(line1, col1, line2, col2), ][!duplicated(lc), , drop = FALSE]
+        line1 <- lc[, 1L]
+        col1  <- lc[, 2L]
+        line2 <- lc[, 3L]
+        col2  <- lc[, 4L]
     }
+
+    out <- list(
+        path  = path,
+        line1 = line1,
+        col1  = col1,
+        line2 = line2,
+        col2  = col2)
 
     class(out) <- c("Location", "list")
     return(out)
@@ -168,7 +170,7 @@ format_long_location <- function(x, ...) {
     x_str <- if (length(ranges) > 1L) {
         c("<Location>",
           "  Path  : " = x$path,
-          "  Ranges: " = "",
+          "  Ranges:"  = "",
           sprintf("    [%i] %s", seq_along(ranges), ranges))
     } else {
         c("<Location>",
@@ -188,7 +190,7 @@ format_short_location <- function(x, ...) {
 
     return(
         sprintf(
-            "'%s': ln %s, col %s @ ln %s, col %s",
+            "%s: ln %s, col %s @ ln %s, col %s",
             x$path,
             x$line1,
             x$col1,

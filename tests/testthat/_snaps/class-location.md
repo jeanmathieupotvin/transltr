@@ -1,4 +1,4 @@
-# location() validates argument path
+# location() validates path
 
     Code
       location(1L)
@@ -6,7 +6,7 @@
       Error:
       ! 'path' must be a non-NA and non-empty character of length 1.
 
-# location() validates argument line1
+# location() validates line1
 
     Code
       location(line1 = "")
@@ -22,7 +22,7 @@
       Error:
       ! all values passed to 'line1', 'col1', 'line2', and 'col2' must be non-NA numeric values in the range [1, Inf).
 
-# location() validates argument col1
+# location() validates col1
 
     Code
       location(col1 = "")
@@ -38,7 +38,7 @@
       Error:
       ! all values passed to 'line1', 'col1', 'line2', and 'col2' must be non-NA numeric values in the range [1, Inf).
 
-# location() validates argument line2
+# location() validates line2
 
     Code
       location(line2 = "")
@@ -54,7 +54,7 @@
       Error:
       ! all values passed to 'line1', 'col1', 'line2', and 'col2' must be non-NA numeric values in the range [1, Inf).
 
-# location() validates argument col2
+# location() validates col2
 
     Code
       location(col2 = "")
@@ -78,13 +78,61 @@
       Error:
       ! line1', 'col1', 'line2', and 'col2' must all have the same length.
 
+# format() validates how
+
+    Code
+      format(location(), "error")
+    Condition
+      Error:
+      ! 'how' must be equal to long, or short.
+
+# format_short_location() throws an error if multiple ranges must be printed
+
+    Code
+      format(loc2, "short")
+    Condition
+      Error:
+      ! 'line1', 'col1', 'line2', and 'col2' must all have a length equal to 1 in order to use the 'short' format.
+
 # print() works
 
     Code
-      print(loc)
+      print(loc1, "short")
+    Output
+      tests/testthat/my-test-file: ln 1, col 2 @ ln 3, col 4
+
+---
+
+    Code
+      print(loc2, "long")
     Output
       <Location>
-        'tests/testthat/my-test-file':
-          - line  1, column  22 @ line   10, column 1
-          - line 11, column 222 @ line 3333, column 4
+        Path  : tests/testthat/my-test-file
+        Ranges:
+          [1] line  1, column  22 @ line   10, column 1
+          [2] line 11, column 222 @ line 3333, column 4
+
+# c.Location() throws an error if an argument is not a Location object
+
+    Code
+      c(loc1, 1L, loc2)
+    Condition
+      Error:
+      ! values passed to '...' must all be 'Location' objects.
+
+# c.Location() throws an error if paths are not equal
+
+    Code
+      c(location("a"), location("b"))
+    Condition
+      Error:
+      ! all 'path' must be equal in order to combine multiple 'Location' objects.
+
+# merge_locations() throws an error if an argument is not a Location object
+
+    Code
+      merge_locations(loc1, 1L, loc2)
+    Condition
+      Error:
+      ! values passed to '...' must all be 'Location' objects.
 
