@@ -3,7 +3,6 @@
 \name{get_template_versions}
 \alias{get_template_versions}
 \alias{get_hash_algorithms}
-\alias{get_hash_length_range}
 \alias{get_generated_by}
 \alias{get_generated_on}
 \title{Parameters}
@@ -11,8 +10,6 @@
 get_template_versions()
 
 get_hash_algorithms()
-
-get_hash_length_range(hash_algorithm = get_hash_algorithms())
 
 get_generated_by()
 
@@ -27,9 +24,6 @@ must be a value returned by \code{\link[=get_hash_algorithms]{get_hash_algorithm
 \code{\link[=get_template_versions]{get_template_versions()}} returns an integer vector.
 
 \code{\link[=get_hash_algorithms]{get_hash_algorithms()}} returns a character vector.
-
-\code{\link[=get_hash_length_range]{get_hash_length_range()}} returns a named integer vector of length 2 which
-represents the range of valid values for the hashes' length (\strong{in bytes}).
 
 \code{\link[=get_generated_by]{get_generated_by()}} returns a character string.
 

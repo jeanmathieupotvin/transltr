@@ -14,7 +14,7 @@ location(path = tempfile(), line1 = 1L, col1 = 1L, line2 = 1L, col2 = 1L)
 
 is_location(x)
 
-\method{format}{Location}(x, ...)
+\method{format}{Location}(x, how = c("long", "short"), ...)
 
 \method{print}{Location}(x, ...)
 
@@ -23,8 +23,8 @@ is_location(x)
 merge_locations(...)
 }
 \arguments{
-\item{path}{A non-empty and non-\link[base:NA]{NA} character string. The
-underlying source file.}
+\item{path}{A non-empty and non-\link[base:NA]{NA} character string identifying
+the origin of the range(s).}
 
 \item{line1, col1}{A non-empty integer vector of non-\link[base:NA]{NA} values.
 The (inclusive) starting point(s) of what is being referenced.}
@@ -32,10 +32,12 @@ The (inclusive) starting point(s) of what is being referenced.}
 \item{line2, col2}{A non-empty integer vector of non-\link[base:NA]{NA} values.
 The (inclusive) end(s) of what is being referenced.}
 
-\item{x}{Any \R object. Obviously, an object of class \code{\link{Location}}
-for the S3 methods defined here.}
+\item{x}{Any \R object for \code{\link[=is_location]{is_location()}}. An object of class
+\code{\link{Location}} for S3 methods \code{\link[=format]{format()}} and \code{\link[=print]{print()}}.}
 
-\item{...}{Further arguments passed to or from other methods.}
+\item{...}{Further arguments passed to or from other methods.
+\code{\link{Location}} objects only for \code{\link[=merge_locations]{merge_locations()}} and S3
+method \code{\link[=c]{c()}}.}
 }
 \value{
 \code{\link[=location]{location()}} returns a named list of length 5 and of class
@@ -44,21 +46,30 @@ for the S3 methods defined here.}
 
 \code{\link[=is_location]{is_location()}} returns a logical.
 
-\code{\link[=format.Location]{format.Location()}} returns a character string.
+\code{\link[=format]{format()}} returns a character string.
 
-\code{\link[=print.Location]{print.Location()}} returns argument \code{x} invisibly.
+\code{\link[=print]{print()}} returns argument \code{x} invisibly.
+
+\code{\link[=c]{c()}} returns a \code{\link{Location}} object. It can only combine objects
+having the exact same \code{path}. In that case, ranges are combined into a
+coherent set of unique range(s).
+
+\code{\link[=merge_locations]{merge_locations()}} returns a list of \code{\link{Location}} objects. It is
+a generalized version of \code{\link[=c]{c()}} that handles \code{\link{Location}} objects
+having different path(s).
 }
 \description{
-An internal class to represent source locations.
+An internal class to represent source locations. It is a more convenient
+alternative to \code{\link[=srcfile]{srcfile()}}.
 }
 \details{
-A \emph{source location} is a line/column range within any text file.
+A \emph{source location} is defined as a set of one or more ranges referencing
+contents wihin a common \emph{origin} that can be located via its underlying
+\code{path}. The latter can be anything: a file on disk, on a network, an object
+in memory, etc.
+
 \code{\link{Location}} objects may refer multiple distinct ranges within
 the same source script. This is why arguments \code{line1}, \code{col1}, \code{line2}, and
 \code{col2} accept integer vectors (and not only scalar values).
-}
-\note{
-\code{\link[=location]{location()}} is mostly used to restructure information returned by
-\code{\link[utils:getParseData]{utils::getParseData()}}.
 }
 \keyword{internal}

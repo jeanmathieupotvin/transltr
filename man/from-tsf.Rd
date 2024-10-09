@@ -25,7 +25,8 @@ from_tsf_header(x = character())
 
 from_tsf_blocks(
   src_blocks = list(),
-  template_version = get_template_versions()
+  template_version = get_template_versions(),
+  hash_algorithm = get_hash_algorithms()
 )
 
 from_tsf_header_v1(
@@ -33,14 +34,13 @@ from_tsf_header_v1(
   generated_by,
   generated_on,
   hash_algorithm,
-  hash_length,
   language_keys,
   ...
 )
 
-from_tsf_blocks_v1(src_blocks = list())
+from_tsf_blocks_v1(src_blocks = list(), hash_algorithm = get_hash_algorithms())
 
-from_tsf_block_v1(tokens = list())
+from_tsf_block_v1(tokens = list(), hash_algorithm = get_hash_algorithms())
 
 from_tsf_block_title_v1(token = tsf_block_line_token("TITLE_HASH"))
 
@@ -66,6 +66,10 @@ Each element represents a different source \code{\link{Block}} object.}
 \item{template_version}{An integer. The translations source file's format
 version. See \code{\link[=get_template_versions]{get_template_versions()}} for available versions.}
 
+\item{hash_algorithm}{A character string. The algorithm to use when
+hashing and identifying source texts that requires translation. It
+must be a value returned by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}.}
+
 \item{generated_by}{A character string. How did the translations source
 file was generated? This will most likely be a version of the package,
 but any other mechanism is fine. Package \code{\link{transltr}} embraces
@@ -73,15 +77,6 @@ portability. See \code{\link[=get_generated_by]{get_generated_by()}} for more in
 
 \item{generated_on}{A character string. When was the translations source
 file generated? See \code{\link[=get_generated_on]{get_generated_on()}} for the actual format.}
-
-\item{hash_algorithm}{A character string. The algorithm to use when
-hashing and identifying source texts that requires translation. It
-must be a value returned by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}.}
-
-\item{hash_length}{An integer. The desired number of hexadecimal characters
-to use when generating hashes with \code{hash_algorithm}. The length must
-comply with what the latter prescribes. See \code{\link[=get_hash_length_range]{get_hash_length_range()}} for
-more information.}
 
 \item{language_keys}{A named list of character strings, or a named character
 vector. It can be empty.
