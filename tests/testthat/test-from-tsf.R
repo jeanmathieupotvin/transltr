@@ -73,7 +73,7 @@ test_that("split_tsf() splits translations source files appropriately", {
     expect_identical(out$rest,   "")
 })
 
-test_that("split_tsf() validates argument x", {
+test_that("split_tsf() validates x", {
     expect_error(split_tsf(1L))
     expect_snapshot(split_tsf(1L), error = TRUE)
 })
@@ -187,7 +187,7 @@ test_that("from_tsf_blocks() returns a list: argument template_version is equal 
     expect_identical(out, list(from_tsf_block_v1(mock_tsf_v1_block_hello_t, "sha1")))
 })
 
-test_that("from_tsf_blocks() validates argument template_version", {
+test_that("from_tsf_blocks() validates template_version", {
     expect_error(from_tsf_blocks(template_version = ""))
     expect_snapshot(from_tsf_blocks(template_version = ""), error = TRUE)
 })
@@ -263,7 +263,7 @@ test_that("from_tsf_header_v1() throws an (appropriate) error if a field is miss
     expect_snapshot(from_tsf_header_v1(), error = TRUE)
 })
 
-test_that("from_tsf_header_v1() validates argument generated_by", {
+test_that("from_tsf_header_v1() validates generated_by", {
     expect_error(
         from_tsf_header_v1(
             template_version = 1L,
@@ -281,7 +281,7 @@ test_that("from_tsf_header_v1() validates argument generated_by", {
             language_keys    = list(en = "English", fr = "Français")))
 })
 
-test_that("from_tsf_header_v1() validates argument generated_on", {
+test_that("from_tsf_header_v1() validates generated_on", {
     expect_error(
         from_tsf_header_v1(
             template_version = 1L,
@@ -299,7 +299,7 @@ test_that("from_tsf_header_v1() validates argument generated_on", {
             language_keys    = list(en = "English", fr = "Français")))
 })
 
-test_that("from_tsf_header_v1() validates argument hash_algorithm", {
+test_that("from_tsf_header_v1() validates hash_algorithm", {
     expect_error(
         from_tsf_header_v1(
             template_version = 1L,
@@ -317,7 +317,7 @@ test_that("from_tsf_header_v1() validates argument hash_algorithm", {
             language_keys    = list(en = "English", fr = "Français")))
 })
 
-test_that("from_tsf_header_v1() validates argument language_keys", {
+test_that("from_tsf_header_v1() validates language_keys", {
     expect_error(
         from_tsf_header_v1(
             template_version = 1L,
@@ -637,7 +637,7 @@ test_that("tokenize_tsf_block_v1() returns an empty list if argument x is empty"
     expect_identical(tokenize_tsf_block_v1(), list())
 })
 
-test_that("tokenize_tsf_block_v1() validates argument x", {
+test_that("tokenize_tsf_block_v1() validates x", {
     expect_error(tokenize_tsf_block_v1(1L))
     expect_snapshot(tokenize_tsf_block_v1(1L), error = TRUE)
 })

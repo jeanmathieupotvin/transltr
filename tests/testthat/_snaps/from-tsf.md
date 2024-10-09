@@ -1,4 +1,4 @@
-# split_tsf() validates argument x
+# split_tsf() validates x
 
     Code
       split_tsf(1L)
@@ -39,7 +39,7 @@
       ! header could not be read. The parser returned this error:
       ! Duplicate map key: 'en'.
 
-# from_tsf_blocks() validates argument template_version
+# from_tsf_blocks() validates template_version
 
     Code
       from_tsf_blocks(template_version = "")
@@ -55,7 +55,7 @@
       Error:
       ! incomplete header. These fields are required but missing: 'template_version', 'generated_by', 'generated_on', 'hash_algorithm', and 'language_keys'.
 
-# from_tsf_header_v1() validates argument generated_by
+# from_tsf_header_v1() validates generated_by
 
     Code
       from_tsf_header_v1(template_version = 1L, generated_by = 1L, generated_on = "August 22, 2024 @ 08:00 (UTC)",
@@ -64,7 +64,7 @@
       Error:
       ! 'generated_by' must be a non-NA and non-empty character of length 1.
 
-# from_tsf_header_v1() validates argument generated_on
+# from_tsf_header_v1() validates generated_on
 
     Code
       from_tsf_header_v1(template_version = 1L, generated_by = "R package transltr 0.0.1",
@@ -74,7 +74,7 @@
       Error:
       ! 'generated_on' must be a non-NA and non-empty character of length 1.
 
-# from_tsf_header_v1() validates argument hash_algorithm
+# from_tsf_header_v1() validates hash_algorithm
 
     Code
       from_tsf_header_v1(template_version = 1L, generated_by = "R package transltr 0.0.1",
@@ -84,7 +84,7 @@
       Error:
       ! 'hash_algorithm' must be equal to 'sha1', or 'utf8'.
 
-# from_tsf_header_v1() validates argument language_keys
+# from_tsf_header_v1() validates language_keys
 
     Code
       from_tsf_header_v1(template_version = 1L, generated_by = "R package transltr 0.0.1",
@@ -132,7 +132,7 @@
       ! the following source location's range could not be converted:
       '- line  1, column 2+4i @ line 3, column 4'.
 
-# tokenize_tsf_block_v1() validates argument x
+# tokenize_tsf_block_v1() validates x
 
     Code
       tokenize_tsf_block_v1(1L)

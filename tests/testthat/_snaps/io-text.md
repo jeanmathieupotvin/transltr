@@ -1,4 +1,4 @@
-# read_text() validates argument path
+# read_text() validates path
 
     Code
       read_text(1L)
@@ -14,7 +14,7 @@
       Error:
       ! 'path' does not exist, is a directory, or is not readable.
 
-# read_text() validates argument encoding
+# read_text() validates encoding
 
     Code
       read_text(mock_file_utf8_path, "")

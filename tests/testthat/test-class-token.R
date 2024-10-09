@@ -39,17 +39,17 @@ test_that("tsf_block_line_token() sets subtype equal to type if null", {
     expect_identical(tsf_block_line_token("TXT")$subtype, "TXT")
 })
 
-test_that("tsf_block_line_token() validates argument type", {
+test_that("tsf_block_line_token() validates type", {
     expect_error(tsf_block_line_token("BAD_TYPE"))
     expect_snapshot(tsf_block_line_token("BAD_TYPE"), error = TRUE)
 })
 
-test_that("tsf_block_line_token() validates argument value", {
+test_that("tsf_block_line_token() validates value", {
     expect_error(tsf_block_line_token(value = 1L))
     expect_snapshot(tsf_block_line_token(value = 1L), error = TRUE)
 })
 
-test_that("tsf_block_line_token() validates argument subtype", {
+test_that("tsf_block_line_token() validates subtype", {
     expect_error(tsf_block_line_token(subtype = 1L))
     expect_snapshot(tsf_block_line_token(subtype = 1L), error = TRUE)
 })

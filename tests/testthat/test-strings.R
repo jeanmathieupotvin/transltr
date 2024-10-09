@@ -13,12 +13,12 @@ test_that("strip_empty_strings() returns a character", {
     expect_length(strip_empty_strings(), 0L)
 })
 
-test_that("strip_empty_strings() validates argument x", {
+test_that("strip_empty_strings() validates x", {
     expect_error(strip_empty_strings(1L))
     expect_snapshot(strip_empty_strings(1L), error = TRUE)
 })
 
-test_that("strip_empty_strings() validates argument which", {
+test_that("strip_empty_strings() validates which", {
     expect_error(strip_empty_strings(which = "error"))
     expect_snapshot(strip_empty_strings(which = "error"), error = TRUE)
 })
@@ -52,19 +52,19 @@ test_that("left_pad_strings() returns a character", {
     expect_length(left_pad_strings(v1), length(v1))
 })
 
-test_that("left_pad_strings() validates argument x", {
+test_that("left_pad_strings() validates x", {
     expect_error(left_pad_strings(1L))
     expect_snapshot(left_pad_strings(1L), error = TRUE)
 })
 
-test_that("left_pad_strings() validates argument pad", {
+test_that("left_pad_strings() validates pad", {
     expect_error(left_pad_strings(pad = 1L))
     expect_error(left_pad_strings(v1, pad = "aa"))
     expect_snapshot(left_pad_strings(pad = 1L),      error = TRUE)
     expect_snapshot(left_pad_strings(v1, pad = "aa"), error = TRUE)
 })
 
-test_that("left_pad_strings() validates argument len", {
+test_that("left_pad_strings() validates len", {
     expect_error(left_pad_strings(v1, len = "1"))
     expect_error(left_pad_strings(v1, len = -1L))
     expect_snapshot(left_pad_strings(v1, len = "1"), error = TRUE)
@@ -93,12 +93,12 @@ test_that("trim_strings() returns a character", {
     expect_identical(trim_strings(v2), v2)
 })
 
-test_that("trim_strings() validates argument x", {
+test_that("trim_strings() validates x", {
     expect_error(trim_strings(1L))
     expect_snapshot(trim_strings(1L), error = TRUE)
 })
 
-test_that("trim_strings() validates argument len", {
+test_that("trim_strings() validates len", {
     expect_error(trim_strings(v2, "1"))
     expect_error(trim_strings(v2, 2L))
     expect_snapshot(trim_strings(v2, "1"), error = TRUE)
@@ -124,12 +124,12 @@ test_that("sanitize_strings() returns a character string", {
     expect_length(sanitize_strings(v2), 1L)
 })
 
-test_that("sanitize_strings() validates argument x", {
+test_that("sanitize_strings() validates x", {
     expect_error(sanitize_strings(1L))
     expect_snapshot(sanitize_strings(1L), error = TRUE)
 })
 
-test_that("sanitize_strings() validates argument concat", {
+test_that("sanitize_strings() validates concat", {
     expect_error(sanitize_strings(v1, concat = 1L))
     expect_snapshot(sanitize_strings(v1, concat = 1L), error = TRUE)
 })

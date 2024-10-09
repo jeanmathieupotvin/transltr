@@ -12,7 +12,7 @@ test_that("read_text() returns a character vector", {
     expect_length(lines, 52L)
 })
 
-test_that("read_text() validates argument path", {
+test_that("read_text() validates path", {
     # Creates a directory within tempdir() and
     # an empty file within this subdirectory.
     temp_dir  <- withr::local_tempdir(pattern  = "a-test-directory")
@@ -31,7 +31,7 @@ test_that("read_text() validates argument path", {
     expect_snapshot(read_text("a-non-existent-file.txt"), error = TRUE)
 })
 
-test_that("read_text() validates argument encoding", {
+test_that("read_text() validates encoding", {
     expect_error(read_text(mock_file_utf8_path, ""))
     expect_snapshot(read_text(mock_file_utf8_path, ""), error = TRUE)
 })
