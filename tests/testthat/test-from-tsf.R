@@ -48,7 +48,7 @@ test_that("from_tsf() converts translations source files appropriately", {
     src_b <- list(mock_tsf_v1_block_lorem, mock_tsf_v1_block_hello)
 
     expect_identical(out$header, from_tsf_header(mock_tsf_v1_head))
-    expect_identical(out$blocks, from_tsf_blocks_v1(src_b))
+    expect_identical(out$blocks, from_tsf_blocks_v1(src_b, "sha1"))
     expect_identical(out$rest,   "")
 })
 
@@ -79,9 +79,9 @@ test_that("split_tsf() validates argument x", {
 })
 
 test_that("split_tsf() throws an error if a header's separator is missing", {
-    # Lines 1 and 23 are the positions of the header's separators.
+    # Lines 1 and 22 are the positions of the header's separators.
     mock_tsf_v1_no_sep_start <- mock_tsf_v1[ -1L]
-    mock_tsf_v1_no_sep_end   <- mock_tsf_v1[-23L]
+    mock_tsf_v1_no_sep_end   <- mock_tsf_v1[-22L]
 
     expect_error(split_tsf(mock_tsf_v1_no_sep_start))
     expect_error(split_tsf(mock_tsf_v1_no_sep_end))
@@ -89,8 +89,8 @@ test_that("split_tsf() throws an error if a header's separator is missing", {
 })
 
 test_that("split_tsf() throws an error if the header is missing", {
-    # Lines 1 @ 24 are the header.
-    mock_tsf_v1_no_head <- mock_tsf_v1[-seq.int(1L, 24L)]
+    # Lines 1 @ 22 are the header.
+    mock_tsf_v1_no_head <- mock_tsf_v1[-seq.int(1L, 22L)]
 
     expect_error(split_tsf(mock_tsf_v1_no_head))
     expect_snapshot(split_tsf(mock_tsf_v1_no_head), error = TRUE)
@@ -108,8 +108,7 @@ test_that("from_tsf_header() returns a named list for template version 1", {
         "template_version: 1",
         "generated_by: R package transltr 0.0.1",
         "generated_on: August 22, 2024 @ 08:00 (UTC)",
-        "hash_algorithm: blake2b",
-        "hash_length: 32",
+        "hash_algorithm: sha1",
         "language_keys:",
         "    en: English",
         "    fr: Français",
@@ -121,8 +120,7 @@ test_that("from_tsf_header() returns a named list for template version 1", {
             template_version = 1L,
             generated_by     = "R package transltr 0.0.1",
             generated_on     = "August 22, 2024 @ 08:00 (UTC)",
-            hash_algorithm   = "blake2b",
-            hash_length      = 32L,
+            hash_algorithm   = "sha1",
             language_keys    = list(en = "English", fr = "Français")))
 })
 
@@ -139,8 +137,7 @@ test_that("from_tsf_header() throws an error if the yaml parser fails", {
         "template_version: 1",
         "generated_by: R package transltr 0.0.1",
         "generated_on: August 22, 2024 @ 08:00 (UTC)",
-        "hash_algorithm: blake2b",
-        "hash_length: 32",
+        "hash_algorithm: sha1",
         "language_keys:",
         "    en: English",
         "    en: French")
@@ -159,8 +156,7 @@ test_that("from_tsf_header() skips yaml comments", {
         "# A comment",
         "generated_by: R package transltr 0.0.1",
         "generated_on: August 22, 2024 @ 08:00 (UTC)",
-        "hash_algorithm: blake2b",
-        "hash_length: 32",
+        "hash_algorithm: sha1",
         "# Another comment",
         "language_keys:",
         "    en: English",
@@ -173,8 +169,7 @@ test_that("from_tsf_header() skips yaml comments", {
             template_version = 1L,
             generated_by     = "R package transltr 0.0.1",
             generated_on     = "August 22, 2024 @ 08:00 (UTC)",
-            hash_algorithm   = "blake2b",
-            hash_length      = 32L,
+            hash_algorithm   = "sha1",
             language_keys    = list(en = "English", fr = "Français")))
 })
 
@@ -189,7 +184,7 @@ test_that("from_tsf_blocks() returns a list: argument template_version is equal 
 
     expect_type(out, "list")
     expect_length(out, 1L)
-    expect_identical(out, list(from_tsf_block_v1(mock_tsf_v1_block_hello_t)))
+    expect_identical(out, list(from_tsf_block_v1(mock_tsf_v1_block_hello_t, "sha1")))
 })
 
 test_that("from_tsf_blocks() validates argument template_version", {
@@ -206,19 +201,17 @@ test_that("from_tsf_header_v1() returns a named list and expected fields", {
         template_version = 1L,
         generated_by     = "R package transltr 0.0.1",
         generated_on     = "August 22, 2024 @ 08:00 (UTC)",
-        hash_algorithm   = "blake2b",
-        hash_length      = 32L,
+        hash_algorithm   = "sha1",
         language_keys    = list(en = "English", fr = "Français"),
         further_field_1  = "test value 1",
         further_field_2  = "test value 2")
 
     expect_type(header, "list")
-    expect_length(header, 7L)
+    expect_length(header, 6L)
     expect_identical(header$template_version, 1L)
     expect_identical(header$generated_by,     "R package transltr 0.0.1")
     expect_identical(header$generated_on,     "August 22, 2024 @ 08:00 (UTC)")
-    expect_identical(header$hash_algorithm,   "blake2b")
-    expect_identical(header$hash_length,      32L)
+    expect_identical(header$hash_algorithm,   "sha1")
     expect_identical(header$language_keys,    c(en = "English", fr = "Français"))
     expect_identical(header$further_fields,   list(
         further_field_1 = "test value 1",
@@ -233,40 +226,35 @@ test_that("from_tsf_header_v1() throws an (appropriate) error if a field is miss
             # template_version = 1L,
             generated_by       = "R package transltr 0.0.1",
             generated_on       = "August 22, 2024 @ 08:00 (UTC)",
-            hash_algorithm     = "blake2b",
-            hash_length        = 32L,
+            hash_algorithm     = "sha1",
             language_keys      = list(en = "English", fr = "Français")))
     expect_error(
         from_tsf_header_v1(
             # template_version = 1L,
             # generated_by     = "R package transltr 0.0.1",
             generated_on       = "August 22, 2024 @ 08:00 (UTC)",
-            hash_algorithm     = "blake2b",
-            hash_length        = 32L,
+            hash_algorithm     = "sha1",
             language_keys      = list(en = "English", fr = "Français")))
     expect_error(
         from_tsf_header_v1(
             # template_version = 1L,
             # generated_by     = "R package transltr 0.0.1",
             # generated_on     = "August 22, 2024 @ 08:00 (UTC)",
-            hash_algorithm     = "blake2b",
-            hash_length        = 32L,
+            hash_algorithm     = "sha1",
             language_keys      = list(en = "English", fr = "Français")))
     expect_error(
         from_tsf_header_v1(
             # template_version = 1L,
             # generated_by     = "R package transltr 0.0.1",
             # generated_on     = "August 22, 2024 @ 08:00 (UTC)",
-            # hash_algorithm   = "blake2b",
-            hash_length        = 32L,
+            # hash_algorithm   = "sha1",
             language_keys      = list(en = "English", fr = "Français")))
     expect_error(
         from_tsf_header_v1(
             # template_version = 1L,
             # generated_by     = "R package transltr 0.0.1",
             # generated_on     = "August 22, 2024 @ 08:00 (UTC)",
-            # hash_algorithm   = "blake2b",
-            # hash_length      = 32L,
+            # hash_algorithm   = "sha1",
             language_keys      = list(en = "English", fr = "Français")))
 
     # If all expectations above succeeds, we only need to
@@ -281,8 +269,7 @@ test_that("from_tsf_header_v1() validates argument generated_by", {
             template_version = 1L,
             generated_by     = 1L,
             generated_on     = "August 22, 2024 @ 08:00 (UTC)",
-            hash_algorithm   = "blake2b",
-            hash_length      = 32L,
+            hash_algorithm   = "sha1",
             language_keys    = list(en = "English", fr = "Français")))
     expect_snapshot(
         error = TRUE,
@@ -290,8 +277,7 @@ test_that("from_tsf_header_v1() validates argument generated_by", {
             template_version = 1L,
             generated_by     = 1L,
             generated_on     = "August 22, 2024 @ 08:00 (UTC)",
-            hash_algorithm   = "blake2b",
-            hash_length      = 32L,
+            hash_algorithm   = "sha1",
             language_keys    = list(en = "English", fr = "Français")))
 })
 
@@ -301,8 +287,7 @@ test_that("from_tsf_header_v1() validates argument generated_on", {
             template_version = 1L,
             generated_by     = "R package transltr 0.0.1",
             generated_on     = 1L,
-            hash_algorithm   = "blake2b",
-            hash_length      = 32L,
+            hash_algorithm   = "sha1",
             language_keys    = list(en = "English", fr = "Français")))
     expect_snapshot(
         error = TRUE,
@@ -310,8 +295,7 @@ test_that("from_tsf_header_v1() validates argument generated_on", {
             template_version = 1L,
             generated_by     = "R package transltr 0.0.1",
             generated_on     = 1L,
-            hash_algorithm   = "blake2b",
-            hash_length      = 32L,
+            hash_algorithm   = "sha1",
             language_keys    = list(en = "English", fr = "Français")))
 })
 
@@ -322,7 +306,6 @@ test_that("from_tsf_header_v1() validates argument hash_algorithm", {
             generated_by     = "R package transltr 0.0.1",
             generated_on     = "August 22, 2024 @ 08:00 (UTC)",
             hash_algorithm   = 1L,
-            hash_length      = 32L,
             language_keys    = list(en = "English", fr = "Français")))
     expect_snapshot(
         error = TRUE,
@@ -331,44 +314,6 @@ test_that("from_tsf_header_v1() validates argument hash_algorithm", {
             generated_by     = "R package transltr 0.0.1",
             generated_on     = "August 22, 2024 @ 08:00 (UTC)",
             hash_algorithm   = 1L,
-            hash_length      = 32L,
-            language_keys    = list(en = "English", fr = "Français")))
-})
-
-test_that("from_tsf_header_v1() validates argument hash_length", {
-    expect_error(
-        from_tsf_header_v1(
-            template_version = 1L,
-            generated_by     = "R package transltr 0.0.1",
-            generated_on     = "August 22, 2024 @ 08:00 (UTC)",
-            hash_algorithm   = "blake2b",
-            hash_length      = "",
-            language_keys    = list(en = "English", fr = "Français")))
-    expect_error(
-        from_tsf_header_v1(
-            template_version = 1L,
-            generated_by     = "R package transltr 0.0.1",
-            generated_on     = "August 22, 2024 @ 08:00 (UTC)",
-            hash_algorithm   = "blake2b",
-            hash_length      = 1L,
-            language_keys    = list(en = "English", fr = "Français")))
-    expect_snapshot(
-        error = TRUE,
-        from_tsf_header_v1(
-            template_version = 1L,
-            generated_by     = "R package transltr 0.0.1",
-            generated_on     = "August 22, 2024 @ 08:00 (UTC)",
-            hash_algorithm   = "blake2b",
-            hash_length      = "",
-            language_keys    = list(en = "English", fr = "Français")))
-    expect_snapshot(
-        error = TRUE,
-        from_tsf_header_v1(
-            template_version = 1L,
-            generated_by     = "R package transltr 0.0.1",
-            generated_on     = "August 22, 2024 @ 08:00 (UTC)",
-            hash_algorithm   = "blake2b",
-            hash_length      = 1L,
             language_keys    = list(en = "English", fr = "Français")))
 })
 
@@ -378,16 +323,14 @@ test_that("from_tsf_header_v1() validates argument language_keys", {
             template_version = 1L,
             generated_by     = "R package transltr 0.0.1",
             generated_on     = "August 22, 2024 @ 08:00 (UTC)",
-            hash_algorithm   = "blake2b",
-            hash_length      = 32L,
+            hash_algorithm   = "sha1",
             language_keys    = 1L))
     expect_error(
         from_tsf_header_v1(
             template_version = 1L,
             generated_by     = "R package transltr 0.0.1",
             generated_on     = "August 22, 2024 @ 08:00 (UTC)",
-            hash_algorithm   = "blake2b",
-            hash_length      = 32L,
+            hash_algorithm   = "sha1",
             language_keys    = list("English", "Français")))
     expect_snapshot(
         error = TRUE,
@@ -395,8 +338,7 @@ test_that("from_tsf_header_v1() validates argument language_keys", {
             template_version = 1L,
             generated_by     = "R package transltr 0.0.1",
             generated_on     = "August 22, 2024 @ 08:00 (UTC)",
-            hash_algorithm   = "blake2b",
-            hash_length      = 32L,
+            hash_algorithm   = "sha1",
             language_keys    = 1L))
     expect_snapshot(
         error = TRUE,
@@ -404,8 +346,7 @@ test_that("from_tsf_header_v1() validates argument language_keys", {
             template_version = 1L,
             generated_by     = "R package transltr 0.0.1",
             generated_on     = "August 22, 2024 @ 08:00 (UTC)",
-            hash_algorithm   = "blake2b",
-            hash_length      = 32L,
+            hash_algorithm   = "sha1",
             language_keys    = list("English", "Français")))
 })
 
@@ -415,8 +356,7 @@ test_that("from_tsf_header_v1() validates further fields", {
             template_version = 1L,
             generated_by     = "R package transltr 0.0.1",
             generated_on     = "August 22, 2024 @ 08:00 (UTC)",
-            hash_algorithm   = "blake2b",
-            hash_length      = 32L,
+            hash_algorithm   = "sha1",
             language_keys    = list(en = "English", fr = "Français"),
             # Insert an unnamed field to generate an error.
             1L))
@@ -426,8 +366,7 @@ test_that("from_tsf_header_v1() validates further fields", {
             template_version = 1L,
             generated_by     = "R package transltr 0.0.1",
             generated_on     = "August 22, 2024 @ 08:00 (UTC)",
-            hash_algorithm   = "blake2b",
-            hash_length      = 32L,
+            hash_algorithm   = "sha1",
             language_keys    = list(en = "English", fr = "Français"),
             # Insert an unnamed field to generate an error.
             1L))
@@ -453,19 +392,19 @@ test_that("from_tsf_blocks_v1() works", {
 
 
 test_that("from_tsf_block_v1() returns a S3 object of class Block", {
-    out <- from_tsf_block_v1(mock_tsf_v1_block_hello_t)
+    out <- from_tsf_block_v1(mock_tsf_v1_block_hello_t, "sha1")
 
     expect_s3_class(out, "Block")
-    expect_identical(out$hash, "9bbbb7410fa6464a1a6a216919179455")
-    expect_identical(out$text_key, "en")
-    expect_identical(out$text, "Hello, world!")
+    expect_identical(out$hash, "b5e480d5ff9fa8583c5caa4c7b63f0719cc878e8")
+    expect_identical(out$hash_algorithm, "sha1")
+    expect_identical(out$source_key, "en")
+    expect_identical(out$source_text, "Hello, world!")
+    expect_identical(out$locations, list(location("file1", 1L, 2L, 3L, 4L)))
     expect_identical(out$translations, c(
-        fr = "Bonjour le monde!",
+        en = "Hello, world!",
         es = "¡Hola Mundo!",
+        fr = "Bonjour le monde!",
         jp = "こんにちは世界！"))
-    expect_identical(out$locations, list(
-        location("file1", 1L, 2L, 3L, 4L)
-    ))
 })
 
 
@@ -532,9 +471,9 @@ test_that("from_tsf_block_loc_v1() returns a S3 object of class Location", {
 
     expect_s3_class(out, "Location")
     expect_identical(out$path, "file1")
-    expect_identical(out$line1, c(1L, 24L))
-    expect_identical(out$col1,  c(2L, 434L))
-    expect_identical(out$line2, c(3L, 3421L))
+    expect_identical(out$line1, c(1L,       24L))
+    expect_identical(out$col1,  c(2L,      434L))
+    expect_identical(out$line2, c(3L,     3421L))
     expect_identical(out$col2,  c(4224L, 35972L))
 })
 

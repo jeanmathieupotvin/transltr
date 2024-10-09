@@ -15,9 +15,6 @@
 #'
 #' [get_hash_algorithms()] returns a character vector.
 #'
-#' [get_hash_length_range()] returns a named integer vector of length 2 which
-#' represents the range of valid values for the hashes' length (**in bytes**).
-#'
 #' [get_generated_by()] returns a character string.
 #'
 #' [get_generated_on()] is just a semantic alias for [utc()] and returns
@@ -36,17 +33,6 @@ get_template_versions <- function() {
 #' @keywords internal
 get_hash_algorithms <- function() {
     return(c("sha1", "utf8"))
-}
-
-#' @rdname transltr-params
-#' @keywords internal
-get_hash_length_range <- function(hash_algorithm = get_hash_algorithms()) {
-    assert_arg(hash_algorithm, TRUE)
-
-    return(
-        switch(hash_algorithm,
-            "blake2b" = c(min = 8L, max = 32L),
-            NULL))
 }
 
 #' @rdname transltr-params

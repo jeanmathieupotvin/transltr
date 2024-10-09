@@ -100,8 +100,7 @@
 #' | `template_version` | Integer       | `integer(1)`              | `1`                                                   |
 #' | `generated_by`     | String        | `character(1)`            | `R package transltr 0.0.1`                            |
 #' | `generated_on`     | String        | `character(1)`            | `August 22, 2024 @ 08:00 UTC`                         |
-#' | `hash_algorithm`   | String        | `character(1)`            | `blake2b`                                             |
-#' | `hash_length`      | Integer       | `integer(1)`              | `32`                                                  |
+#' | `hash_algorithm`   | String        | `character(1)`            | `sha1`                                                |
 #' | `language_keys`    | Map           | `character()`<br/>(Named) | `fr: Français`<br/>`language-key: full-language-name` |
 #'
 #' ## Blocks

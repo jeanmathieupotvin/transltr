@@ -6,14 +6,13 @@ format:
   header: yaml
   blocks: markdown
 translations_sources:
-  14eb0db0b772035b65848e4dc7ad3046: https://www.lipsum.com
-  9bbbb7410fa6464a1a6a216919179455: https://translate.google.ca
+  4f01c06503971d1c854ac42e0a4d09ee26498d82: https://www.lipsum.com
+  b5e480d5ff9fa8583c5caa4c7b63f0719cc878e8: https://translate.google.ca
 # Mandatory fields.
 template_version: 1
 generated_by: R package transltr 0.0.1
 generated_on: August 22, 2024 @ 08:00 UTC
-hash_algorithm: blake2b
-hash_length: 32
+hash_algorithm: sha1
 language_keys:
     en: English
     fr: Français
