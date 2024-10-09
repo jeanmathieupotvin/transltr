@@ -35,9 +35,13 @@ The (inclusive) end(s) of what is being referenced.}
 \item{x}{Any \R object for \code{\link[=is_location]{is_location()}}. An object of class
 \code{\link{Location}} for S3 methods \code{\link[=format]{format()}} and \code{\link[=print]{print()}}.}
 
-\item{...}{Further arguments passed to or from other methods.
-\code{\link{Location}} objects only for \code{\link[=merge_locations]{merge_locations()}} and S3
-method \code{\link[=c]{c()}}.}
+\item{...}{Usage depends on the underlying function.
+\itemize{
+\item Further arguments passed to or from other methods for \code{\link[=format]{format()}} and
+\code{\link[=print]{print()}}.
+\item Any number of \code{\link{Location}} objects for \code{\link[=merge_locations]{merge_locations()}}
+and S3 method \code{\link[=c]{c()}}.
+}}
 }
 \value{
 \code{\link[=location]{location()}} returns a named list of length 5 and of class
@@ -46,7 +50,8 @@ method \code{\link[=c]{c()}}.}
 
 \code{\link[=is_location]{is_location()}} returns a logical.
 
-\code{\link[=format]{format()}} returns a character string.
+\code{\link[=format]{format()}} returns a character. If \code{how} is equal to \code{"short"}, it is of
+length 1.
 
 \code{\link[=print]{print()}} returns argument \code{x} invisibly.
 
@@ -59,8 +64,8 @@ a generalized version of \code{\link[=c]{c()}} that handles \code{\link{Location
 having different path(s).
 }
 \description{
-An internal class to represent source locations. It is a more convenient
-alternative to \code{\link[=srcfile]{srcfile()}}.
+Structure and manipulate source locations. Class \code{\link{Location}}
+is a more convenient alternative to \code{\link[=srcfile]{srcfile()}}.
 }
 \details{
 A \emph{source location} is defined as a set of one or more ranges referencing

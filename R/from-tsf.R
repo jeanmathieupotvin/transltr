@@ -356,15 +356,11 @@ from_tsf_block_v1 <- function(
     txts    <- lapply(t_split[grepl("^TXT_TRL_", t_subs)], from_tsf_block_txt_v1)
 
     # Step 2: create Block object.
-    trans        <- c(src_txt, txts)
-    names(trans) <- c(src_key, keys)
-
-    blk <- do.call(block, c(
-        source_key     = src_key,
-        hash_algorithm = hash_algorithm,
-        locs, trans))
+    blk <- .block(src_key, src_txt, hash_algorithm, keys, txts, locs)
 
     # Step 3: check source information.
+    # Comparing hashes is equivalent to simultaneously
+    # checking source key, text, and chosen hash_algorithm.
     if (blk$hash != hash) {
         warning(call. = FALSE,
             sprintf("source hash '%s' does not match expectation.\n", hash),

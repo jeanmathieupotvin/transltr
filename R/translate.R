@@ -3,7 +3,10 @@
 #' Placeholder for future function [translate()].
 #'
 #' @export
-translate <- function(..., lang = get_language(), concat = " ", key = "en") {
+translate <- function(..., concat = " ", key = "en") {
+    # FIXME: assignments below are placeholders.
+    trans <- get_translator()
+    lang  <- get_language()
     return(.NotYetImplemented())
 }
 

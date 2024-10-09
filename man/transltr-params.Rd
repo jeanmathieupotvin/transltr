@@ -5,7 +5,7 @@
 \alias{get_hash_algorithms}
 \alias{get_generated_by}
 \alias{get_generated_on}
-\title{Parameters}
+\title{Parameters and Constants}
 \usage{
 get_template_versions()
 
@@ -14,11 +14,6 @@ get_hash_algorithms()
 get_generated_by()
 
 get_generated_on()
-}
-\arguments{
-\item{hash_algorithm}{A character string. The algorithm to use when
-hashing and identifying source texts that requires translation. It
-must be a value returned by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}.}
 }
 \value{
 \code{\link[=get_template_versions]{get_template_versions()}} returns an integer vector.
@@ -34,13 +29,24 @@ whatever it returns.
 Helper functions that return valid values for various parameters and
 components of package \code{\link{transltr}}.
 }
-\details{
-From the users' perspective, the hash length correspond to the number of
-hexadecimal characters for convenience. Internally, it corresponds to a
-number of bytes.
+\section{Hashing algorithms}{
+
+Package \code{\link{transltr}} offers two methods.
+\itemize{
+\item Method \code{sha1} corresponds to SHA-1 (Secure Hash Algorithm 1),
+a cryptographic hashing function. While it is now superseded by more
+secure variants (SHA-256, SHA-512, etc.), it is still useful for non-
+sensitive purposes. It is fast, collision-resistant, and may handle
+very large inputs. It outputs strings of 40 hexadecimal characters.
+\item Method \code{utf8} is an \strong{experimental hashing method} derived from the
+cumulative sum of code points. It is slightly faster that \code{sha1} for
+smaller inputs, and outputs shorter integers (as strings) of variable
+lengths porportional to the input's length. It should be reserved for
+expert use only.
 }
+}
+
 \seealso{
 \code{\link[=utc]{utc()}}
 }
-\concept{internal parameters}
 \keyword{internal}

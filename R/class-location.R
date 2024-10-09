@@ -1,7 +1,7 @@
 #' Source Locations
 #'
-#' An internal class to represent source locations. It is a more convenient
-#' alternative to [srcfile()].
+#' Structure and manipulate source locations. Class [`Location`][Location]
+#' is a more convenient alternative to [srcfile()].
 #'
 #' A *source location* is defined as a set of one or more ranges referencing
 #' contents wihin a common *origin* that can be located via its underlying
@@ -24,9 +24,11 @@
 #' @param x Any \R object for [is_location()]. An object of class
 #'   [`Location`][Location] for S3 methods [format()] and [print()].
 #'
-#' @param ... Further arguments passed to or from other methods.
-#'   [`Location`][Location] objects only for [merge_locations()] and S3
-#'   method [c()].
+#' @param ... Usage depends on the underlying function.
+#'   * Further arguments passed to or from other methods for [format()] and
+#'     [print()].
+#'   * Any number of [`Location`][Location] objects for [merge_locations()]
+#'     and S3 method [c()].
 #'
 #' @returns
 #' [location()] returns a named list of length 5 and of class
@@ -35,7 +37,8 @@
 #'
 #' [is_location()] returns a logical.
 #'
-#' [format()] returns a character string.
+#' [format()] returns a character. If `how` is equal to `"short"`, it is of
+#' length 1.
 #'
 #' [print()] returns argument `x` invisibly.
 #'
@@ -145,7 +148,7 @@ c.Location <- function(...) {
 }
 
 #' @rdname class-location
-#' @export
+#' @keywords internal
 merge_locations <- function(...) {
     if (!all(vapply_1l(locs <- list(...), is_location))) {
         stops("values passed to '...' must all be 'Location' objects.")
