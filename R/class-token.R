@@ -34,10 +34,9 @@
 #' @rdname class-token
 #' @keywords internal
 token <- function(type = NULL, value = NULL, ..., .super = NULL) {
-    return(
-        structure(
-            list(type = type, value = value, ...),
-            class = c(.super, "Token", "list")))
+    out <- list(type = type, value = value, ...)
+    class(out) <- c(.super, "Token", "list")
+    return(out)
 }
 
 #' @usage
