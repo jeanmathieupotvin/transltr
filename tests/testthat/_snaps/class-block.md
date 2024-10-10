@@ -1,74 +1,149 @@
-# block() validates argument hash
+# active binding hash throws an error if value is not missing
 
     Code
-      block(1L)
+      blk$hash <- "new-hash"
     Condition
       Error:
-      ! 'hash' must be a non-NA and non-empty character of length 1.
+      ! 'hash' cannot be manually overwritten. Set 'source_key' instead.
 
-# block() validates argument text
+# active binding hash_algorithm validates value
 
     Code
-      block(hash, text = 1L)
+      blk$hash_algorithm <- "new-algo"
     Condition
       Error:
-      ! 'text' must be a non-NA and non-empty character of length 1.
+      ! 'hash_algorithm' must be equal to 'sha1', or 'utf8'.
 
-# block() validates argument text_key
+# active binding source_key validates value
 
     Code
-      block(hash, text, text_key = 1L)
+      blk$source_key <- "new-key"
     Condition
       Error:
-      ! 'text_key' must be a non-NA and non-empty character of length 1.
+      ! 'source_key' must be equal to 'en', 'es', 'fr', or 'jp'.
 
-# block() validates argument locations
+# active binding source_text throws an error if value is not missing
 
     Code
-      block(hash, text, key, locations = 1L)
+      blk$source_text <- "new-text"
     Condition
       Error:
-      ! 'locations' must be a non-empty list.
+      ! 'source_text' cannot be manually overwritten. Set 'source_key' instead.
+
+# active binding keys throws an error if value is not missing
+
+    Code
+      blk$keys <- "new-key"
+    Condition
+      Error:
+      ! 'keys' cannot be manually overwritten.
+      You may add a key with method 'set_translation()'.
+      You may remove a key with method 'rm_translation()'.
+
+# active binding translations throws an error if value is not missing
+
+    Code
+      blk$translations <- "new-translation"
+    Condition
+      Error:
+      ! 'translations' cannot be manually overwritten.
+      You may add a translation with method 'set_translation()'.
+      You may remove a translation with method 'rm_translation()'.
+
+# active binding locations throws an error if value is not missing
+
+    Code
+      blk$locations <- location()
+    Condition
+      Error:
+      ! You may add a location with method 'set_location()'.
+      You may remove a location with method 'rm_location()'.
+
+# $initialize() validates hash_algorithm
+
+    Code
+      Block$new("error")
+    Condition
+      Error:
+      ! 'hash_algorithm' must be equal to 'sha1', or 'utf8'.
+
+# $get_translation() validates key
+
+    Code
+      blk$get_translation(1L)
+    Condition
+      Error:
+      ! 'key' must be a non-NA and non-empty character of length 1.
+
+# $set_translation() validates key
+
+    Code
+      blk$set_translation(1L)
+    Condition
+      Error:
+      ! 'key' must be a non-NA and non-empty character of length 1.
+
+# $set_translation() validates text
+
+    Code
+      blk$set_translation("de", 1L)
+    Condition
+      Error:
+      ! 'text' must be a non-NA character of length 1.
+
+# $set_translations() validates ...
+
+    Code
+      blk$set_translations(1L)
+    Condition
+      Error:
+      ! values passed to '...' must all be character strings.
 
 ---
 
     Code
-      block(hash, text, key, locations = list(1L))
+      blk$set_translations("Hello, world!")
     Condition
       Error:
-      ! 'locations' must only contain 'Location' objects.
+      ! '...' must have names.
 
-# block() validates argument translations
+# $rm_translation() validates key
 
     Code
-      block(hash, text, key, locs, 1L)
+      blk$rm_translation(1L)
     Condition
       Error:
-      ! 'translations' must be a non-empty character vector of non-NA values.
+      ! 'key' must be a non-NA and non-empty character of length 1.
 
 ---
 
     Code
-      block(hash, text, key, locs, unname(trans))
+      blk$rm_translation("en")
     Condition
       Error:
-      ! 'translations' must have names.
+      ! 'key' 'Set a new one before removing it.' is the current 'source_key'. en
 
-# print() works
+---
 
     Code
-      print(block)
-    Output
-      <Block>
-        Hash     : test-hash
-        Text     : Hello, world!
-        Text key : en
-        Lang keys: 'en', 'fr', 'es'
-        <Location>
-          'file1':
-            - line 1, column 2 @ line 3, column 4
-        <Location>
-          'file2':
-            - line 1, column 3 @ line 5, column 7
-            - line 2, column 4 @ line 6, column 8
+      blk$rm_translation("error")
+    Condition
+      Error:
+      ! 'key' must be equal to 'es', 'fr', or 'jp'.
+
+# $rm_location() validates path
+
+    Code
+      blk$rm_location(1L)
+    Condition
+      Error:
+      ! 'path' must be a non-NA and non-empty character of length 1.
+
+---
+
+    Code
+      blk$rm_location("error")
+    Condition
+      Error:
+      ! 'path' must be equal to 'a', or 'b'.
 

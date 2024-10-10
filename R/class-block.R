@@ -311,6 +311,7 @@ Block <- R6::R6Class("Block",
         #'   [get_hash_algorithms()].
         hash_algorithm = \(value) {
             if (!missing(value)) {
+                assert_chr1(value)
                 assert_match(value,
                     choices      = get_hash_algorithms(),
                     quote_values = TRUE,
@@ -462,8 +463,8 @@ Block <- R6::R6Class("Block",
             if (!...length()) {
                 return(invisible(TRUE))
             }
-            if (!is_named(trans <- list(...))) {
-                stops("values passed to '...' must all have names ('key' = 'text').")
+            if (!all(vapply_1l(trans <- list(...), is_chr1))) {
+                stops("values passed to '...' must all be character strings.")
             }
 
             assert_named(trans, x_name = "...")
@@ -481,6 +482,9 @@ Block <- R6::R6Class("Block",
                 return(invisible(TRUE))
             }
 
+            # c() dispatches on c.default() to construct
+            # a new list, not to c.Location(). locs is a
+            # list of Location objects.
             locs <- c(private$.locations, list(...))
             private$.locations <- do.call(merge_locations, locs)
             return(invisible(TRUE))
@@ -505,20 +509,17 @@ Block <- R6::R6Class("Block",
         rm_translation = \(key = "") {
             assert_chr1(key)
 
+            if (key == private$.source_key) {
+                stopf(
+                    "'key' '%s' is the current 'source_key'. %s",
+                    "Set a new one before removing it.", key)
+            }
+
             keys <- self$keys
             assert_match(key, keys[keys != self$source_key], quote_values = TRUE)
 
-            if (key == private$.source_key) {
-                stopf("'%s' is the current 'source_key'. Set a new one before removing it.", key)
-            }
-
-            rm(key, envir = private$.translations)
-            return(
-                invisible(
-                    !exists(key,
-                        private$.translations,
-                        mode     = "character",
-                        inherits = FALSE)))
+            rm(list = key, envir = private$.translations)
+            return(invisible(TRUE))
         },
 
         #' @description Remove a registered location.
