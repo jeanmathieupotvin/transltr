@@ -1,7 +1,7 @@
 # active binding hash throws an error if value is not missing
 
     Code
-      blk$hash <- "new-hash"
+      blk1$hash <- "new-hash"
     Condition
       Error:
       ! 'hash' cannot be manually overwritten. Set 'source_key' instead.
@@ -9,7 +9,7 @@
 # active binding hash_algorithm validates value
 
     Code
-      blk$hash_algorithm <- "new-algo"
+      blk1$hash_algorithm <- "new-algo"
     Condition
       Error:
       ! 'hash_algorithm' must be equal to 'sha1', or 'utf8'.
@@ -17,7 +17,7 @@
 # active binding source_key validates value
 
     Code
-      blk$source_key <- "new-key"
+      blk1$source_key <- "new-key"
     Condition
       Error:
       ! 'source_key' must be equal to 'en', 'es', 'fr', or 'jp'.
@@ -25,7 +25,7 @@
 # active binding source_text throws an error if value is not missing
 
     Code
-      blk$source_text <- "new-text"
+      blk1$source_text <- "new-text"
     Condition
       Error:
       ! 'source_text' cannot be manually overwritten. Set 'source_key' instead.
@@ -33,7 +33,7 @@
 # active binding keys throws an error if value is not missing
 
     Code
-      blk$keys <- "new-key"
+      blk1$keys <- "new-key"
     Condition
       Error:
       ! 'keys' cannot be manually overwritten.
@@ -43,7 +43,7 @@
 # active binding translations throws an error if value is not missing
 
     Code
-      blk$translations <- "new-translation"
+      blk1$translations <- "new-translation"
     Condition
       Error:
       ! 'translations' cannot be manually overwritten.
@@ -53,7 +53,7 @@
 # active binding locations throws an error if value is not missing
 
     Code
-      blk$locations <- location()
+      blk1$locations <- location()
     Condition
       Error:
       ! You may add a location with method 'set_location()'.
@@ -70,7 +70,7 @@
 # $get_translation() validates key
 
     Code
-      blk$get_translation(1L)
+      blk1$get_translation(1L)
     Condition
       Error:
       ! 'key' must be a non-NA and non-empty character of length 1.
@@ -78,7 +78,7 @@
 # $set_translation() validates key
 
     Code
-      blk$set_translation(1L)
+      blk1$set_translation(1L)
     Condition
       Error:
       ! 'key' must be a non-NA and non-empty character of length 1.
@@ -86,7 +86,7 @@
 # $set_translation() validates text
 
     Code
-      blk$set_translation("de", 1L)
+      blk1$set_translation("de", 1L)
     Condition
       Error:
       ! 'text' must be a non-NA character of length 1.
@@ -110,7 +110,7 @@
 # $rm_translation() validates key
 
     Code
-      blk$rm_translation(1L)
+      blk1$rm_translation(1L)
     Condition
       Error:
       ! 'key' must be a non-NA and non-empty character of length 1.
@@ -118,7 +118,7 @@
 ---
 
     Code
-      blk$rm_translation("en")
+      blk1$rm_translation("en")
     Condition
       Error:
       ! 'key' 'Set a new one before removing it.' is the current 'source_key'. en
@@ -126,7 +126,7 @@
 ---
 
     Code
-      blk$rm_translation("error")
+      blk1$rm_translation("error")
     Condition
       Error:
       ! 'key' must be equal to 'es', 'fr', or 'jp'.
@@ -134,7 +134,7 @@
 # $rm_location() validates path
 
     Code
-      blk$rm_location(1L)
+      blk1$rm_location(1L)
     Condition
       Error:
       ! 'path' must be a non-NA and non-empty character of length 1.
@@ -142,8 +142,75 @@
 ---
 
     Code
-      blk$rm_location("error")
+      blk1$rm_location("error")
     Condition
       Error:
       ! 'path' must be equal to 'a', or 'b'.
+
+# .block() validates lengths of trans_keys and trans_texts
+
+    Code
+      .block(trans_keys = "en")
+    Condition
+      Error:
+      ! 'trans_keys' and 'trans_texts' must have the same length.
+
+# print() works
+
+    Code
+      print(blk1)
+    Output
+      <Block>
+        Hash      : b5e480d5ff9fa8583c5caa4c7b63f0719cc878e8
+        Algorithm : sha1
+        Source Key: en
+        ------------------------------------------------------------------------------
+        Translations: 
+          en: Hello, world!
+          es: ¡Hola Mundo!
+          fr: Bonjour, monde!
+          jp: こんにちは世界！
+        ------------------------------------------------------------------------------
+        Locations: 
+          <Location>
+            Path : a
+            Range: line 1, column 2 @ line 3, column 4
+          <Location>
+            Path : b
+            Range: line 5, column 6 @ line 7, column 8
+
+# c.Block() validates ...
+
+    Code
+      c(blk1, 1L, blk2)
+    Condition
+      Error:
+      ! values passed to '...' must all be 'Block' objects.
+
+# c.Block() throws an error if hashes are not equal
+
+    Code
+      blk1 <- test_block()
+      blk2 <- test_block()
+      blk2$source_key <- "fr"
+      c(blk1, blk2)
+    Condition
+      Error:
+      ! all 'hash' must be equal in order to combine multiple 'Block' objects.
+
+# merge_blocks() validates ...
+
+    Code
+      merge_blocks(blk1, 1L, blk2)
+    Condition
+      Error:
+      ! values passed to '...' must all be 'Block' objects.
+
+# merge_blocks() validates hash_algorithm
+
+    Code
+      merge_blocks(blk1, blk2, hash_algorithm = "error")
+    Condition
+      Error:
+      ! 'hash_algorithm' must be equal to sha1, or utf8.
 

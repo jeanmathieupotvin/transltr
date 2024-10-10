@@ -1,4 +1,4 @@
-#' Translations
+#' Translations Blocks
 #'
 #' Structure and manipulate source texts and their translations.
 #'
@@ -32,12 +32,11 @@
 #' @param trans_texts A character vector of of non-empty and non-[NA][base::NA]
 #'   values. Translations of `source_text`.
 #'
-#' @param locations A list of [`Location`][Location] objects.
+#' @param locations A list of [`Location`][Location] objects. A single
+#'   [`Location`][Location] object may be passed to [as_block()].
 #'
 #' @param x Any \R object. A [`Block`][Block] object for [format()] and
 #'   [print()].
-#'
-#' @param location A [`Location`][Location] object.
 #'
 #' @param ... Usage depends on the underlying function.
 #'   * Any number of [`Location`][Location] objects and/or named character
@@ -120,6 +119,16 @@ block <- function(source_key = "", ..., hash_algorithm = get_hash_algorithms()) 
     return(blk)
 }
 
+#' @usage
+#' ## Alternative internal constructor
+#' .block(
+#'   source_key     = "",
+#'   source_text    = "",
+#'   hash_algorithm = get_hash_algorithms(),
+#'   trans_keys     = character(),
+#'   trans_texts    = character(),
+#'   locations      = list()
+#' )
 #' @rdname class-block
 #' @keywords internal
 .block <- function(
@@ -215,9 +224,10 @@ c.Block <- function(...) {
 
     trans <- unlist(lapply(blocks, `[[`, i = "translations"))
     locs  <- unlist(lapply(blocks, `[[`, i = "locations"), FALSE)
-    do.call(..1$set_translations, as.list(trans))
-    do.call(..1$set_locations, locs)
-    return(..1)
+    blk   <- .block(..1$source_key, ..1$source_text, ..1$hash_algorithm)
+    do.call(blk$set_translations, as.list(trans))
+    do.call(blk$set_locations, locs)
+    return(blk)
 }
 
 #' @rdname class-block
@@ -243,22 +253,25 @@ as_block <- function(x, ...) {
 #' @rdname class-block
 #' @export
 as_block.call <- function(x,
-    location       = location(),
+    locations      = list(),
     hash_algorithm = get_hash_algorithms(), ...)
 {
+    # FIXME: requires work on locations.
+    # This has consequences in find_translations() mechanisms.
     suppressWarnings(strings <- as.character(x$`...`))
 
     if (!is_chr1(x$key) || !is_chr1(x$concat) || !is.character(strings)) {
         stops(
-            "in script ", format(location, "short"), ".\n",
             "Values passed to 'key' and 'concat' must be non-empty literal character strings.\n",
             "Values passed to '...' must all be literal character strings. They can be empty.\n",
-            "Otherwise, they cannot be safely evaluated before runtime.")
+            "Otherwise, they cannot be safely evaluated before runtime.\n",
+            "Check the following source locations.\n",
+            unlist(lapply(locations, format)))
     }
 
     blk <- Block$new(hash_algorithm)
     blk$set_translation(x$key, sanitize_strings(strings, x$concat))
-    blk$set_locations(location)
+    do.call(blk$set_locations, if (is.list(locations)) locations else list(locations))
     blk$source_key <- x$key
     return(blk)
 }

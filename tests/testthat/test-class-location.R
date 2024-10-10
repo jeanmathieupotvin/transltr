@@ -90,6 +90,8 @@ test_that("is_location() returns a logical", {
 test_that("format() returns a character", {
     expect_type(format(location(), "long"),  "character")
     expect_type(format(location(), "short"), "character")
+    expect_length(format(location(), "long"),  3L)
+    expect_length(format(location(), "short"), 1L)
 })
 
 test_that("format() validates how", {
@@ -135,16 +137,16 @@ test_that("format_long_location() returns a character", {
 # print.Location() -------------------------------------------------------------
 
 
-test_that("print() returns its argument invisibly", {
-    withr::local_output_sink(tempfile())
-    expect_invisible(print(loc1))
-    expect_identical(print(loc1), loc1)
-})
-
 test_that("print() works", {
     expect_output(print(loc1))
     expect_snapshot(print(loc1, "short"))
     expect_snapshot(print(loc2, "long"))
+})
+
+test_that("print() returns x invisibly", {
+    withr::local_output_sink(tempfile())
+    expect_invisible(print(loc1))
+    expect_identical(print(loc1), loc1)
 })
 
 
@@ -166,7 +168,7 @@ test_that("c.Location() returns its single argument", {
     expect_identical(c(loc1), loc1)
 })
 
-test_that("c.Location() throws an error if an argument is not a Location object", {
+test_that("c.Location() validates ...", {
     # The first argument passed to c() must be a
     # Location object. Otherwise, S3 dispatching
     # won't work as expected.
@@ -189,7 +191,7 @@ test_that("merge_locations() returns a list of Location object", {
     expect_length(out, 2L)
 })
 
-test_that("merge_locations() throws an error if an argument is not a Location object", {
+test_that("merge_locations() validates ...", {
     expect_error(merge_locations(loc1, 1L, loc2))
     expect_snapshot(merge_locations(loc1, 1L, loc2), error = TRUE)
 })

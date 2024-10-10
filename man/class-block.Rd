@@ -11,17 +11,18 @@
 \alias{as_block}
 \alias{as_block.call}
 \alias{Block}
-\title{Translations}
+\title{Translations Blocks}
 \usage{
 block(source_key = "", ..., hash_algorithm = get_hash_algorithms())
 
+## Alternative internal constructor
 .block(
-  source_key = "",
-  source_text = "",
+  source_key     = "",
+  source_text    = "",
   hash_algorithm = get_hash_algorithms(),
-  trans_keys = character(),
-  trans_texts = character(),
-  locations = list()
+  trans_keys     = character(),
+  trans_texts    = character(),
+  locations      = list()
 )
 
 is_block(x)
@@ -36,7 +37,7 @@ merge_blocks(..., hash_algorithm = get_hash_algorithms())
 
 as_block(x, ...)
 
-\method{as_block}{call}(x, location = location(), hash_algorithm = get_hash_algorithms(), ...)
+\method{as_block}{call}(x, locations = list(), hash_algorithm = get_hash_algorithms(), ...)
 }
 \arguments{
 \item{source_key}{A non-empty and non-\link[base:NA]{NA} character string. The
@@ -64,12 +65,11 @@ values. The language keys identifying elements of \code{trans_texts}.}
 \item{trans_texts}{A character vector of of non-empty and non-\link[base:NA]{NA}
 values. Translations of \code{source_text}.}
 
-\item{locations}{A list of \code{\link{Location}} objects.}
+\item{locations}{A list of \code{\link{Location}} objects. A single
+\code{\link{Location}} object may be passed to \code{\link[=as_block]{as_block()}}.}
 
 \item{x}{Any \R object. A \code{\link{Block}} object for \code{\link[=format]{format()}} and
 \code{\link[=print]{print()}}.}
-
-\item{location}{A \code{\link{Location}} object.}
 }
 \value{
 \code{\link[=block]{block()}} and \code{\link[=.block]{.block()}} return an \code{\link[R6:R6Class]{R6}} object of class
