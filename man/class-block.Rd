@@ -10,12 +10,13 @@
 \alias{merge_blocks}
 \alias{as_block}
 \alias{as_block.call}
+\alias{as_block.character}
 \alias{Block}
 \title{Translations Blocks}
 \usage{
 block(source_key = "", ..., hash_algorithm = get_hash_algorithms())
 
-## Alternative internal constructor
+## Internal constructor
 .block(
   source_key     = "",
   source_text    = "",
@@ -38,6 +39,14 @@ merge_blocks(..., hash_algorithm = get_hash_algorithms())
 as_block(x, ...)
 
 \method{as_block}{call}(x, locations = list(), hash_algorithm = get_hash_algorithms(), ...)
+
+\method{as_block}{character}(
+  x,
+  source_key = "",
+  locations = list(),
+  hash_algorithm = get_hash_algorithms(),
+  ...
+)
 }
 \arguments{
 \item{source_key}{A non-empty and non-\link[base:NA]{NA} character string. The
@@ -47,10 +56,10 @@ as_block(x, ...)
 \itemize{
 \item Any number of \code{\link{Location}} objects and/or named character
 strings for \code{\link[=block]{block()}} (in no preferred order).
-\item Further arguments passed to or from other methods for \code{\link[=format]{format()}},
-\code{\link[=print]{print()}}, and \code{\link[=as_block]{as_block()}}.
 \item Any number of \code{\link{Block}} objects for \code{\link[=merge_blocks]{merge_blocks()}} and S3
 method \code{\link[=c]{c()}}.
+\item Further arguments passed to or from other methods for \code{\link[=format]{format()}},
+\code{\link[=print]{print()}}, and \code{\link[=as_block]{as_block()}}.
 }}
 
 \item{hash_algorithm}{A character string. The algorithm to use when hashing
@@ -65,17 +74,15 @@ values. The language keys identifying elements of \code{trans_texts}.}
 \item{trans_texts}{A character vector of of non-empty and non-\link[base:NA]{NA}
 values. Translations of \code{source_text}.}
 
-\item{locations}{A list of \code{\link{Location}} objects. A single
-\code{\link{Location}} object may be passed to \code{\link[=as_block]{as_block()}}.}
+\item{locations}{A list of \code{\link{Location}} objects or a single
+\code{\link{Location}} object.}
 
 \item{x}{Any \R object. A \code{\link{Block}} object for \code{\link[=format]{format()}} and
 \code{\link[=print]{print()}}.}
 }
 \value{
 \code{\link[=block]{block()}} and \code{\link[=.block]{.block()}} return an \code{\link[R6:R6Class]{R6}} object of class
-\code{\link{Block}}. These high-level constructors exposes two different
-signatures for convenience (and different use-cases). \code{\link[=block]{block()}} should
-be preferred most of the time.
+\code{\link{Block}}.
 
 \code{\link[=is_block]{is_block()}} returns a logical.
 
@@ -116,6 +123,9 @@ Users should never attempt to manipulate the information contained in a
 \code{\link{Block}}. The latter exposes an API to safely do so (see below),
 but it is meant to be used internally. Consider using exported features
 instead.
+
+Users may create \code{\link{Block}} objects on-the-fly for testing purposes
+with \code{\link[=block]{block()}}. \code{\link[=.block]{.block()}} should be reserved for internal use-cases.
 }
 \examples{
 ## Create a Block object.
@@ -190,7 +200,10 @@ blk$rm_translation("en")
 \item{\code{hash}}{A non-empty and non-\link[base:NA]{NA} character string. A
 reproducible hash generated from \code{source_key} and \code{source_text}
 using the algorithm given by \code{hash_algorithm}. It is used as a
-unique identifier for the \code{\link{Block}} object.}
+unique identifier for the \code{\link{Block}} object.
+
+This is a \strong{read-only} field. It is automatically updated whenever
+fields \code{source_key} and/or \code{hash_algorithm} are updated.}
 
 \item{\code{hash_algorithm}}{A non-empty and non-\link[base:NA]{NA} character
 string. The algorithm to use when hashing source information for
@@ -201,16 +214,20 @@ identification purposes. It must be a value returned by
 string. The language key of \code{source_text}.}
 
 \item{\code{source_text}}{A non-empty and non-\link[base:NA]{NA} character
-string. The source text to be translated.}
+string. The source text to be translated. This is a \strong{read-only}
+field.}
 
-\item{\code{keys}}{A character vector. Registered language keys.}
+\item{\code{keys}}{A character vector. Registered language keys. This is a
+\strong{read-only} field.}
 
 \item{\code{translations}}{A non-empty named character vector of
 non-\link[base:NA]{NA} values. Registered translations of
-\code{source_text}. Names correspond to the underlying language \code{keys}.}
+\code{source_text}. Names correspond to the underlying language
+\code{keys}. This is a \strong{read-only} field.}
 
 \item{\code{locations}}{A list of \code{\link{Location}} objects giving
-the location(s) of \code{source_text} in the underlying project.}
+the location(s) of \code{source_text} in the underlying project. This
+is a \strong{read-only} field.}
 }
 \if{html}{\out{</div>}}
 }

@@ -17,5 +17,5 @@
     Code
       get_generated_by()
     Output
-      [1] "R package transltr 0.0.1.9001"
+      [1] "R package transltr 0.0.1.9002"
 

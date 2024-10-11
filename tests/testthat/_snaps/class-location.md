@@ -112,7 +112,7 @@
           [1] line  1, column  22 @ line   10, column 1
           [2] line 11, column 222 @ line 3333, column 4
 
-# c.Location() throws an error if an argument is not a Location object
+# c.Location() validates ...
 
     Code
       c(loc1, 1L, loc2)
@@ -128,7 +128,7 @@
       Error:
       ! all 'path' must be equal in order to combine multiple 'Location' objects.
 
-# merge_locations() throws an error if an argument is not a Location object
+# merge_locations() validates ...
 
     Code
       merge_locations(loc1, 1L, loc2)

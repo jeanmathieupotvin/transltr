@@ -85,7 +85,7 @@ find_translations_in_tokens <- function(
 
     return(
         .mapply(as_block,
-            list(calls, locations),
+            list(x = calls, locations = locations),
             list(hash_algorithm = hash_algorithm)))
 }
 

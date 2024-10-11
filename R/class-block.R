@@ -21,6 +21,9 @@
 #' but it is meant to be used internally. Consider using exported features
 #' instead.
 #'
+#' Users may create [`Block`][Block] objects on-the-fly for testing purposes
+#' with [block()]. [.block()] should be reserved for internal use-cases.
+#'
 #' @param source_key A non-empty and non-[NA][base::NA] character string. The
 #'   (default) language key of `source_text`. See Details for more information.
 #'
@@ -32,8 +35,8 @@
 #' @param trans_texts A character vector of of non-empty and non-[NA][base::NA]
 #'   values. Translations of `source_text`.
 #'
-#' @param locations A list of [`Location`][Location] objects. A single
-#'   [`Location`][Location] object may be passed to [as_block()].
+#' @param locations A list of [`Location`][Location] objects or a single
+#'   [`Location`][Location] object.
 #'
 #' @param x Any \R object. A [`Block`][Block] object for [format()] and
 #'   [print()].
@@ -41,18 +44,16 @@
 #' @param ... Usage depends on the underlying function.
 #'   * Any number of [`Location`][Location] objects and/or named character
 #'     strings for [block()] (in no preferred order).
-#'   * Further arguments passed to or from other methods for [format()],
-#'     [print()], and [as_block()].
 #'   * Any number of [`Block`][Block] objects for [merge_blocks()] and S3
 #'     method [c()].
+#'   * Further arguments passed to or from other methods for [format()],
+#'     [print()], and [as_block()].
 #'
 #' @template param-hash-algorithm
 #'
 #' @returns
 #' [block()] and [.block()] return an [`R6`][R6::R6] object of class
-#' [`Block`][Block]. These high-level constructors exposes two different
-#' signatures for convenience (and different use-cases). [block()] should
-#' be preferred most of the time.
+#' [`Block`][Block].
 #'
 #' [is_block()] returns a logical.
 #'
@@ -120,7 +121,7 @@ block <- function(source_key = "", ..., hash_algorithm = get_hash_algorithms()) 
 }
 
 #' @usage
-#' ## Alternative internal constructor
+#' ## Internal constructor
 #' .block(
 #'   source_key     = "",
 #'   source_text    = "",
@@ -143,11 +144,18 @@ block <- function(source_key = "", ..., hash_algorithm = get_hash_algorithms()) 
         stops("'trans_keys' and 'trans_texts' must have the same length.")
     }
 
+    # What locations contains is checked by $set_locations.
+    # Here, we ensure that it is a list possibly containing
+    # Location objects. This is required by do.call() below.
+    if (is_location(locations) || !is.list(locations)) {
+        locations <- list(locations)
+    }
+
     blk <- Block$new(hash_algorithm)
     blk$set_translation(source_key, source_text)
     blk$source_key <- source_key
 
-    lapply(locations, blk$set_locations)
+    do.call(blk$set_locations, locations)
     .mapply(blk$set_translation, list(trans_keys, trans_texts), list())
     return(blk)
 }
@@ -254,10 +262,11 @@ as_block <- function(x, ...) {
 #' @export
 as_block.call <- function(x,
     locations      = list(),
-    hash_algorithm = get_hash_algorithms(), ...)
+    hash_algorithm = get_hash_algorithms(),
+    ...)
 {
-    # FIXME: requires work on locations.
-    # This has consequences in find_translations() mechanisms.
+    # FIXME: this function may call as_block.character() in
+    # a future iteration. This would simplify its signature.
     suppressWarnings(strings <- as.character(x$`...`))
 
     if (!is_chr1(x$key) || !is_chr1(x$concat) || !is.character(strings)) {
@@ -265,15 +274,29 @@ as_block.call <- function(x,
             "Values passed to 'key' and 'concat' must be non-empty literal character strings.\n",
             "Values passed to '...' must all be literal character strings. They can be empty.\n",
             "Otherwise, they cannot be safely evaluated before runtime.\n",
-            "Check the following source locations.\n",
+            "Check the following source location(s).\n",
             unlist(lapply(locations, format)))
     }
 
-    blk <- Block$new(hash_algorithm)
-    blk$set_translation(x$key, sanitize_strings(strings, x$concat))
-    do.call(blk$set_locations, if (is.list(locations)) locations else list(locations))
-    blk$source_key <- x$key
-    return(blk)
+    return(
+        .block(
+            x$key,
+            sanitize_strings(strings, x$concat),
+            hash_algorithm,
+            locations = locations))
+}
+
+#' @rdname class-block
+#' @export
+as_block.character <- function(x,
+    source_key     = "",
+    locations      = list(),
+    hash_algorithm = get_hash_algorithms(),
+    ...)
+{
+    # FIXME: this is a placeholder for future purposes.
+    # I am unusure whether it will be useful or not.
+    return(.NotYetUsed())
 }
 
 #' @rdname class-block
@@ -310,6 +333,9 @@ Block <- R6::R6Class("Block",
         #'   reproducible hash generated from `source_key` and `source_text`
         #'   using the algorithm given by `hash_algorithm`. It is used as a
         #'   unique identifier for the [`Block`][Block] object.
+        #'
+        #'   This is a **read-only** field. It is automatically updated whenever
+        #'   fields `source_key` and/or `hash_algorithm` are updated.
         hash = \(value) {
             if (!missing(value)) {
                 stops("'hash' cannot be manually overwritten. Set 'source_key' instead.")
@@ -355,7 +381,8 @@ Block <- R6::R6Class("Block",
         },
 
         #' @field source_text A non-empty and non-[NA][base::NA] character
-        #'   string. The source text to be translated.
+        #'   string. The source text to be translated. This is a **read-only**
+        #'   field.
         source_text = \(value) {
             if (!missing(value)) {
                 stops("'source_text' cannot be manually overwritten. Set 'source_key' instead.")
@@ -364,7 +391,8 @@ Block <- R6::R6Class("Block",
             return(self$get_translation(private$.source_key))
         },
 
-        #' @field keys A character vector. Registered language keys.
+        #' @field keys A character vector. Registered language keys. This is a
+        #'   **read-only** field.
         keys = \(value) {
             if (!missing(value)) {
                 stops(
@@ -380,7 +408,8 @@ Block <- R6::R6Class("Block",
 
         #' @field translations A non-empty named character vector of
         #'   non-[NA][base::NA] values. Registered translations of
-        #'   `source_text`. Names correspond to the underlying language `keys`.
+        #'   `source_text`. Names correspond to the underlying language
+        #'   `keys`. This is a **read-only** field.
         translations = \(value) {
             if (!missing(value)) {
                 stops(
@@ -395,7 +424,8 @@ Block <- R6::R6Class("Block",
         },
 
         #' @field locations A list of [`Location`][Location] objects giving
-        #'   the location(s) of `source_text` in the underlying project.
+        #'   the location(s) of `source_text` in the underlying project. This
+        #'   is a **read-only** field.
         locations = \(value) {
             if (!missing(value)) {
                 stops(

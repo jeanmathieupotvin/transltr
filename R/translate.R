@@ -6,7 +6,7 @@
 translate <- function(..., concat = " ", key = "en") {
     # FIXME: assignments below are placeholders.
     trans <- get_translator()
-    lang  <- get_language()
+    key   <- get_language()
     return(.NotYetImplemented())
 }
 

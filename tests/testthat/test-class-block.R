@@ -263,7 +263,7 @@ test_that("$rm_location() removes locations as expected", {
 # Constructors -----------------------------------------------------------------
 
 
-test_that("block() works", {
+test_that("block() returns an R6 object of class Block", {
     blk <- block("en",
         location("a"),
         location("b"),
@@ -283,7 +283,7 @@ test_that("block() works", {
     expect_identical(blk$locations, list(location("a"), location("b")))
 })
 
-test_that(".block() works", {
+test_that(".block() returns an R6 object of class Block", {
     blk <- .block(
         source_key     = "en",
         source_text    = "Hello, world!",
@@ -307,6 +307,17 @@ test_that(".block() validates lengths of trans_keys and trans_texts", {
     expect_error(.block(trans_keys = "en"))
     expect_error(.block(trans_texts = "Hello, world!"))
     expect_snapshot(.block(trans_keys = "en"), error = TRUE)
+})
+
+test_that(".block() handles non-list values passed to locations", {
+    # Any value that is not a Location (within a list or not)
+    # should result in an error thrown by $set_locations().
+    expect_no_condition(.block("en", locations = list(location())))
+    expect_no_condition(.block("en", locations = location()))
+    expect_no_condition(.block("en", locations = list()))
+    expect_error(.block("en", locations = 1L))
+    expect_error(.block("en", locations = list(1L)))
+    expect_error(.block("en", locations = list(1L, location())))
 })
 
 
@@ -493,4 +504,5 @@ test_that("merge_blocks() combines Block objects having different hashes", {
 # as_block() -------------------------------------------------------------------
 
 
-# TODO: bookmark.
+# FIXME: To be tested later once the API matures. This function will likely
+# change in a near future.
