@@ -1,8 +1,3 @@
-#' Placeholder
-#'
-#' Placeholder for future function [translate()].
-#'
-#' @export
 translate <- function(..., concat = " ", key = "en") {
     # FIXME: assignments below are placeholders.
     trans <- get_translator()
@@ -33,7 +28,7 @@ match_translate_call.call <- function(x, ...) {
     # We do not check whether the call object truly calls
     # translate() because this check should be done prior
     # to calling match_translate_call().
-    cl        <- match.call(transltr::translate, x, expand.dots = FALSE)
+    cl        <- match.call(translate, x, expand.dots = FALSE)
     cl$concat <- x$concat %??% .TRANSLATE_FORMAL_CONCAT
     cl$key    <- x$key    %??% .TRANSLATE_FORMAL_KEY
     return(cl)

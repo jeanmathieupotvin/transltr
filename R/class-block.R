@@ -74,40 +74,40 @@
 #'
 #' @examples
 #' ## Create a Block object.
-#' block("en",
-#'     location("a", 1L, 2L, 3L, 4L),
-#'     location("a", 1L, 2L, 3L, 4L),
-#'     location("b", 5L, 6L, 7L, 8L),
-#'     location("c", c(9L, 10L), c(11L, 12L), c(13L, 14L), c(15L, 16L)),
+#' transltr:::block("en",
+#'     transltr:::location("a", 1L, 2L, 3L, 4L),
+#'     transltr:::location("a", 1L, 2L, 3L, 4L),
+#'     transltr:::location("b", 5L, 6L, 7L, 8L),
+#'     transltr:::location("c", c(9L, 10L), c(11L, 12L), c(13L, 14L), c(15L, 16L)),
 #'     en = "Hello, world!",
 #'     fr = "Bonjour, monde!",
 #'     es = "¡Hola Mundo!",
 #'     jp = "こんにちは世界！")
 #'
 #' ## Combine Blocks objects.
-#' b1 <- block("en",
-#'     location("a", 1L, 2L, 3L, 4L),
+#' b1 <- transltr:::block("en",
+#'     transltr:::location("a", 1L, 2L, 3L, 4L),
 #'     en = "Hello, world!",
 #'     fr = "Bonjour, monde!",
 #'     es = "¡Hola Mundo!",
 #'     jp = "こんにちは世界！")
 #'
-#' b2 <- block("en",
-#'     location("a", 5L, 6L, 7L, 8L),
+#' b2 <- transltr:::block("en",
+#'     transltr:::location("a", 5L, 6L, 7L, 8L),
 #'     en     = "Hello, world!",
 #'     fr     = "Bonjour, monde!",
 #'     es     = "¡Hola Mundo!",
 #'     `jp-2` = "こんにちは世界！")
 #'
-#' b3 <- block("fr",
-#'     location("c", 1L, 2L, 3L, 4L),
+#' b3 <- transltr:::block("fr",
+#'     transltr:::location("c", 1L, 2L, 3L, 4L),
 #'     en     = "Hello, world!",
 #'     fr     = "Bonjour, monde!",
 #'     `es-2` = "¡Hola Mundo!",
 #'     `jp-2` = "こんにちは世界！")
 #'
 #' c(b1, b2)
-#' merge_blocks(b1, b2, b3)
+#' transltr:::merge_blocks(b1, b2, b3)
 #'
 #' @rdname class-block
 #' @keywords internal
@@ -300,6 +300,7 @@ as_block.character <- function(x,
 }
 
 #' @rdname class-block
+#' @importFrom digest sha1
 #' @keywords internal
 Block <- R6::R6Class("Block",
     lock_class   = TRUE,
@@ -479,7 +480,7 @@ Block <- R6::R6Class("Block",
         #'
         #' @examples
         #' ## Registering source_key and source_text.
-        #' blk <- Block$new()
+        #' blk <- transltr:::Block$new()
         #' blk$set_translation("en", "Hello, world!")
         #' blk$source_key <- "en"
         set_translation = \(key = "", text = "") {
@@ -500,7 +501,7 @@ Block <- R6::R6Class("Block",
         #' @return A `TRUE` (invisibly).
         #'
         #' @examples
-        #' blk <- Block$new()
+        #' blk <- transltr:::Block$new()
         #' blk$set_translations(en = "Hello, world!", fr = "Bonjour, monde!")
         set_translations = \(...) {
             if (!...length()) {
@@ -543,7 +544,7 @@ Block <- R6::R6Class("Block",
         #'
         #' @examples
         #' ## Removing source_key and source_text.
-        #' blk <- Block$new()
+        #' blk <- transltr:::Block$new()
         #' blk$set_translations(en = "Hello, world!", fr = "Bonjour, monde!")
         #' blk$source_key <- "en"
         #'
