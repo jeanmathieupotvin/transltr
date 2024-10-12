@@ -49,7 +49,7 @@ find_translations_in_files <- function(
     }
 
     # Extracting hash_algorithm from first block
-    # allows us to bypass asser_arg() and defer
+    # allows us to bypass assert_arg() and defer
     # validation to the lowest possible level.
     return(
         do.call(merge_blocks, c(
