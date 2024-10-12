@@ -28,7 +28,7 @@ non-technical collaborators such as professional translators.
 
 * Can be used within any context and functions (unlike `base::gettext()`).
 
-* Uses only two carefully chosen dependencies: packages `R6` and `yaml`.
+* Uses carefully chosen dependencies: `digest`, `R6`, and `yaml`.
 
 * Fast speed.
 
