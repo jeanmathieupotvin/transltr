@@ -16,7 +16,7 @@ is_translate_call <- function(x, ...) {
 
 #' @export
 is_translate_call.character <- function(x, ...) {
-    return(grepl("^(['\"]?transltr['\"]?::)?['\"]?translate['\"]?\\((.*?)\\)$", x))
+    return(grepl("^([`'\"]?transltr[`'\"]?::)?[`'\"]?translate[`'\"]?\\((.*?)\\)$", x))
 }
 
 match_translate_call <- function(x, ...) {
@@ -44,5 +44,5 @@ match_translate_call.call <- function(x, ...) {
 # hidden from users. However, these
 # constants must be in sync with
 # formal args of translate().
-.TRANSLATE_FORMAL_CONCAT <- formals(translate)$concat
-.TRANSLATE_FORMAL_KEY    <- formals(translate)$key
+.TRANSLATE_FORMAL_CONCAT <- eval(formals(translate)$concat)
+.TRANSLATE_FORMAL_KEY    <- eval(formals(translate)$key)
