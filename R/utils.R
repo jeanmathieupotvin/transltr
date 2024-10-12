@@ -89,56 +89,6 @@ split_ul <- function(...) {
 }
 
 
-#' Strip Leading and Trailing Empty Strings
-#'
-#' Strip leading and/or trailing superfluous empty elements from a character
-#' vector, keeping only non-empty elements and empty strings intertwined with
-#' them.
-#'
-#' @param x A character vector. It can be empty or contain only empty elements.
-#'
-#' @param which A character string equal to `both`, `leading`, or `trailing`.
-#'   What to remove from `x`.
-#'
-#' @returns A character vector.
-#'
-#' @note
-#' To strip all empty strings, see [base::nzchar()].
-#'
-#' @examples
-#' transltr:::strip_empty_strings("") # character(0)
-#'
-#' x <- c("", "", "a", "b", "", "c", "")
-#'
-#' transltr:::strip_empty_strings(x)             # c("a", "b", "", "c")
-#' transltr:::strip_empty_strings(x, "leading")  # c("a", "b", "", "c", "")
-#' transltr:::strip_empty_strings(x, "trailing") # c("", "", "a", "b", "", "c", "")
-#'
-#' @rdname strip-empty-strings
-#' @family utility functions
-#' @keywords internal
-strip_empty_strings <- function(
-    x     = character(),
-    which = c("both", "leading", "trailing"))
-{
-    assert_chr(x, TRUE)
-    assert_arg(which, TRUE)
-
-    is_nz <- nzchar(x)
-
-    # If x only contains empty strings,
-    # then they are all removed by design.
-    if (all(!is_nz)) {
-        return(character(0L))
-    }
-
-    nz_pos <- which(match(is_nz, TRUE, 0L) == 1L)
-    start  <- if (which == "trailing") 1L        else min(nz_pos)
-    end    <- if (which == "leading")  length(x) else max(nz_pos)
-    return(x[seq.int(start, end, 1L)])
-}
-
-
 # `%||%` was introduced in R 4.4.0. We redefine it here for
 # convenience (and for earlier versions of R) until further
 # notice as an undocumented and internal operator. To avoid

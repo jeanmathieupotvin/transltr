@@ -13,7 +13,7 @@ usethis::use_description(
     fields     = list(
         Package     = "transltr",
         Title       = "A framework to support many languages in any R application",
-        Version     = "0.0.1.9001",
+        Version     = "0.0.1.9002",
         Language    = "en",
         Encoding    = "UTF-8",
         Roxygen     = "list(markdown = TRUE, r6 = TRUE)",
@@ -42,6 +42,7 @@ usethis::use_description(
 usethis::use_mit_license("Jean-Mathieu Potvin")
 
 usethis::use_testthat(parallel = FALSE)
+usethis::use_package("digest")
 usethis::use_package("R6")
 usethis::use_package("utils")
 usethis::use_package("yaml")

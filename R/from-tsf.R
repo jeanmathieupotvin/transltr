@@ -99,8 +99,6 @@
 #'
 #' @template param-hash-algorithm
 #'
-#' @template param-hash-length
-#'
 #' @template param-language-keys
 #'
 #' @returns
@@ -196,7 +194,10 @@
 from_tsf <- function(x = character()) {
     x_split <- split_tsf(x)
     header  <- from_tsf_header(x_split$header)
-    blocks  <- from_tsf_blocks(x_split$blocks, header$template_version)
+    blocks  <- from_tsf_blocks(x_split$blocks,
+        header$template_version,
+        header$hash_algorithm)
+
     return(
         list(
             header = header,
@@ -265,13 +266,15 @@ from_tsf_header <- function(x = character()) {
 #' @keywords internal
 from_tsf_blocks <- function(
     src_blocks       = list(),
-    template_version = get_template_versions())
+    template_version = get_template_versions(),
+    hash_algorithm   = get_hash_algorithms())
 {
     assert_arg(template_version)
+    assert_arg(hash_algorithm)
     return(
         switch(
             template_version,
-            from_tsf_blocks_v1(src_blocks)))
+            from_tsf_blocks_v1(src_blocks, hash_algorithm)))
 }
 
 #' @rdname from-tsf
@@ -281,7 +284,6 @@ from_tsf_header_v1 <- function(
     generated_by,
     generated_on,
     hash_algorithm,
-    hash_length,
     language_keys,
     ...)
 {
@@ -293,7 +295,6 @@ from_tsf_header_v1 <- function(
         "generated_by",
         "generated_on",
         "hash_algorithm",
-        "hash_length",
         "language_keys")
 
     if (any(is_miss <- is.na(match(args_f, args_c)))) {
@@ -309,12 +310,9 @@ from_tsf_header_v1 <- function(
 
     assert_chr1(generated_by)
     assert_chr1(generated_on)
+    assert_match(hash_algorithm, get_hash_algorithms(), quote_values = TRUE)
     assert_chr(language_keys, TRUE)
     assert_named(language_keys)
-    assert_int1(hash_length)
-
-    len_rng <- get_hash_length_range(hash_algorithm)
-    assert_between(hash_length, len_rng[["min"]], len_rng[["max"]])
 
     if (!is_named(further_fields <- list(...))) {
         stops("all further fields (custom user's fields) must be named.")
@@ -326,40 +324,50 @@ from_tsf_header_v1 <- function(
             generated_by     = generated_by,
             generated_on     = generated_on,
             hash_algorithm   = hash_algorithm,
-            hash_length      = hash_length,
             language_keys    = language_keys,
             further_fields   = further_fields))
 }
 
 #' @rdname from-tsf
 #' @keywords internal
-from_tsf_blocks_v1 <- function(src_blocks = list()) {
+from_tsf_blocks_v1 <- function(
+    src_blocks     = list(),
+    hash_algorithm = get_hash_algorithms())
+{
     blocks_t <- lapply(src_blocks, tokenize_tsf_block_v1)
-    return(lapply(blocks_t, from_tsf_block_v1))
+    return(lapply(blocks_t, from_tsf_block_v1, hash_algorithm = hash_algorithm))
 }
 
 #' @rdname from-tsf
 #' @keywords internal
-from_tsf_block_v1 <- function(tokens = list()) {
-    t_split   <- split(tokens, vapply_1c(tokens, `[[`, i = "subtype"))
-    t_hash    <- t_split$TITLE_HASH[[1L]]
-    t_key_src <- t_split$TITLE_KEY_SRC[[1L]]
-    a_key_txt <- t_split$TITLE_KEY_TXT
-    a_tsf_txt <- t_split$TXT_SRC
-    a_t_txt   <- t_split[grepl("^TXT_TRL_", names(t_split))]
-    a_t_loc   <- t_split[grepl("^LOC_SRC_", names(t_split))]
+from_tsf_block_v1 <- function(
+    tokens         = list(),
+    hash_algorithm = get_hash_algorithms())
+{
+    t_split <- split(tokens, vapply_1c(tokens, `[[`, i = "subtype"))
+    t_subs  <- names(t_split)
 
-    translations        <- lapply(a_t_txt,   from_tsf_block_txt_v1)
-    names(translations) <- lapply(a_key_txt, from_tsf_block_title_v1)
-    names(a_t_loc)      <- NULL
+    # Step 1: parse components.
+    hash    <- from_tsf_block_title_v1(t_split$TITLE_HASH[[1L]])
+    src_key <- from_tsf_block_title_v1(t_split$TITLE_KEY_SRC[[1L]])
+    src_txt <- from_tsf_block_txt_v1(t_split$TXT_SRC)
+    keys    <- lapply(t_split$TITLE_KEY_TXT, from_tsf_block_title_v1)
+    locs    <- lapply(t_split[grepl("^LOC_SRC_", t_subs)], from_tsf_block_loc_v1)
+    txts    <- lapply(t_split[grepl("^TXT_TRL_", t_subs)], from_tsf_block_txt_v1)
 
-    return(
-        block(
-            hash         = from_tsf_block_title_v1(t_hash),
-            text         = from_tsf_block_txt_v1(a_tsf_txt),
-            text_key     = from_tsf_block_title_v1(t_key_src),
-            locations    = lapply(a_t_loc, from_tsf_block_loc_v1),
-            translations = translations))
+    # Step 2: create Block object.
+    blk <- .block(src_key, src_txt, hash_algorithm, keys, txts, locs)
+
+    # Step 3: check source information.
+    # Comparing hashes is equivalent to simultaneously
+    # checking source key, text, and chosen hash_algorithm.
+    if (blk$hash != hash) {
+        warning(call. = FALSE,
+            sprintf("source hash '%s' does not match expectation.\n", hash),
+            sprintf("It will be superseded by '%s'.", blk$hash))
+    }
+
+    return(blk)
 }
 
 #' @rdname from-tsf

@@ -6,7 +6,11 @@
 .local
 
 # Ignore common R side-files.
+.Rprof.out
 .Rproj.user
 .Rhistory
 .RData
 .Renviron
+
+# Ignore draw.io backup files.
+*.drawio.bkp

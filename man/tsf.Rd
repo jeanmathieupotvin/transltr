@@ -105,8 +105,7 @@ only modify and/or add further entries to \code{language_keys}.\tabular{llll}{
    \code{template_version} \tab Integer \tab \code{integer(1)} \tab \code{1} \cr
    \code{generated_by} \tab String \tab \code{character(1)} \tab \verb{R package transltr 0.0.1} \cr
    \code{generated_on} \tab String \tab \code{character(1)} \tab \verb{August 22, 2024 @ 08:00 UTC} \cr
-   \code{hash_algorithm} \tab String \tab \code{character(1)} \tab \code{blake2b} \cr
-   \code{hash_length} \tab Integer \tab \code{integer(1)} \tab \code{32} \cr
+   \code{hash_algorithm} \tab String \tab \code{character(1)} \tab \code{sha1} \cr
    \code{language_keys} \tab Map \tab \code{character()}\if{html}{\out{<br/>}}(Named) \tab \code{fr: Français}\if{html}{\out{<br/>}}\code{language-key: full-language-name} \cr
 }
 

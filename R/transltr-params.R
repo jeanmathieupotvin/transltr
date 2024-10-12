@@ -1,22 +1,27 @@
-#' Parameters
+#' Parameters and Constants
 #'
 #' Helper functions that return valid values for various parameters and
 #' components of package [`transltr`][transltr].
 #'
-#' @template param-hash-algorithm
+#' @section Hashing algorithms:
+#' Package [`transltr`][transltr] offers two methods.
 #'
-#' @details
-#' From the users' perspective, the hash length correspond to the number of
-#' hexadecimal characters for convenience. Internally, it corresponds to a
-#' number of bytes.
+#'   * Method `sha1` corresponds to SHA-1 (Secure Hash Algorithm 1),
+#'     a cryptographic hashing function. While it is now superseded by more
+#'     secure variants (SHA-256, SHA-512, etc.), it is still useful for non-
+#'     sensitive purposes. It is fast, collision-resistant, and may handle
+#'     very large inputs. It outputs strings of 40 hexadecimal characters.
+#'
+#'   * Method `utf8` is an **experimental hashing method** derived from the
+#'     cumulative sum of code points. It is slightly faster that `sha1` for
+#'     smaller inputs, and outputs shorter integers (as strings) of variable
+#'     lengths porportional to the input's length. It should be reserved for
+#'     expert use only.
 #'
 #' @returns
 #' [get_template_versions()] returns an integer vector.
 #'
 #' [get_hash_algorithms()] returns a character vector.
-#'
-#' [get_hash_length_range()] returns a named integer vector of length 2 which
-#' represents the range of valid values for the hashes' length (**in bytes**).
 #'
 #' [get_generated_by()] returns a character string.
 #'
@@ -26,7 +31,6 @@
 #' @seealso [utc()]
 #'
 #' @rdname transltr-params
-#' @family internal parameters
 #' @keywords internal
 get_template_versions <- function() {
     return(1L)
@@ -35,24 +39,13 @@ get_template_versions <- function() {
 #' @rdname transltr-params
 #' @keywords internal
 get_hash_algorithms <- function() {
-    return("blake2b")
-}
-
-#' @rdname transltr-params
-#' @keywords internal
-get_hash_length_range <- function(hash_algorithm = get_hash_algorithms()) {
-    assert_arg(hash_algorithm, TRUE)
-
-    return(
-        switch(hash_algorithm,
-            "blake2b" = c(min = 8L, max = 32L),
-            NULL))
+    return(c("sha1", "utf8"))
 }
 
 #' @rdname transltr-params
 #' @keywords internal
 get_generated_by <- function() {
-    return("R package transltr 0.0.1.9001")
+    return("R package transltr 0.0.1.9002")
 }
 
 #' @include utc.R

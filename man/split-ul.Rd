@@ -18,8 +18,6 @@ A list. See \code{\link[base:split]{base::split()}} for further information.
 \seealso{
 Other utility functions: 
 \code{\link{stops}()},
-\code{\link{strip_empty_strings}()},
-\code{\link{to_string}()},
 \code{\link{utc}()},
 \code{\link{vapply_1l}()}
 }

@@ -28,7 +28,7 @@ non-technical collaborators such as professional translators.
 
 * Can be used within any context and functions (unlike `base::gettext()`).
 
-* Uses only two carefully chosen dependencies: packages `R6` and `yaml`.
+* Uses carefully chosen dependencies: `digest`, `R6`, and `yaml`.
 
 * Fast speed.
 
@@ -51,7 +51,7 @@ More to come later. See the proposed architecture below. You may also read
 
 This diagram gives an overview of how the package will work once completed.
 
-![](man/figures/architecture-overview-user.drawio.png)
+![](man/figures/architecture-overview-user.png)
 
 ## Bugs and feedback
 

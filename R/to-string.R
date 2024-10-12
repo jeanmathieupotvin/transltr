@@ -19,7 +19,7 @@
 #'   by `", "`, except for the last one. Argument `last_sep` is used for it.
 #'
 #' @rdname to-string
-#' @family utility functions
+#' @family string functions
 #' @keywords internal
 to_string <- function(x, ...) {
     UseMethod("to_string")
@@ -28,7 +28,7 @@ to_string <- function(x, ...) {
 #' @rdname to-string
 #' @keywords internal
 #' @export
-to_string.default <- function(x, quote_values = FALSE, last_sep = " or ", ...) {
+to_string.default <- function(x, quote_values = FALSE, last_sep = ", or ", ...) {
     x <- as.character(x, ...)
 
     if (quote_values) {

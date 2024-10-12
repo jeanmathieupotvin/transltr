@@ -509,7 +509,7 @@ test_that("assert_match() throws an error by default if x is invalid", {
 test_that("assert_match() adapts its error message(s)", {
     expect_identical(
         assert_match(3L, c(1L, 2L), throw_error = FALSE),
-        "'3L' must be equal to 1 or 2.")
+        "'3L' must be equal to 1, or 2.")
 
     # assert_match() does not adapt its error message.
     # It is constant. But we snapshot it anyway with a
@@ -523,10 +523,10 @@ test_that("assert_match() adapts its error message(s)", {
 test_that("assert_match() does not quote values by default", {
     expect_identical(
         assert_match(3L, c(1L, 2L), throw_error = FALSE),
-        "'3L' must be equal to 1 or 2.")
+        "'3L' must be equal to 1, or 2.")
     expect_identical(
         assert_match(3L, c(1L, 2L), quote_values = TRUE, throw_error = FALSE),
-        "'3L' must be equal to '1' or '2'.")
+        "'3L' must be equal to '1', or '2'.")
 
     expect_snapshot(assert_match(3L, c(1L, 2L)),                      error = TRUE)
     expect_snapshot(assert_match(3L, c(1L, 2L), quote_values = TRUE), error = TRUE)
@@ -554,7 +554,7 @@ test_that("assert_arg() throws an error by default if x is invalid", {
 test_that("assert_arg() adapts its error message(s)", {
     expect_identical(
         wrap_assert_arg(3L, throw_error = FALSE),
-        "'my_x' must be equal to 1 or 2.")
+        "'my_x' must be equal to 1, or 2.")
 
     # assert_arg() does not adapt its error message.
     # It is constant. But we snapshot it anyway with
@@ -568,10 +568,10 @@ test_that("assert_arg() adapts its error message(s)", {
 test_that("assert_arg() does not quote values by default", {
     expect_identical(
         wrap_assert_arg(3L, throw_error = FALSE),
-        "'my_x' must be equal to 1 or 2.")
+        "'my_x' must be equal to 1, or 2.")
     expect_identical(
         wrap_assert_arg(3L, quote_values = TRUE, throw_error = FALSE),
-        "'my_x' must be equal to '1' or '2'.")
+        "'my_x' must be equal to '1', or '2'.")
 
     expect_snapshot(wrap_assert_arg(3L),                      error = TRUE)
     expect_snapshot(wrap_assert_arg(3L, quote_values = TRUE), error = TRUE)

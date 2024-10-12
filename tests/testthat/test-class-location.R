@@ -1,53 +1,52 @@
-# path does not need to exist. Location objects
-# may refer non-existent files and/or ranges.
 path <- "tests/testthat/my-test-file"
 
 # We use extreme dummy ranges to test whether
 # values are appropriately padded or not by format().
-loc <- location(path, c(1L, 11L), c(22L, 222L), c(10L, 3333L), c(1L, 4L))
+loc1 <- location(path, 1L, 2L, 3L, 4L)
+loc2 <- location(path, c(1L, 11L), c(22L, 222L), c(10L, 3333L), c(1L, 4L))
 
 
 # location() -------------------------------------------------------------------
 
 
 test_that("location() returns a S3 object of class Location", {
-    expect_s3_class(loc, "Location")
-    expect_type(loc, "list")
-    expect_length(loc, 5L)
-    expect_identical(loc$path, path)
-    expect_identical(loc$line1, c(1L, 11L))
-    expect_identical(loc$col1,  c(22L, 222L))
-    expect_identical(loc$line2, c(10L, 3333L))
-    expect_identical(loc$col2,  c(1L, 4L))
+    expect_s3_class(loc2, "Location")
+    expect_type(loc2, "list")
+    expect_length(loc2, 5L)
+    expect_identical(loc2$path, path)
+    expect_identical(loc2$line1, c(1L, 11L))
+    expect_identical(loc2$col1,  c(22L, 222L))
+    expect_identical(loc2$line2, c(10L, 3333L))
+    expect_identical(loc2$col2,  c(1L, 4L))
 })
 
-test_that("location() validates argument path", {
+test_that("location() validates path", {
     expect_error(location(1L))
     expect_snapshot(location(1L), error = TRUE)
 })
 
-test_that("location() validates argument line1", {
+test_that("location() validates line1", {
     expect_error(location(line1 = ""))
     expect_error(location(line1 = 0L))
     expect_snapshot(location(line1 = ""), error = TRUE)
     expect_snapshot(location(line1 = 0L), error = TRUE)
 })
 
-test_that("location() validates argument col1", {
+test_that("location() validates col1", {
     expect_error(location(col1 = ""))
     expect_error(location(col1 = 0L))
     expect_snapshot(location(col1 = ""), error = TRUE)
     expect_snapshot(location(col1 = 0L), error = TRUE)
 })
 
-test_that("location() validates argument line2", {
+test_that("location() validates line2", {
     expect_error(location(line2 = ""))
     expect_error(location(line2 = 0L))
     expect_snapshot(location(line2 = ""), error = TRUE)
     expect_snapshot(location(line2 = 0L), error = TRUE)
 })
 
-test_that("location() validates argument col2", {
+test_that("location() validates col2", {
     expect_error(location(col2 = ""))
     expect_error(location(col2 = 0L))
     expect_snapshot(location(col2 = ""), error = TRUE)
@@ -57,6 +56,22 @@ test_that("location() validates argument col2", {
 test_that("location() validates line1, col1, line2, and col2 have the same length", {
     expect_error(location(line1 = c(1L, 2L)))
     expect_snapshot(location(line1 = c(1L, 2L)), error = TRUE)
+})
+
+test_that("location() drops duplicated ranges", {
+    loc <- location(path, c(1L, 1L), c(2L, 2L), c(3L, 3L), c(4L, 4L))
+    expect_identical(loc$line1, 1L)
+    expect_identical(loc$col1,  2L)
+    expect_identical(loc$line2, 3L)
+    expect_identical(loc$col2,  4L)
+})
+
+test_that("location() orders ranges", {
+    loc <- location(path, c(2L, 1L), c(4L, 3L), c(6L, 5L), c(8L, 7L))
+    expect_identical(loc$line1, c(1L, 2L))
+    expect_identical(loc$col1,  c(3L, 4L))
+    expect_identical(loc$line2, c(5L, 6L))
+    expect_identical(loc$col2,  c(7L, 8L))
 })
 
 
@@ -73,30 +88,124 @@ test_that("is_location() returns a logical", {
 
 
 test_that("format() returns a character", {
+    expect_type(format(location(), "long"),  "character")
+    expect_type(format(location(), "short"), "character")
+    expect_length(format(location(), "long"),  3L)
+    expect_length(format(location(), "short"), 1L)
+})
+
+test_that("format() validates how", {
+    expect_error(format(location(), "error"))
+    expect_snapshot(format(location(), "error"), error = TRUE)
+})
+
+test_that("format_short_location() throws an error if multiple ranges must be printed", {
+    expect_error(format(loc2, "short"))
+    expect_snapshot(format(loc2, "short"), error = TRUE)
+})
+
+test_that("format_short_location() returns a character string", {
+    expect_identical(
+        format(location(path), "short"),
+        "tests/testthat/my-test-file: ln 1, col 1 @ ln 1, col 1")
+})
+
+test_that("format_long_location() returns a character", {
     # This test block is a little bit
     # fragile, but hardcoding expected
     # values is much more simpler.
-    fmt_loc <- format(loc)
+    fmt_loc1 <- format(loc1)
+    fmt_loc2 <- format(loc2)
 
-    expect_type(fmt_loc, "character")
-    expect_length(fmt_loc, 4L)
-    expect_identical(fmt_loc[[1L]], "<Location>")
-    expect_identical(fmt_loc[[2L]], "  'tests/testthat/my-test-file':")
-    expect_identical(fmt_loc[[3L]], "    - line  1, column  22 @ line   10, column 1")
-    expect_identical(fmt_loc[[4L]], "    - line 11, column 222 @ line 3333, column 4")
+    expect_type(fmt_loc1, "character")
+    expect_type(fmt_loc2, "character")
+    expect_length(fmt_loc1, 3L)
+    expect_length(fmt_loc2, 5L)
+    expect_identical(fmt_loc1, c(
+        "<Location>",
+        "  Path : tests/testthat/my-test-file",
+        "  Range: line 1, column 2 @ line 3, column 4"))
+    expect_identical(fmt_loc2, c(
+        "<Location>",
+        "  Path  : tests/testthat/my-test-file",
+        "  Ranges:",
+        "    [1] line  1, column  22 @ line   10, column 1",
+        "    [2] line 11, column 222 @ line 3333, column 4"))
 })
 
 
 # print.Location() -------------------------------------------------------------
 
 
-test_that("print() returns its argument invisibly", {
-    withr::local_output_sink(tempfile())
-    expect_invisible(print(loc))
-    expect_identical(print(loc), loc)
+test_that("print() works", {
+    expect_output(print(loc1))
+    expect_snapshot(print(loc1, "short"))
+    expect_snapshot(print(loc2, "long"))
 })
 
-test_that("print() works", {
-    expect_output(print(loc), "^<Location>")
-    expect_snapshot(print(loc))
+test_that("print() returns x invisibly", {
+    withr::local_output_sink(tempfile())
+    expect_invisible(print(loc1))
+    expect_identical(print(loc1), loc1)
+})
+
+
+# c.Location -------------------------------------------------------------------
+
+
+test_that("c.Location() returns a Location object", {
+    out <- c(loc1, loc2)
+
+    expect_s3_class(out, "Location")
+    expect_identical(out$path,  loc1$path)
+    expect_identical(out$line1, c(1L, 1L, 11L))
+    expect_identical(out$col1,  c(2L, 22L, 222L))
+    expect_identical(out$line2, c(3L, 10L, 3333L))
+    expect_identical(out$col2,  c(4L, 1L, 4L))
+})
+
+test_that("c.Location() returns its single argument", {
+    expect_identical(c(loc1), loc1)
+})
+
+test_that("c.Location() validates ...", {
+    # The first argument passed to c() must be a
+    # Location object. Otherwise, S3 dispatching
+    # won't work as expected.
+    expect_error(c(loc1, 1L, loc2))
+    expect_snapshot(c(loc1, 1L, loc2), error = TRUE)
+})
+
+test_that("c.Location() throws an error if paths are not equal", {
+    expect_error(c(location("a"), location("b")))
+    expect_snapshot(c(location("a"), location("b")), error = TRUE)
+})
+
+
+# merge_locations() ------------------------------------------------------------
+
+
+test_that("merge_locations() returns a list of Location object", {
+    out <- merge_locations(location("a"), location("b"))
+    expect_type(out, "list")
+    expect_length(out, 2L)
+})
+
+test_that("merge_locations() validates ...", {
+    expect_error(merge_locations(loc1, 1L, loc2))
+    expect_snapshot(merge_locations(loc1, 1L, loc2), error = TRUE)
+})
+
+test_that("merge_locations() combines Location objects having different paths", {
+    loc1 <- location("a", 1L, 1L, 1L, 1L)
+    loc2 <- location("a", 2L, 2L, 2L, 2L)
+    loc3 <- location("b", 3L, 3L, 3L, 3L)
+    loc4 <- location("b", 4L, 4L, 4L, 4L)
+    loc5 <- location("c", 5L, 5L, 5L, 5L)
+    out  <- merge_locations(loc1, loc2, loc3, loc4, loc5)
+
+    expect_length(out, 3L)
+    expect_identical(out[[1L]], location("a", c(1L, 2L), c(1L, 2L), c(1L, 2L), c(1L, 2L)))
+    expect_identical(out[[2L]], location("b", c(3L, 4L), c(3L, 4L), c(3L, 4L), c(3L, 4L)))
+    expect_identical(out[[3L]], location("c", 5L, 5L, 5L, 5L))
 })

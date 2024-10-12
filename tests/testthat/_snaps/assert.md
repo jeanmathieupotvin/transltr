@@ -144,7 +144,7 @@
       assert_match(3L, c(1L, 2L))
     Condition
       Error:
-      ! '3L' must be equal to 1 or 2.
+      ! '3L' must be equal to 1, or 2.
 
 # assert_match() does not quote values by default
 
@@ -152,7 +152,7 @@
       assert_match(3L, c(1L, 2L))
     Condition
       Error:
-      ! '3L' must be equal to 1 or 2.
+      ! '3L' must be equal to 1, or 2.
 
 ---
 
@@ -160,7 +160,7 @@
       assert_match(3L, c(1L, 2L), quote_values = TRUE)
     Condition
       Error:
-      ! '3L' must be equal to '1' or '2'.
+      ! '3L' must be equal to '1', or '2'.
 
 # assert_arg() adapts its error message(s)
 
@@ -169,7 +169,7 @@
       wrap_assert_arg(3L)
     Condition
       Error:
-      ! 'my_x' must be equal to 1 or 2.
+      ! 'my_x' must be equal to 1, or 2.
 
 # assert_arg() does not quote values by default
 
@@ -177,7 +177,7 @@
       wrap_assert_arg(3L)
     Condition
       Error:
-      ! 'my_x' must be equal to 1 or 2.
+      ! 'my_x' must be equal to 1, or 2.
 
 ---
 
@@ -185,5 +185,5 @@
       wrap_assert_arg(3L, quote_values = TRUE)
     Condition
       Error:
-      ! 'my_x' must be equal to '1' or '2'.
+      ! 'my_x' must be equal to '1', or '2'.
 
