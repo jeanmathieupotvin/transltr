@@ -6,7 +6,7 @@
 \alias{Translator}
 \title{Placeholder}
 \usage{
-translator()
+translator(..., hash_algorithm = get_hash_algorithms())
 
 is_translator()
 }
@@ -16,24 +16,86 @@ Placeholder for future class \code{\link{Translator}}.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-Translator-clone}{\code{Translator$clone()}}
+\item \href{#method-Translator-new}{\code{Translator$new()}}
+\item \href{#method-Translator-translate}{\code{Translator$translate()}}
+\item \href{#method-Translator-get_translation}{\code{Translator$get_translation()}}
+\item \href{#method-Translator-get_block}{\code{Translator$get_block()}}
+\item \href{#method-Translator-set_block}{\code{Translator$set_block()}}
+\item \href{#method-Translator-set_blocks}{\code{Translator$set_blocks()}}
+\item \href{#method-Translator-map_key}{\code{Translator$map_key()}}
+\item \href{#method-Translator-rm_block}{\code{Translator$rm_block()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Translator-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-Translator-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
+\if{html}{\out{<a id="method-Translator-new"></a>}}
+\if{latex}{\out{\hypertarget{method-Translator-new}{}}}
+\subsection{Method \code{new()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Translator$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Translator$new(hash_algorithm = get_hash_algorithms())}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
 }
-\if{html}{\out{</div>}}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Translator-translate"></a>}}
+\if{latex}{\out{\hypertarget{method-Translator-translate}{}}}
+\subsection{Method \code{translate()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Translator$translate(..., concat = " ", source_key = "")}\if{html}{\out{</div>}}
 }
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Translator-get_translation"></a>}}
+\if{latex}{\out{\hypertarget{method-Translator-get_translation}{}}}
+\subsection{Method \code{get_translation()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Translator$get_translation(hash = "", key = "")}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Translator-get_block"></a>}}
+\if{latex}{\out{\hypertarget{method-Translator-get_block}{}}}
+\subsection{Method \code{get_block()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Translator$get_block(hash = "")}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Translator-set_block"></a>}}
+\if{latex}{\out{\hypertarget{method-Translator-set_block}{}}}
+\subsection{Method \code{set_block()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Translator$set_block(source_key = "", ...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Translator-set_blocks"></a>}}
+\if{latex}{\out{\hypertarget{method-Translator-set_blocks}{}}}
+\subsection{Method \code{set_blocks()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Translator$set_blocks(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Translator-map_key"></a>}}
+\if{latex}{\out{\hypertarget{method-Translator-map_key}{}}}
+\subsection{Method \code{map_key()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Translator$map_key(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Translator-rm_block"></a>}}
+\if{latex}{\out{\hypertarget{method-Translator-rm_block}{}}}
+\subsection{Method \code{rm_block()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Translator$rm_block(hash = "")}\if{html}{\out{</div>}}
+}
+
 }
 }

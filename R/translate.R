@@ -1,8 +1,29 @@
-translate <- function(..., concat = " ", key = "en") {
-    # FIXME: assignments below are placeholders.
+translate <- function(..., concat = " ", source_key = "en") {
     trans <- get_translator()
-    key   <- get_language()
-    return(.NotYetImplemented())
+    return(trans$translate(..., concat = concat, source_key = source_key))
+}
+
+text_normalize <- function(..., .concat = " ") {
+    str <- c(...) |>
+        # Remove leading new lines and/or space characters.
+        gsub("^[ \t\n]+", "", x = _) |>
+        # Concatenate elements passed to dots.
+        paste0(collapse = .concat) |>
+        # Replace streams of multiples space characters by a single space.
+        gsub("[ \t]{2,}", " ", x = _) |>
+        # Remove space characters that follow new line characters.
+        gsub("\n[ \t]+", "\n", x = _)
+
+    return(str)
+}
+
+text_hash <- function(.key = "", .text = "", .hash_algorithm = get_hash_algorithms()) {
+    x <- sprintf("%s:%s", .key, .text)
+    return(
+        switch(.hash_algorithm,
+            sha1 = digest::sha1(charToRaw(x)),
+            utf8 = as.character(sum(cumsum(utf8ToInt(x)))),
+            NULL))
 }
 
 is_translate_call <- function(x, ...) {
