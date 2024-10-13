@@ -97,7 +97,7 @@
       blk$set_translations(1L)
     Condition
       Error:
-      ! values passed to '...' must all be character strings.
+      ! values passed to '...' must all be non-NA and non-empty character strings.
 
 ---
 
@@ -147,10 +147,60 @@
       Error:
       ! 'path' must be equal to 'a', or 'b'.
 
+# block() validates source_key
+
+    Code
+      block("")
+    Condition
+      Error:
+      ! 'source_key' must be a non-NA and non-empty character of length 1.
+
+# block() checks that there is at least one translation corresponding to source_key
+
+    Code
+      block("en")
+    Condition
+      Error:
+      ! at least one translation corresponding to 'source_key' must be passed to '...'.
+      It is treated as the source text and its name must be equal to 'source_key'.
+      See documentation for field 'source_text' for more information.
+
+# .block() validates source_key
+
+    Code
+      .block("")
+    Condition
+      Error:
+      ! 'source_key' must be a non-NA and non-empty character of length 1.
+
+# .block() validates source_text
+
+    Code
+      .block("en", 1L)
+    Condition
+      Error:
+      ! 'source_text' must be a non-NA character of length 1.
+
+# .block() validates trans_keys
+
+    Code
+      .block("en", "Hello, world!", trans_keys = 1L)
+    Condition
+      Error:
+      ! 'trans_keys' must be a character vector of non-NA values.
+
+# .block() validates trans_texts
+
+    Code
+      .block("en", "Hello, world!", trans_texts = 1L)
+    Condition
+      Error:
+      ! 'trans_texts' must be a character vector of non-NA values.
+
 # .block() validates lengths of trans_keys and trans_texts
 
     Code
-      .block(trans_keys = "en")
+      .block("en", trans_keys = "en")
     Condition
       Error:
       ! 'trans_keys' and 'trans_texts' must have the same length.

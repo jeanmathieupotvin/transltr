@@ -260,7 +260,7 @@ test_that("$rm_location() removes locations as expected", {
 })
 
 
-# Constructors -----------------------------------------------------------------
+# block() ----------------------------------------------------------------------
 
 
 test_that("block() returns an R6 object of class Block", {
@@ -280,8 +280,22 @@ test_that("block() returns an R6 object of class Block", {
     expect_identical(blk$translations, c(
         en = "Hello, world!",
         fr = "Bonjour, monde!"))
-    expect_identical(blk$locations, list(location("a"), location("b")))
+    expect_identical(blk$locations, list(a = location("a"), b = location("b")))
 })
+
+test_that("block() validates source_key", {
+    expect_error(block(""))
+    expect_snapshot(block(""), error = TRUE)
+})
+
+test_that("block() checks that there is at least one translation corresponding to source_key", {
+    expect_error(block("en"))
+    expect_snapshot(block("en"), error = TRUE)
+})
+
+
+# .block() ---------------------------------------------------------------------
+
 
 test_that(".block() returns an R6 object of class Block", {
     blk <- .block(
@@ -300,13 +314,33 @@ test_that(".block() returns an R6 object of class Block", {
     expect_identical(blk$translations, c(
         en = "Hello, world!",
         fr = "Bonjour, monde!"))
-    expect_identical(blk$locations, list(location("a"), location("b")))
+    expect_identical(blk$locations, list(a = location("a"), b = location("b")))
+})
+
+test_that(".block() validates source_key", {
+    expect_error(.block(""))
+    expect_snapshot(.block(""), error = TRUE)
+})
+
+test_that(".block() validates source_text", {
+    expect_error(.block("en", 1L))
+    expect_snapshot(.block("en", 1L), error = TRUE)
+})
+
+test_that(".block() validates trans_keys", {
+    expect_error(.block("en", "Hello, world!", trans_keys = 1L))
+    expect_snapshot(.block("en", "Hello, world!", trans_keys = 1L), error = TRUE)
+})
+
+test_that(".block() validates trans_texts", {
+    expect_error(.block("en", "Hello, world!", trans_texts = 1L))
+    expect_snapshot(.block("en", "Hello, world!", trans_texts = 1L), error = TRUE)
 })
 
 test_that(".block() validates lengths of trans_keys and trans_texts", {
-    expect_error(.block(trans_keys = "en"))
-    expect_error(.block(trans_texts = "Hello, world!"))
-    expect_snapshot(.block(trans_keys = "en"), error = TRUE)
+    expect_error(.block("en", trans_keys = "en"))
+    expect_error(.block("en", trans_texts = "Hello, world!"))
+    expect_snapshot(.block("en", trans_keys = "en"), error = TRUE)
 })
 
 test_that(".block() handles non-list values passed to locations", {

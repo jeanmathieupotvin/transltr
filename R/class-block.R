@@ -112,16 +112,27 @@
 #' @rdname class-block
 #' @keywords internal
 block <- function(source_key = "", ..., hash_algorithm = get_hash_algorithms()) {
-    blk  <- Block$new(hash_algorithm)
-    dots <- list(...)
-    do.call(blk$set_translations, dots[vapply_1l(dots, is.character)])
+    assert_chr1(source_key)
+
+    dots  <- list(...)
+    trans <- dots[vapply_1l(dots, is.character)]
+
+    if (!is_match(source_key, names(trans))) {
+        stops(
+            "at least one translation corresponding to 'source_key' must be passed to '...'.\n",
+            "It is treated as the source text and its name must be equal to 'source_key'.\n",
+            "See documentation for field 'source_text' for more information.")
+    }
+
+    blk <- Block$new(hash_algorithm)
+    do.call(blk$set_translations, trans)
     do.call(blk$set_locations,    dots[vapply_1l(dots, is_location)])
     blk$source_key <- source_key
     return(blk)
 }
 
 #' @usage
-#' ## Internal constructor
+#' ## Internal alternative constructor
 #' .block(
 #'   source_key     = "",
 #'   source_text    = "",
@@ -140,6 +151,13 @@ block <- function(source_key = "", ..., hash_algorithm = get_hash_algorithms()) 
     trans_texts    = character(),
     locations      = list())
 {
+    # Validate arguments here to output semantic error messages.
+    # Otherwise, they will be a little confusing.
+    assert_chr1(source_key)
+    assert_chr1(source_text, TRUE)
+    assert_chr(trans_keys, TRUE)
+    assert_chr(trans_texts, TRUE)
+
     if (length(trans_keys) != length(trans_texts)) {
         stops("'trans_keys' and 'trans_texts' must have the same length.")
     }
@@ -509,7 +527,7 @@ Block <- R6::R6Class("Block",
                 return(invisible(TRUE))
             }
             if (!all(vapply_1l(trans <- list(...), is_chr1))) {
-                stops("values passed to '...' must all be character strings.")
+                stops("values passed to '...' must all be non-NA and non-empty character strings.")
             }
 
             assert_named(trans, x_name = "...")

@@ -356,7 +356,7 @@ from_tsf_block_v1 <- function(
     txts    <- lapply(t_split[grepl("^TXT_TRL_", t_subs)], from_tsf_block_txt_v1)
 
     # Step 2: create Block object.
-    blk <- .block(src_key, src_txt, hash_algorithm, keys, txts, locs)
+    blk <- .block(src_key, src_txt, hash_algorithm, unlist(keys), unlist(txts), locs)
 
     # Step 3: check source information.
     # Comparing hashes is equivalent to simultaneously
