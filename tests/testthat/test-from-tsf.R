@@ -399,7 +399,7 @@ test_that("from_tsf_block_v1() returns a S3 object of class Block", {
     expect_identical(out$hash_algorithm, "sha1")
     expect_identical(out$source_key, "en")
     expect_identical(out$source_text, "Hello, world!")
-    expect_identical(out$locations, list(location("file1", 1L, 2L, 3L, 4L)))
+    expect_identical(out$locations, list(file1 = location("file1", 1L, 2L, 3L, 4L)))
     expect_identical(out$translations, c(
         en = "Hello, world!",
         es = "¡Hola Mundo!",

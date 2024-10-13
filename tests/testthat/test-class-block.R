@@ -105,11 +105,11 @@ test_that("active binding translations throws an error if value is not missing",
 })
 
 test_that("active binding locations returns registered locations", {
-    # This implicitly checks that translations are
-    # also sorted by their underlying names (keys).
+    # This implicitly checks that locations are
+    # also sorted by their underlying paths.
     expect_identical(blk1$locations, list(
-        location("a", 1L, 2L, 3L, 4L),
-        location("b", 5L, 6L, 7L, 8L)))
+        a = location("a", 1L, 2L, 3L, 4L),
+        b = location("b", 5L, 6L, 7L, 8L)))
 })
 
 test_that("active binding locations throws an error if value is not missing", {
@@ -256,7 +256,7 @@ test_that("$rm_location() removes locations as expected", {
     blk <- test_block()
     blk$rm_location("a")
     expect_length(blk$locations, 1L)
-    expect_identical(blk$locations, list(location("b", 5L, 6L, 7L, 8L)))
+    expect_identical(blk$locations, list(b = location("b", 5L, 6L, 7L, 8L)))
 })
 
 
@@ -412,10 +412,10 @@ test_that("c.Block() returns a Block object", {
         fr = "Bonjour, monde!",
         jp = "こんにちは世界！"))
     expect_identical(out$locations, list(
-        location("a", 1L, 2L, 3L, 4L),
-        location("b", 5L, 6L, 7L, 8L),
-        location("c", 1L, 2L, 3L, 4L),
-        location("d", 5L, 6L, 7L, 8L)))
+        a = location("a", 1L, 2L, 3L, 4L),
+        b = location("b", 5L, 6L, 7L, 8L),
+        c = location("c", 1L, 2L, 3L, 4L),
+        d = location("d", 5L, 6L, 7L, 8L)))
 })
 
 test_that("c.Block() returns its single argument", {

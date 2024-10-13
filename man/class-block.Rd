@@ -16,7 +16,7 @@
 \usage{
 block(source_key = "", ..., hash_algorithm = get_hash_algorithms())
 
-## Internal constructor
+## Internal alternative constructor
 .block(
   source_key     = "",
   source_text    = "",
@@ -382,6 +382,13 @@ Register one or more locations.
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Details}{
+This method calls \code{\link[=merge_locations]{merge_locations()}} to merge all
+values passed to \code{...} together with previously registered
+\code{\link{Location}} objects. The underlying registered
+paths and/or ranges won't be duplicated.
+}
+
 \subsection{Returns}{
 A \code{TRUE} (invisibly).
 }

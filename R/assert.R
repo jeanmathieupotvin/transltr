@@ -174,8 +174,8 @@ is_named <- function(x, allow_empty_names = FALSE, allow_na_names = FALSE) {
 #' @keywords internal
 is_match <- function(x, choices, allow_partial = FALSE) {
     if (length(x)) {
-        local_match <- if (allow_partial) base::pmatch else base::match
-        return(local_match(x[[1L]], choices, 0L) > 0L)
+        .match <- if (allow_partial) base::pmatch else base::match
+        return(.match(x[[1L]], choices, 0L) > 0L)
     }
 
     # Empty vectors are considered as

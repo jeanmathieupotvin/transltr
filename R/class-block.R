@@ -311,7 +311,7 @@ Block <- R6::R6Class("Block",
         .hash_algo    = "<unset>",  # See $hash_algorithm
         .source_key   = "<unset>",  # See $source_key
         .translations = NULL,       # See $translations
-        .locations    = list(),     # See $locations
+        .locations    = NULL,       # See $locations
 
         # @description Compute hash of the key/text pair.
         #
@@ -434,7 +434,7 @@ Block <- R6::R6Class("Block",
                     "You may remove a location with method 'rm_location()'.")
             }
 
-            return(private$.locations)
+            return(as.list(private$.locations, sorted = TRUE))
         }
     ),
     public = list(
@@ -450,6 +450,7 @@ Block <- R6::R6Class("Block",
             # because source translation is not set.
             private$.hash_algo    <- hash_algorithm
             private$.translations <- new.env(parent = emptyenv())
+            private$.locations    <- new.env(parent = emptyenv())
             return(self)
         },
 
@@ -520,17 +521,22 @@ Block <- R6::R6Class("Block",
         #'
         #' @param ... Any number of [`Location`][Location] objects.
         #'
+        #' @details This method calls [merge_locations()] to merge all
+        #'   values passed to `...` together with previously registered
+        #'   [`Location`][Location] objects. The underlying registered
+        #'   paths and/or ranges won't be duplicated.
+        #'
         #' @return A `TRUE` (invisibly).
         set_locations = \(...) {
             if (!...length()) {
                 return(invisible(TRUE))
             }
 
-            # c() dispatches on c.default() to construct
-            # a new list, not to c.Location(). locs is a
-            # list of Location objects.
-            locs <- c(private$.locations, list(...))
-            private$.locations <- do.call(merge_locations, locs)
+            locs <- c(as.list(private$.locations), list(...))
+            locs <- do.call(merge_locations, locs)
+            names(locs) <- vapply_1c(locs, `[[`, i = "path")
+
+            list2env(locs, envir = private$.locations)
             return(invisible(TRUE))
         },
 
@@ -574,9 +580,8 @@ Block <- R6::R6Class("Block",
         #' @return A `TRUE` (invisibly).
         rm_location = \(path = "") {
             assert_chr1(path)
-            paths <- vapply_1c(private$.locations, `[[`, i = "path")
-            assert_match(path, paths, quote_values = TRUE)
-            private$.locations[paths == path] <- NULL
+            assert_match(path, names(private$.locations), quote_values = TRUE)
+            rm(list = path, envir = private$.locations)
             return(invisible(TRUE))
         }
     )
