@@ -5,7 +5,7 @@
 \alias{get_translator}
 \title{Placeholder}
 \usage{
-set_translator()
+set_translator(x = translator())
 
 get_translator()
 }
