@@ -229,7 +229,7 @@ split_tsf <- function(x = character()) {
 
     return(
         list(
-            header = strip_empty_strings(h_no_sep),
+            header = str_strip_empty(h_no_sep),
             blocks = x_split[-1L],
             rest   = rest))
 }
@@ -380,7 +380,7 @@ from_tsf_block_title_v1 <- function(token = tsf_block_line_token("TITLE_HASH")) 
 #' @keywords internal
 from_tsf_block_txt_v1 <- function(tokens = list()) {
     t_vals <- vapply_1c(tokens, `[[`, i = "value")
-    text   <- strip_empty_strings(t_vals)
+    text   <- str_strip_empty(t_vals)
 
     # Identify lines that require a new line
     # character for appending (empty lines).

@@ -4,16 +4,16 @@
 #' These functions perform common string transformations.
 #'
 #' @details
-#' [strip_empty_strings()] strips leading and/or trailing empty elements from
+#' [str_strip_empty()] strips leading and/or trailing empty elements from
 #' a character vector.
 #'
-#' [left_pad_strings()] appends a single character to elements of a character
+#' [str_left_pad()] appends a single character to elements of a character
 #' vector until they reach a target length.
 #'
-#' [trim_strings()] wraps [base::strtrim()] and trims elements of a character
+#' [str_trim()] wraps [base::strtrim()] and trims elements of a character
 #' vector until they reach a target length.
 #'
-#' [sanitize_strings()] does three things to elements of a character vector.
+#' [str_sanitize()] does three things to elements of a character vector.
 #'   * It concatenates its elements into a single one.
 #'   * It replaces substrings of repeated space characters (spaces and/or tabs)
 #'     by a single space.
@@ -27,7 +27,7 @@
 #' @param len A non-[NA][base::NA] integer. Desired length for individual
 #'   elements of `x` as reported by
 #'   [`base::nchar(, type = "chars")`][base::nchar()]. It can further be
-#'   `NULL` for [left_pad_strings()]. This internally sets `len` equal to
+#'   `NULL` for [str_left_pad()]. This internally sets `len` equal to
 #'   the length of the longest element of `x`.
 #'
 #' @param pad A non-empty and non-[NA][base::NA] character string used to
@@ -41,23 +41,23 @@
 #' @note
 #' To strip all empty strings, use [base::nzchar()]. It will be much faster.
 #'
-#' [sanitize_strings()] will likely change in a neear future. This function
+#' [str_sanitize()] will likely change in a neear future. This function
 #' is not robust enough. It should support escaped characters, escaped
 #' sequences, etc.
 #'
 #' @examples
-#' transltr:::strip_empty_strings("") # character(0)
+#' transltr:::str_strip_empty("") # character(0)
 #'
 #' x <- c("", "", "a", "b", "", "c", "")
 #'
-#' transltr:::strip_empty_strings(x)             # c("a", "b", "", "c")
-#' transltr:::strip_empty_strings(x, "leading")  # c("a", "b", "", "c", "")
-#' transltr:::strip_empty_strings(x, "trailing") # c("", "", "a", "b", "", "c")
+#' transltr:::str_strip_empty(x)             # c("a", "b", "", "c")
+#' transltr:::str_strip_empty(x, "leading")  # c("a", "b", "", "c", "")
+#' transltr:::str_strip_empty(x, "trailing") # c("", "", "a", "b", "", "c")
 #'
 #' @rdname strings
 #' @family string functions
 #' @keywords internal
-strip_empty_strings <- function(
+str_strip_empty <- function(
     x     = character(),
     which = c("both", "leading", "trailing"))
 {
@@ -80,7 +80,7 @@ strip_empty_strings <- function(
 
 #' @rdname strings
 #' @keywords internal
-left_pad_strings <- function(x = character(), len = NULL, pad = " ") {
+str_left_pad <- function(x = character(), len = NULL, pad = " ") {
     assert_chr(x, TRUE)
     assert_chr1(pad)
 
@@ -101,7 +101,7 @@ left_pad_strings <- function(x = character(), len = NULL, pad = " ") {
 
 #' @rdname strings
 #' @keywords internal
-trim_strings <- function(x = character(), len = 80L) {
+str_trim <- function(x = character(), len = 80L) {
     assert_chr(x, TRUE)
     assert_int1(len)
     assert_between(len, 3L)
@@ -117,7 +117,7 @@ trim_strings <- function(x = character(), len = 80L) {
 
 #' @rdname strings
 #' @keywords internal
-sanitize_strings <- function(x = character(), concat = " ") {
+str_sanitize <- function(x = character(), concat = " ") {
     # FIXME: this function should be reviewed and robustified.
     assert_chr(x)
     assert_chr1(concat)

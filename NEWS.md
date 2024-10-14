@@ -15,8 +15,8 @@ scripts of a project.
 many things, such as hashing source text (among other things). It exposes an
 API to safely manipulate locations and translations.
 
-4. New internal functions to manipulate strings: `left_pad_strings()`,
-`trim_strings()`, and `sanitize_strings()`. The latter requires more work.
+4. New internal functions to manipulate strings: `str_left_pad()`,
+`str_trim()`, and `str_sanitize()`. The latter requires more work.
 
 5. Function `find_translations()` and many internal mechanisms to exact
 source texts from R scripts. It will be renamed in a future commit.

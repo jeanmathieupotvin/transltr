@@ -197,8 +197,8 @@ format.Block <- function(x, ...) {
         #     minus 4 spaces for indentation
         #     minus X spaces for padded keys
         #     minus 2 chars for the separator (': ').
-        keys  <- left_pad_strings(names(trans))
-        trans <- trim_strings(trans, 74L - max(nchar(keys), 0L))
+        keys  <- str_left_pad(names(trans))
+        trans <- str_trim(trans, 74L - max(nchar(keys), 0L))
         c("  Translations: ", sprintf("    %s: %s", keys, trans))
     } else {
         c("  Translations: " = "<none>")
@@ -299,7 +299,7 @@ as_block.call <- function(x,
     return(
         .block(
             x$key,
-            sanitize_strings(strings, x$concat),
+            str_sanitize(strings, x$concat),
             hash_algorithm,
             locations = locations))
 }

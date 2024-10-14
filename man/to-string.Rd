@@ -32,7 +32,7 @@ context of package \code{\link{transltr}}.
 }
 \seealso{
 Other string functions: 
-\code{\link{strip_empty_strings}()}
+\code{\link{str_strip_empty}()}
 }
 \concept{string functions}
 \keyword{internal}
