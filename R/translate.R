@@ -50,8 +50,8 @@ match_translate_call.call <- function(x, ...) {
     # translate() because this check should be done prior
     # to calling match_translate_call().
     cl        <- match.call(translate, x, expand.dots = FALSE)
-    cl$concat <- x$concat %??% .TRANSLATE_FORMAL_CONCAT
-    cl$key    <- x$key    %??% .TRANSLATE_FORMAL_KEY
+    cl$concat <- x$concat %??% ._TRANSLATE_FORMAL_CONCAT
+    cl$key    <- x$key    %??% ._TRANSLATE_FORMAL_KEY
     return(cl)
 }
 
@@ -60,5 +60,5 @@ match_translate_call.call <- function(x, ...) {
 # hidden from users. However, these
 # constants must be in sync with
 # formal args of translate().
-.TRANSLATE_FORMAL_CONCAT <- eval(formals(translate)$concat)
-.TRANSLATE_FORMAL_KEY    <- eval(formals(translate)$key)
+._TRANSLATE_FORMAL_CONCAT <- eval(formals(translate)$concat)
+._TRANSLATE_FORMAL_KEY    <- eval(formals(translate)$key)

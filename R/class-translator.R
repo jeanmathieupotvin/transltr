@@ -12,7 +12,7 @@ translator <- function(..., hash_algorithm = get_hash_algorithms()) {
 
 #' @rdname class-translator
 #' @export
-is_translator <- function() {
+is_translator <- function(x) {
     return(inherits(x, "Translator"))
 }
 

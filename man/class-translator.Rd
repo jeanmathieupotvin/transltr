@@ -8,7 +8,7 @@
 \usage{
 translator(..., hash_algorithm = get_hash_algorithms())
 
-is_translator()
+is_translator(x)
 }
 \description{
 Placeholder for future class \code{\link{Translator}}.
@@ -31,7 +31,7 @@ Placeholder for future class \code{\link{Translator}}.
 \if{latex}{\out{\hypertarget{method-Translator-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Translator$new(hash_algorithm = get_hash_algorithms())}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Translator$new(id = "", hash_algorithm = get_hash_algorithms())}\if{html}{\out{</div>}}
 }
 
 }
