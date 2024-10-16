@@ -51,3 +51,4 @@ Collate:
     'transltr-params.R'
     'tsf.R'
     'utils.R'
+    'uuid.R'
