@@ -38,7 +38,6 @@
 #' [UUIDs explained](https://www.uuidtools.com/uuid-versions-explained)
 #'
 #' @keywords internal
-#' @export
 uuid <- function() {
     chars <- as.character(uuid_raw())
     storage.mode(chars) <- "list"
@@ -47,7 +46,6 @@ uuid <- function() {
 
 #' @rdname uuid
 #' @keywords internal
-#' @export
 uuid_raw <- function() {
     # Useful reminder for standard UUID structure.
     #
@@ -110,7 +108,6 @@ uuid_raw <- function() {
 
 #' @rdname uuid
 #' @keywords internal
-#' @export
 uuid_is <- function(x = character()) {
     if (!is_chr(x, FALSE)) {
         return(FALSE)
