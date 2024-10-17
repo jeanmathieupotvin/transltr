@@ -97,25 +97,27 @@ split_ul <- function(...) {
 #' The intent of [format_vector()] is to format any [vector][vector()] into a
 #' set of name/value pairs (given as character strings), where indentation
 #' provides information on embedded structures. The following template shows
-#' how it formats `x`.
+#' how it attempts to format `x`.
 #'
 #' ```
 #' <.top_label>:
-#'   <x1_name>: <x1_value>
-#'   <x2_name>: <x2_value>
-#'   <x3_name>:
-#'     <x3_x1_name>: <x3_x1_value>
+#'   <names(x[1])>: <x[1]>
+#'   <names(x[2])>: <x[2]>
+#'   <names(x[3])>:
+#'     <names(x[[3]][1])>: <x[[3]][[1]]>
 #'     ...
-#'   <nokey>: <xi_value>
-#'   <nokey>: <xj_value>
+#'   <nokey>: <x[i]>
+#'   <nokey>: <x[j]>
 #'   <nokey>:
-#'     <nokey>: <xk_value>
+#'     <nokey>: <x[[k]][[1]]>
 #'     ...
 #' ```
 #'
-#' The `"<nokey>"` strings won't be printed unless `show_nokey` is `TRUE`. If
-#' it is `FALSE`, no label is printed for missing keys (names that are either
-#' `NULL` or empty).
+#' Names are used to construct labels. If `x[i]` has a name (`names(x[i])`
+#' is not `NULL`), it is used to construct a label for `x[i]`. The format is
+#' equivalent to `names(x[i]): as.character(x[i])`. If `x[i]` does not have
+#' a name (or if it is empty), `<nokey>` is printed, unless `.show_nokey` is
+#' `FALSE`. See Examples below.
 #'
 #' @param x A [vector][vector()]. It cannot be empty.
 #'

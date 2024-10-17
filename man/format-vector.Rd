@@ -44,24 +44,26 @@ Format atomic \link[=vector]{vectors} and/or \emph{recursive} structures such as
 The intent of \code{\link[=format_vector]{format_vector()}} is to format any \link[=vector]{vector} into a
 set of name/value pairs (given as character strings), where indentation
 provides information on embedded structures. The following template shows
-how it formats \code{x}.
+how it attempts to format \code{x}.
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{<.top_label>:
-  <x1_name>: <x1_value>
-  <x2_name>: <x2_value>
-  <x3_name>:
-    <x3_x1_name>: <x3_x1_value>
+  <names(x[1])>: <x[1]>
+  <names(x[2])>: <x[2]>
+  <names(x[3])>:
+    <names(x[[3]][1])>: <x[[3]][[1]]>
     ...
-  <nokey>: <xi_value>
-  <nokey>: <xj_value>
+  <nokey>: <x[i]>
+  <nokey>: <x[j]>
   <nokey>:
-    <nokey>: <xk_value>
+    <nokey>: <x[[k]][[1]]>
     ...
 }\if{html}{\out{</div>}}
 
-The \code{"<nokey>"} strings won't be printed unless \code{show_nokey} is \code{TRUE}. If
-it is \code{FALSE}, no label is printed for missing keys (names that are either
-\code{NULL} or empty).
+Names are used to construct labels. If \code{x[i]} has a name (\code{names(x[i])}
+is not \code{NULL}), it is used to construct a label for \code{x[i]}. The format is
+equivalent to \code{names(x[i]): as.character(x[i])}. If \code{x[i]} does not have
+a name (or if it is empty), \verb{<nokey>} is printed, unless \code{.show_nokey} is
+\code{FALSE}. See Examples below.
 }
 \note{
 \code{\link[=format_vector]{format_vector()}} is the \emph{workhorse} function of all S3 \code{\link[=format]{format()}} methods:
