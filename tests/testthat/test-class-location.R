@@ -123,12 +123,12 @@ test_that("format_long_location() returns a character", {
     expect_length(fmt_loc2, 5L)
     expect_identical(fmt_loc1, c(
         "<Location>",
-        "  Path : tests/testthat/my-test-file",
+        "  Path: tests/testthat/my-test-file",
         "  Range: line 1, column 2 @ line 3, column 4"))
     expect_identical(fmt_loc2, c(
         "<Location>",
-        "  Path  : tests/testthat/my-test-file",
-        "  Ranges:",
+        "  Path: tests/testthat/my-test-file",
+        "  Ranges: ",
         "    [1] line  1, column  22 @ line   10, column 1",
         "    [2] line 11, column 222 @ line 3333, column 4"))
 })

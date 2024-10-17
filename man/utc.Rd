@@ -25,6 +25,7 @@ better for readability.
 }
 \seealso{
 Other utility functions: 
+\code{\link{format_vector}()},
 \code{\link{split_ul}()},
 \code{\link{stops}()},
 \code{\link{vapply_1l}()}

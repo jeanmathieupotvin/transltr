@@ -18,6 +18,26 @@ is_translator <- function(x) {
 
 #' @rdname class-translator
 #' @export
+format.Translator <- function(x, ...) {
+    xlist <- list(
+        Identifier = x$id,
+        Language   = x$language,
+        Algorithm  = x$hash_algorithm,
+        Keys       = x$keys_map %??% "<none>",
+        Hashes     = x$hashes   %??% "<none>")
+
+    return(format_vector(xlist, "<Translator>", .show_nokey = FALSE))
+}
+
+#' @rdname class-translator
+#' @export
+print.Translator <- function(x, ...) {
+    cat(format(x, ...), sep = "\n")
+    return(invisible(x))
+}
+
+#' @rdname class-translator
+#' @export
 Translator <- R6::R6Class("Translator",
     lock_class   = TRUE,
     lock_objects = TRUE,

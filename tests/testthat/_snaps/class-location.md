@@ -107,8 +107,8 @@
       print(loc2, "long")
     Output
       <Location>
-        Path  : tests/testthat/my-test-file
-        Ranges:
+        Path: tests/testthat/my-test-file
+        Ranges: 
           [1] line  1, column  22 @ line   10, column 1
           [2] line 11, column 222 @ line 3333, column 4
 

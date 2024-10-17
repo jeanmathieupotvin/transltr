@@ -187,40 +187,16 @@ is_block <- function(x) {
 #' @rdname class-block
 #' @export
 format.Block <- function(x, ...) {
-    # For translations and locations, we print
-    # FIELD: <none> if either field is empty.
+    trans <- if (length(x$translations)) x$translations else "<none>"
+    locs  <- unlist(lapply(x$locations, format), TRUE, FALSE) %??% "<none>"
+    xlist <- list(
+        Hash         = x$hash,
+        `Source Key` = x$source_key,
+        Algorithm    = x$hash_algorithm,
+        Translations = trans,
+        Locations    = locs)
 
-    trans_strs <- if (length(trans <- x$translations)) {
-        # We want a total width of 80 chars, ignoring
-        # non-ASCII chars that may have width > 1.
-        # This yields 80 chars
-        #     minus 4 spaces for indentation
-        #     minus X spaces for padded keys
-        #     minus 2 chars for the separator (': ').
-        keys  <- str_left_pad(names(trans))
-        trans <- str_trim(trans, 74L - max(nchar(keys), 0L))
-        c("  Translations: ", sprintf("    %s: %s", keys, trans))
-    } else {
-        c("  Translations: " = "<none>")
-    }
-
-    locs_strs <- if (length(locs <- x$locations)) {
-        c("  Locations: ", sprintf("    %s", unlist(lapply(locs, format))))
-    } else {
-        c("  Locations: " = "<none>")
-    }
-
-    x_str <- c(
-        "<Block>",
-        "  Hash      : " = x$hash,
-        "  Algorithm : " = x$hash_algorithm,
-        "  Source Key: " = x$source_key,
-        "  ------------------------------------------------------------------------------",
-        trans_strs,
-        "  ------------------------------------------------------------------------------",
-        locs_strs)
-
-    return(paste0(names(x_str), x_str))
+    return(format_vector(xlist, "<Block>", .show_nokey = FALSE))
 }
 
 #' @rdname class-block

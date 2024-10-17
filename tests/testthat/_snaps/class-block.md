@@ -211,22 +211,20 @@
       print(blk1)
     Output
       <Block>
-        Hash      : b5e480d5ff9fa8583c5caa4c7b63f0719cc878e8
-        Algorithm : sha1
+        Hash: b5e480d5ff9fa8583c5caa4c7b63f0719cc878e8
         Source Key: en
-        ------------------------------------------------------------------------------
+        Algorithm: sha1
         Translations: 
           en: Hello, world!
           es: ¡Hola Mundo!
           fr: Bonjour, monde!
           jp: こんにちは世界！
-        ------------------------------------------------------------------------------
         Locations: 
           <Location>
-            Path : a
+            Path: a
             Range: line 1, column 2 @ line 3, column 4
           <Location>
-            Path : b
+            Path: b
             Range: line 5, column 6 @ line 7, column 8
 
 # c.Block() validates ...

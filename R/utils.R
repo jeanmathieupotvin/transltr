@@ -89,6 +89,124 @@ split_ul <- function(...) {
 }
 
 
+#' Format Vectors
+#'
+#' Format atomic [vectors][vector()] and/or *recursive* structures such as
+#' [lists][list()].
+#'
+#' The intent of [format_vector()] is to format any [vector][vector()] into a
+#' set of name/value pairs (given as character strings), where indentation
+#' provides information on embedded structures. The following template shows
+#' how it formats `x`.
+#'
+#' ```
+#' <.top_label>:
+#'   <x1_name>: <x1_value>
+#'   <x2_name>: <x2_value>
+#'   <x3_name>:
+#'     <x3_x1_name>: <x3_x1_value>
+#'     ...
+#'   <nokey>: <xi_value>
+#'   <nokey>: <xj_value>
+#'   <nokey>:
+#'     <nokey>: <xk_value>
+#'     ...
+#' ```
+#'
+#' The `"<nokey>"` strings won't be printed unless `show_nokey` is `TRUE`. If
+#' it is `FALSE`, no label is printed for missing keys (names that are either
+#' `NULL` or empty).
+#'
+#' @param x A [vector][vector()]. It cannot be empty.
+#'
+#' @param .top_label A `NULL` or a non-empty and non-[NA][base::NA] character
+#'   string used as some kind of descriptive message. Its exact meaning depends
+#'   on the underlying context. In recursive calls to [format_vector()], this
+#'   is set equal to the name of the current element of `x`. **It is not
+#'   validated for efficiency.**
+#'
+#' @param .indent A non-[NA][base::NA] integer value. Number of space characters
+#'   to use by `.levels` for indentation purposes. **It is not validated for
+#'   efficiency.**
+#'
+#' @param .show_nokey A non-[NA][base::NA] logical value. Should `NULL` and/or
+#'   empty names be replaced by `"<nokey>"`? **It is not validated for
+#'   efficiency.**
+#'
+#' @param .level A non-[NA][base::NA] integer value. The current nesting level
+#'   in recursive calls to [format_vector()]. **It is not validated for
+#'   efficiency.**
+#'
+#' @returns A character vector.
+#'
+#' @note
+#' [format_vector()] is the *workhorse* function of all S3 [format()] methods:
+#' [format.Translator()], [format.Block()], and [format.Location()].
+#'
+#' @examples
+#' x <- list(
+#'     FirstName = "John",
+#'     LastName  = "Doe",
+#'     Address   = list(
+#'         StreetAddress = "123 Main Street",
+#'         City          = "Montreal",
+#'         Province      = "Quebec",
+#'         PostalCode    = "H0H 0H0"),
+#'     Notes = c(
+#'         "Send mail to",
+#'         "address above."))
+#'
+#' cat(transltr:::format_vector(x, "<JohnDoe>"), sep = "\n")
+#' cat(transltr:::format_vector(x, "<JohnDoe>", .show_nokey = FALSE), sep = "\n")
+#'
+#' @rdname format-vector
+#' @family utility functions
+#' @keywords internal
+format_vector <- function(
+    x          = vector(),
+    .top_label  = NULL,
+    .indent     = 2L,
+    .show_nokey = TRUE,
+    .level      = 1L)
+{
+    prefix  <- strrep(" ", .indent * .level)
+    lines   <- vector("list", length(x) + 1L)
+    indices <- seq_along(x)
+
+    lines[[1L]] <- .top_label
+
+    for (i in indices) {
+        xi       <- x[i]
+        xi_names <- names(xi) %??% ""
+
+        if (.show_nokey && !nzchar(xi_names)) {
+            xi_names <- "<nokey>"
+        }
+
+        labels <- if (is.null(xi_names) || !nzchar(xi_names)) {
+            prefix
+        } else {
+            sprintf("%s%s: ", prefix, xi_names)
+        }
+
+        # Vectors and recursive structures.
+        if (length(xi[[1L]]) > 1L) {
+            lines[[i + 1L]] <- format_vector(xi[[1L]],
+                labels,
+                .indent,
+                .show_nokey,
+                .level + 1L)
+            next
+        }
+
+        # Single values (of length 1).
+        lines[[i + 1L]] <- sprintf("%s%s", labels, xi)
+    }
+
+    return(str_trim(unlist(lines, TRUE, FALSE)))
+}
+
+
 # `%||%` was introduced in R 4.4.0. We redefine it here for
 # convenience (and for earlier versions of R) until further
 # notice as an undocumented and internal operator. To avoid

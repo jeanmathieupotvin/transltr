@@ -17,6 +17,7 @@ A list. See \code{\link[base:split]{base::split()}} for further information.
 }
 \seealso{
 Other utility functions: 
+\code{\link{format_vector}()},
 \code{\link{stops}()},
 \code{\link{utc}()},
 \code{\link{vapply_1l}()}

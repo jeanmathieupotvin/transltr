@@ -373,42 +373,37 @@ test_that("format() returns a character", {
     # values is much more simpler.
     fmt_blk2      <- format(blk2)
     fmt_blk_empty <- format(Block$new())
-    fmt_trans_sep <- sprintf("  %s", strrep("-", 78L))
 
     expect_type(fmt_blk2, "character")
-    expect_length(fmt_blk2, 16L)
+    expect_length(fmt_blk2, 14L)
     expect_identical(fmt_blk2, c(
         "<Block>",
-        "  Hash      : b5e480d5ff9fa8583c5caa4c7b63f0719cc878e8",
-        "  Algorithm : sha1",
+        "  Hash: b5e480d5ff9fa8583c5caa4c7b63f0719cc878e8",
         "  Source Key: en",
-        fmt_trans_sep,
+        "  Algorithm: sha1",
         "  Translations: ",
         "    el: Γεια σου, Κόσμος!",
         "    en: Hello, world!",
-        fmt_trans_sep,
         "  Locations: ",
         "    <Location>",
-        "      Path : c",
+        "      Path: c",
         "      Range: line 1, column 2 @ line 3, column 4",
         "    <Location>",
-        "      Path : d",
+        "      Path: d",
         "      Range: line 5, column 6 @ line 7, column 8"))
 
     expect_type(fmt_blk_empty, "character")
-    expect_length(fmt_blk_empty, 8L)
+    expect_length(fmt_blk_empty, 6L)
 
     # Check that "<unset>" and "<none>"
     # special strings are used accordingly
     # when underlying fields are empty.
     expect_identical(fmt_blk_empty, c(
         "<Block>",
-        "  Hash      : <unset>",
-        "  Algorithm : sha1",
+        "  Hash: <unset>",
         "  Source Key: <unset>",
-        fmt_trans_sep,
+        "  Algorithm: sha1",
         "  Translations: <none>",
-        fmt_trans_sep,
         "  Locations: <none>"))
 })
 

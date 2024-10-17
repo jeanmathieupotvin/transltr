@@ -33,6 +33,7 @@ safety.
 }
 \seealso{
 Other utility functions: 
+\code{\link{format_vector}()},
 \code{\link{split_ul}()},
 \code{\link{stops}()},
 \code{\link{utc}()}

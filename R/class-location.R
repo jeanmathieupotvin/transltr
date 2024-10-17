@@ -170,18 +170,17 @@ format_long_location <- function(x, ...) {
         chars[[3L]],
         chars[[4L]])
 
-    x_str <- if (length(ranges) > 1L) {
-        c("<Location>",
-          "  Path  : " = x$path,
-          "  Ranges:"  = "",
-          sprintf("    [%i] %s", seq_along(ranges), ranges))
+    xlist <- if (length(ranges) > 1L) {
+        list(
+            Path   = x$path,
+            Ranges = sprintf("[%i] %s", seq_along(ranges), ranges))
     } else {
-        c("<Location>",
-          "  Path : " = x$path,
-          "  Range: " = ranges)
+        list(
+            Path  = x$path,
+            Range = ranges)
     }
 
-    return(paste0(names(x_str), x_str))
+    return(format_vector(xlist, "<Location>", .show_nokey = FALSE))
 }
 
 format_short_location <- function(x, ...) {
