@@ -4,6 +4,7 @@
 \alias{vapply_1l}
 \alias{vapply_1i}
 \alias{vapply_1c}
+\alias{map}
 \title{Safe Apply Wrappers}
 \usage{
 vapply_1l(x, fun, ...)
@@ -11,20 +12,25 @@ vapply_1l(x, fun, ...)
 vapply_1i(x, fun, ...)
 
 vapply_1c(x, fun, ...)
+
+map(fun, ..., moreArgs = list())
 }
 \arguments{
 \item{x}{Passed as is to argument \code{X} of \code{\link[base:lapply]{*apply()}}.}
 
-\item{fun}{Passed as is to argument \code{FUN} of \code{\link[base:lapply]{*apply()}}.}
+\item{fun}{Passed as is to argument \code{FUN} of \code{\link[base:lapply]{*apply()}}
+or \code{\link[=.mapply]{.mapply()}}.}
 
-\item{...}{Further arguments passed as is to \code{\link[base:lapply]{*apply()}}.
-It later passes them to \code{fun}.}
+\item{...}{Further arguments passed as is to \code{\link[base:lapply]{*apply()}}
+or \code{\link[=.mapply]{.mapply()}}. It later passes them to \code{fun}.}
 }
 \value{
 \code{\link[=vapply_1l]{vapply_1l()}},
 \code{\link[=vapply_1l]{vapply_1l()}}, and
 \code{\link[=vapply_1c]{vapply_1c()}} respectively return a logical, an integer, and a character
 vector having the same length as \code{x}. Names are always discarded.
+
+\code{\link[=map]{map()}} returns a list having the same length as \code{x}.
 }
 \description{
 These functions wrap a function of the \code{\link[base:lapply]{*apply()}}

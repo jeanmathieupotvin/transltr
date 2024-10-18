@@ -76,7 +76,7 @@ find_translations_in_tokens <- function(
     is_trans  <- is_translate_call(src_text)
     calls     <- lapply(src_text[is_trans], match_translate_call)
     lc_ranges <- lapply(tokens[c("line1", "col1", "line2", "col2")], `[`, i = is_trans)
-    locations <- .mapply(location, lc_ranges, list(path = path))
+    locations <- map(location, lc_ranges, list(path = path))
 
     return(
         .mapply(as_block,

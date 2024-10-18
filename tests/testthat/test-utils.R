@@ -37,6 +37,18 @@ test_that("vapply_1c() returns a character vector", {
 })
 
 
+# map() ------------------------------------------------------------------------
+
+
+test_that("map() returns a list", {
+    out <- map(`+`, c(1L, 2L), c(3L, 4L))
+
+    expect_type(out, "list")
+    expect_length(out, 2L)
+    expect_identical(out, list(4L, 6L))
+})
+
+
 # stops() ----------------------------------------------------------------------
 
 

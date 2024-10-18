@@ -174,7 +174,7 @@ block <- function(source_key = "", ..., hash_algorithm = get_hash_algorithms()) 
     blk$source_key <- source_key
 
     do.call(blk$set_locations, locations)
-    .mapply(blk$set_translation, list(trans_keys, trans_texts), list())
+    map(blk$set_translation, trans_keys, trans_texts)
     return(blk)
 }
 
@@ -275,7 +275,7 @@ as_block.call <- function(x,
     return(
         .block(
             x$key,
-            str_sanitize(strings, x$concat),
+            text_normalize(strings, x$concat),
             hash_algorithm,
             locations = locations))
 }
@@ -305,23 +305,7 @@ Block <- R6::R6Class("Block",
         .hash_algo    = "<unset>",  # See $hash_algorithm
         .source_key   = "<unset>",  # See $source_key
         .translations = NULL,       # See $translations
-        .locations    = NULL,       # See $locations
-
-        # @description Compute hash of the key/text pair.
-        #
-        # @param key A non-empty and non-NA character string. The language key.
-        # @param text A non-empty and non-NA character string. The source text
-        #   or one of its translations.
-        #
-        # @return A character string.
-        .hash_do = \(key = "", text = "") {
-            x <- sprintf("%s:%s", key, text)
-            return(
-                switch(private$.hash_algo,
-                    sha1 = digest::sha1(charToRaw(x)),
-                    utf8 = as.character(sum(cumsum(utf8ToInt(x)))),
-                    NULL))
-        }
+        .locations    = NULL        # See $locations
     ),
     active = list(
         #' @field hash A non-empty and non-[NA][base::NA] character string. A
@@ -353,7 +337,10 @@ Block <- R6::R6Class("Block",
 
                 key <- private$.source_key
                 private$.hash_algo <- value
-                private$.hash      <- private$.hash_do(key, self$get_translation(key))
+                private$.hash      <- text_hash(
+                    key,
+                    self$get_translation(key),
+                    private$.hash_algo)
             }
 
             return(private$.hash_algo)
@@ -369,7 +356,10 @@ Block <- R6::R6Class("Block",
                     x_name       = "source_key")
 
                 private$.source_key <- value
-                private$.hash       <- private$.hash_do(value, self$get_translation(value))
+                private$.hash       <- text_hash(
+                    value,
+                    self$get_translation(value),
+                    private$.hash_algo)
             }
 
             return(private$.source_key)
