@@ -78,19 +78,3 @@
       Error:
       ! 'len' must be a non-NA numeric value in the range [3, Inf).
 
-# str_sanitize() validates x
-
-    Code
-      str_sanitize(1L)
-    Condition
-      Error:
-      ! 'x' must be a non-empty character vector of non-NA values.
-
-# str_sanitize() validates concat
-
-    Code
-      str_sanitize(v1, concat = 1L)
-    Condition
-      Error:
-      ! 'concat' must be a non-NA and non-empty character of length 1.
-

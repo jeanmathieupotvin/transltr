@@ -4,7 +4,6 @@
 \alias{str_strip_empty}
 \alias{str_left_pad}
 \alias{str_trim}
-\alias{str_sanitize}
 \title{Manipulate Strings}
 \usage{
 str_strip_empty(x = character(), which = c("both", "leading", "trailing"))
@@ -12,8 +11,6 @@ str_strip_empty(x = character(), which = c("both", "leading", "trailing"))
 str_left_pad(x = character(), len = NULL, pad = " ")
 
 str_trim(x = character(), len = 80L)
-
-str_sanitize(x = character(), concat = " ")
 }
 \arguments{
 \item{x}{A character vector. It can be empty or contain empty elements.}
@@ -48,21 +45,9 @@ vector until they reach a target length.
 
 \code{\link[=str_trim]{str_trim()}} wraps \code{\link[base:strtrim]{base::strtrim()}} and trims elements of a character
 vector until they reach a target length.
-
-\code{\link[=str_sanitize]{str_sanitize()}} does three things to elements of a character vector.
-\itemize{
-\item It concatenates its elements into a single one.
-\item It replaces substrings of repeated space characters (spaces and/or tabs)
-by a single space.
-\item It removes leading space, tab, and new line characters.
-}
 }
 \note{
 To strip all empty strings, use \code{\link[base:nchar]{base::nzchar()}}. It will be much faster.
-
-\code{\link[=str_sanitize]{str_sanitize()}} will likely change in a neear future. This function
-is not robust enough. It should support escaped characters, escaped
-sequences, etc.
 }
 \examples{
 transltr:::str_strip_empty("") # character(0)

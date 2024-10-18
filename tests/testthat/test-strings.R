@@ -114,33 +114,3 @@ test_that("str_trim() trims strings as expected", {
         "A line that conta...",
         "Another line that..."))
 })
-
-
-# str_sanitize() ---------------------------------------------------------------
-
-
-test_that("str_sanitize() returns a character string", {
-    expect_type(str_sanitize(v2), "character")
-    expect_length(str_sanitize(v2), 1L)
-})
-
-test_that("str_sanitize() validates x", {
-    expect_error(str_sanitize(1L))
-    expect_snapshot(str_sanitize(1L), error = TRUE)
-})
-
-test_that("str_sanitize() validates concat", {
-    expect_error(str_sanitize(v1, concat = 1L))
-    expect_snapshot(str_sanitize(v1, concat = 1L), error = TRUE)
-})
-
-test_that("str_sanitize() replaces space characters as expected", {
-    v <- c(
-        "A normal line",
-        "\n\t A line that starts with spaces",
-        "A line   with multiple  \t\t spaces")
-
-    expect_identical(
-        str_sanitize(v, concat = "; "),
-        "A normal line; A line that starts with spaces; A line with multiple spaces")
-})

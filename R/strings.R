@@ -13,12 +13,6 @@
 #' [str_trim()] wraps [base::strtrim()] and trims elements of a character
 #' vector until they reach a target length.
 #'
-#' [str_sanitize()] does three things to elements of a character vector.
-#'   * It concatenates its elements into a single one.
-#'   * It replaces substrings of repeated space characters (spaces and/or tabs)
-#'     by a single space.
-#'   * It removes leading space, tab, and new line characters.
-#'
 #' @param x A character vector. It can be empty or contain empty elements.
 #'
 #' @param which A character string equal to `both`, `leading`, or `trailing`.
@@ -40,10 +34,6 @@
 #'
 #' @note
 #' To strip all empty strings, use [base::nzchar()]. It will be much faster.
-#'
-#' [str_sanitize()] will likely change in a neear future. This function
-#' is not robust enough. It should support escaped characters, escaped
-#' sequences, etc.
 #'
 #' @examples
 #' transltr:::str_strip_empty("") # character(0)
@@ -113,14 +103,4 @@ str_trim <- function(x = character(), len = 80L) {
     to_trim    <- nchar(x) > len
     x[to_trim] <- paste0(strtrim(x[to_trim], len - 3L), "...")
     return(x)
-}
-
-#' @rdname strings
-#' @keywords internal
-str_sanitize <- function(x = character(), concat = " ") {
-    # FIXME: this function should be reviewed and robustified.
-    assert_chr(x)
-    assert_chr1(concat)
-    str <- paste0(x, collapse = concat)
-    return(gsub("[ \n\t]{2,}", " ", gsub("^[ \n\t]{2,}", "", str)))
 }
