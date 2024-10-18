@@ -34,6 +34,7 @@ Imports:
     yaml
 Collate:
     'assert.R'
+    'constants.R'
     'class-block.R'
     'class-location.R'
     'class-token.R'

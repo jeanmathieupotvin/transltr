@@ -109,6 +109,7 @@
 #' c(b1, b2)
 #' transltr:::merge_blocks(b1, b2, b3)
 #'
+#' @include constants.R
 #' @rdname class-block
 #' @keywords internal
 block <- function(source_key = "", ..., hash_algorithm = get_hash_algorithms()) {
@@ -187,8 +188,8 @@ is_block <- function(x) {
 #' @rdname class-block
 #' @export
 format.Block <- function(x, ...) {
-    trans <- if (length(x$translations)) x$translations else "<none>"
-    locs  <- unlist(lapply(x$locations, format), TRUE, FALSE) %??% "<none>"
+    trans <- if (length(x$translations)) x$translations else .__STR_EMPTY_OBJ
+    locs  <- unlist(lapply(x$locations, format), TRUE, FALSE) %??% .__STR_EMPTY_OBJ
     xlist <- list(
         Hash         = x$hash,
         `Source Key` = x$source_key,
@@ -301,9 +302,9 @@ Block <- R6::R6Class("Block",
     lock_objects = TRUE,
     cloneable    = FALSE,
     private      = list(
-        .hash         = "<unset>",  # See $hash
-        .hash_algo    = "<unset>",  # See $hash_algorithm
-        .source_key   = "<unset>",  # See $source_key
+        .hash         = .__STR_UNDEFINED,  # See $hash
+        .hash_algo    = .__STR_UNDEFINED,  # See $hash_algorithm
+        .source_key   = .__STR_UNDEFINED,  # See $source_key
         .translations = NULL,       # See $translations
         .locations    = NULL        # See $locations
     ),

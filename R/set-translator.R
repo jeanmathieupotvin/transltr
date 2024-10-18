@@ -13,7 +13,7 @@ set_translator <- function(x = translator()) {
     }
 
     env <- parent.frame()
-    attr(env, ".__translator__") <- x
+    attr(env, .__OBJ_TRANSLATOR) <- x
     return(invisible())
 }
 
@@ -26,11 +26,9 @@ get_translator <- function() {
     # n = sys.nframe() - 1L + 1L = sys.nframe().
     frames      <- c(.GlobalEnv, sys.frames())[seq.int(sys.nframe(), 1L, -1L)]
     trans_chain <- lapply(frames, attr,
-        which = ._TRANSLATOR_ATTR_NAME,
+        which = .__TRANSLATOR,
         exact = TRUE)
 
     trans <- unlist(trans_chain, FALSE)[[1L]]
     return(if (is_translator(trans)) trans else NULL)
 }
-
-._TRANSLATOR_ATTR_NAME <- ".__translator__"

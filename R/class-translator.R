@@ -2,6 +2,7 @@
 #'
 #' Placeholder for future class [`Translator`][Translator].
 #'
+#' @include constants.R
 #' @rdname class-translator
 #' @export
 translator <- function(..., hash_algorithm = get_hash_algorithms()) {
@@ -23,8 +24,8 @@ format.Translator <- function(x, ...) {
         Identifier = x$id,
         Language   = x$language,
         Algorithm  = x$hash_algorithm,
-        Keys       = x$keys_map %??% "<none>",
-        Hashes     = x$hashes   %??% "<none>")
+        Keys       = x$keys_map %??% .__STR_EMPTY_OBJ ,
+        Hashes     = x$hashes   %??% .__STR_EMPTY_OBJ )
 
     return(format_vector(xlist, "<Translator>", .show_nokey = FALSE))
 }
@@ -43,8 +44,9 @@ Translator <- R6::R6Class("Translator",
     lock_objects = TRUE,
     cloneable    = FALSE,
     private      = list(
-        .language  = "<unset>",  # See $language
-        .hash_algo = "<unset>",  # See $hash_algorithm
+        .id        = .__STR_UNDEFINED,
+        .language  = .__STR_UNDEFINED,  # See $language
+        .hash_algo = .__STR_UNDEFINED,  # See $hash_algorithm
         .keys_map  = NULL,       # See $keys_map, $initialize -> new.env()
         .blocks    = NULL        # See $intialize -> new.env()
     ),
