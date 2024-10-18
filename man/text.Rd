@@ -5,7 +5,7 @@
 \alias{text_hash}
 \title{Operate on Text}
 \usage{
-text_normalize(..., .concat = " ")
+text_normalize(..., .concat = " ", .multi = " ")
 
 text_hash(.key = "", .text = "", .hash_algorithm = get_hash_algorithms())
 }
@@ -16,13 +16,17 @@ as such.}
 \item{.concat}{A character string. It is used to concatenate values passed
 to \code{...}. \strong{It is not validated for efficiency.}}
 
+\item{.multi}{A character string. How should new lines be interpreted within
+multi-line character strings? By default, they are interpreted as such.
+Using \code{" "} treats new lines as simple spaces (like CommonMark does).}
+
 \item{.key}{A character string. A language key. See class
 \code{\link{Translator}} for more information. \strong{It is not
 validated for efficiency.}}
 
 \item{.text}{A character string. \strong{It is not validated for efficiency.}}
 
-\item{hash_algorithm}{A character string. The algorithm to use when hashing
+\item{.hash_algorithm}{A character string. The algorithm to use when hashing
 \code{.key} and \code{.text}. It must be a value returned by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}.
 \strong{It is not validated for efficiency.}}
 }
@@ -41,9 +45,12 @@ fixed-length output.
 \enumerate{
 \item It concatenates elements passed to \code{...} into a single character string.
 \item It removes leading new lines and/or space characters.
-\item It replaces substrings of repeated characters by a single space.
+\item It removes trailing space characters (but \strong{not} trailing new lines).
+\item It replaces substrings of many space characters by a single one.
 \item It removes space characters that (immediately) follow new line characters.
 }
+
+It may further change how new lines are interpreted. See argument \code{.multi}.
 
 Doing so allows users to either split source text into multiple character
 strings, or write it as a single multi-line character string formatted in
@@ -52,6 +59,11 @@ a variety of ways. See Examples.
 \code{\link[=text_hash]{text_hash()}} returns a reproducible hash generated from \code{.key} and
 \code{.text} using the algorithm given by \code{.hash_algorithm}. What is hashed
 is the concatenated values of \code{.key} and \code{.text}: \code{.key:.text}.
+}
+\note{
+A space character is defined as an ASCII regular space (\code{" "}) or horizontal
+tab (\code{"\\t"}). A new line is an ASCII line feed (\code{"\\n"}). For reference, their
+respective code points are \code{0x20}, \code{0x09}, and \code{0x0a}.
 }
 \examples{
 str1 <- "
@@ -66,12 +78,14 @@ str2 <- c(
    "when an unknown printer took a galley of type and scrambled it to make a type",
    "specimen book.")
 
-identical(
-    text_normalize(str1),
-    text_normalize(str2, .concat = "\n")  ## TRUE
+identical(text_normalize(str1), text_normalize(str2, .concat = "\n") ## TRUE
 
 cat(text_normalize(str1), "\n")
 cat(text_normalize(str2, .concat = "\n"), "\n")
+
+## Using .multi to normalize source representations differently.
+text_normalize(str1, .multi = "")
+text_normalize(str1, .multi = " ")
 
 }
 \keyword{internal}

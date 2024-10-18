@@ -395,7 +395,7 @@ test_that("from_tsf_block_v1() returns a S3 object of class Block", {
     out <- from_tsf_block_v1(mock_tsf_v1_block_hello_t, "sha1")
 
     expect_s3_class(out, "Block")
-    expect_identical(out$hash, "b5e480d5ff9fa8583c5caa4c7b63f0719cc878e8")
+    expect_identical(out$hash, "256e0d707386d0fcd9abf10ad994000bdaa25812")
     expect_identical(out$hash_algorithm, "sha1")
     expect_identical(out$source_key, "en")
     expect_identical(out$source_text, "Hello, world!")

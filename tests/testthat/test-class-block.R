@@ -26,7 +26,7 @@ blk2 <- block("en",
 
 
 test_that("active binding hash returns registered hash", {
-    expect_identical(blk1$hash, "b5e480d5ff9fa8583c5caa4c7b63f0719cc878e8")
+    expect_identical(blk1$hash, "256e0d707386d0fcd9abf10ad994000bdaa25812")
 })
 
 test_that("active binding hash throws an error if value is not missing", {
@@ -65,7 +65,7 @@ test_that("active binding source_key sets new value and new hash", {
     blk <- test_block()
     blk$source_key <- "fr"
     expect_identical(blk$source_key, "fr")
-    expect_identical(blk$hash, "4755d5a2e4dc0d7a8d599655e5d0c22d51db752d")
+    expect_identical(blk$hash, "f3c8754329c1b152887d35f00119fca783243d27")
 })
 
 test_that("active binding source_text returns registered source_text", {
@@ -273,7 +273,7 @@ test_that("block() returns an R6 object of class Block", {
         1L, 1.0, 1.0 + 2i, raw(1L))
 
     expect_s3_class(blk, "Block")
-    expect_identical(blk$hash, "b5e480d5ff9fa8583c5caa4c7b63f0719cc878e8")
+    expect_identical(blk$hash, "256e0d707386d0fcd9abf10ad994000bdaa25812")
     expect_identical(blk$hash_algorithm, "sha1")
     expect_identical(blk$source_key, "en")
     expect_identical(blk$source_text, "Hello, world!")
@@ -307,7 +307,7 @@ test_that(".block() returns an R6 object of class Block", {
         locations      = list(location("a"), location("b")))
 
     expect_s3_class(blk, "Block")
-    expect_identical(blk$hash, "b5e480d5ff9fa8583c5caa4c7b63f0719cc878e8")
+    expect_identical(blk$hash, "256e0d707386d0fcd9abf10ad994000bdaa25812")
     expect_identical(blk$hash_algorithm, "sha1")
     expect_identical(blk$source_key, "en")
     expect_identical(blk$source_text, "Hello, world!")
@@ -378,7 +378,7 @@ test_that("format() returns a character", {
     expect_length(fmt_blk2, 14L)
     expect_identical(fmt_blk2, c(
         "<Block>",
-        "  Hash: b5e480d5ff9fa8583c5caa4c7b63f0719cc878e8",
+        "  Hash: 256e0d707386d0fcd9abf10ad994000bdaa25812",
         "  Source Key: en",
         "  Algorithm: sha1",
         "  Translations: ",
@@ -515,13 +515,11 @@ test_that("merge_blocks() combines Block objects having different hashes", {
     blk2 <- block("en", location("el"), en = "Hello, world!", el = "Γεια σου, Κόσμος!")
     blk3 <- block("fr", location("fr"), fr =  "Bonjour, monde!")
     out  <- merge_blocks(blk1, blk2, blk3)
+    keys <- vapply_1c(out, `[[`, i = "source_key")
 
-    # Blocks are extracted by positions
-    # because the output is implicitly
-    # sorted by source_keys.
     expect_length(out, 2L)
-    expect_identical(out[[1L]], blk3)
-    expect_identical(out[[2L]], block(
+    expect_identical(out[[which(keys == "fr")]], blk3)
+    expect_identical(out[[which(keys == "en")]], block(
         "en",
         location("en"),
         location("el"),
