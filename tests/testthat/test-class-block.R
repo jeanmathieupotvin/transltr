@@ -118,21 +118,6 @@ test_that("active binding locations throws an error if value is not missing", {
 })
 
 
-# Class: private methods -------------------------------------------------------
-
-
-test_that("$.hash_do() returns a character string", {
-    blk  <- test_block()
-    sha1 <- blk$.__enclos_env__$private$.hash_do("en", "Hello, world!")
-
-    blk$hash_algorithm <- "utf8"
-    utf8 <- blk$.__enclos_env__$private$.hash_do("en", "Hello, world!")
-
-    expect_identical(sha1, "b5e480d5ff9fa8583c5caa4c7b63f0719cc878e8")
-    expect_identical(utf8, "12351")
-})
-
-
 # Class: public methods --------------------------------------------------------
 
 

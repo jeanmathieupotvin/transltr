@@ -3,89 +3,104 @@
 \name{text_normalize}
 \alias{text_normalize}
 \alias{text_hash}
-\title{Operate on Text}
+\title{Normalize Text}
 \usage{
-text_normalize(..., .concat = " ", .multi = " ")
+text_normalize(..., .concat = " ")
 
 text_hash(.key = "", .text = "", .hash_algorithm = get_hash_algorithms())
 }
 \arguments{
-\item{...}{Any number of character strings, or objects that can be coerced
-as such.}
+\item{...}{Any number of character vectors.}
 
-\item{.concat}{A character string. It is used to concatenate values passed
-to \code{...}. \strong{It is not validated for efficiency.}}
+\item{.concat}{A character string used to concatenate values.}
 
-\item{.multi}{A character string. How should new lines be interpreted within
-multi-line character strings? By default, they are interpreted as such.
-Using \code{" "} treats new lines as simple spaces (like CommonMark does).}
+\item{.key}{A character string. A language key. See \code{\link[=translate]{translate()}}.}
 
-\item{.key}{A character string. A language key. See class
-\code{\link{Translator}} for more information. \strong{It is not
-validated for efficiency.}}
-
-\item{.text}{A character string. \strong{It is not validated for efficiency.}}
+\item{.text}{A character string.}
 
 \item{.hash_algorithm}{A character string. The algorithm to use when hashing
-\code{.key} and \code{.text}. It must be a value returned by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}.
-\strong{It is not validated for efficiency.}}
+\code{.key} and \code{.text}.}
 }
 \value{
-A character string.
+A character string. \code{\link[=text_hash]{text_hash()}} returns \code{NULL} for unknown
+\code{.hash_algorithm} values.
 }
 \description{
-\code{\link[=text_normalize]{text_normalize()}} transforms text (possibly) split into multiple character
-strings or across multiple lines.
+\code{\link[=text_normalize]{text_normalize()}} ensures consistency of input text, allowing it to be
+written in a variety of ways.
 
 \code{\link[=text_hash]{text_hash()}} maps an arbitrary character string (of any length) to a
 fixed-length output.
+
+These functions are meant to be used as \emph{building blocks} and does not
+validate their inputs for maximum efficieny.
 }
 \details{
-\code{\link[=text_normalize]{text_normalize()}} enforces conventions on input text.
+In what follows, a space character is defined as being an ASCII regular
+space or an horizontal tab (\verb{\\t}). A new line is defined an ASCII line
+feed (\verb{\\n}).
+
+\code{\link[=text_normalize]{text_normalize()}} constructs a normalized string from all single-line and
+multi-line strings passed to \code{...}. All underlying values are (implicitly)
+coerced to character values in the process. It does so by going through
+these 5 steps.
 \enumerate{
-\item It concatenates elements passed to \code{...} into a single character string.
-\item It removes leading new lines and/or space characters.
-\item It removes trailing space characters (but \strong{not} trailing new lines).
-\item It replaces substrings of many space characters by a single one.
-\item It removes space characters that (immediately) follow new line characters.
+\item It removes implicit new lines and spaces used for indentation from
+multi-line strings. Empty lines are preserved.
+\item It replaces empty values by a new line.
+\item It concatenates values into a single character string using \code{.concat}.
+\item It removes leading and/or trailing new lines and/or spaces, including
+those that could had been introduced temporarily at previous steps.
+\item It replaces substrings of space characters by a single space.
 }
 
-It may further change how new lines are interpreted. See argument \code{.multi}.
-
-Doing so allows users to either split source text into multiple character
-strings, or write it as a single multi-line character string formatted in
-a variety of ways. See Examples.
-
-\code{\link[=text_hash]{text_hash()}} returns a reproducible hash generated from \code{.key} and
-\code{.text} using the algorithm given by \code{.hash_algorithm}. What is hashed
-is the concatenated values of \code{.key} and \code{.text}: \code{.key:.text}.
+\code{\link[=text_hash]{text_hash()}} returns a reproducible hash generated from \code{.key} and \code{.text}
+using the algorithm given by \code{.hash_algorithm}.
 }
 \note{
-A space character is defined as an ASCII regular space (\code{" "}) or horizontal
-tab (\code{"\\t"}). A new line is an ASCII line feed (\code{"\\n"}). For reference, their
-respective code points are \code{0x20}, \code{0x09}, and \code{0x0a}.
+I am not satisfied with the current implementation of \code{\link[=text_normalize]{text_normalize()}}.
+It \emph{does the job}, but I believe it is (1) \emph{ugly} and (2) not fast enough.
+Using \code{\link[=gsub]{gsub()}} five times yields a huge performance penalty. Advices are
+welcome. I will absolutely revisit this function in the future.
 }
 \examples{
-str1 <- "
-   Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-   Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-   when an unknown printer took a galley of type and scrambled it to make a type
-   specimen book."
+x1 <- "
+  Lorem Ipsum is simply dummy text of the printing and typesetting industry.
 
-str2 <- c(
-   "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-   "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
-   "when an unknown printer took a galley of type and scrambled it to make a type",
-   "specimen book.")
+  Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+  when an unknown printer took a galley of type and scrambled it to make a type
+  specimen book."
 
-identical(text_normalize(str1), text_normalize(str2, .concat = "\n") ## TRUE
+x2 <- c(
+  "",
+  "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+  "",
+  "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
+  "when an unknown printer took a galley of type and scrambled it to make a type",
+  "specimen book.",
+  "")
 
-cat(text_normalize(str1), "\n")
-cat(text_normalize(str2, .concat = "\n"), "\n")
+str1 <- text_normalize(x1)
+str2 <- text_normalize(x2)
+identical(str1, str2) ## TRUE
 
-## Using .multi to normalize source representations differently.
-text_normalize(str1, .multi = "")
-text_normalize(str1, .multi = " ")
+cat(str1, "\n")
+cat(str2, "\n")
+
+## Beware of multi-line strings missing proper indentation purposes. These
+## won't be normalized as expected. Use at least one space after new lines.
+x <- "
+Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+
+    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+    when an unknown printer took a galley of type and scrambled it to make a type
+    specimen book. It has survived not only five centuries, but also the leap into
+ electronic typesetting, remaining essentially unchanged. It was popularised in
+    the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,
+ and more recently with desktop publishing software like Aldus PageMaker
+including versions of Lorem Ipsum."
+
+cat(text_normalize(x), "\n")
 
 }
 \keyword{internal}

@@ -1,99 +1,111 @@
-#' Operate on Text
+#' Normalize Text
 #'
 #' @description
-#' [text_normalize()] transforms text (possibly) split into multiple character
-#' strings or across multiple lines.
+#' [text_normalize()] ensures consistency of input text, allowing it to be
+#' written in a variety of ways.
 #'
 #' [text_hash()] maps an arbitrary character string (of any length) to a
 #' fixed-length output.
 #'
+#' These functions are meant to be used as *building blocks* and does not
+#' validate their inputs for maximum efficieny.
+#'
 #' @details
-#' [text_normalize()] enforces conventions on input text.
+#' In what follows, a space character is defined as being an ASCII regular
+#' space or an horizontal tab (`\t`). A new line is defined an ASCII line
+#' feed (`\n`).
 #'
-#'   1. It concatenates elements passed to `...` into a single character string.
-#'   2. It removes leading new lines and/or space characters.
-#'   3. It removes trailing space characters (but **not** trailing new lines).
-#'   4. It replaces substrings of many space characters by a single one.
-#'   5. It removes space characters that (immediately) follow new line characters.
+#' [text_normalize()] constructs a normalized string from all single-line and
+#' multi-line strings passed to `...`. All underlying values are (implicitly)
+#' coerced to character values in the process. It does so by going through
+#' these 5 steps.
 #'
-#' It may further change how new lines are interpreted. See argument `.multi`.
+#'   1. It removes implicit new lines and spaces used for indentation from
+#'      multi-line strings. Empty lines are preserved.
+#'   2. It replaces empty values by a new line.
+#'   3. It concatenates values into a single character string using `.concat`.
+#'   4. It removes leading and/or trailing new lines and/or spaces, including
+#'      those that could had been introduced temporarily at previous steps.
+#'   5. It replaces substrings of space characters by a single space.
 #'
-#' Doing so allows users to either split source text into multiple character
-#' strings, or write it as a single multi-line character string formatted in
-#' a variety of ways. See Examples.
+#' [text_hash()] returns a reproducible hash generated from `.key` and `.text`
+#' using the algorithm given by `.hash_algorithm`.
 #'
-#' [text_hash()] returns a reproducible hash generated from `.key` and
-#' `.text` using the algorithm given by `.hash_algorithm`. What is hashed
-#' is the concatenated values of `.key` and `.text`: `.key:.text`.
+#' @param ... Any number of character vectors.
 #'
-#' @note
-#' A space character is defined as an ASCII regular space (`" "`) or horizontal
-#' tab (`"\t"`). A new line is an ASCII line feed (`"\n"`). For reference, their
-#' respective code points are `0x20`, `0x09`, and `0x0a`.
+#' @param .concat A character string used to concatenate values.
 #'
-#' @param ... Any number of character strings, or objects that can be coerced
-#'   as such.
+#' @param .key A character string. A language key. See [translate()].
 #'
-#' @param .concat A character string. It is used to concatenate values passed
-#'   to `...`. **It is not validated for efficiency.**
-#'
-#' @param .multi A character string. How should new lines be interpreted within
-#'   multi-line character strings? By default, they are interpreted as such.
-#'   Using `" "` treats new lines as simple spaces (like CommonMark does).
-#'
-#' @param .key A character string. A language key. See class
-#'   [`Translator`][Translator] for more information. **It is not
-#'   validated for efficiency.**
-#'
-#' @param .text A character string. **It is not validated for efficiency.**
+#' @param .text A character string.
 #'
 #' @param .hash_algorithm A character string. The algorithm to use when hashing
-#'   `.key` and `.text`. It must be a value returned by [get_hash_algorithms()].
-#'   **It is not validated for efficiency.**
+#'   `.key` and `.text`.
 #'
-#' @returns A character string.
+#' @returns A character string. [text_hash()] returns `NULL` for unknown
+#'   `.hash_algorithm` values.
+#'
+#' @note
+#' I am not satisfied with the current implementation of [text_normalize()].
+#' It *does the job*, but I believe it is (1) *ugly* and (2) not fast enough.
+#' Using [gsub()] five times yields a huge performance penalty. Advices are
+#' welcome. I will absolutely revisit this function in the future.
 #'
 #' @examples
-#' str1 <- "
-#'    Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-#'    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-#'    when an unknown printer took a galley of type and scrambled it to make a type
-#'    specimen book."
+#' x1 <- "
+#'   Lorem Ipsum is simply dummy text of the printing and typesetting industry.
 #'
-#' str2 <- c(
-#'    "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-#'    "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
-#'    "when an unknown printer took a galley of type and scrambled it to make a type",
-#'    "specimen book.")
+#'   Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+#'   when an unknown printer took a galley of type and scrambled it to make a type
+#'   specimen book."
 #'
-#' identical(text_normalize(str1), text_normalize(str2, .concat = "\n") ## TRUE
+#' x2 <- c(
+#'   "",
+#'   "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+#'   "",
+#'   "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
+#'   "when an unknown printer took a galley of type and scrambled it to make a type",
+#'   "specimen book.",
+#'   "")
 #'
-#' cat(text_normalize(str1), "\n")
-#' cat(text_normalize(str2, .concat = "\n"), "\n")
+#' str1 <- text_normalize(x1)
+#' str2 <- text_normalize(x2)
+#' identical(str1, str2) ## TRUE
 #'
-#' ## Using .multi to normalize source representations differently.
-#' text_normalize(str1, .multi = "")
-#' text_normalize(str1, .multi = " ")
+#' cat(str1, "\n")
+#' cat(str2, "\n")
+#'
+#' ## Beware of multi-line strings missing proper indentation purposes. These
+#' ## won't be normalized as expected. Use at least one space after new lines.
+#' x <- "
+#' Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+#'
+#'     Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+#'     when an unknown printer took a galley of type and scrambled it to make a type
+#'     specimen book. It has survived not only five centuries, but also the leap into
+#'  electronic typesetting, remaining essentially unchanged. It was popularised in
+#'     the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,
+#'  and more recently with desktop publishing software like Aldus PageMaker
+#' including versions of Lorem Ipsum."
+#'
+#' cat(text_normalize(x), "\n")
 #'
 #' @rdname text
 #' @keywords internal
-text_normalize <- function(..., .concat = " ", .multi = "\n") {
-    # FIXME: argument .multi is experimental and should be
-    # reviewed later. It requires a bit more work and testing.
-    dots <- c(...)
+text_normalize <- function(..., .concat = " ") {
+    dots  <- c(...)
+    empty <- which(!nzchar(dots)[-length(dots)])
+    dots  <- dots |>
+        gsub("\n[ \t]+", .concat, x = _) |>
+        gsub("^[ \t\n]+|[ \t\n]+$", "", x = _)
+
+    dots[empty - 1L] <- paste0(dots[empty - 1L], "\n")
     return(
-        dots |>
-            # Remove empty elements from ...
-            _[nzchar(dots)] |>
-            # Remove leading new lines and/or spaces.
-            # Remove trailing spaces.
-            gsub("^[ \t\n]+|[ \t]+$", "", x = _) |>
-            # Concatenate all elements passed to dots.
+        dots[nzchar(dots)] |>
             paste0(collapse = .concat) |>
-            # Replace substrings of many spaces by a single space.
-            gsub("[ \t]{2,}", " ", x = _) |>
-            # Remove spaces that immediately follow new lines.
-            gsub("\n[ \t]+", .multi, x = _))
+            gsub("[ \t]*\n[ \t]*", "\n", x = _) |>
+            gsub("\n+", "\n", x = _) |>
+            gsub("[ \t]+", " ", x = _))
 }
 
 #' @rdname text
@@ -106,7 +118,8 @@ text_hash <- function(
     x <- sprintf("%s:%s", .key, .text)
     return(
         switch(.hash_algorithm,
-            sha1 = digest::digest(charToRaw(x),
+            sha1 = digest::digest(
+                charToRaw(x),
                 algo      = "sha1",
                 serialize = FALSE),
             utf8 = as.character(sum(cumsum(utf8ToInt(x)))),

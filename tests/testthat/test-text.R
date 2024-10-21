@@ -7,49 +7,127 @@ test_that("text_normalize() returns a character string", {
     expect_length(out, 1L)
 })
 
-test_that("text_normalize() concatenates argument ...", {
-    expect_identical(text_normalize("a", "b", "c",          .concat = ""), "abc")
-    expect_identical(text_normalize("a", c("b"), list("c"), .concat = ""), "abc")
+test_that("text_normalize() works as expected", {
+    # This covers exaggerated expected use cases extracted
+    # from documentation. The format of constants below is
+    # intentional and must be left as is.
+    x1 <- "
+        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+
+        Lorem Ipsum has been the industry's standard dummy text ever since the
+        1500s, when an unknown printer    took a galley of type and scrambled it
+        to make a type specimen book."
+
+    x2 <- c(
+        "",
+        "Lorem Ipsum is simply dummy text of the printing and typesetting",
+        "industry.",
+        "",
+        "Lorem Ipsum has been the industry's standard dummy text ever since",
+        "the 1500s, when an unknown printer    took a galley of type and",
+        "scrambled it to make a type specimen book.")
+
+    x3 <- "
+        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+
+            Lorem Ipsum has been the industry's standard dummy text ever
+            since the 1500s, when an unknown printer took a galley of type
+            and scrambled it to make a type specimen book. It has survived
+            not only five centuries, but also the leap into electronic
+            typesetting, remaining essentially unchanged. It was popularised
+            in the 1960s with the release of Letraset sheets containing Lorem
+            Ipsum passages, and more recently with desktop publishing software
+            like Aldus PageMaker including versions of Lorem Ipsum."
+
+    expect_identical(
+        text_normalize(x1),
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.\nLorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.")
+    expect_identical(
+        text_normalize(x2),
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.\nLorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.")
+    expect_identical(
+        text_normalize(x3),
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.\nLorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.")
+    expect_snapshot({
+        cat(x1, "\n")
+        cat(text_normalize(x1), "\n")
+    })
+    expect_snapshot({
+        cat(x2, "\n")
+        cat(text_normalize(x2), "\n")
+    })
+    expect_snapshot({
+        cat(x3, "\n")
+        cat(text_normalize(x3), "\n")
+    })
+})
+
+test_that("text_normalize() removes implicit new lines and spaces used for indentation", {
+    # This covers step 1 in documentation.
+    expect_identical(
+        text_normalize("
+            This is a multi-line string.
+            It is sometimes convenient."),
+        "This is a multi-line string. It is sometimes convenient.")
+    expect_identical(
+        text_normalize("
+            This is a multi-line string.
+            It has an empty line.
+
+            It is sometimes convenient."),
+        "This is a multi-line string. It has an empty line.\nIt is sometimes convenient.")
+})
+
+test_that("text_normalize() replaces all non-trailing/leading empty values by a new line", {
+    # This covers step 2 in documentation.
+    expect_identical(text_normalize("", "a", "", "b", "c"), "a\nb c")
+    expect_identical(text_normalize("", "a", "", "b", "c", .concat = ""), "a\nbc")
+})
+
+test_that("text_normalize() concatenates values passed to ...", {
+    # This covers step 3 in documentation.
+    expect_identical(text_normalize("a", "b", "c"),     "a b c")
+    expect_identical(text_normalize("a", c("b", "c")),  "a b c")
+    expect_identical(text_normalize("a", "b", "c",    .concat = ""), "abc")
+    expect_identical(text_normalize("a", c("b", "c"), .concat = ""), "abc")
 })
 
 test_that("text_normalize() removes leading new lines and/or spaces", {
+    # This partially covers step 4 in documentation.
     str <- c(
-        "\n This is a leading new line.",
-        "  These are leading spaces.",
-        "  \t\n These are both.")
+        "\nLeading new line.",
+        "  Leading spaces.",
+        "  \t\nLeading spaces and new lines.")
     expect_identical(
-        text_normalize(str, .concat = "@@"),
-        "This is a leading new line.@@These are leading spaces.@@These are both.")
+        text_normalize(str, .concat = ""),
+         "Leading new line.Leading spaces.Leading spaces and new lines.")
 })
 
-test_that("text_normalize() removes trailing spaces", {
+test_that("text_normalize() removes trailing new lines and/or spaces", {
+    # This partially covers step 4 in documentation.
+    # Using \t\t is equivalent to using " " because
+    # any substring of space characters is replaced
+    # by " ".
     str <- c(
-        "This is a trailing new line.\n",
-        "These are trailing spaces.  \t ",
-        "These are both. \t ")
+        "Trailing new line.\n",
+        "Trailing spaces.  \t ",
+        "Trailing spaces and new lines. \t ")
     expect_identical(
-        text_normalize(str, .concat = "@@"),
-        "This is a trailing new line.\n@@These are trailing spaces.@@These are both.")
+        text_normalize(str, .concat = ""),
+        "Trailing new line.Trailing spaces.Trailing spaces and new lines.")
+    expect_identical(
+        text_normalize(str, .concat = "\t\t"),
+        "Trailing new line. Trailing spaces. Trailing spaces and new lines.")
 })
 
-test_that("text_normalize() does not remove trailing new lines", {
-    expect_identical(
-        text_normalize("This is a trailing new line.\n"),
-        "This is a trailing new line.\n")
-})
-
-test_that("text_normalize() replaces many space characters by a single one", {
+test_that("text_normalize() replaces many space characters by a single space", {
+    # This covers step 5 in documentation.
     str <- c(
-        "This sentence contains many    spaces and   \t tabs.",
-        "\t  This sentence contains leading and trailing spaces and tabs.  \t ")
+        "Many spaces and    \t tabs.",
+        "Many \t\t  tabs and spaces.")
     expect_identical(
-        text_normalize(str, .concat = "@@"),
-        "This sentence contains many spaces and tabs.@@This sentence contains leading and trailing spaces and tabs.")
-})
-
-test_that("text_normalize() removes spaces that immediately follow new lines", {
-    str <- c("This is\n      a sentence.")
-    expect_identical(text_normalize(str), "This is\na sentence.")
+        text_normalize(str),
+        "Many spaces and tabs. Many tabs and spaces.")
 })
 
 
@@ -59,11 +137,14 @@ test_that("text_normalize() removes spaces that immediately follow new lines", {
 test_that("text_hash() returns a character string", {
     out_sha1 <- text_hash("en", "Hello, world!", "sha1")
     out_utf8 <- text_hash("en", "Hello, world!", "utf8")
-    expect_null(text_hash("en", "Hello, world!", "error"))
     expect_type(out_sha1, "character")
     expect_type(out_utf8, "character")
     expect_length(out_sha1, 1L)
     expect_length(out_utf8, 1L)
+})
+
+test_that("text_hash() returns null for unknown hashing algorithms", {
+    expect_null(text_hash("en", "Hello, world!", "error"))
 })
 
 test_that("text_hash() returns a sha-1 hash wheen algorithm is sha1", {
@@ -71,7 +152,7 @@ test_that("text_hash() returns a sha-1 hash wheen algorithm is sha1", {
     # by https://codebeautify.org/sha1-hash-generator and
     # double-checked by https://10015.io/tools/sha1-encrypt-decrypt.
 
-    long_string <- text_normalize(.multi = " ", "
+    long_string <- text_normalize("
         Lorem Ipsum is simply dummy text of the printing and typesetting industry.
         Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
         when an unknown printer took a galley of type and scrambled it to make a type

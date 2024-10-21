@@ -276,7 +276,7 @@ as_block.call <- function(x,
     return(
         .block(
             x$key,
-            text_normalize(strings, x$concat),
+            text_normalize(strings, .concat = x$concat),
             hash_algorithm,
             locations = locations))
 }

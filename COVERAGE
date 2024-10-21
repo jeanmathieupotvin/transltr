@@ -1,11 +1,9 @@
-transltr Coverage: 78.42%
+transltr Coverage: 78.55%
 R/class-translator.R: 0.00%
 R/find-translations.R: 0.00%
-R/set-language.R: 0.00%
 R/set-translator.R: 0.00%
 R/translate.R: 0.00%
-R/utils.R: 90.00%
-R/uuid.R: 90.00%
+R/class-block.R: 90.18%
 R/from-tsf.R: 98.03%
 R/assert.R: 100.00%
 R/class-location.R: 100.00%
