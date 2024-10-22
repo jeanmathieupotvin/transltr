@@ -22,10 +22,9 @@ is_translator <- function(x) {
 format.Translator <- function(x, ...) {
     xlist <- list(
         Identifier = x$id,
-        Language   = x$language,
         Algorithm  = x$hash_algorithm,
-        Keys       = x$keys_map %??% .__STR_EMPTY_OBJ ,
-        Hashes     = x$hashes   %??% .__STR_EMPTY_OBJ )
+        Keys       = x$keys_map %??% .__STR_EMPTY_OBJ,
+        Hashes     = x$hashes   %??% .__STR_EMPTY_OBJ)
 
     return(format_vector(xlist, "<Translator>", .show_nokey = FALSE))
 }
@@ -44,11 +43,10 @@ Translator <- R6::R6Class("Translator",
     lock_objects = TRUE,
     cloneable    = FALSE,
     private      = list(
-        .id        = .__STR_UNDEFINED,
-        .language  = .__STR_UNDEFINED,  # See $language
+        .id        = .__STR_UNDEFINED,  # See $id
         .hash_algo = .__STR_UNDEFINED,  # See $hash_algorithm
-        .keys_map  = NULL,       # See $keys_map, $initialize -> new.env()
-        .blocks    = NULL        # See $intialize -> new.env()
+        .keys_map  = NULL,              # See $keys_map, $initialize -> new.env()
+        .blocks    = NULL               # See $intialize -> new.env()
     ),
     active = list(
         language = \(value) {
@@ -118,12 +116,13 @@ Translator <- R6::R6Class("Translator",
             private$.keys_map <- new.env(parent = emptyenv())
             return(self)
         },
-        translate = \(..., concat = " ", source_key = "") {
+        translate = \(..., key = "", concat = " ", source_key = "en") {
+            assert_chr1(key)
             assert_chr1(concat)
             assert_chr1(source_key)
-            text <- text_normalize(..., concat)
-            hash <- text_hash(source_key, text, private$.hash_algorithm)
-            return(self$get_translation(hash, private$.language))
+            text <- text_normalize(..., concat = concat)
+            hash <- text_hash(source_key, text, private$.hash_algo)
+            return(self$get_translation(hash, key))
         },
         get_translation = \(hash = "", key = "") {
             return(self$get_block(hash)$get_translation(key))

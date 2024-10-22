@@ -8,31 +8,41 @@
 \alias{.__STR_NO_NAME}
 \alias{.__STR_FORMAL_CONCAT_DEFAULT}
 \alias{.__STR_FORMAL_KEY_DEFAULT}
-\alias{.__OBJ_TRANSLATOR}
+\alias{.__STR_ATTACHED_DB}
 \title{Internal Constants}
 \format{
 \itemize{
-\item \code{.__STR_EMPTY_OBJ} is a character string equal to \code{"<none>"}.
+\item \code{.__STR_EMPTY_OBJ} is a character string equal to \code{"<none>"}. It
+standardizes the format of empty objects.
 }
 
 \itemize{
-\item \code{.__STR_UNDEFINED} is a character string equal to \code{"<unset>"}.
+\item \code{.__STR_UNDEFINED} is a character string equal to \code{"<unset>"}. It
+signals that a field is not yet set, and may change how empty strings are
+formatted.
 }
 
 \itemize{
-\item \code{.__STR_NO_NAME} is a character string equal to \code{"<nokey>"}.
+\item \code{.__STR_NO_NAME} is a character string equal to \code{"<nokey>"}. It
+is used when formatting empty names (when appropriate).
 }
 
 \itemize{
 \item \code{.__STR_FORMAL_CONCAT_DEFAULT} is a character string equal to \code{" "}.
+It matches the value of formal argument \code{concat} of \code{\link[=translate]{translate()}}.
 }
 
 \itemize{
 \item \code{.__STR_FORMAL_KEY_DEFAULT} is a character string equal to \code{"en"}.
+It matches the value of formal argument \code{source_key} of \code{\link[=translate]{translate()}}.
 }
 
 \itemize{
-\item \code{.__OBJ_TRANSLATOR} is a character string equal to \code{".__translator__"}.
+\item \code{.__STR_ATTACHED_DB} is a character string equal to
+\code{"transltr:translators"}. This is the name of the environment
+\code{\link{transltr}} attaches to the \link[=search]{search path}
+when it is (first) loaded. Registered \code{\link{Translator}}
+objects are assigned there.
 }
 }
 \usage{
@@ -46,20 +56,12 @@
 
 .__STR_FORMAL_KEY_DEFAULT
 
-.__OBJ_TRANSLATOR
+.__STR_ATTACHED_DB
 }
 \description{
 These constants are used internally by \code{\link{transltr}}. They ensure
 consistency across its features. Their prefix states their underlying type.
-}
-\details{
-\code{.__OBJ_TRANSLATOR} gives the name of the attribute that references the
-latest registered \code{\link{Translator}} object. It is set by
-\code{\link[=set_translator]{set_translator()}} and read by \code{\link[=get_translator]{get_translator()}}.
-}
-\note{
-Constants \code{.__STR_FORMAL_CONCAT_DEFAULT} and \code{.__STR_FORMAL_KEY_DEFAULT} are
-respectively equal to the default values of formal arguments \code{concat} and
-\code{source_key} of \code{\link[=translate]{translate()}}.
+
+\strong{Users should never interact with these constants.}
 }
 \keyword{internal}

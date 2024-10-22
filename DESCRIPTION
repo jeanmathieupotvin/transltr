@@ -43,6 +43,7 @@ Collate:
     'from-tsf.R'
     'io-text.R'
     'io-translations.R'
+    'set-language.R'
     'set-translator.R'
     'strings.R'
     'text.R'
@@ -54,3 +55,4 @@ Collate:
     'tsf.R'
     'utils.R'
     'uuid.R'
+    'zzz.R'

@@ -305,8 +305,8 @@ Block <- R6::R6Class("Block",
         .hash         = .__STR_UNDEFINED,  # See $hash
         .hash_algo    = .__STR_UNDEFINED,  # See $hash_algorithm
         .source_key   = .__STR_UNDEFINED,  # See $source_key
-        .translations = NULL,       # See $translations
-        .locations    = NULL        # See $locations
+        .translations = NULL,              # See $translations
+        .locations    = NULL               # See $locations
     ),
     active = list(
         #' @field hash A non-empty and non-[NA][base::NA] character string. A

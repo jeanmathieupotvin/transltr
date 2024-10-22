@@ -1,6 +1,12 @@
+#' @export
 translate <- function(..., concat = " ", source_key = "en") {
-    trans <- get_translator()
-    return(trans$translate(..., concat = concat, source_key = source_key))
+    trans <- translator_get()
+    lang  <- language_get()
+    return(
+        trans$translate(...,
+            key        = lang,
+            concat     = concat,
+            source_key = source_key))
 }
 
 is_translate_call <- function(x, ...) {
