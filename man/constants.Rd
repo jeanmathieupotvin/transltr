@@ -24,7 +24,7 @@ formatted.
 
 \itemize{
 \item \code{.__STR_NO_NAME} is a character string equal to \code{"<nokey>"}. It
-is used when formatting empty names (when appropriate).
+is (sometimes) used when formatting empty names.
 }
 
 \itemize{
