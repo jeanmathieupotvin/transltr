@@ -31,6 +31,8 @@
         return(invisible())
     }
 
+    # NOTE: this will always generate a NOTE
+    # from R CMD check. It can be ignored.
     attach(NULL, name = .__STR_ATTACHED_DB)
     return(invisible())
 }

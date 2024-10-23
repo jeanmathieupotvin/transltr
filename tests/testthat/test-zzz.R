@@ -2,12 +2,15 @@
 
 
 test_that(".hook_load() returns null invisibly", {
-    # Ensure there is nothing attached to the
-    # search path, and call the load hook
+    # Reset state, and call load hook
     # twice to test both if branches.
     .hook_unload()
-    expect_null(.hook_load())
-    expect_null(.hook_load())
+    expect_null(.hook_load())       # Test output at line 35.
+    expect_invisible(.hook_load())  # Test output invisiblity at line 31.
+
+    .hook_unload()
+    expect_invisible(.hook_load())  # Test output invisiblity at line 35.
+    expect_null(.hook_load())       # Test output at line 31.
 })
 
 test_that(".hook_load() attaches an environment to the search path", {
@@ -40,6 +43,9 @@ test_that(".hook_load() does not attach an environment to the search path if not
 
 test_that(".hook_unload() returns null invisibly", {
     expect_null(.hook_unload())
+
+    .hook_load()
+    expect_invisible(.hook_unload())
 })
 
 test_that(".hook_unload() removes an environment from the search path", {
