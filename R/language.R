@@ -4,8 +4,8 @@
 #' It is registered as an environment variable named `TRANSLTR_LANGUAGE`.
 #'
 #' [language_set()] leaves the underlying locale as is. To change an \R
-#' session's locale, use [Sys.setlocale()] instead. Users can safely use
-#' both simultaneously if required. See below for more information.
+#' session's locale, use [Sys.setlocale()] or [Sys.setLanguage()] instead.
+#' See below for more information.
 #'
 #' @template param-key
 #'
@@ -40,6 +40,8 @@
 #' @note
 #' An environment variable is used because it can be shared among different
 #' processes. This matters when using parallel and/or concurrent \R sessions.
+#' It can further be shared among direct and transitive dependencies (other
+#' packages that rely on [`transltr`][transltr]).
 #'
 #' @rdname language
 #' @export

@@ -10,8 +10,14 @@ language_set(key = "en")
 language_get()
 }
 \arguments{
-\item{key}{A non-empty and non-\link[base:NA]{NA} character string. A
-language key.}
+\item{key}{A non-empty and non-\link[base:NA]{NA} character string. A language
+key, i.e. a \emph{code} for a language. For example, \code{"jp"} could be the key
+of \code{"日本語"} (Japanese). While users retain full control over keys, it is
+best to use language codes stemming from well-known schemes such as
+\href{https://en.wikipedia.org/wiki/IETF_language_tag}{IETF BCP 47}, and
+\href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
+To maximize portability and to ease shared usage of language keys,
+\code{\link{transltr}} recommends using codes stemming from the former.}
 }
 \value{
 \code{\link[=language_set]{language_set()}} returns \code{NULL} invisibly. It is used for its side-effect
@@ -26,12 +32,14 @@ It is registered as an environment variable named \code{TRANSLTR_LANGUAGE}.
 }
 \details{
 \code{\link[=language_set]{language_set()}} leaves the underlying locale as is. To change an \R
-session's locale, use \code{\link[=Sys.setlocale]{Sys.setlocale()}} instead. Users can safely use
-both simultaneously if required. See below for more information.
+session's locale, use \code{\link[=Sys.setlocale]{Sys.setlocale()}} or \code{\link[=Sys.setLanguage]{Sys.setLanguage()}} instead.
+See below for more information.
 }
 \note{
 An environment variable is used because it can be shared among different
 processes. This matters when using parallel and/or concurrent \R sessions.
+It can further be shared among direct and transitive dependencies (other
+packages that rely on \code{\link{transltr}}).
 }
 \section{Locales versus languages}{
 
