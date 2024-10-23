@@ -1,4 +1,4 @@
-transltr Coverage: 76.35%
+transltr Coverage: 77.71%
 R/class-translator.R: 0.00%
 R/find-translations.R: 0.00%
 R/set-translator.R: 0.00%
@@ -10,6 +10,7 @@ R/class-location.R: 100.00%
 R/class-token.R: 100.00%
 R/io-text.R: 100.00%
 R/io-translations.R: 100.00%
+R/set-language.R: 100.00%
 R/strings.R: 100.00%
 R/text.R: 100.00%
 R/to-string.R: 100.00%

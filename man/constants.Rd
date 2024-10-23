@@ -3,6 +3,7 @@
 \docType{data}
 \name{constants}
 \alias{constants}
+\alias{.__LGL_DEBUG_FLAG}
 \alias{.__STR_EMPTY_OBJ}
 \alias{.__STR_UNDEFINED}
 \alias{.__STR_NO_NAME}
@@ -11,6 +12,13 @@
 \alias{.__STR_ATTACHED_DB}
 \title{Internal Constants}
 \format{
+\itemize{
+\item \code{.__LGL_DEBUG_FLAG} is a logical value always equal to \code{FALSE}. It
+is only ever (temporarily) set equal to \code{TRUE} in unit tests via
+\code{\link[testthat:local_mocked_bindings]{testthat::with_mocked_bindings()}}. It is used to force errors that are
+are hard to test with usual methods.
+}
+
 \itemize{
 \item \code{.__STR_EMPTY_OBJ} is a character string equal to \code{"<none>"}. It
 standardizes the format of empty objects.
@@ -46,6 +54,8 @@ objects are assigned there.
 }
 }
 \usage{
+.__LGL_DEBUG_FLAG
+
 .__STR_EMPTY_OBJ
 
 .__STR_UNDEFINED
@@ -62,6 +72,6 @@ objects are assigned there.
 These constants are used internally by \code{\link{transltr}}. They ensure
 consistency across its features. Their prefix states their underlying type.
 
-\strong{Users should never interact with these constants.}
+\strong{Users should never interact with them.}
 }
 \keyword{internal}

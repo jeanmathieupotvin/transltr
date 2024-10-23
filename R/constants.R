@@ -4,11 +4,19 @@
 #' These constants are used internally by [`transltr`][transltr]. They ensure
 #' consistency across its features. Their prefix states their underlying type.
 #'
-#' **Users should never interact with these constants.**
+#' **Users should never interact with them.**
 #'
 #' @name constants
 #' @rdname constants
 NULL
+
+#' @format * `.__LGL_DEBUG_FLAG` is a logical value always equal to `FALSE`. It
+#'   is only ever (temporarily) set equal to `TRUE` in unit tests via
+#'   [testthat::with_mocked_bindings()]. It is used to force errors that are
+#'   are hard to test with usual methods.
+#' @rdname constants
+#' @keywords internal
+.__LGL_DEBUG_FLAG <- FALSE
 
 #' @format * `.__STR_EMPTY_OBJ` is a character string equal to `"<none>"`. It
 #'   standardizes the format of empty objects.
