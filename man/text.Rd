@@ -80,8 +80,8 @@ x2 <- c(
   "specimen book.",
   "")
 
-str1 <- text_normalize(x1)
-str2 <- text_normalize(x2)
+str1 <- transltr:::text_normalize(x1)
+str2 <- transltr:::text_normalize(x2)
 identical(str1, str2) ## TRUE
 
 cat(str1, "\n")
@@ -100,7 +100,7 @@ Lorem Ipsum is simply dummy text of the printing and typesetting industry.
  and more recently with desktop publishing software like Aldus PageMaker
 including versions of Lorem Ipsum."
 
-cat(text_normalize(x), "\n")
+cat(transltr:::text_normalize(x), "\n")
 
 }
 \keyword{internal}

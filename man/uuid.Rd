@@ -16,10 +16,10 @@ uuid_is(x = character())
 \item{x}{A non-empty character vector.}
 }
 \value{
-\code{\link[=uuid_raw]{uuid_raw()}} returns a raw vector of length 16.
-
-\code{\link[=uuid_str]{uuid_str()}} returns a character of length 1 containing exactly 36
+\code{\link[=uuid]{uuid()}} returns a character of length 1 containing exactly 36
 characters: 32 hexadecimal characters and 4 hyphens (used as separators).
+
+\code{\link[=uuid_raw]{uuid_raw()}} returns a raw vector of length 16.
 
 \code{\link[=uuid_is]{uuid_is()}} returns a logical vector having the same length as \code{x}. It
 checks whether its elements are valid version 4 (variant 1) UUIDs or

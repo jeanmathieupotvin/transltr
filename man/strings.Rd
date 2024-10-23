@@ -26,9 +26,6 @@ the length of the longest element of \code{x}.}
 
 \item{pad}{A non-empty and non-\link[base:NA]{NA} character string used to
 separate the results.}
-
-\item{concat}{A non-\link[base:NA]{NA} character string used to concatenate
-elements of \code{x}.}
 }
 \value{
 A character vector.

@@ -27,9 +27,6 @@
 #' @param pad A non-empty and non-[NA][base::NA] character string used to
 #'   separate the results.
 #'
-#' @param concat A non-[NA][base::NA] character string used to concatenate
-#'   elements of `x`.
-#'
 #' @returns A character vector.
 #'
 #' @note

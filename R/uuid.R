@@ -16,10 +16,10 @@
 #' @param x A non-empty character vector.
 #'
 #' @returns
-#' [uuid_raw()] returns a raw vector of length 16.
-#'
-#' [uuid_str()] returns a character of length 1 containing exactly 36
+#' [uuid()] returns a character of length 1 containing exactly 36
 #' characters: 32 hexadecimal characters and 4 hyphens (used as separators).
+#'
+#' [uuid_raw()] returns a raw vector of length 16.
 #'
 #' [uuid_is()] returns a logical vector having the same length as `x`. It
 #' checks whether its elements are valid version 4 (variant 1) UUIDs or
