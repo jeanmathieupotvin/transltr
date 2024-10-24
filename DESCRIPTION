@@ -48,7 +48,6 @@ Collate:
     'text.R'
     'to-string.R'
     'translate.R'
-    'translator.R'
     'transltr-package.R'
     'utc.R'
     'transltr-params.R'
