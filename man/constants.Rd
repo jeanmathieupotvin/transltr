@@ -9,7 +9,6 @@
 \alias{.__STR_NO_NAME}
 \alias{.__STR_FORMAL_CONCAT_DEFAULT}
 \alias{.__STR_FORMAL_KEY_DEFAULT}
-\alias{.__STR_ATTACHED_DB}
 \title{Internal Constants}
 \format{
 \itemize{
@@ -44,14 +43,6 @@ It matches the value of formal argument \code{concat} of \code{\link[=translate]
 \item \code{.__STR_FORMAL_KEY_DEFAULT} is a character string equal to \code{"en"}.
 It matches the value of formal argument \code{source_key} of \code{\link[=translate]{translate()}}.
 }
-
-\itemize{
-\item \code{.__STR_ATTACHED_DB} is a character string equal to
-\code{"transltr:translators"}. This is the name of the environment
-\code{\link{transltr}} attaches to the \link[=search]{search path}
-when it is (first) loaded. Registered \code{\link{Translator}}
-objects are assigned there.
-}
 }
 \usage{
 .__LGL_DEBUG_FLAG
@@ -65,8 +56,6 @@ objects are assigned there.
 .__STR_FORMAL_CONCAT_DEFAULT
 
 .__STR_FORMAL_KEY_DEFAULT
-
-.__STR_ATTACHED_DB
 }
 \description{
 These constants are used internally by \code{\link{transltr}}. They ensure

@@ -48,12 +48,3 @@ NULL
 #' @rdname constants
 #' @keywords internal
 .__STR_FORMAL_KEY_DEFAULT <- "en"
-
-#' @format * `.__STR_ATTACHED_DB` is a character string equal to
-#'   `"transltr:translators"`. This is the name of the environment
-#'   [`transltr`][transltr] attaches to the [search path][search()]
-#'   when it is (first) loaded. Registered [`Translator`][Translator]
-#'   objects are assigned there.
-#' @rdname constants
-#' @keywords internal
-.__STR_ATTACHED_DB <- "transltr:translators"
