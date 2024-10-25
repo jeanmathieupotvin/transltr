@@ -9,12 +9,13 @@
 \alias{.__STR_NO_NAME}
 \alias{.__STR_FORMAL_CONCAT_DEFAULT}
 \alias{.__STR_FORMAL_KEY_DEFAULT}
+\alias{.__CHR_EXCLUDED_NS}
 \title{Internal Constants}
 \format{
 \itemize{
-\item \code{.__LGL_DEBUG_FLAG} is a logical value always equal to \code{FALSE}. It
-is only ever (temporarily) set equal to \code{TRUE} in unit tests via
-\code{\link[testthat:local_mocked_bindings]{testthat::with_mocked_bindings()}}. It is used to force errors that are
+\item \code{.__LGL_DEBUG_FLAG} is a logical value always equal to \code{FALSE}.
+It is only ever (temporarily) set equal to \code{TRUE} in unit tests via
+\code{\link[testthat:local_mocked_bindings]{testthat::with_mocked_bindings()}}. It is used to force errors that
 are hard to test with usual methods.
 }
 
@@ -43,6 +44,14 @@ It matches the value of formal argument \code{concat} of \code{\link[=translate]
 \item \code{.__STR_FORMAL_KEY_DEFAULT} is a character string equal to \code{"en"}.
 It matches the value of formal argument \code{source_key} of \code{\link[=translate]{translate()}}.
 }
+
+\itemize{
+\item \code{.__CHR_EXCLUDED_NS} is a character vector containing elements
+\code{"base"}, and \code{"transltr"}. These are the names of excluded packages (or
+\link[=loadNamespace]{namespaces}) when attempting to determine the scope of
+a \code{\link{Translator}} object. See \code{\link[=translator_set]{translator_set()}} and
+\code{\link[=translator_get]{translator_get()}} for more information.
+}
 }
 \usage{
 .__LGL_DEBUG_FLAG
@@ -56,6 +65,8 @@ It matches the value of formal argument \code{source_key} of \code{\link[=transl
 .__STR_FORMAL_CONCAT_DEFAULT
 
 .__STR_FORMAL_KEY_DEFAULT
+
+.__CHR_EXCLUDED_NS
 }
 \description{
 These constants are used internally by \code{\link{transltr}}. They ensure

@@ -1,10 +1,20 @@
 #' @export
-translate <- function(..., concat = " ", source_key = "en") {
-    trans <- translator_get()
-    lang  <- language_get()
+translate <- function(...,
+    key        = language_get(),
+    scope      = NULL,
+    source_key = "en",
+    concat     = " ")
+{
+    if (!is_translator(trans <- translator_get(scope))) {
+        stopf(
+            "no 'Translator' object set for scope '%s'. %s",
+            scope %??% translator_scope(),
+            "Call 'translator_set()' first.")
+    }
+
     return(
         trans$translate(...,
-            key        = lang,
+            key        = key,
             concat     = concat,
             source_key = source_key))
 }

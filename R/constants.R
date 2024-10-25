@@ -10,9 +10,9 @@
 #' @rdname constants
 NULL
 
-#' @format * `.__LGL_DEBUG_FLAG` is a logical value always equal to `FALSE`. It
-#'   is only ever (temporarily) set equal to `TRUE` in unit tests via
-#'   [testthat::with_mocked_bindings()]. It is used to force errors that are
+#' @format * `.__LGL_DEBUG_FLAG` is a logical value always equal to `FALSE`.
+#'   It is only ever (temporarily) set equal to `TRUE` in unit tests via
+#'   [testthat::with_mocked_bindings()]. It is used to force errors that
 #'   are hard to test with usual methods.
 #' @rdname constants
 #' @keywords internal
@@ -48,3 +48,12 @@ NULL
 #' @rdname constants
 #' @keywords internal
 .__STR_FORMAL_KEY_DEFAULT <- "en"
+
+#' @format * `.__CHR_EXCLUDED_NS` is a character vector containing elements
+#'   `"base"`, and `"transltr"`. These are the names of excluded packages (or
+#'   [namespaces][loadNamespace()]) when attempting to determine the scope of
+#'   a [`Translator`][Translator] object. See [translator_set()] and
+#'   [translator_get()] for more information.
+#' @rdname constants
+#' @keywords internal
+.__CHR_EXCLUDED_NS <- c("base", "transltr")
