@@ -1,3 +1,5 @@
+# FIXME: add documentation on the limits of using translator_set().
+
 #' @export
 translator_set <- function(x = translator(), scope = NULL) {
     scope <- scope %??% translator_scope()
@@ -22,22 +24,28 @@ translator_get <- function(scope = NULL) {
     return(.__translators_cache__[[scope]])
 }
 
+#' @rdname translator-scope
+#' @keywords internal
 translator_scope <- function() {
     if (sys.nframe() < 2L) {
-        return("global")
+        # This must be tested manually by calling
+        # the function from a global environment.
+        # We cannot control the call stack while
+        # using testthat, because it is in charge
+        # of executing code. There is also no way
+        # to alter the call stack.
+        return("global") # nocov
     }
 
     # Traverse the call stack and get the scope of
     # each called function. We use sys.function(i)
-    # starting at i = 1 to do so, because 0 is the
-    # current call to translator_get(). Here, i is
-    # the number of generation to go back into the
-    # stack. Using sys.parents() + 1L is slightly
-    # faster than seq_len(sys.nframe()). The next
-    # line of code below alters the stack, but in
-    # a way that is safe (top to bottom) for what
-    # we are trying to achieve.
-    scopes <- vapply_1c(sys.parents() + 1L, \(i) {
+    # starting at i = 0 (the current call). Doing
+    # so alters the call stack, by adding further
+    # calls to it. Specifically, 3 calls are added,
+    # and we take them into account to access the
+    # call stack's state prior to vapply_1c().
+    # Also, index of sys.function() starts at 0.
+    scopes <- vapply_1c(-seq_len(sys.nframe()) + 1L - 3L, \(i) {
         return(translator_scope_name(sys.function(i)))
     })
 
@@ -53,6 +61,8 @@ translator_scope <- function() {
     return(scopes[[which.max(!match(scopes, .__CHR_EXCLUDED_NS, 0L))]])
 }
 
+#' @rdname translator-scope
+#' @keywords internal
 translator_scope_name <- function(x) {
     scope <- switch(class(x),
         character  = x,
