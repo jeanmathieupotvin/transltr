@@ -161,9 +161,8 @@
       block("en")
     Condition
       Error:
-      ! at least one translation corresponding to 'source_key' must be passed to '...'.
-      It is treated as the source text and its name must be equal to 'source_key'.
-      See documentation for field 'source_text' for more information.
+      ! a translation corresponding to 'source_key' must be passed to '...'.
+      It is treated as the source text.
 
 # .block() validates source_key
 

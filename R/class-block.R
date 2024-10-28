@@ -120,14 +120,13 @@ block <- function(source_key = "", ..., hash_algorithm = get_hash_algorithms()) 
 
     if (!is_match(source_key, names(trans))) {
         stops(
-            "at least one translation corresponding to 'source_key' must be passed to '...'.\n",
-            "It is treated as the source text and its name must be equal to 'source_key'.\n",
-            "See documentation for field 'source_text' for more information.")
+            "a translation corresponding to 'source_key' must be passed to '...'.\n",
+            "It is treated as the source text.")
     }
 
     blk <- Block$new(hash_algorithm)
     do.call(blk$set_translations, trans)
-    do.call(blk$set_locations,    dots[vapply_1l(dots, is_location)])
+    do.call(blk$set_locations, dots[vapply_1l(dots, is_location)])
     blk$source_key <- source_key
     return(blk)
 }
