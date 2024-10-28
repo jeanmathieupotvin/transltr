@@ -10,6 +10,12 @@
 #' The idea of using [evalq()] below was taken from the documentation of
 #' [gettext()].
 #'
+#' When leaving `scope` as `NULL`, [on.exit()] should be used instead of
+#' [withr::defer()]. This is because the latter registers a callback function
+#' with no namespace, and therefore, [translator_scope()] defaults to 'global'.
+#' It is safer to sepcify a scope when using [withr::defer()]. This is one of
+#' the potential improvements that could be introduced for [translator_scope()]
+#' in the future.
 NULL
 
 
@@ -37,7 +43,7 @@ test_that("translator_set() validates scope", {
 })
 
 test_that("translator_set() sets scope if null", {
-    withr::defer(translator_set(NULL, "global"))
+    withr::defer(translator_set(NULL))
     translator_set(translator(id = "test-null-scope"))
     id <- translator_get()$id
     expect_identical(id, "test-null-scope")
@@ -99,12 +105,17 @@ test_that("translator_set() unsets translator objects", {
     expect_null(translator_get("utils"))
 })
 
+test_that("translator_set() does not throw a condition when unsetting non-existent translator objects", {
+    # uuid() is used to ensure no collision.
+    expect_no_condition(translator_set(NULL, uuid()))
+})
+
 
 # translator_get() -------------------------------------------------------------
 
 
 test_that("translator_get() returns a translator object from the cache", {
-    withr::defer(translator_set(NULL, "global"))
+    withr::defer(translator_set(NULL))
     translator_set(scope = "global")
     expect_s3_class(translator_get("global"), "Translator")
 })
@@ -119,10 +130,18 @@ test_that("translator_get() validates scope", {
 })
 
 test_that("translator_get() sets scope if null", {
-    withr::defer(translator_set(NULL, "global"))
+    withr::defer(translator_set(NULL))
     translator_set(translator(id = "test-null-scope"))
     id <- translator_get()$id
     expect_identical(id, "test-null-scope")
+})
+
+
+# translator_scopes() ----------------------------------------------------------
+
+
+test_that("translator_scopes() returns a character string", {
+    expect_type(translator_scopes(), "character")
 })
 
 
