@@ -221,10 +221,10 @@
         Locations: 
           <Location>
             Path: a
-            Range: line 1, column 2 @ line 3, column 4
+            Ranges: line 1, column 2 @ line 3, column 4
           <Location>
             Path: b
-            Range: line 5, column 6 @ line 7, column 8
+            Ranges: line 5, column 6 @ line 7, column 8
 
 # c.Block() validates ...
 

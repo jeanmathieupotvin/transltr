@@ -159,26 +159,15 @@ merge_locations <- function(...) {
 }
 
 format_long_location <- function(x, ...) {
-    # Align ranges by components for
-    # nicer outputs when printing.
-    ints   <- x[c("line1", "col1", "line2", "col2")]
-    chars  <- lapply(ints, encodeString, width = NULL, justify = "right")
-    ranges <- sprintf(
-        "line %s, column %s @ line %s, column %s",
-        chars[[1L]],
-        chars[[2L]],
-        chars[[3L]],
-        chars[[4L]])
-
-    xlist <- if (length(ranges) > 1L) {
-        list(
-            Path   = x$path,
-            Ranges = sprintf("[%i] %s", seq_along(ranges), ranges))
-    } else {
-        list(
-            Path  = x$path,
-            Range = ranges)
-    }
+    chars <- lapply(x, encodeString, width = NULL, justify = "right")
+    xlist <- list(
+        Path   = x$path,
+        Ranges = sprintf(
+            "line %s, column %s @ line %s, column %s",
+            chars[[2L]],
+            chars[[3L]],
+            chars[[4L]],
+            chars[[5L]]))
 
     return(format_vector(xlist, "<Location>", .show_nokey = FALSE))
 }

@@ -372,10 +372,10 @@ test_that("format() returns a character", {
         "  Locations: ",
         "    <Location>",
         "      Path: c",
-        "      Range: line 1, column 2 @ line 3, column 4",
+        "      Ranges: line 1, column 2 @ line 3, column 4",
         "    <Location>",
         "      Path: d",
-        "      Range: line 5, column 6 @ line 7, column 8"))
+        "      Ranges: line 5, column 6 @ line 7, column 8"))
 
     expect_type(fmt_blk_empty, "character")
     expect_length(fmt_blk_empty, 6L)
