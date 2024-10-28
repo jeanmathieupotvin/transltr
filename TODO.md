@@ -57,6 +57,9 @@ These tasks were last updated on `October 28, 2024`.
   - This should be very minor changes, mostly just a final check.
 - Complete top-level `README`.
 
+`[Miscellaneous]`
+- Change arguments `key` and `source_key` for `lang` and `source_lang`.
+
 # Future Improvements
 
 `[update_translations()]`

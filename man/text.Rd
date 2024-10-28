@@ -10,7 +10,7 @@ text_normalize(..., .concat = " ")
 text_hash(.key = "", .text = "", .hash_algorithm = get_hash_algorithms())
 }
 \arguments{
-\item{...}{Any number of character vectors.}
+\item{...}{Any number of character vectors. The source text to translate.}
 
 \item{.concat}{A character string used to concatenate values.}
 

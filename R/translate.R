@@ -1,3 +1,43 @@
+#' Translate Text
+#'
+#' Translate source text to a language given by `key`. This is an high-level
+#' interface to [`Translator$translate()`][Translator].
+#'
+#' @param scope A `NULL`, or an optional non-empty and non-[NA][base::NA]
+#'   character string. See [translator_set()] for more information.
+#'
+#' @template param-dots-source-text
+#'
+#' @template param-key
+#'
+#' @template param-source-key
+#'
+#' @template param-concat
+#'
+#' @note
+#' It is recommended to **always** use [translate()] instead of
+#' [`Translator$translate()`][Translator]. The latter is not detected by
+#' [find_translations()], while the former is.
+#'
+#' @seealso [`Translator`][Translator],
+#'   [translator_set()],
+#'   [language_set()]
+#'
+#' @examples
+#' ## Create a Translator. This would normally be done
+#' ## automatically by find_source() or read_translations().
+#' my_translator <- translator(block("en", en = "Hello!", es = "¡Hola!"))
+#'
+#' ## Register it (implicitly, under 'global' scope).
+#' translator_set(my_translator)
+#'
+#' ## Set current language.
+#' language_set("es")
+#'
+#' ## Request translations.
+#' translate("Hello!") ## Outputs "¡Hola!".
+#' translate("Hello!", key = "en") ## Outputs "Hello!".
+#'
 #' @export
 translate <- function(...,
     key        = language_get(),

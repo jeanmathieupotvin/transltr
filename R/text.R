@@ -31,8 +31,6 @@
 #' [text_hash()] returns a reproducible hash generated from `.key` and `.text`
 #' using the algorithm given by `.hash_algorithm`.
 #'
-#' @param ... Any number of character vectors.
-#'
 #' @param .concat A character string used to concatenate values.
 #'
 #' @param .key A character string. A language key. See [translate()].
@@ -41,6 +39,8 @@
 #'
 #' @param .hash_algorithm A character string. The algorithm to use when hashing
 #'   `.key` and `.text`.
+#'
+#' @template param-dots-source-text
 #'
 #' @returns A character string. [text_hash()] returns `NULL` for unknown
 #'   `.hash_algorithm` values.
