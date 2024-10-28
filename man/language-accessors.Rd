@@ -3,7 +3,7 @@
 \name{language_set}
 \alias{language_set}
 \alias{language_get}
-\title{Current Language}
+\title{Get or Set Language}
 \usage{
 language_set(key = "en")
 

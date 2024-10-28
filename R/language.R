@@ -1,4 +1,4 @@
-#' Current Language
+#' Get or Set Language
 #'
 #' Get or set the current language **key** setting of [`transltr`][transltr].
 #' It is registered as an environment variable named `TRANSLTR_LANGUAGE`.
@@ -43,7 +43,7 @@
 #' It can further be shared among direct and transitive dependencies (other
 #' packages that rely on [`transltr`][transltr]).
 #'
-#' @rdname language
+#' @rdname language-accessors
 #' @export
 language_set <- function(key = "en") {
     if (is.null(key)) {
@@ -63,7 +63,7 @@ language_set <- function(key = "en") {
     return(invisible())
 }
 
-#' @rdname language
+#' @rdname language-accessors
 #' @export
 language_get <- function() {
     # It does not matter whether the environment variable
