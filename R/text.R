@@ -1,14 +1,14 @@
 #' Normalize Text
 #'
 #' @description
+#' These functions are meant to be used as *building blocks* and do not
+#' validate their inputs for maximum efficiency.
+#'
 #' [text_normalize()] ensures consistency of input text, allowing it to be
 #' written in a variety of ways.
 #'
 #' [text_hash()] maps an arbitrary character string (of any length) to a
 #' fixed-length output.
-#'
-#' These functions are meant to be used as *building blocks* and does not
-#' validate their inputs for maximum efficieny.
 #'
 #' @details
 #' In what follows, a space character is defined as being an ASCII regular
@@ -28,22 +28,22 @@
 #'      those that could had been introduced temporarily at previous steps.
 #'   5. It replaces substrings of space characters by a single space.
 #'
-#' [text_hash()] returns a reproducible hash generated from `.key` and `.text`
-#' using the algorithm given by `.hash_algorithm`.
+#' [text_hash()] returns a reproducible hash generated from `.lang` and `.text`
+#' using the algorithm given by `.algo`.
+#'
+#' @param ... Any number of character vectors.
 #'
 #' @param .concat A character string used to concatenate values.
 #'
-#' @param .key A character string. A language key. See [translate()].
+#' @param .lang A character string. A language.
 #'
 #' @param .text A character string.
 #'
-#' @param .hash_algorithm A character string. The algorithm to use when hashing
-#'   `.key` and `.text`.
-#'
-#' @template param-dots-source-text
+#' @param .algo A non-empty and non-[NA][base::NA] character string. The
+#'   algorithm to use when hashing `.lang` and `.text`.
 #'
 #' @returns A character string. [text_hash()] returns `NULL` for unknown
-#'   `.hash_algorithm` values.
+#'   `.algo` values.
 #'
 #' @note
 #' I am not satisfied with the current implementation of [text_normalize()].
@@ -100,6 +100,7 @@ text_normalize <- function(..., .concat = " ") {
         gsub("^[ \t\n]+|[ \t\n]+$", "", x = _)
 
     dots[empty - 1L] <- paste0(dots[empty - 1L], "\n")
+
     return(
         dots[nzchar(dots)] |>
             paste0(collapse = .concat) |>
@@ -110,14 +111,11 @@ text_normalize <- function(..., .concat = " ") {
 
 #' @rdname text
 #' @keywords internal
-text_hash <- function(
-    .key            = "",
-    .text           = "",
-    .hash_algorithm = get_hash_algorithms())
-{
-    x <- sprintf("%s:%s", .key, .text)
+text_hash <- function(.lang = "", .text = "", .algo = get_hash_algorithms()) {
+    x <- sprintf("%s:%s", .lang, .text)
+
     return(
-        switch(.hash_algorithm,
+        switch(.algo,
             sha1 = digest::digest(
                 charToRaw(x),
                 algo      = "sha1",

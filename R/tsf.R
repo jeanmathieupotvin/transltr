@@ -69,8 +69,8 @@
 #' Package [`transltr`][transltr] uses so-called *language keys* to uniquely
 #' identify a native language in a (possibly) more concise way. This is
 #' convenient for portability and universality. For example, `日本語` (Japanese
-#' or Nihongo) could be identified by the ASCII string `jp` (or `jp-utf8`,
-#' `jp-eucjp`, etc.) in TSFs.
+#' or Nihongo) could be identified by the ASCII string `ja` (or `ja-utf8`,
+#' `ja-eucjp`, etc.) in TSFs.
 #'
 #' Language keys can be (almost) any character string. Users have full control
 #' over them and are free to use whatever they want.

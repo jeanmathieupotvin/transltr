@@ -7,7 +7,7 @@ test_that("translate() returns a character string", {
         x     = translator(block("en", en = "Hello!", es = "¡Hola!")),
         scope = "test")
 
-    out <- translate("Hello!", key = "es", scope = "test")
+    out <- translate("Hello!", lang = "es", scope = "test")
 
     expect_type(out, "character")
     expect_length(out, 1L)
@@ -28,17 +28,17 @@ test_that("translate() works with implicit scopes", {
     out_global <- evalq(envir = globalenv(), \() {
         on.exit(translator_set(NULL))
         translator_set(translator(block("en", en = "Hello!", fr = "Bonjour!")))
-        return(translate("Hello!", key = "fr"))
+        return(translate("Hello!", lang = "fr"))
     })()
     out_stats <- evalq(envir = asNamespace("stats"), \() {
         on.exit(translator_set(NULL))
         translator_set(translator(block("en", en = "Hello!", es = "¡Hola!")))
-        return(translate("Hello!", key = "es"))
+        return(translate("Hello!", lang = "es"))
     })()
     out_utils <- evalq(envir = asNamespace("utils"), \() {
         on.exit(translator_set(NULL))
-        translator_set(translator(block("en", en = "Hello!", jp = "こんにちは！")))
-        return(translate("Hello!", key = "jp"))
+        translator_set(translator(block("en", en = "Hello!", ja = "こんにちは！")))
+        return(translate("Hello!", lang = "ja"))
     })()
 
     expect_identical(out_global, "Bonjour!")
@@ -48,9 +48,9 @@ test_that("translate() works with implicit scopes", {
 
 test_that("translate() throws an error if implicit scope has no set translator object", {
     expect_error({
-        evalq(envir = globalenv(), \() translate("Hello, world!", key = "fr"))()
+        evalq(envir = globalenv(), \() translate("Hello, world!", lang = "fr"))()
     })
     expect_snapshot(error = TRUE, {
-        evalq(envir = globalenv(), \() translate("Hello, world!", key = "fr"))()
+        evalq(envir = globalenv(), \() translate("Hello, world!", lang = "fr"))()
     })
 })

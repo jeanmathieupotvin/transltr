@@ -1,6 +1,6 @@
 # What To Do Next
 
-These tasks were last updated on `October 28, 2024`.
+These tasks were last updated on `October 29, 2024`.
 
 > **This file is only useful for the maintainer and contributors.
 > Regular users may safely ignore it, as it does not constitute a formal
@@ -30,6 +30,9 @@ These tasks were last updated on `October 28, 2024`.
 
 `[PT/PB/PTF]`
 - **Change Translations Source File (TSF) based on Jérôme's feedback.**
+  - Rename arguments `key` and `source_key` to `lang` and `source_lang`.
+    - This has consequences on scripts `from-tsf.R`, and `tsf.R`.
+    - This also has consequences on related test scripts.
   - Simpliy header and change overall structure.
   - Integrate class `Translator` into `from_tsf()`.
   - Revisit `split_tsf()`, `from_tsf_header()`, and `from_tsf_header_v1()`.
@@ -58,7 +61,7 @@ These tasks were last updated on `October 28, 2024`.
 - Complete top-level `README`.
 
 `[Miscellaneous]`
-- Change arguments `key` and `source_key` for `lang` and `source_lang`.
+- All `set*()` functions and methods should return `NULL` invisibly.
 
 # Future Improvements
 

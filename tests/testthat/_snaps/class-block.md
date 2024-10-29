@@ -4,7 +4,8 @@
       blk1$hash <- "new-hash"
     Condition
       Error:
-      ! 'hash' cannot be manually overwritten. Set 'source_key' instead.
+      ! 'hash' cannot be manually overwritten.
+      Update it by setting 'source_lang' instead.
 
 # active binding hash_algorithm validates value
 
@@ -14,13 +15,13 @@
       Error:
       ! 'hash_algorithm' must be equal to 'sha1', or 'utf8'.
 
-# active binding source_key validates value
+# active binding source_lang validates value
 
     Code
-      blk1$source_key <- "new-key"
+      blk1$source_lang <- "new-lang"
     Condition
       Error:
-      ! 'source_key' must be equal to 'en', 'es', 'fr', or 'jp'.
+      ! 'source_lang' must be equal to 'en', 'es', 'fr', or 'ja'.
 
 # active binding source_text throws an error if value is not missing
 
@@ -28,17 +29,17 @@
       blk1$source_text <- "new-text"
     Condition
       Error:
-      ! 'source_text' cannot be manually overwritten. Set 'source_key' instead.
+      ! 'source_text' cannot be overwritten.
+      Update it by setting 'source_lang'.
+      You may add a new translation before doing so.
 
-# active binding keys throws an error if value is not missing
+# active binding languages throws an error if value is not missing
 
     Code
-      blk1$keys <- "new-key"
+      blk1$langs <- "new-lang"
     Condition
-      Error:
-      ! 'keys' cannot be manually overwritten.
-      You may add a key with method 'set_translation()'.
-      You may remove a key with method 'rm_translation()'.
+      Error in `blk1$langs <- "new-lang"`:
+      ! cannot add bindings to a locked environment
 
 # active binding translations throws an error if value is not missing
 
@@ -47,8 +48,7 @@
     Condition
       Error:
       ! 'translations' cannot be manually overwritten.
-      You may add a translation with method 'set_translation()'.
-      You may remove a translation with method 'rm_translation()'.
+      Update them by setting, or removing translations.
 
 # active binding locations throws an error if value is not missing
 
@@ -56,8 +56,8 @@
       blk1$locations <- location()
     Condition
       Error:
-      ! You may add a location with method 'set_location()'.
-      You may remove a location with method 'rm_location()'.
+      ! 'locations' cannot be manually overwritten.
+      Update them by setting, or removing 'Location' objects.
 
 # $initialize() validates hash_algorithm
 
@@ -67,21 +67,21 @@
       Error:
       ! 'hash_algorithm' must be equal to 'sha1', or 'utf8'.
 
-# $get_translation() validates key
+# $get_translation() validates lang
 
     Code
       blk1$get_translation(1L)
     Condition
       Error:
-      ! 'key' must be a non-NA and non-empty character of length 1.
+      ! 'lang' must be a non-NA and non-empty character of length 1.
 
-# $set_translation() validates key
+# $set_translation() validates lang
 
     Code
       blk1$set_translation(1L)
     Condition
       Error:
-      ! 'key' must be a non-NA and non-empty character of length 1.
+      ! 'lang' must be a non-NA and non-empty character of length 1.
 
 # $set_translation() validates text
 
@@ -107,13 +107,13 @@
       Error:
       ! '...' must have names.
 
-# $rm_translation() validates key
+# $rm_translation() validates lang
 
     Code
       blk1$rm_translation(1L)
     Condition
       Error:
-      ! 'key' must be a non-NA and non-empty character of length 1.
+      ! 'lang' must be a non-NA and non-empty character of length 1.
 
 ---
 
@@ -121,7 +121,7 @@
       blk1$rm_translation("en")
     Condition
       Error:
-      ! 'key' 'Set a new one before removing it.' is the current 'source_key'. en
+      ! 'en' is the current 'source_lang'. Set a new one before removing it.
 
 ---
 
@@ -129,7 +129,7 @@
       blk1$rm_translation("error")
     Condition
       Error:
-      ! 'key' must be equal to 'es', 'fr', or 'jp'.
+      ! 'lang' must be equal to 'es', 'fr', or 'ja'.
 
 # $rm_location() validates path
 
@@ -147,30 +147,30 @@
       Error:
       ! 'path' must be equal to 'a', or 'b'.
 
-# block() validates source_key
+# block() validates source_lang
 
     Code
       block("")
     Condition
       Error:
-      ! 'source_key' must be a non-NA and non-empty character of length 1.
+      ! 'source_lang' must be a non-NA and non-empty character of length 1.
 
-# block() checks that there is at least one translation corresponding to source_key
+# block() checks that there is at least one translation corresponding to source_lang
 
     Code
       block("en")
     Condition
       Error:
-      ! a translation corresponding to 'source_key' must be passed to '...'.
+      ! a translation corresponding to 'source_lang' must be passed to '...'.
       It is treated as the source text.
 
-# .block() validates source_key
+# .block() validates source_lang
 
     Code
       .block("")
     Condition
       Error:
-      ! 'source_key' must be a non-NA and non-empty character of length 1.
+      ! 'source_lang' must be a non-NA and non-empty character of length 1.
 
 # .block() validates source_text
 
@@ -180,29 +180,29 @@
       Error:
       ! 'source_text' must be a non-NA character of length 1.
 
-# .block() validates trans_keys
+# .block() validates langs
 
     Code
-      .block("en", "Hello, world!", trans_keys = 1L)
+      .block("en", "Hello, world!", langs = 1L)
     Condition
       Error:
-      ! 'trans_keys' must be a character vector of non-NA values.
+      ! 'langs' must be a character vector of non-NA values.
 
-# .block() validates trans_texts
+# .block() validates texts
 
     Code
-      .block("en", "Hello, world!", trans_texts = 1L)
+      .block("en", "Hello, world!", texts = 1L)
     Condition
       Error:
-      ! 'trans_texts' must be a character vector of non-NA values.
+      ! 'texts' must be a character vector of non-NA values.
 
-# .block() validates lengths of trans_keys and trans_texts
+# .block() validates lengths of langs and trans_texts
 
     Code
-      .block("en", trans_keys = "en")
+      .block("en", trans_langs = "en")
     Condition
-      Error:
-      ! 'trans_keys' and 'trans_texts' must have the same length.
+      Error in `.block()`:
+      ! unused argument (trans_langs = "en")
 
 # print() works
 
@@ -211,13 +211,13 @@
     Output
       <Block>
         Hash: 256e0d707386d0fcd9abf10ad994000bdaa25812
-        Source Key: en
+        Source Lang: en
         Algorithm: sha1
         Translations: 
           en: Hello, world!
           es: ¡Hola Mundo!
           fr: Bonjour, monde!
-          jp: こんにちは世界！
+          ja: こんにちは世界！
         Locations: 
           <Location>
             Path: a
@@ -239,7 +239,7 @@
     Code
       blk1 <- test_block()
       blk2 <- test_block()
-      blk2$source_key <- "fr"
+      blk2$source_lang <- "fr"
       c(blk1, blk2)
     Condition
       Error:

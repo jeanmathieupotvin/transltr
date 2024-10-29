@@ -85,7 +85,7 @@ vector. It can be empty.
 \code{"日本語"}, etc.
 \item The names are \emph{keys} that uniquely identify corresponding languages.
 As such, they are referred to as \emph{language keys}. For example,
-\code{en}, \code{fr}, \code{jp}, etc.
+\code{en}, \code{fr}, \code{ja}, etc.
 }
 
 Users retain full control over names and keys, and are free to use

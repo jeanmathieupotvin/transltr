@@ -17,4 +17,4 @@ language_keys:
     en: English
     fr: Français
     es: Español
-    jp: 日本語
+    ja: 日本語

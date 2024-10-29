@@ -397,14 +397,14 @@ test_that("from_tsf_block_v1() returns a S3 object of class Block", {
     expect_s3_class(out, "Block")
     expect_identical(out$hash, "256e0d707386d0fcd9abf10ad994000bdaa25812")
     expect_identical(out$hash_algorithm, "sha1")
-    expect_identical(out$source_key, "en")
+    expect_identical(out$source_lang, "en")
     expect_identical(out$source_text, "Hello, world!")
     expect_identical(out$locations, list(file1 = location("file1", 1L, 2L, 3L, 4L)))
     expect_identical(out$translations, c(
         en = "Hello, world!",
         es = "¡Hola Mundo!",
         fr = "Bonjour le monde!",
-        jp = "こんにちは世界！"))
+        ja = "こんにちは世界！"))
 })
 
 
@@ -685,9 +685,9 @@ test_that("tokenize_tsf_block_line_v1() returns a character string", {
 })
 
 test_that("tokenize_tsf_block_line_v1() properly tokenizes strings", {
-    expect_identical(tokenize_tsf_block_line_v1("# `{{ hash }}`"),  "TITLE_HASH")
-    expect_identical(tokenize_tsf_block_line_v1("## `{{ key }}`"),  "TITLE_KEY_SRC")
-    expect_identical(tokenize_tsf_block_line_v1("## key"),          "TITLE_KEY_TXT")
+    expect_identical(tokenize_tsf_block_line_v1("# `{{ hash }}`"),   "TITLE_HASH")
+    expect_identical(tokenize_tsf_block_line_v1("## `{{ lang }}`"),  "TITLE_KEY_SRC")
+    expect_identical(tokenize_tsf_block_line_v1("## lang"),          "TITLE_KEY_TXT")
     expect_identical(tokenize_tsf_block_line_v1("`path/to/file`:"), "LOC_SRC_PATH")
     expect_identical(tokenize_tsf_block_line_v1("- line 1, column 2 @ line 3, column 4224"),        "LOC_SRC_RNG")
     expect_identical(tokenize_tsf_block_line_v1("-  line  1, column  2  @  line  3, column  4224"), "LOC_SRC_RNG")
@@ -696,7 +696,7 @@ test_that("tokenize_tsf_block_line_v1() properly tokenizes strings", {
 
     # Tests below are some edge cases.
     expect_identical(tokenize_tsf_block_line_v1("# {{ hash }}"),   "TXT")
-    expect_identical(tokenize_tsf_block_line_v1("## `{ key }`"),   "TITLE_KEY_TXT")
+    expect_identical(tokenize_tsf_block_line_v1("## `{ lang }`"),  "TITLE_KEY_TXT")
     expect_identical(tokenize_tsf_block_line_v1("`path/to/file`"), "TXT")
     expect_identical(tokenize_tsf_block_line_v1("path/to/file:"),  "TXT")
     expect_identical(tokenize_tsf_block_line_v1("line  1, column  2  @  line  3, column  4224"), "TXT")

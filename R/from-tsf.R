@@ -99,7 +99,7 @@
 #'
 #' @template param-hash-algorithm
 #'
-#' @template param-language-keys
+#' @template to-rm-param-language-keys
 #'
 #' @returns
 #' This section is split according to the top-down hierarchy explained above.

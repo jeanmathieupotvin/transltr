@@ -15,6 +15,6 @@ Bonjour le monde!
 
 ¡Hola Mundo!
 
-## jp
+## ja
 
 こんにちは世界！

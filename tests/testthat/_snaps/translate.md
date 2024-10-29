@@ -9,7 +9,7 @@
 # translate() throws an error if implicit scope has no set translator object
 
     Code
-      evalq(envir = globalenv(), function() translate("Hello, world!", key = "fr"))()
+      evalq(envir = globalenv(), function() translate("Hello, world!", lang = "fr"))()
     Condition
       Error:
       ! no 'Translator' object set for scope 'global'. Call 'translator_set()' first.

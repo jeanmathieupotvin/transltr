@@ -6,36 +6,49 @@
 \usage{
 translate(
   ...,
-  key = language_get(),
+  lang = language_get(),
   scope = NULL,
-  source_key = "en",
-  concat = " "
+  concat = " ",
+  source_lang = "en"
 )
 }
 \arguments{
 \item{...}{Any number of character vectors. The source text to translate.}
 
-\item{key}{A non-empty and non-\link[base:NA]{NA} character string. A language
-key, i.e. a \emph{code} for a language. For example, \code{"jp"} could be the key
-of \code{"日本語"} (Japanese). While users retain full control over keys, it is
-best to use language codes stemming from well-known schemes such as
-\href{https://en.wikipedia.org/wiki/IETF_language_tag}{IETF BCP 47}, and
+\item{lang}{A non-empty and non-\link[base:NA]{NA} character string. The
+requested language.
+
+A language is usually a code (of two or three letters) for a native
+language name. For example, \code{ja} is a code for \code{日本語} (Japanese). While
+users retain full control over codes, it is best to use language codes
+stemming from well-known schemes such as
+\href{https://en.wikipedia.org/wiki/IETF_language_tag}{IETF BCP 47}, or
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
-To maximize portability and to ease shared usage of language keys,
-\code{\link{transltr}} recommends using codes stemming from the former.}
+Doing so maximizes portability and cross-compatibility between packages.}
 
 \item{scope}{A \code{NULL}, or an optional non-empty and non-\link[base:NA]{NA}
-character string. See \code{\link[=translator_set]{translator_set()}} for more information.}
-
-\item{source_key}{A non-empty and non-\link[base:NA]{NA} character string. The
-language key of the (untranslated) source text.}
+character string.}
 
 \item{concat}{A non-empty and non-\link[base:NA]{NA} character string used to
 concatenate values passed to \code{...}.}
+
+\item{source_lang}{A non-empty and non-\link[base:NA]{NA} character string. The
+language of the (untranslated) source text.
+
+A language is usually a code (of two or three letters) for a native
+language name. For example, \code{ja} is a code for \code{日本語} (Japanese). While
+users retain full control over codes, it is best to use language codes
+stemming from well-known schemes such as
+\href{https://en.wikipedia.org/wiki/IETF_language_tag}{IETF BCP 47}, or
+\href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
+Doing so maximizes portability and cross-compatibility between packages.}
 }
 \description{
-Translate source text to a language given by \code{key}. This is an high-level
-interface to \code{\link[=Translator]{Translator$translate()}}.
+Translate source text to a language. This is an high-level interface to
+\code{\link[=Translator]{Translator$translate()}}.
+}
+\details{
+See \code{\link[=translator_set]{translator_set()}} for more information on scopes.
 }
 \note{
 It is recommended to \strong{always} use \code{\link[=translate]{translate()}} instead of
@@ -55,7 +68,7 @@ language_set("es")
 
 ## Request translations.
 translate("Hello!") ## Outputs "¡Hola!".
-translate("Hello!", key = "en") ## Outputs "Hello!".
+translate("Hello!", lang = "en") ## Outputs "Hello!".
 
 }
 \seealso{

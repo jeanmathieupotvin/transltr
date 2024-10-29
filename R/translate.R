@@ -1,25 +1,27 @@
 #' Translate Text
 #'
-#' Translate source text to a language given by `key`. This is an high-level
-#' interface to [`Translator$translate()`][Translator].
+#' Translate source text to a language. This is an high-level interface to
+#' [`Translator$translate()`][Translator].
 #'
-#' @param scope A `NULL`, or an optional non-empty and non-[NA][base::NA]
-#'   character string. See [translator_set()] for more information.
+#' See [translator_set()] for more information on scopes.
 #'
-#' @template param-dots-source-text
+#' @param ... Any number of character vectors. The source text to translate.
 #'
-#' @template param-key
+#' @template param-lang
 #'
-#' @template param-source-key
+#' @template param-scope
 #'
 #' @template param-concat
+#'
+#' @template param-source-lang
 #'
 #' @note
 #' It is recommended to **always** use [translate()] instead of
 #' [`Translator$translate()`][Translator]. The latter is not detected by
 #' [find_translations()], while the former is.
 #'
-#' @seealso [`Translator`][Translator],
+#' @seealso
+#'   [`Translator`][Translator],
 #'   [translator_set()],
 #'   [language_set()]
 #'
@@ -36,14 +38,14 @@
 #'
 #' ## Request translations.
 #' translate("Hello!") ## Outputs "¡Hola!".
-#' translate("Hello!", key = "en") ## Outputs "Hello!".
+#' translate("Hello!", lang = "en") ## Outputs "Hello!".
 #'
 #' @export
 translate <- function(...,
-    key        = language_get(),
-    scope      = NULL,
-    source_key = "en",
-    concat     = " ")
+    lang        = language_get(),
+    scope       = NULL,
+    concat      = " ",
+    source_lang = "en")
 {
     if (!is_translator(trans <- translator_get(scope))) {
         stopf(
@@ -54,9 +56,9 @@ translate <- function(...,
 
     return(
         trans$translate(...,
-            key        = key,
+            lang        = lang,
             concat     = concat,
-            source_key = source_key))
+            source_lang = source_lang))
 }
 
 is_translate_call <- function(x, ...) {
@@ -84,6 +86,6 @@ match_translate_call.call <- function(x, ...) {
     # to calling match_translate_call().
     cl        <- match.call(translate, x, expand.dots = FALSE)
     cl$concat <- x$concat %??% .__STR_FORMAL_CONCAT_DEFAULT
-    cl$key    <- x$key    %??% .__STR_FORMAL_KEY_DEFAULT
+    cl$lang   <- x$lang   %??% .__STR_FORMAL_SOURCE_LANG_DEFAULT
     return(cl)
 }

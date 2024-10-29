@@ -7,7 +7,7 @@ test_block <- function() {
             en = "Hello, world!",
             fr = "Bonjour, monde!",
             es = "¡Hola Mundo!",
-            jp = "こんにちは世界！"))
+            ja = "こんにちは世界！"))
 }
 
 # We use blk1 (and blk2 if two objects are required)
@@ -51,20 +51,20 @@ test_that("active binding hash_algorithm sets new value and new hash", {
     expect_identical(blk$hash, "12351")
 })
 
-test_that("active binding source_key returns registered source_key", {
-    expect_identical(blk1$source_key, "en")
+test_that("active binding source_lang returns registered source_lang", {
+    expect_identical(blk1$source_lang, "en")
 })
 
-test_that("active binding source_key validates value", {
-    expect_error(blk1$source_key <- 1L)
-    expect_error(blk1$source_key <- "new-key")
-    expect_snapshot(blk1$source_key <- "new-key", error = TRUE)
+test_that("active binding source_lang validates value", {
+    expect_error(blk1$source_lang <- 1L)
+    expect_error(blk1$source_lang <- "new-lang")
+    expect_snapshot(blk1$source_lang <- "new-lang", error = TRUE)
 })
 
-test_that("active binding source_key sets new value and new hash", {
+test_that("active binding source_lang sets new value and new hash", {
     blk <- test_block()
-    blk$source_key <- "fr"
-    expect_identical(blk$source_key, "fr")
+    blk$source_lang <- "fr"
+    expect_identical(blk$source_lang, "fr")
     expect_identical(blk$hash, "f3c8754329c1b152887d35f00119fca783243d27")
 })
 
@@ -77,26 +77,26 @@ test_that("active binding source_text throws an error if value is not missing", 
     expect_snapshot(blk1$source_text <- "new-text", error = TRUE)
 })
 
-test_that("active binding keys returns registered language keys", {
-    # This implicitly checks that keys are also sorted.
-    keys <- blk1$keys
-    expect_identical(keys, c("en", "es", "fr", "jp"), ignore_attr = TRUE)
-    expect_identical(attr(keys, "source_key"), "en")
+test_that("active binding languages returns registered languages", {
+    # This implicitly checks that langs are also sorted.
+    langs <- blk1$languages
+    expect_identical(langs, c("en", "es", "fr", "ja"), ignore_attr = TRUE)
+    expect_identical(attr(langs, "source_lang"), "en")
 })
 
-test_that("active binding keys throws an error if value is not missing", {
-    expect_error(blk1$keys <- "new-key")
-    expect_snapshot(blk1$keys <- "new-key", error = TRUE)
+test_that("active binding languages throws an error if value is not missing", {
+    expect_error(blk1$langs <- "new-lang")
+    expect_snapshot(blk1$langs <- "new-lang", error = TRUE)
 })
 
 test_that("active binding translations returns registered translations", {
     # This implicitly checks that translations are
-    # also sorted by their underlying names (keys).
+    # also sorted by their underlying names (langs).
     expect_identical(blk1$translations, c(
         en = "Hello, world!",
         es = "¡Hola Mundo!",
         fr = "Bonjour, monde!",
-        jp = "こんにちは世界！"))
+        ja = "こんにちは世界！"))
 })
 
 test_that("active binding translations throws an error if value is not missing", {
@@ -138,10 +138,10 @@ test_that("$get_translation() works", {
     expect_identical(blk1$get_translation("en"), "Hello, world!")
     expect_identical(blk1$get_translation("es"), "¡Hola Mundo!")
     expect_identical(blk1$get_translation("fr"), "Bonjour, monde!")
-    expect_identical(blk1$get_translation("jp"), "こんにちは世界！")
+    expect_identical(blk1$get_translation("ja"), "こんにちは世界！")
 })
 
-test_that("$get_translation() validates key", {
+test_that("$get_translation() validates lang", {
     expect_error(blk1$get_translation(1L))
     expect_snapshot(blk1$get_translation(1L), error = TRUE)
 })
@@ -153,7 +153,7 @@ test_that("$set_translation() works", {
     expect_identical(blk$get_translation("en"), "Hello, world!")
 })
 
-test_that("$set_translation() validates key", {
+test_that("$set_translation() validates lang", {
     expect_error(blk1$set_translation(1L))
     expect_snapshot(blk1$set_translation(1L), error = TRUE)
 })
@@ -206,7 +206,7 @@ test_that("$rm_translation() returns a logical", {
     expect_invisible(test_block()$rm_translation("fr"))
 })
 
-test_that("$rm_translation() validates key", {
+test_that("$rm_translation() validates lang", {
     expect_error(blk1$rm_translation(1L))
     expect_error(blk1$rm_translation("en"))
     expect_error(blk1$rm_translation("error"))
@@ -222,7 +222,7 @@ test_that("$rm_translation() removes translations as expected", {
     expect_identical(blk$translations, c(
         en = "Hello, world!",
         fr = "Bonjour, monde!",
-        jp = "こんにちは世界！"))
+        ja = "こんにちは世界！"))
 })
 
 test_that("$rm_location() returns a logical", {
@@ -260,7 +260,7 @@ test_that("block() returns an R6 object of class Block", {
     expect_s3_class(blk, "Block")
     expect_identical(blk$hash, "256e0d707386d0fcd9abf10ad994000bdaa25812")
     expect_identical(blk$hash_algorithm, "sha1")
-    expect_identical(blk$source_key, "en")
+    expect_identical(blk$source_lang, "en")
     expect_identical(blk$source_text, "Hello, world!")
     expect_identical(blk$translations, c(
         en = "Hello, world!",
@@ -268,12 +268,12 @@ test_that("block() returns an R6 object of class Block", {
     expect_identical(blk$locations, list(a = location("a"), b = location("b")))
 })
 
-test_that("block() validates source_key", {
+test_that("block() validates source_lang", {
     expect_error(block(""))
     expect_snapshot(block(""), error = TRUE)
 })
 
-test_that("block() checks that there is at least one translation corresponding to source_key", {
+test_that("block() checks that there is at least one translation corresponding to source_lang", {
     expect_error(block("en"))
     expect_snapshot(block("en"), error = TRUE)
 })
@@ -284,17 +284,17 @@ test_that("block() checks that there is at least one translation corresponding t
 
 test_that(".block() returns an R6 object of class Block", {
     blk <- .block(
-        source_key     = "en",
+        source_lang    = "en",
         source_text    = "Hello, world!",
         hash_algorithm = "sha1",
-        trans_keys     = "fr",
-        trans_texts    = "Bonjour, monde!",
+        langs          = "fr",
+        texts          = "Bonjour, monde!",
         locations      = list(location("a"), location("b")))
 
     expect_s3_class(blk, "Block")
     expect_identical(blk$hash, "256e0d707386d0fcd9abf10ad994000bdaa25812")
     expect_identical(blk$hash_algorithm, "sha1")
-    expect_identical(blk$source_key, "en")
+    expect_identical(blk$source_lang, "en")
     expect_identical(blk$source_text, "Hello, world!")
     expect_identical(blk$translations, c(
         en = "Hello, world!",
@@ -302,7 +302,7 @@ test_that(".block() returns an R6 object of class Block", {
     expect_identical(blk$locations, list(a = location("a"), b = location("b")))
 })
 
-test_that(".block() validates source_key", {
+test_that(".block() validates source_lang", {
     expect_error(.block(""))
     expect_snapshot(.block(""), error = TRUE)
 })
@@ -312,20 +312,20 @@ test_that(".block() validates source_text", {
     expect_snapshot(.block("en", 1L), error = TRUE)
 })
 
-test_that(".block() validates trans_keys", {
-    expect_error(.block("en", "Hello, world!", trans_keys = 1L))
-    expect_snapshot(.block("en", "Hello, world!", trans_keys = 1L), error = TRUE)
+test_that(".block() validates langs", {
+    expect_error(.block("en", "Hello, world!", langs = 1L))
+    expect_snapshot(.block("en", "Hello, world!", langs = 1L), error = TRUE)
 })
 
-test_that(".block() validates trans_texts", {
-    expect_error(.block("en", "Hello, world!", trans_texts = 1L))
-    expect_snapshot(.block("en", "Hello, world!", trans_texts = 1L), error = TRUE)
+test_that(".block() validates texts", {
+    expect_error(.block("en", "Hello, world!", texts = 1L))
+    expect_snapshot(.block("en", "Hello, world!", texts = 1L), error = TRUE)
 })
 
-test_that(".block() validates lengths of trans_keys and trans_texts", {
-    expect_error(.block("en", trans_keys = "en"))
+test_that(".block() validates lengths of langs and trans_texts", {
+    expect_error(.block("en", trans_langs = "en"))
     expect_error(.block("en", trans_texts = "Hello, world!"))
-    expect_snapshot(.block("en", trans_keys = "en"), error = TRUE)
+    expect_snapshot(.block("en", trans_langs = "en"), error = TRUE)
 })
 
 test_that(".block() handles non-list values passed to locations", {
@@ -364,7 +364,7 @@ test_that("format() returns a character", {
     expect_identical(fmt_blk2, c(
         "<Block>",
         "  Hash: 256e0d707386d0fcd9abf10ad994000bdaa25812",
-        "  Source Key: en",
+        "  Source Lang: en",
         "  Algorithm: sha1",
         "  Translations: ",
         "    el: Γεια σου, Κόσμος!",
@@ -386,7 +386,7 @@ test_that("format() returns a character", {
     expect_identical(fmt_blk_empty, c(
         "<Block>",
         "  Hash: <unset>",
-        "  Source Key: <unset>",
+        "  Source Lang: <unset>",
         "  Algorithm: sha1",
         "  Translations: <none>",
         "  Locations: <none>"))
@@ -417,14 +417,14 @@ test_that("c.Block() returns a Block object", {
     expect_s3_class(out, "Block")
     expect_identical(out$hash, blk1$hash)
     expect_identical(out$hash_algorithm, blk1$hash_algorithm)
-    expect_identical(out$source_key, blk1$source_key)
+    expect_identical(out$source_lang, blk1$source_lang)
     expect_identical(out$source_text, blk1$source_text)
     expect_identical(out$translations, c(
         el = "Γεια σου, Κόσμος!",
         en = "Hello, world!",
         es = "¡Hola Mundo!",
         fr = "Bonjour, monde!",
-        jp = "こんにちは世界！"))
+        ja = "こんにちは世界！"))
     expect_identical(out$locations, list(
         a = location("a", 1L, 2L, 3L, 4L),
         b = location("b", 5L, 6L, 7L, 8L),
@@ -446,13 +446,13 @@ test_that("c.Block() validates ...", {
 
 test_that("c.Block() throws an error if hashes are not equal", {
     blk <- test_block()
-    blk$source_key <- "fr"
+    blk$source_lang <- "fr"
 
     expect_error(c(blk1, blk))
     expect_snapshot(error = TRUE, {
         blk1 <- test_block()
         blk2 <- test_block()
-        blk2$source_key <- "fr"
+        blk2$source_lang <- "fr"
         c(blk1, blk2)
     })
 })
@@ -478,7 +478,7 @@ test_that("c.Block() does not mutate its arguments", {
 
 test_that("merge_blocks() returns a list of Block object", {
     blk <- test_block()
-    blk$source_key <- "jp"
+    blk$source_lang <- "ja"
     out <- merge_blocks(blk1, blk)
 
     expect_type(out, "list")
@@ -496,15 +496,15 @@ test_that("merge_blocks() validates hash_algorithm", {
 })
 
 test_that("merge_blocks() combines Block objects having different hashes", {
-    blk1 <- block("en", location("en"), en = "Hello, world!")
-    blk2 <- block("en", location("el"), en = "Hello, world!", el = "Γεια σου, Κόσμος!")
-    blk3 <- block("fr", location("fr"), fr =  "Bonjour, monde!")
-    out  <- merge_blocks(blk1, blk2, blk3)
-    keys <- vapply_1c(out, `[[`, i = "source_key")
+    blk1  <- block("en", location("en"), en = "Hello, world!")
+    blk2  <- block("en", location("el"), en = "Hello, world!", el = "Γεια σου, Κόσμος!")
+    blk3  <- block("fr", location("fr"), fr =  "Bonjour, monde!")
+    out   <- merge_blocks(blk1, blk2, blk3)
+    langs <- vapply_1c(out, `[[`, i = "source_lang")
 
     expect_length(out, 2L)
-    expect_identical(out[[which(keys == "fr")]], blk3)
-    expect_identical(out[[which(keys == "en")]], block(
+    expect_identical(out[[which(langs == "fr")]], blk3)
+    expect_identical(out[[which(langs == "en")]], block(
         "en",
         location("en"),
         location("el"),

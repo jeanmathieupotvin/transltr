@@ -12,7 +12,7 @@ test_that("language_set() returns null invisibly", {
     expect_invisible(language_set(NULL))
 })
 
-test_that("language_set() validates key", {
+test_that("language_set() validates lang", {
     expect_error(language_set(1L))
     expect_snapshot(language_set(1L), error = TRUE)
 })
@@ -24,7 +24,7 @@ test_that("language_set() sets environment variable", {
     expect_identical(language_get(), "test-en")
 })
 
-test_that("language_set() unsets environment variable if key is null", {
+test_that("language_set() unsets environment variable if lang is null", {
     language_set("test-en")
     language_set(NULL)
 

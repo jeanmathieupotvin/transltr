@@ -1,10 +1,10 @@
-# language_set() validates key
+# language_set() validates lang
 
     Code
       language_set(1L)
     Condition
       Error:
-      ! 'key' must be a non-NA and non-empty character of length 1.
+      ! 'lang' must be a non-NA and non-empty character of length 1.
 
 # language_set() throws an error if it fails to set environment variable
 
@@ -13,7 +13,7 @@
       language_set("test-en")
     Condition
       Error:
-      ! failed to set language key 'test-en'.
+      ! failed to set language 'test-en'.
 
 # language_set() throws an error if it fails to unset environment variable
 
@@ -22,5 +22,5 @@
       language_set(NULL)
     Condition
       Error:
-      ! failed to unset current language key.
+      ! failed to unset current language.
 

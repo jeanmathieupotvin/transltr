@@ -18,7 +18,7 @@ language_keys:
     en: English
     fr: Français
     es: Español
-    jp: 日本語
+    ja: 日本語
 ---
 
 # `{{ ce06fb763aad57fd2b265a18a375d7daae86af7f }}`
@@ -66,7 +66,7 @@ las hojas "Letraset", las cuales contenian pasajes de Lorem Ipsum, y más
 recientemente con software de autoedición, como por ejemplo Aldus PageMaker, el
 cual incluye versiones de Lorem Ipsum.
 
-## jp
+## ja
 
 Lorem Ipsum は、印刷および植字業界の単なるダミー テキストです。
 Lorem Ipsum は 1500 年代以来業界の標準ダミー テキストであり、
@@ -94,6 +94,6 @@ Bonjour le monde!
 
 ¡Hola Mundo!
 
-## jp
+## ja
 
 こんにちは世界！

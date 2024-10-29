@@ -7,33 +7,33 @@
 \usage{
 text_normalize(..., .concat = " ")
 
-text_hash(.key = "", .text = "", .hash_algorithm = get_hash_algorithms())
+text_hash(.lang = "", .text = "", .algo = get_hash_algorithms())
 }
 \arguments{
-\item{...}{Any number of character vectors. The source text to translate.}
+\item{...}{Any number of character vectors.}
 
 \item{.concat}{A character string used to concatenate values.}
 
-\item{.key}{A character string. A language key. See \code{\link[=translate]{translate()}}.}
+\item{.lang}{A character string. A language.}
 
 \item{.text}{A character string.}
 
-\item{.hash_algorithm}{A character string. The algorithm to use when hashing
-\code{.key} and \code{.text}.}
+\item{.algo}{A non-empty and non-\link[base:NA]{NA} character string. The
+algorithm to use when hashing \code{.lang} and \code{.text}.}
 }
 \value{
 A character string. \code{\link[=text_hash]{text_hash()}} returns \code{NULL} for unknown
-\code{.hash_algorithm} values.
+\code{.algo} values.
 }
 \description{
+These functions are meant to be used as \emph{building blocks} and do not
+validate their inputs for maximum efficiency.
+
 \code{\link[=text_normalize]{text_normalize()}} ensures consistency of input text, allowing it to be
 written in a variety of ways.
 
 \code{\link[=text_hash]{text_hash()}} maps an arbitrary character string (of any length) to a
 fixed-length output.
-
-These functions are meant to be used as \emph{building blocks} and does not
-validate their inputs for maximum efficieny.
 }
 \details{
 In what follows, a space character is defined as being an ASCII regular
@@ -54,8 +54,8 @@ those that could had been introduced temporarily at previous steps.
 \item It replaces substrings of space characters by a single space.
 }
 
-\code{\link[=text_hash]{text_hash()}} returns a reproducible hash generated from \code{.key} and \code{.text}
-using the algorithm given by \code{.hash_algorithm}.
+\code{\link[=text_hash]{text_hash()}} returns a reproducible hash generated from \code{.lang} and \code{.text}
+using the algorithm given by \code{.algo}.
 }
 \note{
 I am not satisfied with the current implementation of \code{\link[=text_normalize]{text_normalize()}}.

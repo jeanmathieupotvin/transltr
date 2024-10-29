@@ -5,7 +5,7 @@
 #'     `"日本語"`, etc.
 #'   * The names are *keys* that uniquely identify corresponding languages.
 #'     As such, they are referred to as *language keys*. For example,
-#'     `en`, `fr`, `jp`, etc.
+#'     `en`, `fr`, `ja`, etc.
 #'
 #'   Users retain full control over names and keys, and are free to use
 #'   whatever makes sense to them.

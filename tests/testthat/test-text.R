@@ -166,7 +166,7 @@ test_that("text_hash() returns a sha-1 hash wheen algorithm is sha1", {
     expect_identical(text_hash("en", "Hello, world!",   "sha1"), "256e0d707386d0fcd9abf10ad994000bdaa25812")
     expect_identical(text_hash("fr", "Bonjour, monde!", "sha1"), "f3c8754329c1b152887d35f00119fca783243d27")
     expect_identical(text_hash("es", "¡Hola Mundo!",    "sha1"), "faf516ddb9969506f4a8771d528efb029db50698")
-    expect_identical(text_hash("jp", "こんにちは世界！", "sha1"), "422a3da869a9744a7154f713affd25b73bb23c34")
+    expect_identical(text_hash("ja", "こんにちは世界！", "sha1"), "83daa9cda6da5189dc5c81c78323361fab6b652b")
 })
 
 test_that("text_hash() returns an integer hash wheen algorithm is utf8", {

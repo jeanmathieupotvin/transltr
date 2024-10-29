@@ -1,39 +1,31 @@
 #' Translations Blocks
 #'
-#' Structure and manipulate source texts and their translations.
+#' Structure and manipulate source text and its translations.
 #'
 #' A [`Block`][Block] is first and foremost a collection of translations of
-#' a given source text (i.e. text extracted from \R source scripts). These
-#' translations are each identified by a *language key*, a character string
-#' that can be mapped to a native language. For more information, see section
-#' *[Language keys][Translations Source Files]*.
+#' a given source text (i.e. text extracted from \R source scripts). Each
+#' translation is uniquely identified by a language.
 #'
 #' It has two further components.
 #'
 #'   1. A repducible hash derived from an hashing algorithm that can be used
-#'   to identify the source key and text.
+#'   to identify the source text and language.
 #'
 #'   2. One or more source locations. See class [`Location`][Location] for more
 #'   information.
 #'
 #' Users should never attempt to manipulate the information contained in a
-#' [`Block`][Block]. The latter exposes an API to safely do so (see below),
-#' but it is meant to be used internally. Consider using exported features
-#' instead.
+#' [`Block`][Block]. Consider using exported features instead.
 #'
-#' Users may create [`Block`][Block] objects on-the-fly for testing purposes
-#' with [block()]. [.block()] should be reserved for internal use-cases.
+#' [`Block`][Block] objects may be created on-the-fly for testing purposes
+#' with [block()].
 #'
-#' @param source_key A non-empty and non-[NA][base::NA] character string. The
-#'   (default) language key of `source_text`. See Details for more information.
+#' @param langs A character vector of non-empty and non-[NA][base::NA]
+#'   values. The languages of `texts`. See argument `source_lang` for
+#'   more information.
 #'
-#' @param source_text A non-empty and non-[NA][base::NA] character string.
-#'
-#' @param trans_keys A character vector of non-empty and non-[NA][base::NA]
-#'   values. The language keys identifying elements of `trans_texts`.
-#'
-#' @param trans_texts A character vector of of non-empty and non-[NA][base::NA]
-#'   values. Translations of `source_text`.
+#' @param texts A character vector of of non-empty and non-[NA][base::NA]
+#'   values. The translations of `source_text`.
 #'
 #' @param locations A list of [`Location`][Location] objects or a single
 #'   [`Location`][Location] object.
@@ -49,6 +41,10 @@
 #'   * Further arguments passed to or from other methods for [format()],
 #'     [print()], and [as_block()].
 #'
+#' @template param-source-lang
+#'
+#' @template param-source-text
+#'
 #' @template param-hash-algorithm
 #'
 #' @returns
@@ -63,7 +59,7 @@
 #'
 #' [c()] returns a [`Block`][Block] object. It can only combine objects
 #' having the exact same `hash`, which is equivalent to having the same
-#' `hash_algorithm`, `source_key`, and `source_text`. In that case, the
+#' `hash_algorithm`, `source_lang`, and `source_text`. In that case, the
 #' underlying translations and locations are combined into coherent sets.
 #'
 #' [merge_blocks()] returns a list of [`Block`][Block] objects. It is
@@ -82,7 +78,7 @@
 #'     en = "Hello, world!",
 #'     fr = "Bonjour, monde!",
 #'     es = "¡Hola Mundo!",
-#'     jp = "こんにちは世界！")
+#'     ja = "こんにちは世界！")
 #'
 #' ## Combine Blocks objects.
 #' b1 <- transltr:::block("en",
@@ -90,21 +86,21 @@
 #'     en = "Hello, world!",
 #'     fr = "Bonjour, monde!",
 #'     es = "¡Hola Mundo!",
-#'     jp = "こんにちは世界！")
+#'     ja = "こんにちは世界！")
 #'
 #' b2 <- transltr:::block("en",
 #'     transltr:::location("a", 5L, 6L, 7L, 8L),
 #'     en     = "Hello, world!",
 #'     fr     = "Bonjour, monde!",
 #'     es     = "¡Hola Mundo!",
-#'     `jp-2` = "こんにちは世界！")
+#'     `ja-2` = "こんにちは世界！")
 #'
 #' b3 <- transltr:::block("fr",
 #'     transltr:::location("c", 1L, 2L, 3L, 4L),
 #'     en     = "Hello, world!",
 #'     fr     = "Bonjour, monde!",
 #'     `es-2` = "¡Hola Mundo!",
-#'     `jp-2` = "こんにちは世界！")
+#'     `ja-2` = "こんにちは世界！")
 #'
 #' c(b1, b2)
 #' transltr:::merge_blocks(b1, b2, b3)
@@ -112,54 +108,45 @@
 #' @include constants.R
 #' @rdname class-block
 #' @keywords internal
-block <- function(source_key = "", ..., hash_algorithm = get_hash_algorithms()) {
-    assert_chr1(source_key)
+block <- function(source_lang = "", ..., hash_algorithm = get_hash_algorithms()) {
+    assert_chr1(source_lang)
 
     dots  <- list(...)
-    trans <- dots[vapply_1l(dots, is.character)]
+    texts <- dots[vapply_1l(dots, is.character)]
+    locs  <- dots[vapply_1l(dots, is_location)]
 
-    if (!is_match(source_key, names(trans))) {
+    if (!is_match(source_lang, names(texts))) {
         stops(
-            "a translation corresponding to 'source_key' must be passed to '...'.\n",
+            "a translation corresponding to 'source_lang' must be passed to '...'.\n",
             "It is treated as the source text.")
     }
 
     blk <- Block$new(hash_algorithm)
-    do.call(blk$set_translations, trans)
-    do.call(blk$set_locations, dots[vapply_1l(dots, is_location)])
-    blk$source_key <- source_key
+    do.call(blk$set_translations, texts)
+    do.call(blk$set_locations, locs)
+    blk$source_lang <- source_lang
     return(blk)
 }
 
-#' @usage
-#' ## Internal alternative constructor
-#' .block(
-#'   source_key     = "",
-#'   source_text    = "",
-#'   hash_algorithm = get_hash_algorithms(),
-#'   trans_keys     = character(),
-#'   trans_texts    = character(),
-#'   locations      = list()
-#' )
 #' @rdname class-block
 #' @keywords internal
 .block <- function(
-    source_key     = "",
+    source_lang    = "",
     source_text    = "",
     hash_algorithm = get_hash_algorithms(),
-    trans_keys     = character(),
-    trans_texts    = character(),
+    langs          = character(),
+    texts          = character(),
     locations      = list())
 {
     # Validate arguments here to output semantic error messages.
     # Otherwise, they will be a little confusing.
-    assert_chr1(source_key)
+    assert_chr1(source_lang)
     assert_chr1(source_text, TRUE)
-    assert_chr(trans_keys, TRUE)
-    assert_chr(trans_texts, TRUE)
+    assert_chr(langs, TRUE)
+    assert_chr(texts, TRUE)
 
-    if (length(trans_keys) != length(trans_texts)) {
-        stops("'trans_keys' and 'trans_texts' must have the same length.")
+    if (length(langs) != length(texts)) {
+        stops("'langs' and 'texts' must have the same length.")
     }
 
     # What locations contains is checked by $set_locations.
@@ -170,11 +157,11 @@ block <- function(source_key = "", ..., hash_algorithm = get_hash_algorithms()) 
     }
 
     blk <- Block$new(hash_algorithm)
-    blk$set_translation(source_key, source_text)
-    blk$source_key <- source_key
+    blk$set_translation(source_lang, source_text)
+    blk$source_lang <- source_lang
 
     do.call(blk$set_locations, locations)
-    map(blk$set_translation, trans_keys, trans_texts)
+    map(blk$set_translation, langs, texts)
     return(blk)
 }
 
@@ -190,11 +177,11 @@ format.Block <- function(x, ...) {
     trans <- if (length(x$translations)) x$translations else .__STR_EMPTY_OBJ
     locs  <- unlist(lapply(x$locations, format), TRUE, FALSE) %??% .__STR_EMPTY_OBJ
     xlist <- list(
-        Hash         = x$hash,
-        `Source Key` = x$source_key,
-        Algorithm    = x$hash_algorithm,
-        Translations = trans,
-        Locations    = locs)
+        Hash          = x$hash,
+        `Source Lang` = x$source_lang,
+        Algorithm     = x$hash_algorithm,
+        Translations  = trans,
+        Locations     = locs)
 
     return(format_vector(xlist, "<Block>", .show_nokey = FALSE))
 }
@@ -219,14 +206,14 @@ c.Block <- function(...) {
     hashes <- vapply_1c(blocks, `[[`, i = "hash")
 
     # Checking hashes simultaneously checks equality
-    # of hash_algorithm, source_key and source_text.
+    # of hash_algorithm, source_lang and source_text.
     if (!all(hashes[[1L]] == hashes[-1L])) {
         stops("all 'hash' must be equal in order to combine multiple 'Block' objects.")
     }
 
     trans <- unlist(lapply(blocks, `[[`, i = "translations"))
     locs  <- unlist(lapply(blocks, `[[`, i = "locations"), FALSE)
-    blk   <- .block(..1$source_key, ..1$source_text, ..1$hash_algorithm)
+    blk   <- .block(..1$source_lang, ..1$source_text, ..1$hash_algorithm)
     do.call(blk$set_translations, as.list(trans))
     do.call(blk$set_locations, locs)
     return(blk)
@@ -263,9 +250,9 @@ as_block.call <- function(x,
     # a future iteration. This would simplify its signature.
     suppressWarnings(strings <- as.character(x$`...`))
 
-    if (!is_chr1(x$key) || !is_chr1(x$concat) || !is.character(strings)) {
+    if (!is_chr1(x$source_lang) || !is_chr1(x$concat) || !is.character(strings)) {
         stops(
-            "Values passed to 'key' and 'concat' must be non-empty literal character strings.\n",
+            "Values passed to 'source_lang' and 'concat' must be non-empty literal character strings.\n",
             "Values passed to '...' must all be literal character strings. They can be empty.\n",
             "Otherwise, they cannot be safely evaluated before runtime.\n",
             "Check the following source location(s).\n",
@@ -274,7 +261,7 @@ as_block.call <- function(x,
 
     return(
         .block(
-            x$key,
+            x$source_lang,
             text_normalize(strings, .concat = x$concat),
             hash_algorithm,
             locations = locations))
@@ -283,7 +270,7 @@ as_block.call <- function(x,
 #' @rdname class-block
 #' @export
 as_block.character <- function(x,
-    source_key     = "",
+    source_lang     = "",
     locations      = list(),
     hash_algorithm = get_hash_algorithms(),
     ...)
@@ -303,30 +290,29 @@ Block <- R6::R6Class("Block",
     private      = list(
         .hash         = .__STR_UNDEFINED,  # See $hash
         .hash_algo    = .__STR_UNDEFINED,  # See $hash_algorithm
-        .source_key   = .__STR_UNDEFINED,  # See $source_key
+        .source_lang  = .__STR_UNDEFINED,  # See $source_lang
         .translations = NULL,              # See $translations
         .locations    = NULL               # See $locations
     ),
     active = list(
         #' @field hash A non-empty and non-[NA][base::NA] character string. A
-        #'   reproducible hash generated from `source_key` and `source_text`
-        #'   using the algorithm given by `hash_algorithm`. It is used as a
-        #'   unique identifier for the [`Block`][Block] object.
+        #'   reproducible hash generated from `source_lang` and `source_text`
+        #'   using the algorithm specified by `hash_algorithm`. It is used as
+        #'   a unique identifier for the [`Block`][Block] object.
         #'
-        #'   This is a **read-only** field. It is automatically updated whenever
-        #'   fields `source_key` and/or `hash_algorithm` are updated.
+        #'   This is a **read-only** field. It is automatically updated
+        #'   whenever fields `source_lang` and/or `hash_algorithm` are updated.
         hash = \(value) {
             if (!missing(value)) {
-                stops("'hash' cannot be manually overwritten. Set 'source_key' instead.")
+                stops(
+                    "'hash' cannot be manually overwritten.\n",
+                    "Update it by setting 'source_lang' instead.")
             }
 
             return(private$.hash)
         },
 
-        #' @field hash_algorithm A non-empty and non-[NA][base::NA] character
-        #'   string. The algorithm to use when hashing source information for
-        #'   identification purposes. It must be a value returned by
-        #'   [get_hash_algorithms()].
+        #' @template field-hash-algorithm
         hash_algorithm = \(value) {
             if (!missing(value)) {
                 assert_chr1(value)
@@ -335,72 +321,68 @@ Block <- R6::R6Class("Block",
                     quote_values = TRUE,
                     x_name       = "hash_algorithm")
 
-                key <- private$.source_key
                 private$.hash_algo <- value
                 private$.hash      <- text_hash(
-                    key,
-                    self$get_translation(key),
+                    private$.source_lang,
+                    self$get_translation(private$.source_lang),
                     private$.hash_algo)
             }
 
             return(private$.hash_algo)
         },
 
-        #' @field source_key A non-empty and non-[NA][base::NA] character
-        #'   string. The language key of `source_text`.
-        source_key = \(value) {
+        #' @template field-source-lang
+        source_lang = \(value) {
             if (!missing(value)) {
                 assert_chr1(value)
-                assert_match(value, self$keys,
+                assert_match(value, self$languages,
                     quote_values = TRUE,
-                    x_name       = "source_key")
+                    x_name       = "source_lang")
 
-                private$.source_key <- value
+                private$.source_lang <- value
                 private$.hash       <- text_hash(
                     value,
                     self$get_translation(value),
                     private$.hash_algo)
             }
 
-            return(private$.source_key)
+            return(private$.source_lang)
         },
 
-        #' @field source_text A non-empty and non-[NA][base::NA] character
-        #'   string. The source text to be translated. This is a **read-only**
-        #'   field.
+        #' @template field-source-text
         source_text = \(value) {
             if (!missing(value)) {
-                stops("'source_text' cannot be manually overwritten. Set 'source_key' instead.")
+                stops(
+                    "'source_text' cannot be overwritten.\n",
+                    "Update it by setting 'source_lang'.\n",
+                    "You may add a new translation before doing so.")
             }
 
-            return(self$get_translation(private$.source_key))
+            return(self$get_translation(private$.source_lang))
         },
 
-        #' @field keys A character vector. Registered language keys. This is a
-        #'   **read-only** field.
-        keys = \(value) {
+        #' @field languages A character vector. Registered language codes.
+        #'   This is a **read-only** field.
+        languages = \(value) {
             if (!missing(value)) {
                 stops(
-                    "'keys' cannot be manually overwritten.\n",
-                    "You may add a key with method 'set_translation()'.\n",
-                    "You may remove a key with method 'rm_translation()'.")
+                    "'languages' cannot be manually overwritten.\n",
+                    "Update them by setting, or removing translations.")
             }
 
-            keys <- sort(names(private$.translations))
-            attr(keys, "source_key") <- private$.source_key
-            return(keys)
+            langs <- sort(names(private$.translations))
+            attr(langs, "source_lang") <- private$.source_lang
+            return(langs)
         },
 
-        #' @field translations A non-empty named character vector of
-        #'   non-[NA][base::NA] values. Registered translations of
-        #'   `source_text`. Names correspond to the underlying language
-        #'   `keys`. This is a **read-only** field.
+        #' @field translations A named character vector. Registered
+        #'   translations of `source_text`. Names correspond to `languages`.
+        #'   This is a **read-only** field.
         translations = \(value) {
             if (!missing(value)) {
                 stops(
                     "'translations' cannot be manually overwritten.\n",
-                    "You may add a translation with method 'set_translation()'.\n",
-                    "You may remove a translation with method 'rm_translation()'.")
+                    "Update them by setting, or removing translations.")
             }
 
             translations <- as.list(private$.translations, sorted = TRUE)
@@ -414,8 +396,8 @@ Block <- R6::R6Class("Block",
         locations = \(value) {
             if (!missing(value)) {
                 stops(
-                    "You may add a location with method 'set_location()'.\n",
-                    "You may remove a location with method 'rm_location()'.")
+                    "'locations' cannot be manually overwritten.\n",
+                    "Update them by setting, or removing 'Location' objects.")
             }
 
             return(as.list(private$.locations, sorted = TRUE))
@@ -442,36 +424,35 @@ Block <- R6::R6Class("Block",
         #'
         #' @details This method can also be used to extract `source_text`.
         #'
-        #  Package roxygen2 7.3.2 automatically reuses templates whenever
-        #  it is appropriate within an R6 class.
-        #' @template param-key
+        #  NOTE: Package roxygen2 reuses templates whenever within an R6 class.
+        #' @template param-lang
         #'
-        #' @return A character string. `NULL` is returned if `key` is not
+        #' @return A character string. `NULL` is returned if `lang` is not
         #'   registered.
-        get_translation = \(key = "") {
-            assert_chr1(key)
-            return(private$.translations[[key]])
+        get_translation = \(lang = "") {
+            assert_chr1(lang)
+            return(private$.translations[[lang]])
         },
 
         #' @description Register a translation.
         #'
-        #' @details This method is also used to register `source_key` and
+        #' @details This method is also used to register `source_lang` and
         #'  `source_text` **before** setting them as such. See Examples below.
         #'
         #' @param text A non-empty and non-[NA][base::NA] character string. A
-        #'   translation (or a source text).
+        #'   translation, or a source text.
         #'
         #' @return A `TRUE` (invisibly).
         #'
         #' @examples
-        #' ## Registering source_key and source_text.
+        #' ## Registering source_lang and source_text.
         #' blk <- transltr:::Block$new()
         #' blk$set_translation("en", "Hello, world!")
-        #' blk$source_key <- "en"
-        set_translation = \(key = "", text = "") {
-            assert_chr1(key)
+        #' blk$source_lang <- "en"
+        set_translation = \(lang = "", text = "") {
+            assert_chr1(lang)
             assert_chr1(text, TRUE)
-            private$.translations[[key]] <- text
+            private$.translations[[lang]] <- text
             return(invisible(TRUE))
         },
 
@@ -497,7 +478,7 @@ Block <- R6::R6Class("Block",
             }
 
             assert_named(trans, x_name = "...")
-            list2env(trans, envir = private$.translations)
+            list2env(trans, private$.translations)
             return(invisible(TRUE))
         },
 
@@ -520,39 +501,39 @@ Block <- R6::R6Class("Block",
             locs <- do.call(merge_locations, locs)
             names(locs) <- vapply_1c(locs, `[[`, i = "path")
 
-            list2env(locs, envir = private$.locations)
+            list2env(locs, private$.locations)
             return(invisible(TRUE))
         },
 
         #' @description Remove a registered translation.
         #'
-        #' @details You cannot remove a `key` registered as `source_key`.
-        #'   You must assign a new value as `source_key` before doing so.
+        #' @details You cannot remove a `lang` registered as `source_lang`.
+        #'   You must assign a new value as `source_lang` before doing so.
         #'
         #' @return A logical (invisibly) indicating whether the operation
         #'   succeeded or not.
         #'
         #' @examples
-        #' ## Removing source_key and source_text.
+        #' ## Removing source_lang and source_text.
         #' blk <- transltr:::Block$new()
         #' blk$set_translations(en = "Hello, world!", fr = "Bonjour, monde!")
-        #' blk$source_key <- "en"
+        #' blk$source_lang <- "en"
         #'
-        #' blk$source_key <- "fr"
+        #' blk$source_lang <- "fr"
         #' blk$rm_translation("en")
-        rm_translation = \(key = "") {
-            assert_chr1(key)
+        rm_translation = \(lang = "") {
+            assert_chr1(lang)
 
-            if (key == private$.source_key) {
+            if (lang == private$.source_lang) {
                 stopf(
-                    "'key' '%s' is the current 'source_key'. %s",
-                    "Set a new one before removing it.", key)
+                    "'%s' is the current 'source_lang'. %s",
+                    lang, "Set a new one before removing it.")
             }
 
-            keys <- self$keys
-            assert_match(key, keys[keys != self$source_key], quote_values = TRUE)
+            langs <- self$languages
+            assert_match(lang, langs[langs != self$source_lang], quote_values = TRUE)
 
-            rm(list = key, envir = private$.translations)
+            rm(list = lang, envir = private$.translations)
             return(invisible(TRUE))
         },
 
@@ -565,6 +546,7 @@ Block <- R6::R6Class("Block",
         rm_location = \(path = "") {
             assert_chr1(path)
             assert_match(path, names(private$.locations), quote_values = TRUE)
+
             rm(list = path, envir = private$.locations)
             return(invisible(TRUE))
         }

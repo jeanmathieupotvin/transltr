@@ -17,7 +17,7 @@ translator_scopes()
 used to unset a previously registered \code{\link{Translator}} object.}
 
 \item{scope}{A \code{NULL}, or an optional non-empty and non-\link[base:NA]{NA}
-character string. The \emph{scope} of \code{x}. See Details.}
+character string.}
 }
 \value{
 \code{\link[=translator_set]{translator_set()}} returns \code{NULL}, invisibly. It is used for its side-effect

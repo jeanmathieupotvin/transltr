@@ -49,8 +49,7 @@
 #' @param x A [`Translator`][Translator] object, or `NULL`. The latter is
 #'   used to unset a previously registered [`Translator`][Translator] object.
 #'
-#' @param scope A `NULL`, or an optional non-empty and non-[NA][base::NA]
-#'   character string. The *scope* of `x`. See Details.
+#' @template param-scope
 #'
 #' @returns
 #' [translator_set()] returns `NULL`, invisibly. It is used for its side-effect

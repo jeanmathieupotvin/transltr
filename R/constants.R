@@ -43,11 +43,12 @@ NULL
 #' @keywords internal
 .__STR_FORMAL_CONCAT_DEFAULT <- " "
 
-#' @format * `.__STR_FORMAL_KEY_DEFAULT` is a character string equal to `"en"`.
-#'   It matches the value of formal argument `source_key` of [translate()].
+#' @format * `.__STR_FORMAL_SOURCE_LANG_DEFAULT` is a character string equal
+#'   to `"en"`. It matches the value of formal argument `source_key` of
+#'   [translate()].
 #' @rdname constants
 #' @keywords internal
-.__STR_FORMAL_KEY_DEFAULT <- "en"
+.__STR_FORMAL_SOURCE_LANG_DEFAULT <- "en"
 
 #' @format * `.__CHR_EXCLUDED_NS` is a character vector containing elements
 #'   `"base"`, and `"transltr"`. These are the names of excluded packages (or

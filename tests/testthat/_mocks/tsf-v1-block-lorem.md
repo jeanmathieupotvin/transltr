@@ -43,7 +43,7 @@ las hojas "Letraset", las cuales contenian pasajes de Lorem Ipsum, y más
 recientemente con software de autoedición, como por ejemplo Aldus PageMaker, el
 cual incluye versiones de Lorem Ipsum.
 
-## jp
+## ja
 
 Lorem Ipsum は、印刷および植字業界の単なるダミー テキストです。
 Lorem Ipsum は 1500 年代以来業界の標準ダミー テキストであり、
