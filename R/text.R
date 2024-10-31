@@ -110,14 +110,14 @@ text_normalize <- function(..., .concat = " ") {
 }
 
 #' @rdname text
+#' @importFrom digest sha1
 #' @keywords internal
 text_hash <- function(.lang = "", .text = "", .algo = get_hash_algorithms()) {
     x <- sprintf("%s:%s", .lang, .text)
 
     return(
         switch(.algo,
-            sha1 = digest::digest(
-                charToRaw(x),
+            sha1 = digest::digest(charToRaw(x),
                 algo      = "sha1",
                 serialize = FALSE),
             utf8 = as.character(sum(cumsum(utf8ToInt(x)))),

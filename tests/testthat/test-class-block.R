@@ -41,6 +41,7 @@ test_that("active binding hash_algorithm returns registered hash_algorithm", {
 test_that("active binding hash_algorithm validates value", {
     expect_error(blk1$hash_algorithm <- 1L)
     expect_error(blk1$hash_algorithm <- "new-algo")
+    expect_snapshot(blk1$hash_algorithm <- 1L,         error = TRUE)
     expect_snapshot(blk1$hash_algorithm <- "new-algo", error = TRUE)
 })
 
@@ -58,6 +59,7 @@ test_that("active binding source_lang returns registered source_lang", {
 test_that("active binding source_lang validates value", {
     expect_error(blk1$source_lang <- 1L)
     expect_error(blk1$source_lang <- "new-lang")
+    expect_snapshot(blk1$source_lang <- 1L,         error = TRUE)
     expect_snapshot(blk1$source_lang <- "new-lang", error = TRUE)
 })
 
@@ -124,6 +126,8 @@ test_that("active binding locations throws an error if value is not missing", {
 test_that("$initialize() works", {
     # It can only be tested indirectly via $new().
     blk <- Block$new("utf8")
+
+    expect_s3_class(blk, c("Block", "R6"), exact = TRUE)
     expect_identical(blk$hash_algorithm, "utf8")
     expect_type(blk$.__enclos_env__$private$.translations, "environment")
 })
@@ -167,8 +171,8 @@ test_that("$set_translations() works", {
     blk <- Block$new()
 
     # Case ... is empty.
-    expect_true(Block$new()$set_translations())
-    expect_invisible(Block$new()$set_translations())
+    expect_true(blk$set_translations())
+    expect_invisible(blk$set_translations())
 
     # Case ... is not empty.
     expect_true(blk$set_translations(en = "Hello, world!"))
@@ -257,7 +261,7 @@ test_that("block() returns an R6 object of class Block", {
         # These arguments should be ignored silently.
         1L, 1.0, 1.0 + 2i, raw(1L))
 
-    expect_s3_class(blk, "Block")
+    expect_s3_class(blk, c("Block", "R6"), exact = TRUE)
     expect_identical(blk$hash, "256e0d707386d0fcd9abf10ad994000bdaa25812")
     expect_identical(blk$hash_algorithm, "sha1")
     expect_identical(blk$source_lang, "en")

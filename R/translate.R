@@ -1,11 +1,11 @@
 #' Translate Text
 #'
-#' Translate source text to a language. This is an high-level interface to
+#' Translate source text. This is an high-level interface to
 #' [`Translator$translate()`][Translator].
 #'
 #' See [translator_set()] for more information on scopes.
 #'
-#' @param ... Any number of character vectors. The source text to translate.
+#' @template param-dots-source-text
 #'
 #' @template param-lang
 #'
@@ -13,12 +13,7 @@
 #'
 #' @template param-concat
 #'
-#' @template param-source-lang
-#'
-#' @note
-#' It is recommended to **always** use [translate()] instead of
-#' [`Translator$translate()`][Translator]. The latter is not detected by
-#' [find_translations()], while the former is.
+#' @template param-source-lang-no-example
 #'
 #' @seealso
 #'   [`Translator`][Translator],

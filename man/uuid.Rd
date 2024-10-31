@@ -10,10 +10,10 @@ uuid()
 
 uuid_raw()
 
-uuid_is(x = character())
+uuid_is(x)
 }
 \arguments{
-\item{x}{A non-empty character vector.}
+\item{x}{An \R object.}
 }
 \value{
 \code{\link[=uuid]{uuid()}} returns a character of length 1 containing exactly 36

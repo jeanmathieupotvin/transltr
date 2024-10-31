@@ -53,6 +53,7 @@
 #' @aliases Location
 #' @rdname class-location
 #' @keywords internal
+#' @export
 location <- function(
     path  = tempfile(),
     line1 = 1L,
@@ -101,6 +102,7 @@ location <- function(
 
 #' @rdname class-location
 #' @keywords internal
+#' @export
 is_location <- function(x) {
     return(inherits(x, "Location"))
 }
@@ -111,8 +113,8 @@ format.Location <- function(x, how = c("long", "short"), ...) {
     assert_arg(how)
     return(
         switch(how,
-            long  = format_long_location(x, ...),
-            short = format_short_location(x, ...)))
+            long  = .format_long_location(x, ...),
+            short = .format_short_location(x, ...)))
 }
 
 #' @rdname class-location
@@ -149,6 +151,7 @@ c.Location <- function(...) {
 
 #' @rdname class-location
 #' @keywords internal
+#' @export
 merge_locations <- function(...) {
     if (!all(vapply_1l(locs <- list(...), is_location))) {
         stops("values passed to '...' must all be 'Location' objects.")
@@ -158,7 +161,11 @@ merge_locations <- function(...) {
     return(lapply(groups, \(group) do.call(c, group)))
 }
 
-format_long_location <- function(x, ...) {
+
+# Internal functions -----------------------------------------------------------
+
+
+.format_long_location <- function(x, ...) {
     chars <- lapply(x, encodeString, width = NULL, justify = "right")
     xlist <- list(
         Path   = x$path,
@@ -172,7 +179,7 @@ format_long_location <- function(x, ...) {
     return(format_vector(xlist, "<Location>", .show_nokey = FALSE))
 }
 
-format_short_location <- function(x, ...) {
+.format_short_location <- function(x, ...) {
     if (length(x$line1) > 1L) {
         stops(
             "'line1', 'col1', 'line2', and 'col2' must all have ",

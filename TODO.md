@@ -1,17 +1,12 @@
 # What To Do Next
 
-These tasks were last updated on `October 29, 2024`.
-
-> **This file is only useful for the maintainer and contributors.
-> Regular users may safely ignore it, as it does not constitute a formal
-> roadmap for the project.**
+> **This file is only useful for the contributors. Users should ignore it, as
+> it does not constitute a formal roadmap for the project.**
 
 # For Initial Release to CRAN
 
 `[Translator]`
-- Write documentation and tests for class `Translator` and related features.
-- Update documentation of class `Block` after writing documentation of class
-  `Translator`.
+- Update documentation and tests of class `Block`.
 
 `[translate()]`
 - Write documentation and tests for `translate()`.
@@ -80,6 +75,13 @@ These tasks were last updated on `October 29, 2024`.
 - Revisit `translator_scope()`.
   - I think the call stack can be traversed more efficiently by looping
     on enclosures of evaluation frames.
+
+`[Cache]`
+- Explore the idea of replacing `.__translators_cache__` by a singleton
+  instance of `TranslatorsCache` R6 class. Its interface would have two methods:
+  `set()`, and `get()`, and bindings would be defined in `private`.
+  - It would be instantiated once in a `zzz.R` script.
+  - It would be opaque to users, just like the current implementation.
 
 `[Documentation]`
 - Review older documentation for consistency.

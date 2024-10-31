@@ -30,11 +30,10 @@
 #' @param locations A list of [`Location`][Location] objects or a single
 #'   [`Location`][Location] object.
 #'
-#' @param x Any \R object. A [`Block`][Block] object for [format()] and
-#'   [print()].
+#' @param x Any \R object.
 #'
 #' @param ... Usage depends on the underlying function.
-#'   * Any number of [`Location`][Location] objects and/or named character
+#'   * Any number of [`Location`][Location] objects, and/or named character
 #'     strings for [block()] (in no preferred order).
 #'   * Any number of [`Block`][Block] objects for [merge_blocks()] and S3
 #'     method [c()].
@@ -108,6 +107,7 @@
 #' @include constants.R
 #' @rdname class-block
 #' @keywords internal
+#' @export
 block <- function(source_lang = "", ..., hash_algorithm = get_hash_algorithms()) {
     assert_chr1(source_lang)
 
@@ -167,6 +167,7 @@ block <- function(source_lang = "", ..., hash_algorithm = get_hash_algorithms())
 
 #' @rdname class-block
 #' @keywords internal
+#' @export
 is_block <- function(x) {
     return(inherits(x, "Block"))
 }
@@ -221,6 +222,7 @@ c.Block <- function(...) {
 
 #' @rdname class-block
 #' @keywords internal
+#' @export
 merge_blocks <- function(..., hash_algorithm = get_hash_algorithms()) {
     if (!all(vapply_1l(blocks <- list(...), is_block))) {
         stops("values passed to '...' must all be 'Block' objects.")
@@ -235,6 +237,7 @@ merge_blocks <- function(..., hash_algorithm = get_hash_algorithms()) {
 
 #' @rdname class-block
 #' @keywords internal
+#' @export
 as_block <- function(x, ...) {
     UseMethod("as_block")
 }
@@ -268,21 +271,8 @@ as_block.call <- function(x,
 }
 
 #' @rdname class-block
-#' @export
-as_block.character <- function(x,
-    source_lang     = "",
-    locations      = list(),
-    hash_algorithm = get_hash_algorithms(),
-    ...)
-{
-    # FIXME: this is a placeholder for future purposes.
-    # I am unusure whether it will be useful or not.
-    return(.NotYetUsed())
-}
-
-#' @rdname class-block
-#' @importFrom digest sha1
 #' @keywords internal
+#' @export
 Block <- R6::R6Class("Block",
     lock_class   = TRUE,
     lock_objects = TRUE,
@@ -315,9 +305,8 @@ Block <- R6::R6Class("Block",
         #' @template field-hash-algorithm
         hash_algorithm = \(value) {
             if (!missing(value)) {
-                assert_chr1(value)
-                assert_match(value,
-                    choices      = get_hash_algorithms(),
+                assert_chr1(value, x_name = "hash_algorithm")
+                assert_match(value, get_hash_algorithms(),
                     quote_values = TRUE,
                     x_name       = "hash_algorithm")
 
@@ -334,7 +323,7 @@ Block <- R6::R6Class("Block",
         #' @template field-source-lang
         source_lang = \(value) {
             if (!missing(value)) {
-                assert_chr1(value)
+                assert_chr1(value, x_name = "source_lang")
                 assert_match(value, self$languages,
                     quote_values = TRUE,
                     x_name       = "source_lang")
@@ -425,6 +414,7 @@ Block <- R6::R6Class("Block",
         #' @details This method can also be used to extract `source_text`.
         #'
         #  NOTE: Package roxygen2 reuses templates whenever within an R6 class.
+        #
         #' @template param-lang
         #'
         #' @return A character string. `NULL` is returned if `lang` is not

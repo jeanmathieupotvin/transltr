@@ -99,18 +99,18 @@ test_that("format() validates how", {
     expect_snapshot(format(location(), "error"), error = TRUE)
 })
 
-test_that("format_short_location() throws an error if multiple ranges must be printed", {
+test_that(".format_short_location() throws an error if multiple ranges must be printed", {
     expect_error(format(loc2, "short"))
     expect_snapshot(format(loc2, "short"), error = TRUE)
 })
 
-test_that("format_short_location() returns a character string", {
+test_that(".format_short_location() returns a character string", {
     expect_identical(
         format(location(path), "short"),
         "tests/testthat/my-test-file: ln 1, col 1 @ ln 1, col 1")
 })
 
-test_that("format_long_location() returns a character", {
+test_that(".format_long_location() returns a character", {
     # This test block is a little bit
     # fragile, but hardcoding expected
     # values is much more simpler.

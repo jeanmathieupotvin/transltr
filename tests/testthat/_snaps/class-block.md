@@ -10,12 +10,28 @@
 # active binding hash_algorithm validates value
 
     Code
+      blk1$hash_algorithm <- 1L
+    Condition
+      Error:
+      ! 'hash_algorithm' must be a non-NA and non-empty character of length 1.
+
+---
+
+    Code
       blk1$hash_algorithm <- "new-algo"
     Condition
       Error:
       ! 'hash_algorithm' must be equal to 'sha1', or 'utf8'.
 
 # active binding source_lang validates value
+
+    Code
+      blk1$source_lang <- 1L
+    Condition
+      Error:
+      ! 'source_lang' must be a non-NA and non-empty character of length 1.
+
+---
 
     Code
       blk1$source_lang <- "new-lang"

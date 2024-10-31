@@ -13,7 +13,9 @@ translate(
 )
 }
 \arguments{
-\item{...}{Any number of character vectors. The source text to translate.}
+\item{...}{Any number of character vectors. The source text to translate.
+Values can be empty and/or \link[base:NA]{NA}, but can lead to unexpected
+results.}
 
 \item{lang}{A non-empty and non-\link[base:NA]{NA} character string. The
 requested language.
@@ -33,27 +35,15 @@ character string.}
 concatenate values passed to \code{...}.}
 
 \item{source_lang}{A non-empty and non-\link[base:NA]{NA} character string. The
-language of the (untranslated) source text.
-
-A language is usually a code (of two or three letters) for a native
-language name. For example, \code{ja} is a code for \code{日本語} (Japanese). While
-users retain full control over codes, it is best to use language codes
-stemming from well-known schemes such as
-\href{https://en.wikipedia.org/wiki/IETF_language_tag}{IETF BCP 47}, or
-\href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
-Doing so maximizes portability and cross-compatibility between packages.}
+language of the (untranslated) source text. See argument \code{lang} for more
+information.}
 }
 \description{
-Translate source text to a language. This is an high-level interface to
+Translate source text. This is an high-level interface to
 \code{\link[=Translator]{Translator$translate()}}.
 }
 \details{
 See \code{\link[=translator_set]{translator_set()}} for more information on scopes.
-}
-\note{
-It is recommended to \strong{always} use \code{\link[=translate]{translate()}} instead of
-\code{\link[=Translator]{Translator$translate()}}. The latter is not detected by
-\code{\link[=find_translations]{find_translations()}}, while the former is.
 }
 \examples{
 ## Create a Translator. This would normally be done

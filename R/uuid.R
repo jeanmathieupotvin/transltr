@@ -13,7 +13,7 @@
 #' values. The user must ensure that the underlying seed is appropriate when
 #' generating UUIDs. See [set.seed()] for more information.
 #'
-#' @param x A non-empty character vector.
+#' @param x An \R object.
 #'
 #' @returns
 #' [uuid()] returns a character of length 1 containing exactly 36
@@ -108,7 +108,7 @@ uuid_raw <- function() {
 
 #' @rdname uuid
 #' @keywords internal
-uuid_is <- function(x = character()) {
+uuid_is <- function(x) {
     if (!is_chr(x, FALSE)) {
         return(FALSE)
     }

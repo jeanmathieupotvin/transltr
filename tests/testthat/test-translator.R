@@ -50,12 +50,10 @@ test_that("translator_set() sets scope if null", {
 })
 
 test_that("translator_set() sets translator objects", {
-    # To test further scopes stemming from namespaces and
-    # named environments, we use evalq(). Each call below
-    # simulates a function definition in a package. This
-    # function calls translator_set(), which infers scope
-    # from the underlying namespace (as expected). Since
-    # it returns a matching id for testing purposes.
+    # To test further scopes stemming from namespaces and named
+    # environments, we use evalq(). Each call below simulates a
+    # function in a package. It calls translator_set(), which
+    # infers scope from the underlying namespace.
     scope_global <- evalq(envir = globalenv(), \() {
         translator_set(translator(id = "global"))
         id <- translator_get()$id

@@ -10,7 +10,6 @@
 \alias{merge_blocks}
 \alias{as_block}
 \alias{as_block.call}
-\alias{as_block.character}
 \alias{Block}
 \title{Translations Blocks}
 \usage{
@@ -38,14 +37,6 @@ merge_blocks(..., hash_algorithm = get_hash_algorithms())
 as_block(x, ...)
 
 \method{as_block}{call}(x, locations = list(), hash_algorithm = get_hash_algorithms(), ...)
-
-\method{as_block}{character}(
-  x,
-  source_lang = "",
-  locations = list(),
-  hash_algorithm = get_hash_algorithms(),
-  ...
-)
 }
 \arguments{
 \item{source_lang}{A non-empty and non-\link[base:NA]{NA} character string. The
@@ -61,7 +52,7 @@ Doing so maximizes portability and cross-compatibility between packages.}
 
 \item{...}{Usage depends on the underlying function.
 \itemize{
-\item Any number of \code{\link{Location}} objects and/or named character
+\item Any number of \code{\link{Location}} objects, and/or named character
 strings for \code{\link[=block]{block()}} (in no preferred order).
 \item Any number of \code{\link{Block}} objects for \code{\link[=merge_blocks]{merge_blocks()}} and S3
 method \code{\link[=c]{c()}}.
@@ -69,9 +60,9 @@ method \code{\link[=c]{c()}}.
 \code{\link[=print]{print()}}, and \code{\link[=as_block]{as_block()}}.
 }}
 
-\item{hash_algorithm}{A character string. The algorithm to use when hashing
-source information for identification purposes. It must be a value returned
-by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}.}
+\item{hash_algorithm}{A character string equal to one of the values returned
+by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}. The algorithm to use when hashing source
+information for identification purposes.}
 
 \item{source_text}{A non-empty and non-\link[base:NA]{NA} character string. The
 (untranslated) source text.}
@@ -86,8 +77,7 @@ values. The translations of \code{source_text}.}
 \item{locations}{A list of \code{\link{Location}} objects or a single
 \code{\link{Location}} object.}
 
-\item{x}{Any \R object. A \code{\link{Block}} object for \code{\link[=format]{format()}} and
-\code{\link[=print]{print()}}.}
+\item{x}{Any \R object.}
 }
 \value{
 \code{\link[=block]{block()}} and \code{\link[=.block]{.block()}} return an \code{\link[R6:R6Class]{R6}} object of class
@@ -210,9 +200,9 @@ a unique identifier for the \code{\link{Block}} object.
 This is a \strong{read-only} field. It is automatically updated
 whenever fields \code{source_lang} and/or \code{hash_algorithm} are updated.}
 
-\item{\code{hash_algorithm}}{A character string. The algorithm to use when hashing
-source information for identification purposes. It must be a value returned
-by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}.}
+\item{\code{hash_algorithm}}{A character string equal to one of the values returned
+by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}. The algorithm to use when hashing source
+information for identification purposes.}
 
 \item{\code{source_lang}}{A non-empty and non-\link[base:NA]{NA} character string. The
 language of the (untranslated) source text.
@@ -265,9 +255,9 @@ Create a \code{\link{Block}} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{hash_algorithm}}{A character string. The algorithm to use when hashing
-source information for identification purposes. It must be a value returned
-by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}.}
+\item{\code{hash_algorithm}}{A character string equal to one of the values returned
+by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}. The algorithm to use when hashing source
+information for identification purposes.}
 }
 \if{html}{\out{</div>}}
 }

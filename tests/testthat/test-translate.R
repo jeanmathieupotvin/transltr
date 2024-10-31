@@ -21,23 +21,26 @@ test_that("translate() validates translator object it fetches for given scope", 
 test_that("translate() works with implicit scopes", {
     # To test further scopes stemming from namespaces and named
     # environments, we use evalq(). Each call below simulates a
-    # function definition in a package. This function calls
-    # translator_set() and translate(), which infer scope from
-    # the underlying namespace (as expected). Since it returns
-    # a matching id for testing purposes.
+    # function in a package. It calls functions that infer scope
+    # from the underlying namespace. block() is not exported, and
+    # is not on the search path in normal circumstances. We must
+    # fetch it explicitly from the package.
     out_global <- evalq(envir = globalenv(), \() {
         on.exit(translator_set(NULL))
-        translator_set(translator(block("en", en = "Hello!", fr = "Bonjour!")))
+        blk <- transltr:::block("en", en = "Hello!", fr = "Bonjour!")
+        translator_set(translator(blk))
         return(translate("Hello!", lang = "fr"))
     })()
     out_stats <- evalq(envir = asNamespace("stats"), \() {
         on.exit(translator_set(NULL))
-        translator_set(translator(block("en", en = "Hello!", es = "¡Hola!")))
+        blk <- transltr:::block("en", en = "Hello!", es = "¡Hola!")
+        translator_set(translator(blk))
         return(translate("Hello!", lang = "es"))
     })()
     out_utils <- evalq(envir = asNamespace("utils"), \() {
         on.exit(translator_set(NULL))
-        translator_set(translator(block("en", en = "Hello!", ja = "こんにちは！")))
+        blk <- transltr:::block("en", en = "Hello!", ja = "こんにちは！")
+        translator_set(translator(blk))
         return(translate("Hello!", lang = "ja"))
     })()
 
