@@ -2,7 +2,6 @@
 % Please edit documentation in R/class-block.R
 \name{block}
 \alias{block}
-\alias{.block}
 \alias{is_block}
 \alias{format.Block}
 \alias{print.Block}
@@ -11,18 +10,9 @@
 \alias{as_block}
 \alias{as_block.call}
 \alias{Block}
-\title{Translations Blocks}
+\title{Source Text and Translations}
 \usage{
 block(source_lang = "", ..., hash_algorithm = get_hash_algorithms())
-
-.block(
-  source_lang = "",
-  source_text = "",
-  hash_algorithm = get_hash_algorithms(),
-  langs = character(),
-  texts = character(),
-  locations = list()
-)
 
 is_block(x)
 
@@ -36,7 +26,7 @@ merge_blocks(..., hash_algorithm = get_hash_algorithms())
 
 as_block(x, ...)
 
-\method{as_block}{call}(x, locations = list(), hash_algorithm = get_hash_algorithms(), ...)
+\method{as_block}{call}(x, location = list(), hash_algorithm = get_hash_algorithms(), ...)
 }
 \arguments{
 \item{source_lang}{A non-empty and non-\link[base:NA]{NA} character string. The
@@ -64,100 +54,80 @@ method \code{\link[=c]{c()}}.
 by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}. The algorithm to use when hashing source
 information for identification purposes.}
 
-\item{source_text}{A non-empty and non-\link[base:NA]{NA} character string. The
-(untranslated) source text.}
-
-\item{langs}{A character vector of non-empty and non-\link[base:NA]{NA}
-values. The languages of \code{texts}. See argument \code{source_lang} for
-more information.}
-
-\item{texts}{A character vector of of non-empty and non-\link[base:NA]{NA}
-values. The translations of \code{source_text}.}
-
-\item{locations}{A list of \code{\link{Location}} objects or a single
-\code{\link{Location}} object.}
-
 \item{x}{Any \R object.}
+
+\item{location}{A \code{\link{Location}} object.}
 }
 \value{
-\code{\link[=block]{block()}} and \code{\link[=.block]{.block()}} return an \code{\link[R6:R6Class]{R6}} object of class
-\code{\link{Block}}.
+\code{\link[=block]{block()}}, \code{\link[=c]{c()}}, and \code{\link[=as_block]{as_block()}} return an \code{\link[R6:R6Class]{R6}} object of
+class \code{\link{Block}}.
 
-\code{\link[=is_block]{is_block()}} returns a logical.
+\code{\link[=is_block]{is_block()}} returns a logical value.
 
-\code{\link[=format]{format()}} returns a character.
+\code{\link[=format]{format()}} returns a character vector.
 
 \code{\link[=print]{print()}} returns argument \code{x} invisibly.
 
-\code{\link[=c]{c()}} returns a \code{\link{Block}} object. It can only combine objects
-having the exact same \code{hash}, which is equivalent to having the same
-\code{hash_algorithm}, \code{source_lang}, and \code{source_text}. In that case, the
-underlying translations and locations are combined into coherent sets.
-
-\code{\link[=merge_blocks]{merge_blocks()}} returns a list of \code{\link{Block}} objects. It is
-a generalized version of \code{\link[=c]{c()}} that handles \code{\link{Block}} objects
-having different hash(es).
-
-\code{\link[=as_block]{as_block()}} returns a \code{\link{Block}} object.
+\code{\link[=merge_blocks]{merge_blocks()}} returns a list of (combined) \code{\link{Block}} objects.
 }
 \description{
-Structure and manipulate source text and its translations.
+Store, structure, and manipulate \strong{a single} source text and its
+translations.
 }
 \details{
-A \code{\link{Block}} is first and foremost a collection of translations of
-a given source text (i.e. text extracted from \R source scripts). Each
-translation is uniquely identified by a language.
+A \code{\link{Block}} object is a collection of translations of a \emph{source text}
+(i.e. text extracted from \R source scripts). It exposes a set of methods
+that can be used to safely manipulate the information it contains, but it
+is unlikely to be useful in typical circumstances. See class
+\code{\link{Translator}} instead.
+\subsection{Combining Block Objects}{
 
-It has two further components.
-\enumerate{
-\item A repducible hash derived from an hashing algorithm that can be used
-to identify the source text and language.
-\item One or more source locations. See class \code{\link{Location}} for more
-information.
+\code{\link[=c]{c()}} can only combine \code{\link{Block}} objects having the same \code{hash}.
+This is equivalent to having the same \code{hash_algorithm}, \code{source_lang},
+and \code{source_text}. In that case, the underlying translations and
+\code{\link{Location}} objects are combined, and a new object is returned.
+
+\code{\link[=merge_blocks]{merge_blocks()}} is a generalized version of \code{\link[=c]{c()}} that handles any number
+of \code{\link{Block}} objects having possibly different hashes. It can be
+viewed as a vectorized version of \code{\link[=c]{c()}}.
 }
-
-Users should never attempt to manipulate the information contained in a
-\code{\link{Block}}. Consider using exported features instead.
-
-\code{\link{Block}} objects may be created on-the-fly for testing purposes
-with \code{\link[=block]{block()}}.
 }
 \examples{
 ## Create a Block object.
-transltr:::block("en",
-    transltr:::location("a", 1L, 2L, 3L, 4L),
-    transltr:::location("a", 1L, 2L, 3L, 4L),
-    transltr:::location("b", 5L, 6L, 7L, 8L),
-    transltr:::location("c", c(9L, 10L), c(11L, 12L), c(13L, 14L), c(15L, 16L)),
+block("en",
+    location("a", 1L, 2L, 3L, 4L),
+    location("a", 1L, 2L, 3L, 4L),
+    location("b", 5L, 6L, 7L, 8L),
+    location("c", c(9L, 10L), c(11L, 12L), c(13L, 14L), c(15L, 16L)),
     en = "Hello, world!",
     fr = "Bonjour, monde!",
     es = "¡Hola Mundo!",
     ja = "こんにちは世界！")
 
 ## Combine Blocks objects.
-b1 <- transltr:::block("en",
-    transltr:::location("a", 1L, 2L, 3L, 4L),
+b1 <- block("en",
+    location("a", 1L, 2L, 3L, 4L),
     en = "Hello, world!",
     fr = "Bonjour, monde!",
     es = "¡Hola Mundo!",
     ja = "こんにちは世界！")
 
-b2 <- transltr:::block("en",
-    transltr:::location("a", 5L, 6L, 7L, 8L),
+b2 <- block("en",
+    location("a", 5L, 6L, 7L, 8L),
     en     = "Hello, world!",
     fr     = "Bonjour, monde!",
     es     = "¡Hola Mundo!",
     `ja-2` = "こんにちは世界！")
 
-b3 <- transltr:::block("fr",
-    transltr:::location("c", 1L, 2L, 3L, 4L),
+b3 <- block("fr",
+    location("c", 1L, 2L, 3L, 4L),
     en     = "Hello, world!",
     fr     = "Bonjour, monde!",
     `es-2` = "¡Hola Mundo!",
     `ja-2` = "こんにちは世界！")
 
 c(b1, b2)
-transltr:::merge_blocks(b1, b2, b3)
+merge_blocks(b1, b2, b3)
 
 
 ## ------------------------------------------------
@@ -165,7 +135,7 @@ transltr:::merge_blocks(b1, b2, b3)
 ## ------------------------------------------------
 
 ## Registering source_lang and source_text.
-blk <- transltr:::Block$new()
+blk <- Block$new()
 blk$set_translation("en", "Hello, world!")
 blk$source_lang <- "en"
 
@@ -173,7 +143,7 @@ blk$source_lang <- "en"
 ## Method `Block$set_translations`
 ## ------------------------------------------------
 
-blk <- transltr:::Block$new()
+blk <- Block$new()
 blk$set_translations(en = "Hello, world!", fr = "Bonjour, monde!")
 
 ## ------------------------------------------------
@@ -181,7 +151,7 @@ blk$set_translations(en = "Hello, world!", fr = "Bonjour, monde!")
 ## ------------------------------------------------
 
 ## Removing source_lang and source_text.
-blk <- transltr:::Block$new()
+blk <- Block$new()
 blk$set_translations(en = "Hello, world!", fr = "Bonjour, monde!")
 blk$source_lang <- "en"
 
@@ -193,9 +163,10 @@ blk$rm_translation("en")
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
 \item{\code{hash}}{A non-empty and non-\link[base:NA]{NA} character string. A
-reproducible hash generated from \code{source_lang} and \code{source_text}
-using the algorithm specified by \code{hash_algorithm}. It is used as
-a unique identifier for the \code{\link{Block}} object.
+reproducible hash generated from \code{source_lang} and \code{source_text},
+and by using the algorithm specified by \code{hash_algorithm}. It is
+used as a unique identifier for the underlying \code{\link{Block}}
+object.
 
 This is a \strong{read-only} field. It is automatically updated
 whenever fields \code{source_lang} and/or \code{hash_algorithm} are updated.}
@@ -218,16 +189,19 @@ Doing so maximizes portability and cross-compatibility between packages.}
 \item{\code{source_text}}{A non-empty and non-\link[base:NA]{NA} character string. The
 (untranslated) source text. This is a \strong{read-only} field.}
 
-\item{\code{languages}}{A character vector. Registered language codes.
-This is a \strong{read-only} field.}
+\item{\code{languages}}{A character vector. Registered language
+codes. This is a \strong{read-only} field. Use methods below
+to update it.}
 
 \item{\code{translations}}{A named character vector. Registered
-translations of \code{source_text}. Names correspond to \code{languages}.
-This is a \strong{read-only} field.}
+translations of \code{source_text}, including the latter. Names
+correspond to \code{languages}. This is a \strong{read-only} field.
+Use methods below to update it.}
 
 \item{\code{locations}}{A list of \code{\link{Location}} objects giving
-the location(s) of \code{source_text} in the underlying project. This
-is a \strong{read-only} field.}
+the location(s) of \code{source_text} in the underlying project. It
+can be empty. This is a \strong{read-only} field. Use methods below
+to update it.}
 }
 \if{html}{\out{</div>}}
 }
@@ -269,7 +243,7 @@ An \code{\link[R6:R6Class]{R6}} object of class \code{\link{Block}}.
 \if{html}{\out{<a id="method-Block-get_translation"></a>}}
 \if{latex}{\out{\hypertarget{method-Block-get_translation}{}}}
 \subsection{Method \code{get_translation()}}{
-Extract a translation.
+Extract a translation, or the source text.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Block$get_translation(lang = "")}\if{html}{\out{</div>}}
 }
@@ -290,20 +264,16 @@ Doing so maximizes portability and cross-compatibility between packages.}
 }
 \if{html}{\out{</div>}}
 }
-\subsection{Details}{
-This method can also be used to extract \code{source_text}.
-}
-
 \subsection{Returns}{
-A character string. \code{NULL} is returned if \code{lang} is not
-registered.
+A character string. \code{NULL} is returned if the requested
+translation is not available.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Block-set_translation"></a>}}
 \if{latex}{\out{\hypertarget{method-Block-set_translation}{}}}
 \subsection{Method \code{set_translation()}}{
-Register a translation.
+Register a translation, or the source text.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Block$set_translation(lang = "", text = "")}\if{html}{\out{</div>}}
 }
@@ -338,7 +308,7 @@ A \code{TRUE} (invisibly).
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{## Registering source_lang and source_text.
-blk <- transltr:::Block$new()
+blk <- Block$new()
 blk$set_translation("en", "Hello, world!")
 blk$source_lang <- "en"
 }
@@ -351,7 +321,8 @@ blk$source_lang <- "en"
 \if{html}{\out{<a id="method-Block-set_translations"></a>}}
 \if{latex}{\out{\hypertarget{method-Block-set_translations}{}}}
 \subsection{Method \code{set_translations()}}{
-Register one or more translations.
+Register one or more translations, and/or the source
+text.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Block$set_translations(...)}\if{html}{\out{</div>}}
 }
@@ -374,7 +345,7 @@ A \code{TRUE} (invisibly).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{blk <- transltr:::Block$new()
+\preformatted{blk <- Block$new()
 blk$set_translations(en = "Hello, world!", fr = "Bonjour, monde!")
 }
 \if{html}{\out{</div>}}
@@ -421,22 +392,15 @@ Remove a registered translation.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{lang}}{A non-empty and non-\link[base:NA]{NA} character string. The
-requested language.
-
-A language is usually a code (of two or three letters) for a native
-language name. For example, \code{ja} is a code for \code{日本語} (Japanese). While
-users retain full control over codes, it is best to use language codes
-stemming from well-known schemes such as
-\href{https://en.wikipedia.org/wiki/IETF_language_tag}{IETF BCP 47}, or
-\href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
-Doing so maximizes portability and cross-compatibility between packages.}
+\item{\code{lang}}{A non-empty and non-\link[base:NA]{NA} character string
+identifying a translation to be removed.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Details}{
-You cannot remove a \code{lang} registered as \code{source_lang}.
-You must assign a new value as \code{source_lang} before doing so.
+You cannot remove \code{lang} when it is registered as the
+current \code{source_lang}. You must update \code{source_lang} before
+doing so.
 }
 
 \subsection{Returns}{
@@ -446,7 +410,7 @@ succeeded or not.
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{## Removing source_lang and source_text.
-blk <- transltr:::Block$new()
+blk <- Block$new()
 blk$set_translations(en = "Hello, world!", fr = "Bonjour, monde!")
 blk$source_lang <- "en"
 

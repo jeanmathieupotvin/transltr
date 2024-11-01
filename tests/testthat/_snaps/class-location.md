@@ -86,7 +86,7 @@
       Error:
       ! 'how' must be equal to long, or short.
 
-# format_short_location() throws an error if multiple ranges must be printed
+# .format_short_location() throws an error if multiple ranges must be printed
 
     Code
       format(loc2, "short")

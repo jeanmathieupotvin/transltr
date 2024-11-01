@@ -4,7 +4,7 @@
       blk1$hash <- "new-hash"
     Condition
       Error:
-      ! 'hash' cannot be manually overwritten.
+      ! 'hash' cannot be overwritten.
       Update it by setting 'source_lang' instead.
 
 # active binding hash_algorithm validates value
@@ -63,7 +63,7 @@
       blk1$translations <- "new-translation"
     Condition
       Error:
-      ! 'translations' cannot be manually overwritten.
+      ! 'translations' cannot be overwritten.
       Update them by setting, or removing translations.
 
 # active binding locations throws an error if value is not missing
@@ -72,7 +72,7 @@
       blk1$locations <- location()
     Condition
       Error:
-      ! 'locations' cannot be manually overwritten.
+      ! 'locations' cannot be overwritten.
       Update them by setting, or removing 'Location' objects.
 
 # $initialize() validates hash_algorithm

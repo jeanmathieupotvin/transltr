@@ -37,7 +37,7 @@ hash_decompress <- trans1$.__enclos_env__$private$.hash_expand
 # Class: active bindings -------------------------------------------------------
 
 
-test_that("active binding id returns registered id", {
+test_that("active binding id returns id", {
     expect_identical(trans1$id, "test-translator")
 })
 
@@ -52,7 +52,7 @@ test_that("active binding id validates value", {
     expect_snapshot(trans1$id <- 1L, error = TRUE)
 })
 
-test_that("active binding hash_algorithm returns registered algorithm", {
+test_that("active binding hash_algorithm returns algorithm", {
     expect_identical(trans1$hash_algorithm, "sha1")
 })
 
@@ -79,7 +79,7 @@ test_that("active binding hash_algorithm validates value", {
     expect_snapshot(trans1$hash_algorithm <- "new-algo", error = TRUE)
 })
 
-test_that("active binding hashes returns registered hashes", {
+test_that("active binding hashes returns hashes", {
     expect_null(Translator$new()$hashes)
     expect_identical(trans1$hashes, c(
         "256e0d707386d0fcd9abf10ad994000bdaa25812",
@@ -91,7 +91,7 @@ test_that("active binding hashes validates value", {
     expect_snapshot(trans1$hashes <- "error", error = TRUE)
 })
 
-test_that("active binding source_texts returns registered source texts", {
+test_that("active binding source_texts returns source texts", {
     expect_null(Translator$new()$source_texts)
     expect_identical(trans1$source_texts, c(
         `256e0d7` = "Hello, world!",
@@ -103,7 +103,7 @@ test_that("active binding source_texts validates value", {
     expect_snapshot(trans1$source_texts <- 1L, error = TRUE)
 })
 
-test_that("active binding languages returns registered languages", {
+test_that("active binding languages returns languages", {
     # This implicitly checks that hashes are also sorted.
     expect_null(Translator$new()$languages)
     expect_identical(trans1$languages, c("en", "fr"))
@@ -120,7 +120,7 @@ test_that("active binding languages validates value", {
     expect_snapshot(trans1$languages <- "error", error = TRUE)
 })
 
-test_that("active binding native_languages returns registered native languages", {
+test_that("active binding native_languages returns native languages", {
     # This implicitly checks that hashes are also sorted.
     expect_null(Translator$new()$native_languages)
     expect_identical(trans1$native_languages, c(en = "English", fr = "Français"))

@@ -23,8 +23,8 @@ is_location(x)
 merge_locations(...)
 }
 \arguments{
-\item{path}{A non-empty and non-\link[base:NA]{NA} character string identifying
-the origin of the range(s).}
+\item{path}{A non-empty and non-\link[base:NA]{NA} character string. The origin
+of the range(s).}
 
 \item{line1, col1}{A non-empty integer vector of non-\link[base:NA]{NA} values.
 The (inclusive) starting point(s) of what is being referenced.}
@@ -35,46 +35,73 @@ The (inclusive) end(s) of what is being referenced.}
 \item{x}{Any \R object for \code{\link[=is_location]{is_location()}}. An object of class
 \code{\link{Location}} for S3 methods \code{\link[=format]{format()}} and \code{\link[=print]{print()}}.}
 
+\item{how}{A character string equal to \code{"long"} or \code{"short"}. The latter is
+suitable for embedding \code{\link{Location}} objects in
+\link[=message]{messages}, and \link{conditions}.}
+
 \item{...}{Usage depends on the underlying function.
 \itemize{
-\item Further arguments passed to or from other methods for \code{\link[=format]{format()}} and
-\code{\link[=print]{print()}}.
 \item Any number of \code{\link{Location}} objects for \code{\link[=merge_locations]{merge_locations()}}
 and S3 method \code{\link[=c]{c()}}.
+\item Further arguments passed to or from other methods for \code{\link[=format]{format()}} and
+\code{\link[=print]{print()}}.
 }}
 }
 \value{
-\code{\link[=location]{location()}} returns a named list of length 5 and of class
+\code{\link[=location]{location()}} and \code{\link[=c]{c()}} returns a named list of length 5 and of class
 \code{\link{Location}}. It contains the values of \code{path}, \code{line1}, \code{col1},
 \code{line2}, and \code{col2}.
 
-\code{\link[=is_location]{is_location()}} returns a logical.
+\code{\link[=is_location]{is_location()}} returns a logical value.
 
-\code{\link[=format]{format()}} returns a character. If \code{how} is equal to \code{"short"}, it is of
-length 1.
+\code{\link[=format]{format()}} returns a character vector. If \code{how} is equal to \code{"short"}, it
+is of length 1.
 
 \code{\link[=print]{print()}} returns argument \code{x} invisibly.
 
-\code{\link[=c]{c()}} returns a \code{\link{Location}} object. It can only combine objects
-having the exact same \code{path}. In that case, ranges are combined into a
-coherent set of unique range(s).
-
-\code{\link[=merge_locations]{merge_locations()}} returns a list of \code{\link{Location}} objects. It is
-a generalized version of \code{\link[=c]{c()}} that handles \code{\link{Location}} objects
-having different path(s).
+\code{\link[=merge_locations]{merge_locations()}} returns a list of (combined) \code{\link{Location}}
+objects.
 }
 \description{
-Structure and manipulate source locations. Class \code{\link{Location}}
-is a more convenient alternative to \code{\link[=srcfile]{srcfile()}}.
+Store, structure, and manipulate source locations. Class
+\code{\link{Location}} is a lighter alternative to \code{\link[=srcfile]{srcfile()}} and
+related functionalities.
 }
 \details{
-A \emph{source location} is defined as a set of one or more ranges referencing
-contents wihin a common \emph{origin} that can be located via its underlying
-\code{path}. The latter can be anything: a file on disk, on a network, an object
-in memory, etc.
+A \code{\link{Location}} is a set of one or more line/column ranges
+referencing contents (like text or source code) within a common \emph{origin}
+identified by an underlying \code{path}. The latter is generic and can be
+\emph{anything}: a file on disk, on a network, a pointer, a binding, etc. What
+matters is the underlying context.
 
-\code{\link{Location}} objects may refer multiple distinct ranges within
-the same source script. This is why arguments \code{line1}, \code{col1}, \code{line2}, and
+\code{\link{Location}} objects may refer to multiple distinct ranges for
+the the same origin. This is why arguments \code{line1}, \code{col1}, \code{line2}, and
 \code{col2} accept integer vectors (and not only scalar values).
+\subsection{Combining Location Objects}{
+
+\code{\link[=c]{c()}} can only combine \code{\link{Location}} objects having the same
+\code{path}. In that case, the underlying ranges are combined into a set of
+non-duplicated range(s).
+
+\code{\link[=merge_locations]{merge_locations()}} is a generalized version of \code{\link[=c]{c()}} that handles any
+number of \code{\link{Location}} objects having possibly different paths.
+It can be viewed as a vectorized version of \code{\link[=c]{c()}}.
+}
+}
+\examples{
+## Create Location objects.
+loc1 <- location("a", 1L, 2L, 3L, 4L)
+loc2 <- location("a", 5L, 6L, 7L, 8L)
+loc3 <- location("c", c(9L, 10L), c(11L, 12L), c(13L, 14L), c(15L, 16L))
+
+## Combine Location objects.
+c(loc1, loc2)
+merge_locations(loc1, loc2, loc3)
+
+## Using a Location object to reference text in an R
+## character vector stored in a named environment.
+x <- "This is a string and it is held in memory for some purpose."
+location("<environment: R_GlobalEnv: x>", 1L, 11L, 1L, 16L)  ## "string"
+
 }
 \keyword{internal}

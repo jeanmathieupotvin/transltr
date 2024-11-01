@@ -1,6 +1,6 @@
 #' Source Texts and Translations
 #'
-#' Class [`Translator`][Translator] stores source texts and their translations.
+#' Store, structure, and manipulate source text**s** and their translations.
 #'
 #' A [`Translator`][Translator] object is a collection of many source texts,
 #' and related translations. It exposes a set of methods that can be used to
@@ -31,6 +31,16 @@
 #' @template param-id
 #'
 #' @template param-hash-algorithm
+#'
+#' @returns
+#' [translator()] returns an [`R6`][R6::R6] object of class
+#' [`Translator`][Translator].
+#'
+#' [is_block()] returns a logical value.
+#'
+#' [format()] returns a character vector.
+#'
+#' [print()] returns argument `x` invisibly.
 #'
 #' @seealso [translate()],
 #'   [translator_set()],
@@ -169,10 +179,11 @@ Translator <- R6::R6Class("Translator",
             return(private$.hash_algo)
         },
 
-        #' @field hashes A character vector of non-empty and
-        #'   non-[NA][base::NA] values, or `NULL`. The set of
-        #'   all `hash` exposed by registered [`Block`][Block]
-        #'   objects. If there is none, `hashes` is `NULL`.
+        #' @field hashes A character vector of non-empty and non-[NA][base::NA]
+        #'   values, or `NULL`. The set of all `hash` exposed by registered
+        #'   [`Block`][Block] objects. If there is none, `hashes` is `NULL`.
+        #'   This is a **read-only** field. It is automatically updated
+        #'   whenever field `hash_algorithm` is updated.
         hashes = \(value) {
             if (!missing(value)) {
                 stops(
@@ -188,6 +199,7 @@ Translator <- R6::R6Class("Translator",
         #'   non-[NA][base::NA] values, or `NULL`. The set of all
         #'   `source_text` exposed by registered [`Block`][Block]
         #'   objects. If there is none, `source_texts` is `NULL`.
+        #'   This is a **read-only** field.
         source_texts = \(value) {
             if (!missing(value)) {
                 stops(
@@ -209,6 +221,7 @@ Translator <- R6::R6Class("Translator",
         #'   non-[NA][base::NA] values, or `NULL`. The set of all
         #'   `languages` (codes) exposed by registered [`Block`][Block]
         #'   objects. If there is none, `languages` is `NULL`.
+        #'   This is a **read-only** field.
         languages = \(value) {
             if (!missing(value)) {
                 stops(
@@ -296,9 +309,7 @@ Translator <- R6::R6Class("Translator",
             return(self$get_translation(hash, lang))
         },
 
-        #' @description Extract a translation.
-        #'
-        #' @details This method can also be used to extract source texts.
+        #' @description Extract a translation, or source texts.
         #'
         #' @template param-hash
         #'

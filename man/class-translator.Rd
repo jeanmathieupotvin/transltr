@@ -35,8 +35,18 @@ information for identification purposes.}
 
 \item{x}{Any \R object.}
 }
+\value{
+\code{\link[=translator]{translator()}} returns an \code{\link[R6:R6Class]{R6}} object of class
+\code{\link{Translator}}.
+
+\code{\link[=is_block]{is_block()}} returns a logical value.
+
+\code{\link[=format]{format()}} returns a character vector.
+
+\code{\link[=print]{print()}} returns argument \code{x} invisibly.
+}
 \description{
-Class \code{\link{Translator}} stores source texts and their translations.
+Store, structure, and manipulate source text\strong{s} and their translations.
 }
 \details{
 A \code{\link{Translator}} object is a collection of many source texts,
@@ -119,20 +129,23 @@ collisions when using user-defined values.}
 by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}. The algorithm to use when hashing source
 information for identification purposes.}
 
-\item{\code{hashes}}{A character vector of non-empty and
-non-\link[base:NA]{NA} values, or \code{NULL}. The set of
-all \code{hash} exposed by registered \code{\link{Block}}
-objects. If there is none, \code{hashes} is \code{NULL}.}
+\item{\code{hashes}}{A character vector of non-empty and non-\link[base:NA]{NA}
+values, or \code{NULL}. The set of all \code{hash} exposed by registered
+\code{\link{Block}} objects. If there is none, \code{hashes} is \code{NULL}.
+This is a \strong{read-only} field. It is automatically updated
+whenever field \code{hash_algorithm} is updated.}
 
 \item{\code{source_texts}}{A character vector of non-empty and
 non-\link[base:NA]{NA} values, or \code{NULL}. The set of all
 \code{source_text} exposed by registered \code{\link{Block}}
-objects. If there is none, \code{source_texts} is \code{NULL}.}
+objects. If there is none, \code{source_texts} is \code{NULL}.
+This is a \strong{read-only} field.}
 
 \item{\code{languages}}{A character vector of non-empty and
 non-\link[base:NA]{NA} values, or \code{NULL}. The set of all
 \code{languages} (codes) exposed by registered \code{\link{Block}}
-objects. If there is none, \code{languages} is \code{NULL}.}
+objects. If there is none, \code{languages} is \code{NULL}.
+This is a \strong{read-only} field.}
 
 \item{\code{native_languages}}{A named character vector of non-empty and
 non-\link[base:NA]{NA} values, or \code{NULL}. An optional, but useful map
@@ -244,7 +257,7 @@ in the requested language, or \code{NULL} if none is available.
 \if{html}{\out{<a id="method-Translator-get_translation"></a>}}
 \if{latex}{\out{\hypertarget{method-Translator-get_translation}{}}}
 \subsection{Method \code{get_translation()}}{
-Extract a translation.
+Extract a translation, or source texts.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Translator$get_translation(hash = "", lang = "")}\if{html}{\out{</div>}}
 }
@@ -269,10 +282,6 @@ Doing so maximizes portability and cross-compatibility between packages.}
 }
 \if{html}{\out{</div>}}
 }
-\subsection{Details}{
-This method can also be used to extract source texts.
-}
-
 \subsection{Returns}{
 A character string. \code{NULL} is returned if the requested
 translation is not available (either \code{hash} or \code{lang} is not

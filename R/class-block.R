@@ -1,34 +1,24 @@
-#' Translations Blocks
+#' Source Text and Translations
 #'
-#' Structure and manipulate source text and its translations.
+#' Store, structure, and manipulate **a single** source text and its
+#' translations.
 #'
-#' A [`Block`][Block] is first and foremost a collection of translations of
-#' a given source text (i.e. text extracted from \R source scripts). Each
-#' translation is uniquely identified by a language.
+#' A [`Block`][Block] object is a collection of translations of a *source text*
+#' (i.e. text extracted from \R source scripts). It exposes a set of methods
+#' that can be used to safely manipulate the information it contains, but it
+#' is unlikely to be useful in typical circumstances. See class
+#' [`Translator`][Translator] instead.
 #'
-#' It has two further components.
+#' ## Combining Block Objects
 #'
-#'   1. A repducible hash derived from an hashing algorithm that can be used
-#'   to identify the source text and language.
+#' [c()] can only combine [`Block`][Block] objects having the same `hash`.
+#' This is equivalent to having the same `hash_algorithm`, `source_lang`,
+#' and `source_text`. In that case, the underlying translations and
+#' [`Location`][Location] objects are combined, and a new object is returned.
 #'
-#'   2. One or more source locations. See class [`Location`][Location] for more
-#'   information.
-#'
-#' Users should never attempt to manipulate the information contained in a
-#' [`Block`][Block]. Consider using exported features instead.
-#'
-#' [`Block`][Block] objects may be created on-the-fly for testing purposes
-#' with [block()].
-#'
-#' @param langs A character vector of non-empty and non-[NA][base::NA]
-#'   values. The languages of `texts`. See argument `source_lang` for
-#'   more information.
-#'
-#' @param texts A character vector of of non-empty and non-[NA][base::NA]
-#'   values. The translations of `source_text`.
-#'
-#' @param locations A list of [`Location`][Location] objects or a single
-#'   [`Location`][Location] object.
+#' [merge_blocks()] is a generalized version of [c()] that handles any number
+#' of [`Block`][Block] objects having possibly different hashes. It can be
+#' viewed as a vectorized version of [c()].
 #'
 #' @param x Any \R object.
 #'
@@ -40,69 +30,60 @@
 #'   * Further arguments passed to or from other methods for [format()],
 #'     [print()], and [as_block()].
 #'
-#' @template param-source-lang
+#' @param location A [`Location`][Location] object.
 #'
-#' @template param-source-text
+#' @template param-source-lang
 #'
 #' @template param-hash-algorithm
 #'
 #' @returns
-#' [block()] and [.block()] return an [`R6`][R6::R6] object of class
-#' [`Block`][Block].
+#' [block()], [c()], and [as_block()] return an [`R6`][R6::R6] object of
+#' class [`Block`][Block].
 #'
-#' [is_block()] returns a logical.
+#' [is_block()] returns a logical value.
 #'
-#' [format()] returns a character.
+#' [format()] returns a character vector.
 #'
 #' [print()] returns argument `x` invisibly.
 #'
-#' [c()] returns a [`Block`][Block] object. It can only combine objects
-#' having the exact same `hash`, which is equivalent to having the same
-#' `hash_algorithm`, `source_lang`, and `source_text`. In that case, the
-#' underlying translations and locations are combined into coherent sets.
-#'
-#' [merge_blocks()] returns a list of [`Block`][Block] objects. It is
-#' a generalized version of [c()] that handles [`Block`][Block] objects
-#' having different hash(es).
-#'
-#' [as_block()] returns a [`Block`][Block] object.
+#' [merge_blocks()] returns a list of (combined) [`Block`][Block] objects.
 #'
 #' @examples
 #' ## Create a Block object.
-#' transltr:::block("en",
-#'     transltr:::location("a", 1L, 2L, 3L, 4L),
-#'     transltr:::location("a", 1L, 2L, 3L, 4L),
-#'     transltr:::location("b", 5L, 6L, 7L, 8L),
-#'     transltr:::location("c", c(9L, 10L), c(11L, 12L), c(13L, 14L), c(15L, 16L)),
+#' block("en",
+#'     location("a", 1L, 2L, 3L, 4L),
+#'     location("a", 1L, 2L, 3L, 4L),
+#'     location("b", 5L, 6L, 7L, 8L),
+#'     location("c", c(9L, 10L), c(11L, 12L), c(13L, 14L), c(15L, 16L)),
 #'     en = "Hello, world!",
 #'     fr = "Bonjour, monde!",
 #'     es = "¡Hola Mundo!",
 #'     ja = "こんにちは世界！")
 #'
 #' ## Combine Blocks objects.
-#' b1 <- transltr:::block("en",
-#'     transltr:::location("a", 1L, 2L, 3L, 4L),
+#' b1 <- block("en",
+#'     location("a", 1L, 2L, 3L, 4L),
 #'     en = "Hello, world!",
 #'     fr = "Bonjour, monde!",
 #'     es = "¡Hola Mundo!",
 #'     ja = "こんにちは世界！")
 #'
-#' b2 <- transltr:::block("en",
-#'     transltr:::location("a", 5L, 6L, 7L, 8L),
+#' b2 <- block("en",
+#'     location("a", 5L, 6L, 7L, 8L),
 #'     en     = "Hello, world!",
 #'     fr     = "Bonjour, monde!",
 #'     es     = "¡Hola Mundo!",
 #'     `ja-2` = "こんにちは世界！")
 #'
-#' b3 <- transltr:::block("fr",
-#'     transltr:::location("c", 1L, 2L, 3L, 4L),
+#' b3 <- block("fr",
+#'     location("c", 1L, 2L, 3L, 4L),
 #'     en     = "Hello, world!",
 #'     fr     = "Bonjour, monde!",
 #'     `es-2` = "¡Hola Mundo!",
 #'     `ja-2` = "こんにちは世界！")
 #'
 #' c(b1, b2)
-#' transltr:::merge_blocks(b1, b2, b3)
+#' merge_blocks(b1, b2, b3)
 #'
 #' @include constants.R
 #' @rdname class-block
@@ -251,16 +232,17 @@ Block <- R6::R6Class("Block",
     ),
     active = list(
         #' @field hash A non-empty and non-[NA][base::NA] character string. A
-        #'   reproducible hash generated from `source_lang` and `source_text`
-        #'   using the algorithm specified by `hash_algorithm`. It is used as
-        #'   a unique identifier for the [`Block`][Block] object.
+        #'   reproducible hash generated from `source_lang` and `source_text`,
+        #'   and by using the algorithm specified by `hash_algorithm`. It is
+        #'   used as a unique identifier for the underlying [`Block`][Block]
+        #'   object.
         #'
         #'   This is a **read-only** field. It is automatically updated
         #'   whenever fields `source_lang` and/or `hash_algorithm` are updated.
         hash = \(value) {
             if (!missing(value)) {
                 stops(
-                    "'hash' cannot be manually overwritten.\n",
+                    "'hash' cannot be overwritten.\n",
                     "Update it by setting 'source_lang' instead.")
             }
 
@@ -294,7 +276,7 @@ Block <- R6::R6Class("Block",
                     x_name       = "source_lang")
 
                 private$.source_lang <- value
-                private$.hash       <- text_hash(
+                private$.hash <- text_hash(
                     value,
                     self$get_translation(value),
                     private$.hash_algo)
@@ -315,42 +297,41 @@ Block <- R6::R6Class("Block",
             return(self$get_translation(private$.source_lang))
         },
 
-        #' @field languages A character vector. Registered language codes.
-        #'   This is a **read-only** field.
+        #' @field languages A character vector. Registered language
+        #'   codes. This is a **read-only** field. Use methods below
+        #'   to update it.
         languages = \(value) {
             if (!missing(value)) {
                 stops(
-                    "'languages' cannot be manually overwritten.\n",
+                    "'languages' cannot be overwritten.\n",
                     "Update them by setting, or removing translations.")
             }
 
-            langs <- sort(names(private$.translations))
-            attr(langs, "source_lang") <- private$.source_lang
-            return(langs)
+            return(sort(names(private$.translations)))
         },
 
         #' @field translations A named character vector. Registered
-        #'   translations of `source_text`. Names correspond to `languages`.
-        #'   This is a **read-only** field.
+        #'   translations of `source_text`, including the latter. Names
+        #'   correspond to `languages`. This is a **read-only** field.
+        #'   Use methods below to update it.
         translations = \(value) {
             if (!missing(value)) {
                 stops(
-                    "'translations' cannot be manually overwritten.\n",
+                    "'translations' cannot be overwritten.\n",
                     "Update them by setting, or removing translations.")
             }
 
-            translations <- as.list(private$.translations, sorted = TRUE)
-            storage.mode(translations) <- "character"
-            return(translations)
+            return(unlist(as.list(private$.translations, sorted = TRUE)))
         },
 
         #' @field locations A list of [`Location`][Location] objects giving
-        #'   the location(s) of `source_text` in the underlying project. This
-        #'   is a **read-only** field.
+        #'   the location(s) of `source_text` in the underlying project. It
+        #'   can be empty. This is a **read-only** field. Use methods below
+        #'   to update it.
         locations = \(value) {
             if (!missing(value)) {
                 stops(
-                    "'locations' cannot be manually overwritten.\n",
+                    "'locations' cannot be overwritten.\n",
                     "Update them by setting, or removing 'Location' objects.")
             }
 
@@ -374,22 +355,20 @@ Block <- R6::R6Class("Block",
             return(self)
         },
 
-        #' @description Extract a translation.
-        #'
-        #' @details This method can also be used to extract `source_text`.
+        #' @description Extract a translation, or the source text.
         #'
         #  NOTE: Package roxygen2 reuses templates whenever within an R6 class.
         #
         #' @template param-lang
         #'
-        #' @return A character string. `NULL` is returned if `lang` is not
-        #'   registered.
+        #' @return A character string. `NULL` is returned if the requested
+        #'   translation is not available.
         get_translation = \(lang = "") {
             assert_chr1(lang)
             return(private$.translations[[lang]])
         },
 
-        #' @description Register a translation.
+        #' @description Register a translation, or the source text.
         #'
         #' @details This method is also used to register `source_lang` and
         #'  `source_text` **before** setting them as such. See Examples below.
@@ -401,7 +380,7 @@ Block <- R6::R6Class("Block",
         #'
         #' @examples
         #' ## Registering source_lang and source_text.
-        #' blk <- transltr:::Block$new()
+        #' blk <- Block$new()
         #' blk$set_translation("en", "Hello, world!")
         #' blk$source_lang <- "en"
         set_translation = \(lang = "", text = "") {
@@ -411,7 +390,8 @@ Block <- R6::R6Class("Block",
             return(invisible(TRUE))
         },
 
-        #' @description Register one or more translations.
+        #' @description Register one or more translations, and/or the source
+        #'   text.
         #'
         #' @param ... Any number of named, non-empty, and non-[NA][base::NA]
         #'   character strings.
@@ -422,7 +402,7 @@ Block <- R6::R6Class("Block",
         #' @return A `TRUE` (invisibly).
         #'
         #' @examples
-        #' blk <- transltr:::Block$new()
+        #' blk <- Block$new()
         #' blk$set_translations(en = "Hello, world!", fr = "Bonjour, monde!")
         set_translations = \(...) {
             if (!...length()) {
@@ -462,15 +442,19 @@ Block <- R6::R6Class("Block",
 
         #' @description Remove a registered translation.
         #'
-        #' @details You cannot remove a `lang` registered as `source_lang`.
-        #'   You must assign a new value as `source_lang` before doing so.
+        #' @param lang A non-empty and non-[NA][base::NA] character string
+        #'   identifying a translation to be removed.
+        #'
+        #' @details You cannot remove `lang` when it is registered as the
+        #'   current `source_lang`. You must update `source_lang` before
+        #'   doing so.
         #'
         #' @return A logical (invisibly) indicating whether the operation
         #'   succeeded or not.
         #'
         #' @examples
         #' ## Removing source_lang and source_text.
-        #' blk <- transltr:::Block$new()
+        #' blk <- Block$new()
         #' blk$set_translations(en = "Hello, world!", fr = "Bonjour, monde!")
         #' blk$source_lang <- "en"
         #'
