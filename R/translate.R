@@ -52,7 +52,7 @@ translate <- function(...,
     return(
         trans$translate(...,
             lang        = lang,
-            concat     = concat,
+            concat      = concat,
             source_lang = source_lang))
 }
 
