@@ -180,46 +180,6 @@
       ! a translation corresponding to 'source_lang' must be passed to '...'.
       It is treated as the source text.
 
-# .block() validates source_lang
-
-    Code
-      .block("")
-    Condition
-      Error:
-      ! 'source_lang' must be a non-NA and non-empty character of length 1.
-
-# .block() validates source_text
-
-    Code
-      .block("en", 1L)
-    Condition
-      Error:
-      ! 'source_text' must be a non-NA character of length 1.
-
-# .block() validates langs
-
-    Code
-      .block("en", "Hello, world!", langs = 1L)
-    Condition
-      Error:
-      ! 'langs' must be a character vector of non-NA values.
-
-# .block() validates texts
-
-    Code
-      .block("en", "Hello, world!", texts = 1L)
-    Condition
-      Error:
-      ! 'texts' must be a character vector of non-NA values.
-
-# .block() validates lengths of langs and trans_texts
-
-    Code
-      .block("en", trans_langs = "en")
-    Condition
-      Error in `.block()`:
-      ! unused argument (trans_langs = "en")
-
 # print() works
 
     Code

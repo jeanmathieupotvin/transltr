@@ -1,8 +1,8 @@
-transltr Coverage: 91.64%
+transltr Coverage: 91.63%
 R/find-translations.R: 0.00%
 R/translate.R: 55.56%
-R/class-block.R: 88.34%
-R/from-tsf.R: 98.03%
+R/class-block.R: 87.67%
+R/from-tsf.R: 98.08%
 R/assert.R: 100.00%
 R/class-location.R: 100.00%
 R/class-token.R: 100.00%

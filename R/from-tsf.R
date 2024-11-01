@@ -351,12 +351,16 @@ from_tsf_block_v1 <- function(
     hash    <- from_tsf_block_title_v1(t_split$TITLE_HASH[[1L]])
     src_key <- from_tsf_block_title_v1(t_split$TITLE_KEY_SRC[[1L]])
     src_txt <- from_tsf_block_txt_v1(t_split$TXT_SRC)
-    keys    <- lapply(t_split$TITLE_KEY_TXT, from_tsf_block_title_v1)
     locs    <- lapply(t_split[grepl("^LOC_SRC_", t_subs)], from_tsf_block_loc_v1)
     txts    <- lapply(t_split[grepl("^TXT_TRL_", t_subs)], from_tsf_block_txt_v1)
+    names(txts) <- lapply(t_split$TITLE_KEY_TXT, from_tsf_block_title_v1)
 
     # Step 2: create Block object.
-    blk <- .block(src_key, src_txt, hash_algorithm, unlist(keys), unlist(txts), locs)
+    blk <- Block$new(hash_algorithm)
+    blk$set_translation(src_key, src_txt)
+    blk$source_lang <- src_key
+    do.call(blk$set_locations,    locs)
+    do.call(blk$set_translations, txts)
 
     # Step 3: check source information.
     # Comparing hashes is equivalent to simultaneously

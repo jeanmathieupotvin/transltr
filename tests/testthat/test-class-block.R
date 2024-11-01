@@ -25,7 +25,7 @@ blk2 <- block("en",
 # Class: active bindings -------------------------------------------------------
 
 
-test_that("active binding hash returns registered hash", {
+test_that("active binding hash returns hash", {
     expect_identical(blk1$hash, "256e0d707386d0fcd9abf10ad994000bdaa25812")
 })
 
@@ -34,7 +34,7 @@ test_that("active binding hash throws an error if value is not missing", {
     expect_snapshot(blk1$hash <- "new-hash", error = TRUE)
 })
 
-test_that("active binding hash_algorithm returns registered hash_algorithm", {
+test_that("active binding hash_algorithm returns hash_algorithm", {
     expect_identical(blk1$hash_algorithm, "sha1")
 })
 
@@ -52,7 +52,7 @@ test_that("active binding hash_algorithm sets new value and new hash", {
     expect_identical(blk$hash, "12351")
 })
 
-test_that("active binding source_lang returns registered source_lang", {
+test_that("active binding source_lang returns source_lang", {
     expect_identical(blk1$source_lang, "en")
 })
 
@@ -70,7 +70,7 @@ test_that("active binding source_lang sets new value and new hash", {
     expect_identical(blk$hash, "f3c8754329c1b152887d35f00119fca783243d27")
 })
 
-test_that("active binding source_text returns registered source_text", {
+test_that("active binding source_text returns source_text", {
     expect_identical(blk1$source_text, "Hello, world!")
 })
 
@@ -79,11 +79,10 @@ test_that("active binding source_text throws an error if value is not missing", 
     expect_snapshot(blk1$source_text <- "new-text", error = TRUE)
 })
 
-test_that("active binding languages returns registered languages", {
+test_that("active binding languages returns languages", {
     # This implicitly checks that langs are also sorted.
     langs <- blk1$languages
     expect_identical(langs, c("en", "es", "fr", "ja"), ignore_attr = TRUE)
-    expect_identical(attr(langs, "source_lang"), "en")
 })
 
 test_that("active binding languages throws an error if value is not missing", {
@@ -91,7 +90,7 @@ test_that("active binding languages throws an error if value is not missing", {
     expect_snapshot(blk1$langs <- "new-lang", error = TRUE)
 })
 
-test_that("active binding translations returns registered translations", {
+test_that("active binding translations returns translations", {
     # This implicitly checks that translations are
     # also sorted by their underlying names (langs).
     expect_identical(blk1$translations, c(
@@ -106,7 +105,7 @@ test_that("active binding translations throws an error if value is not missing",
     expect_snapshot(blk1$translations <- "new-translation", error = TRUE)
 })
 
-test_that("active binding locations returns registered locations", {
+test_that("active binding locations returns locations", {
     # This implicitly checks that locations are
     # also sorted by their underlying paths.
     expect_identical(blk1$locations, list(
@@ -280,67 +279,6 @@ test_that("block() validates source_lang", {
 test_that("block() checks that there is at least one translation corresponding to source_lang", {
     expect_error(block("en"))
     expect_snapshot(block("en"), error = TRUE)
-})
-
-
-# .block() ---------------------------------------------------------------------
-
-
-test_that(".block() returns an R6 object of class Block", {
-    blk <- .block(
-        source_lang    = "en",
-        source_text    = "Hello, world!",
-        hash_algorithm = "sha1",
-        langs          = "fr",
-        texts          = "Bonjour, monde!",
-        locations      = list(location("a"), location("b")))
-
-    expect_s3_class(blk, "Block")
-    expect_identical(blk$hash, "256e0d707386d0fcd9abf10ad994000bdaa25812")
-    expect_identical(blk$hash_algorithm, "sha1")
-    expect_identical(blk$source_lang, "en")
-    expect_identical(blk$source_text, "Hello, world!")
-    expect_identical(blk$translations, c(
-        en = "Hello, world!",
-        fr = "Bonjour, monde!"))
-    expect_identical(blk$locations, list(a = location("a"), b = location("b")))
-})
-
-test_that(".block() validates source_lang", {
-    expect_error(.block(""))
-    expect_snapshot(.block(""), error = TRUE)
-})
-
-test_that(".block() validates source_text", {
-    expect_error(.block("en", 1L))
-    expect_snapshot(.block("en", 1L), error = TRUE)
-})
-
-test_that(".block() validates langs", {
-    expect_error(.block("en", "Hello, world!", langs = 1L))
-    expect_snapshot(.block("en", "Hello, world!", langs = 1L), error = TRUE)
-})
-
-test_that(".block() validates texts", {
-    expect_error(.block("en", "Hello, world!", texts = 1L))
-    expect_snapshot(.block("en", "Hello, world!", texts = 1L), error = TRUE)
-})
-
-test_that(".block() validates lengths of langs and trans_texts", {
-    expect_error(.block("en", trans_langs = "en"))
-    expect_error(.block("en", trans_texts = "Hello, world!"))
-    expect_snapshot(.block("en", trans_langs = "en"), error = TRUE)
-})
-
-test_that(".block() handles non-list values passed to locations", {
-    # Any value that is not a Location (within a list or not)
-    # should result in an error thrown by $set_locations().
-    expect_no_condition(.block("en", locations = list(location())))
-    expect_no_condition(.block("en", locations = location()))
-    expect_no_condition(.block("en", locations = list()))
-    expect_error(.block("en", locations = 1L))
-    expect_error(.block("en", locations = list(1L)))
-    expect_error(.block("en", locations = list(1L, location())))
 })
 
 

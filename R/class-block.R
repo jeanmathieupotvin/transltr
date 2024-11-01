@@ -130,43 +130,6 @@ block <- function(source_lang = "", ..., hash_algorithm = get_hash_algorithms())
 
 #' @rdname class-block
 #' @keywords internal
-.block <- function(
-    source_lang    = "",
-    source_text    = "",
-    hash_algorithm = get_hash_algorithms(),
-    langs          = character(),
-    texts          = character(),
-    locations      = list())
-{
-    # Validate arguments here to output semantic error messages.
-    # Otherwise, they will be a little confusing.
-    assert_chr1(source_lang)
-    assert_chr1(source_text, TRUE)
-    assert_chr(langs, TRUE)
-    assert_chr(texts, TRUE)
-
-    if (length(langs) != length(texts)) {
-        stops("'langs' and 'texts' must have the same length.")
-    }
-
-    # What locations contains is checked by $set_locations.
-    # Here, we ensure that it is a list possibly containing
-    # Location objects. This is required by do.call() below.
-    if (is_location(locations) || !is.list(locations)) {
-        locations <- list(locations)
-    }
-
-    blk <- Block$new(hash_algorithm)
-    blk$set_translation(source_lang, source_text)
-    blk$source_lang <- source_lang
-
-    do.call(blk$set_locations, locations)
-    map(blk$set_translation, langs, texts)
-    return(blk)
-}
-
-#' @rdname class-block
-#' @keywords internal
 #' @export
 is_block <- function(x) {
     return(inherits(x, "Block"))
@@ -214,9 +177,11 @@ c.Block <- function(...) {
 
     trans <- unlist(lapply(blocks, `[[`, i = "translations"))
     locs  <- unlist(lapply(blocks, `[[`, i = "locations"), FALSE)
-    blk   <- .block(..1$source_lang, ..1$source_text, ..1$hash_algorithm)
+
+    blk <- Block$new(..1$hash_algorithm)
     do.call(blk$set_translations, as.list(trans))
     do.call(blk$set_locations, locs)
+    blk$source_lang <- ..1$source_lang
     return(blk)
 }
 
@@ -245,7 +210,7 @@ as_block <- function(x, ...) {
 #' @rdname class-block
 #' @export
 as_block.call <- function(x,
-    locations      = list(),
+    location      = list(),
     hash_algorithm = get_hash_algorithms(),
     ...)
 {
@@ -262,12 +227,12 @@ as_block.call <- function(x,
             unlist(lapply(locations, format)))
     }
 
-    return(
-        .block(
-            x$source_lang,
-            text_normalize(strings, .concat = x$concat),
-            hash_algorithm,
-            locations = locations))
+    text <- text_normalize(strings, .concat = x$concat)
+    blk  <- Block$new(hash_algorithm)
+    blk$set_locations(location)
+    blk$set_translation(x$source_lang, text)
+    blk$source_lang <- x$source_lang
+    return(blk)
 }
 
 #' @rdname class-block
