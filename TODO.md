@@ -5,11 +5,7 @@
 
 # For Initial Release to CRAN
 
-`[Translator]`
-- Update documentation and tests of class `Block`.
-
 `[translate()]`
-- Write documentation and tests for `translate()`.
 - Revisit and revamp `is_translate_call()` and `match_translate_call()`.
   - Write documentation and tests for them.
   - Revisit function `as_block.call()`. It may not be needed afterwards.
@@ -54,9 +50,6 @@
   `NAMESPACE`, `STATISTICS`, and `NEWS`.
   - This should be very minor changes, mostly just a final check.
 - Complete top-level `README`.
-
-`[Miscellaneous]`
-- All `set*()` functions and methods should return `NULL` invisibly.
 
 # Future Improvements
 

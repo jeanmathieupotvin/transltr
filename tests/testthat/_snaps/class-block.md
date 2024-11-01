@@ -78,7 +78,7 @@
 # $initialize() validates hash_algorithm
 
     Code
-      Block$new("error")
+      Block$new(1L)
     Condition
       Error:
       ! 'hash_algorithm' must be equal to 'sha1', or 'utf8'.

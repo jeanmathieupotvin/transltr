@@ -303,7 +303,7 @@ This method is also used to register \code{source_lang} and
 }
 
 \subsection{Returns}{
-A \code{TRUE} (invisibly).
+A \code{NULL}, invisibly.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -341,7 +341,7 @@ method \code{set_translation()}.
 }
 
 \subsection{Returns}{
-A \code{TRUE} (invisibly).
+A \code{NULL}, invisibly.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -377,7 +377,7 @@ paths and/or ranges won't be duplicated.
 }
 
 \subsection{Returns}{
-A \code{TRUE} (invisibly).
+A \code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
@@ -404,8 +404,7 @@ doing so.
 }
 
 \subsection{Returns}{
-A logical (invisibly) indicating whether the operation
-succeeded or not.
+A \code{NULL}, invisibly.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -440,7 +439,7 @@ identifying a \code{\link{Location}} object to be removed.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{TRUE} (invisibly).
+A \code{NULL}, invisibly.
 }
 }
 }

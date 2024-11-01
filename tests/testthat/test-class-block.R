@@ -34,7 +34,7 @@ test_that("active binding hash throws an error if value is not missing", {
     expect_snapshot(blk1$hash <- "new-hash", error = TRUE)
 })
 
-test_that("active binding hash_algorithm returns hash_algorithm", {
+test_that("active binding hash_algorithm returns hashing algorithm", {
     expect_identical(blk1$hash_algorithm, "sha1")
 })
 
@@ -52,7 +52,7 @@ test_that("active binding hash_algorithm sets new value and new hash", {
     expect_identical(blk$hash, "12351")
 })
 
-test_that("active binding source_lang returns source_lang", {
+test_that("active binding source_lang returns source language", {
     expect_identical(blk1$source_lang, "en")
 })
 
@@ -70,7 +70,7 @@ test_that("active binding source_lang sets new value and new hash", {
     expect_identical(blk$hash, "f3c8754329c1b152887d35f00119fca783243d27")
 })
 
-test_that("active binding source_text returns source_text", {
+test_that("active binding source_text returns source text", {
     expect_identical(blk1$source_text, "Hello, world!")
 })
 
@@ -132,8 +132,8 @@ test_that("$initialize() works", {
 })
 
 test_that("$initialize() validates hash_algorithm", {
-    expect_error(Block$new("error"))
-    expect_snapshot(Block$new("error"), error = TRUE)
+    expect_error(Block$new(1L))
+    expect_snapshot(Block$new(1L), error = TRUE)
 })
 
 test_that("$get_translation() works", {
@@ -151,7 +151,7 @@ test_that("$get_translation() validates lang", {
 
 test_that("$set_translation() works", {
     blk <- Block$new()
-    expect_true(blk$set_translation("en", "Hello, world!"))
+    expect_null(blk$set_translation("en", "Hello, world!"))
     expect_invisible(blk$set_translation("en", "Hello, world!"))
     expect_identical(blk$get_translation("en"), "Hello, world!")
 })
@@ -170,11 +170,11 @@ test_that("$set_translations() works", {
     blk <- Block$new()
 
     # Case ... is empty.
-    expect_true(blk$set_translations())
+    expect_null(blk$set_translations())
     expect_invisible(blk$set_translations())
 
     # Case ... is not empty.
-    expect_true(blk$set_translations(en = "Hello, world!"))
+    expect_null(blk$set_translations(en = "Hello, world!"))
     expect_invisible(blk$set_translations(fr = "Bonjour, monde!"))
     expect_identical(blk$get_translation("en"), "Hello, world!")
     expect_identical(blk$get_translation("fr"), "Bonjour, monde!")
@@ -192,11 +192,11 @@ test_that("$set_locations() returns a logical", {
     blk <- Block$new()
 
     # Case ... is empty.
-    expect_true(Block$new()$set_locations())
+    expect_null(Block$new()$set_locations())
     expect_invisible(Block$new()$set_locations())
 
     # Case ... is not empty.
-    expect_true(blk$set_locations(location("z", 1L, 1L, 1L, 1L)))
+    expect_null(blk$set_locations(location("z", 1L, 1L, 1L, 1L)))
     expect_invisible(blk$set_locations(location("z", 2L, 2L, 2L, 2L)))
     expect_length(blk$locations, 1L)
     expect_identical(
@@ -205,7 +205,7 @@ test_that("$set_locations() returns a logical", {
 })
 
 test_that("$rm_translation() returns a logical", {
-    expect_true(test_block()$rm_translation("es"))
+    expect_null(test_block()$rm_translation("es"))
     expect_invisible(test_block()$rm_translation("fr"))
 })
 
@@ -229,7 +229,7 @@ test_that("$rm_translation() removes translations as expected", {
 })
 
 test_that("$rm_location() returns a logical", {
-    expect_true(test_block()$rm_location("a"))
+    expect_null(test_block()$rm_location("a"))
     expect_invisible(test_block()$rm_location("a"))
 })
 

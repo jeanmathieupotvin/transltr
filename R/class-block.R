@@ -376,7 +376,7 @@ Block <- R6::R6Class("Block",
         #' @param text A non-empty and non-[NA][base::NA] character string. A
         #'   translation, or a source text.
         #'
-        #' @return A `TRUE` (invisibly).
+        #' @return A `NULL`, invisibly.
         #'
         #' @examples
         #' ## Registering source_lang and source_text.
@@ -387,7 +387,7 @@ Block <- R6::R6Class("Block",
             assert_chr1(lang)
             assert_chr1(text, TRUE)
             private$.translations[[lang]] <- text
-            return(invisible(TRUE))
+            return(invisible())
         },
 
         #' @description Register one or more translations, and/or the source
@@ -399,14 +399,14 @@ Block <- R6::R6Class("Block",
         #' @details This method can be viewed as a vectorized version of
         #'   method `set_translation()`.
         #'
-        #' @return A `TRUE` (invisibly).
+        #' @return A `NULL`, invisibly.
         #'
         #' @examples
         #' blk <- Block$new()
         #' blk$set_translations(en = "Hello, world!", fr = "Bonjour, monde!")
         set_translations = \(...) {
             if (!...length()) {
-                return(invisible(TRUE))
+                return(invisible())
             }
             if (!all(vapply_1l(trans <- list(...), is_chr1))) {
                 stops("values passed to '...' must all be non-NA and non-empty character strings.")
@@ -414,7 +414,7 @@ Block <- R6::R6Class("Block",
 
             assert_named(trans, x_name = "...")
             list2env(trans, private$.translations)
-            return(invisible(TRUE))
+            return(invisible())
         },
 
         #' @description Register one or more locations.
@@ -426,10 +426,10 @@ Block <- R6::R6Class("Block",
         #'   [`Location`][Location] objects. The underlying registered
         #'   paths and/or ranges won't be duplicated.
         #'
-        #' @return A `TRUE` (invisibly).
+        #' @return A `NULL`, invisibly.
         set_locations = \(...) {
             if (!...length()) {
-                return(invisible(TRUE))
+                return(invisible())
             }
 
             locs <- c(as.list(private$.locations), list(...))
@@ -437,7 +437,7 @@ Block <- R6::R6Class("Block",
             names(locs) <- vapply_1c(locs, `[[`, i = "path")
 
             list2env(locs, private$.locations)
-            return(invisible(TRUE))
+            return(invisible())
         },
 
         #' @description Remove a registered translation.
@@ -449,8 +449,7 @@ Block <- R6::R6Class("Block",
         #'   current `source_lang`. You must update `source_lang` before
         #'   doing so.
         #'
-        #' @return A logical (invisibly) indicating whether the operation
-        #'   succeeded or not.
+        #' @return A `NULL`, invisibly.
         #'
         #' @examples
         #' ## Removing source_lang and source_text.
@@ -473,7 +472,7 @@ Block <- R6::R6Class("Block",
             assert_match(lang, langs[langs != self$source_lang], quote_values = TRUE)
 
             rm(list = lang, envir = private$.translations)
-            return(invisible(TRUE))
+            return(invisible())
         },
 
         #' @description Remove a registered location.
@@ -481,13 +480,13 @@ Block <- R6::R6Class("Block",
         #' @param path A non-empty and non-[NA][base::NA] character string
         #'   identifying a [`Location`][Location] object to be removed.
         #'
-        #' @return A `TRUE` (invisibly).
+        #' @return A `NULL`, invisibly.
         rm_location = \(path = "") {
             assert_chr1(path)
             assert_match(path, names(private$.locations), quote_values = TRUE)
 
             rm(list = path, envir = private$.locations)
-            return(invisible(TRUE))
+            return(invisible())
         }
     )
 )
