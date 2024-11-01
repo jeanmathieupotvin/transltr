@@ -17,8 +17,8 @@
 #'
 #' Since it can be detected and processed by [find_translations()], it is
 #' recommended to use [translate()] at all times. Method
-#' [`Translator$translate()`] is the underlying workhorse function called by
-#' the former.
+#' [`Translator$translate()`][Translator] is the underlying workhorse function
+#' called by the former.
 #'
 #' @param ... Usage depends on the underlying function.
 #'   * Any number of [`Block`][Block] objects, and/or named character
@@ -357,11 +357,11 @@ Translator <- R6::R6Class("Translator",
         #' blk1 <- block("en",
         #'     location("a", 1L, 2L, 3L, 4L),
         #'     en = "Hello, world!",
-        #'     fr = "Bonjour, monde!"),
+        #'     fr = "Bonjour, monde!")
         #' blk2 <- block("en",
         #'     location("b", 5L, 6L, 7L, 8L),
         #'     en = "Farewell, world!",
-        #'     fr = "Au revoir, monde!"))
+        #'     fr = "Au revoir, monde!")
         #'
         #' ## Create a new Translator and register them.
         #' trans <- Translator$new()
@@ -389,7 +389,7 @@ Translator <- R6::R6Class("Translator",
         #'
         #' @examples
         #' trans <- Translator$new()
-        #' trans$set_native_language(
+        #' trans$set_native_languages(
         #'     en = "English",
         #'     fr = "Français",
         #'     ja = "日本語")

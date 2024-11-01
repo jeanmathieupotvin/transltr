@@ -95,7 +95,7 @@ is.null(translator_get(NULL)) ## TRUE
 ## package for illustration purposes.
 evalq(envir = asNamespace("utils"), \() {
    on.exit(translator_set(NULL))
-   translator_set(translator(id = sprintf("utils:\%s", uuid())))
+   translator_set(translator(id = sprintf("utils:\%s", transltr::uuid())))
    return(translator_get())
 })()
 

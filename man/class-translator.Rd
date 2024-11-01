@@ -63,8 +63,8 @@ directly interact with them.
 
 Since it can be detected and processed by \code{\link[=find_translations]{find_translations()}}, it is
 recommended to use \code{\link[=translate]{translate()}} at all times. Method
-\code{\link[=Translator$translate]{Translator$translate()}} is the underlying workhorse function called by
-the former.
+\code{\link[=Translator]{Translator$translate()}} is the underlying workhorse function
+called by the former.
 }
 }
 \examples{
@@ -91,11 +91,11 @@ translator(
 blk1 <- block("en",
     location("a", 1L, 2L, 3L, 4L),
     en = "Hello, world!",
-    fr = "Bonjour, monde!"),
+    fr = "Bonjour, monde!")
 blk2 <- block("en",
     location("b", 5L, 6L, 7L, 8L),
     en = "Farewell, world!",
-    fr = "Au revoir, monde!"))
+    fr = "Au revoir, monde!")
 
 ## Create a new Translator and register them.
 trans <- Translator$new()
@@ -106,7 +106,7 @@ trans$set_blocks(blk1, blk2)
 ## ------------------------------------------------
 
 trans <- Translator$new()
-trans$set_native_language(
+trans$set_native_languages(
     en = "English",
     fr = "Français",
     ja = "日本語")
@@ -358,11 +358,11 @@ A \code{NULL}, invisibly.
 blk1 <- block("en",
     location("a", 1L, 2L, 3L, 4L),
     en = "Hello, world!",
-    fr = "Bonjour, monde!"),
+    fr = "Bonjour, monde!")
 blk2 <- block("en",
     location("b", 5L, 6L, 7L, 8L),
     en = "Farewell, world!",
-    fr = "Au revoir, monde!"))
+    fr = "Au revoir, monde!")
 
 ## Create a new Translator and register them.
 trans <- Translator$new()
@@ -397,7 +397,7 @@ A \code{NULL}, invisibly.
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{trans <- Translator$new()
-trans$set_native_language(
+trans$set_native_languages(
     en = "English",
     fr = "Français",
     ja = "日本語")

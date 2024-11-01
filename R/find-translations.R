@@ -1,3 +1,13 @@
+#' Placeholder
+#'
+#' Placeholder.
+#'
+#' @param path Placeholder.
+#' @param encoding Placeholder.
+#'
+#' @template param-hash-algorithm
+#'
+#' @export
 find_translations <- function(
     path           = getwd(),
     encoding       = "UTF-8",

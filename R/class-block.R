@@ -204,8 +204,7 @@ as_block.call <- function(x,
             "Values passed to 'source_lang' and 'concat' must be non-empty literal character strings.\n",
             "Values passed to '...' must all be literal character strings. They can be empty.\n",
             "Otherwise, they cannot be safely evaluated before runtime.\n",
-            "Check the following source location(s).\n",
-            unlist(lapply(locations, format)))
+            "Check ", format(location), ".")
     }
 
     text <- text_normalize(strings, .concat = x$concat)
