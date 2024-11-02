@@ -57,3 +57,37 @@ test_that("translate() throws an error if implicit scope has no set translator o
         evalq(envir = globalenv(), \() translate("Hello, world!", lang = "fr"))()
     })
 })
+
+
+# is_translate_call() ----------------------------------------------------------
+
+
+test_that("is_translate_call() returns a logical", {
+    expect_true(is_translate_call(str2lang('translate("test")'), .strict = FALSE))
+    expect_false(is_translate_call(str2lang('translate("test")')))
+})
+
+test_that("is_translate_call() handles typical use cases", {
+    expect_true(is_translate_call(str2lang('translate("test")'), .strict = FALSE))
+    expect_false(is_translate_call(str2lang('translate("test")')))
+    expect_true(is_translate_call(str2lang('transltr::translate("test")')))
+})
+
+test_that("is_translate_call() handles quotes", {
+    expect_true(is_translate_call(str2lang('"translate"("test")'), .strict = FALSE))
+    expect_false(is_translate_call(str2lang('"translate"("test")')))
+    expect_true(is_translate_call(str2lang('transltr::"translate"("test")')))
+    expect_true(is_translate_call(str2lang('"transltr"::translate("test")')))
+})
+
+test_that("is_translate_call() handles backticks", {
+    expect_true(is_translate_call(str2lang('`translate`("test")'), .strict = FALSE))
+    expect_false(is_translate_call(str2lang('`translate`("test")')))
+    expect_true(is_translate_call(str2lang('transltr::`translate`("test")')))
+    expect_true(is_translate_call(str2lang('`transltr`::translate("test")')))
+})
+
+test_that("is_translate_call() handles quotes and backticks", {
+    expect_true(is_translate_call(str2lang('"transltr"::`translate`("test")')))
+    expect_true(is_translate_call(str2lang('`transltr`::"translate"("test")')))
+})

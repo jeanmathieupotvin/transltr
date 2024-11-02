@@ -56,31 +56,67 @@ translate <- function(...,
             source_lang = source_lang))
 }
 
-is_translate_call <- function(x, ...) {
-    UseMethod("is_translate_call")
-}
 
-#' @export
-is_translate_call.character <- function(x, ...) {
-    return(grepl("^([`'\"]?transltr[`'\"]?::)?[`'\"]?translate[`'\"]?\\((.*?)\\)$", x))
-}
-
-match_translate_call <- function(x, ...) {
-    UseMethod("match_translate_call")
-}
-
-#' @export
-match_translate_call.character <- function(x, ...) {
-    return(match_translate_call.call(str2lang(x), ...))
-}
-
-#' @export
-match_translate_call.call <- function(x, ...) {
-    # We do not check whether the call object truly calls
-    # translate() because this check should be done prior
-    # to calling match_translate_call().
-    cl        <- match.call(translate, x, expand.dots = FALSE)
-    cl$concat <- x$concat %??% .__STR_FORMAL_CONCAT_DEFAULT
-    cl$lang   <- x$lang   %??% .__STR_FORMAL_SOURCE_LANG_DEFAULT
-    return(cl)
+#' Identify Calls to Function translate()
+#'
+#' @description
+#' Check whether an object is a [`call`][call] to [translate()].
+#'
+#' This function is meant to be used as a *building block* and does not
+#' validate its inputs for maximum efficiency.
+#'
+#' @details
+#' An *implicit* call does not specify the namespace, i.e. `translate()`. It
+#' may refer to *any* such function, and may not correspond to [translate()].
+#' This depends on the user's intents at compile time, and on the
+#' [search][search()] path at runtime.
+#'
+#' An *explicit* call includes the namespace, i.e. `transltr::translate()`,
+#' and there is no ambiguity.
+#'
+#' \R is sometimes an odd language, and this function covers some unusual use
+#' cases. See Examples below. By design, it **does not** detect calls to method
+#' [`Translator$translate()`][Translator]. Using the latter is discouraged.
+#'
+#' @param x Any \R object.
+#'
+#' @param .strict A non-[NA][base::NA] logical value. Must namespace `transltr`
+#'   be explicitly stated via operator `::` in the call?
+#'
+#' @returns A logical value.
+#'
+#' @examples
+#' ## Typical ways to write source calls.
+#' is_translate_call(str2lang('translate("test")'), .strict = FALSE)  ## TRUE
+#' is_translate_call(str2lang('transltr::translate("test")'))  ## TRUE
+#' is_translate_call(str2lang('translate("test")'))  ## FALSE
+#'
+#' ## Quotes and backticks are also valid.
+#' is_translate_call(str2lang('"translate"("test")'), .strict = FALSE)  ## TRUE
+#' is_translate_call(str2lang('"translate"("test")'))  ## FALSE
+#'
+#' is_translate_call(str2lang('`translate`("test")'), .strict = FALSE)  ## TRUE
+#' is_translate_call(str2lang('`translate`("test")'))  ## FALSE
+#'
+#' is_translate_call(str2lang('"transltr"::`translate`("test")'))  ## TRUE
+#' is_translate_call(str2lang('`transltr`::"translate"("test")'))  ## TRUE
+#'
+#' @rdname is-translate-call
+#' @keywords internal
+is_translate_call <- function(x, .strict = TRUE) {
+    return(
+        # x is a call and,
+        is.call(x) &&
+        switch(class(x1 <- x[[1L]]),
+            # it is a call to (any) translate function (not strict), or
+            name = !.strict && identical(x1, quote(translate)),
+            call = {
+                # it embeds a call to operator `::` (strict), and
+                identical(x1[[1L]],          quote(`::`)) &&
+                # the namespace is transltr, and
+                identical(as.name(x1[[2L]]), quote(transltr)) &&
+                # the function (name) fetched is translate.
+                identical(as.name(x1[[3L]]), quote(translate))
+            },
+            FALSE))
 }
