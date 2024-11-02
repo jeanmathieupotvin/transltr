@@ -39,7 +39,7 @@ Collate:
     'class-location.R'
     'class-token.R'
     'class-translator.R'
-    'find-translations.R'
+    'find-source.R'
     'from-tsf.R'
     'io-text.R'
     'io-translations.R'
