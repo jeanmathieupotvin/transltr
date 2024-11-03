@@ -86,8 +86,8 @@ test_that("active binding languages returns languages", {
 })
 
 test_that("active binding languages throws an error if value is not missing", {
-    expect_error(blk1$langs <- "new-lang")
-    expect_snapshot(blk1$langs <- "new-lang", error = TRUE)
+    expect_error(blk1$languages <- "new-lang")
+    expect_snapshot(blk1$languages <- "new-lang", error = TRUE)
 })
 
 test_that("active binding translations returns translations", {

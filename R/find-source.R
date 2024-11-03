@@ -34,7 +34,6 @@ find_source <- function(
         no..         = TRUE)
 
     blocks <- find_source_in_files(paths, encoding, strict, hash_algorithm)
-    #do.call(merge_blocks, c(blocks, hash_algorithm = hash_algorithm))
     trans  <- Translator$new(id, hash_algorithm)
     trans$set_native_languages(...)
     do.call(trans$set_blocks, blocks)

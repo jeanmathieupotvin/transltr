@@ -52,10 +52,11 @@
 # active binding languages throws an error if value is not missing
 
     Code
-      blk1$langs <- "new-lang"
+      blk1$languages <- "new-lang"
     Condition
-      Error in `blk1$langs <- "new-lang"`:
-      ! cannot add bindings to a locked environment
+      Error:
+      ! 'languages' cannot be overwritten.
+      Update them by setting, or removing translations.
 
 # active binding translations throws an error if value is not missing
 

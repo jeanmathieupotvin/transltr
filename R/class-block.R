@@ -156,6 +156,11 @@ c.Block <- function(...) {
         stops("all 'hash' must be equal in order to combine multiple 'Block' objects.")
     }
 
+    # Names of inputs are stripped. Otherwise,
+    # unlist() alters named character vectors
+    # stemming from $languages.
+    names(blocks) <- NULL
+
     trans <- unlist(lapply(blocks, `[[`, i = "translations"))
     locs  <- unlist(lapply(blocks, `[[`, i = "locations"), FALSE)
 

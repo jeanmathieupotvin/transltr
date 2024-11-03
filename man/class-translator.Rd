@@ -349,6 +349,14 @@ Register one or more \code{\link{Block}} objects.
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Details}{
+This method calls \code{\link[=merge_blocks]{merge_blocks()}} to merge all
+values passed to \code{...} together with previously registered
+\code{\link{Block}} objects. The underlying registered source
+texts, translations, and \code{\link{Location}} objects
+won't be duplicated.
+}
+
 \subsection{Returns}{
 A \code{NULL}, invisibly.
 }

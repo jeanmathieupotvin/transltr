@@ -167,13 +167,13 @@ Translator <- R6::R6Class("Translator",
                 # Update hash_algorithm of each Block.
                 eapply(private$.blocks, \(blk) blk$hash_algorithm <- value)
 
+                # Update object's hash_algorithm.
+                private$.hash_algo <- value
+
                 # Reassign updated Block under new hashes.
                 blocks          <- as.list(private$.blocks)
                 private$.blocks <- new.env(parent = emptyenv())
                 do.call(self$set_blocks, blocks)
-
-                # Update object's hash_algorithm.
-                private$.hash_algo <- value
             }
 
             return(private$.hash_algo)
@@ -342,13 +342,19 @@ Translator <- R6::R6Class("Translator",
         #' @return A `NULL`, invisibly.
         set_block = \(source_lang = "", ...) {
             blk <- block(source_lang, ..., hash_algorithm = private$.hash_algo)
-            private$.blocks[[blk$hash]] <- blk
+            self$set_blocks(blk)
             return(invisible())
         },
 
         #' @description Register one or more [`Block`][Block] objects.
         #'
         #' @param ... Any number of [`Block`][Block] objects.
+        #'
+        #' @details This method calls [merge_blocks()] to merge all
+        #'   values passed to `...` together with previously registered
+        #'   [`Block`][Block] objects. The underlying registered source
+        #'   texts, translations, and [`Location`][Location] objects
+        #'   won't be duplicated.
         #'
         #' @return A `NULL`, invisibly.
         #'
@@ -370,11 +376,11 @@ Translator <- R6::R6Class("Translator",
             if (!...length()) {
                 return(invisible())
             }
-            if (!all(vapply_1l(blocks <- list(...), is_block))) {
-                stops("values passed to '...' must all be 'Block' objects.")
-            }
 
+            args   <- c(as.list(private$.blocks), list(...), hash_algorithm = private$.hash_algo)
+            blocks <- do.call(merge_blocks, args)
             names(blocks) <- vapply_1c(blocks, `[[`, i = "hash")
+
             list2env(blocks, private$.blocks)
             return(invisible())
         },

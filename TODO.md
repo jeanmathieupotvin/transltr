@@ -5,19 +5,11 @@
 
 # For Initial Release to CRAN
 
-`[translate()]`
-- Revisit and revamp `is_translate_call()` and `match_translate_call()`.
-  - Write documentation and tests for them.
-  - Revisit function `as_block.call()`. It may not be needed afterwards.
-    - Update documentation and write tests if we keep it.
-
 `[find_source()]`
-- Rename `find_translations*()` to `find_source()`.
-  - Integrate class `Translator` into `find_source()`.
-  - Integrate changes to `is_translate_call()` and `match_translate_call()`.
-  - Revisit current implementation for consistency with latest work.
-  - Write documentation and tests for `find_source*()` functions.
-    - Integrate local mock stored in `.local/` into `_mocks/`.
+- Update documentation and write tests for `as_block()`.
+- Integrate class `Translator` into `find_source()`.
+- Write documentation and tests for `find_source*()` functions.
+- Integrate local mock stored in `.local/` into `_mocks/`.
 
 `[PT/PB/PTF]`
 - **Change Translations Source File (TSF) based on Jérôme's feedback.**
