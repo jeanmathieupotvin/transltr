@@ -196,27 +196,36 @@ as_block <- function(x, ...) {
 #' @rdname class-block
 #' @export
 as_block.call <- function(x,
-    location      = list(),
+    strict         = FALSE,
+    location       = transltr::location(),
     hash_algorithm = get_hash_algorithms(),
+    validate       = TRUE,
     ...)
 {
-    # FIXME: this function may call as_block.character() in
-    # a future iteration. This would simplify its signature.
-    suppressWarnings(strings <- as.character(x$`...`))
+    assert_lgl1(validate)
 
-    if (!is_chr1(x$source_lang) || !is_chr1(x$concat) || !is.character(strings)) {
-        stops(
-            "Values passed to 'source_lang' and 'concat' must be non-empty literal character strings.\n",
-            "Values passed to '...' must all be literal character strings. They can be empty.\n",
-            "Otherwise, they cannot be safely evaluated before runtime.\n",
-            "Check ", format(location), ".")
+    if (validate) {
+        assert_lgl1(strict)
+
+        if (!is_translate_call(x, strict)) {
+            stops("'x' must be a 'call' object to 'transltr::translate()'.")
+        }
+        if (!is_location(location)) {
+            stops("'location' must be a 'Location' object.")
+        }
     }
 
-    text <- text_normalize(strings, .concat = x$concat)
-    blk  <- Block$new(hash_algorithm)
+    # First element of a call is the
+    # name of the underlying function.
+    args        <- as.list(match.call(translate, x, expand.dots = FALSE))[-1L]
+    dots        <- unlist(args$`...`, use.names = FALSE)
+    concat      <- args$concat      %??% .__STR_FORMAL_CONCAT_DEFAULT
+    source_lang <- args$source_lang %??% .__STR_FORMAL_SOURCE_LANG_DEFAULT
+
+    blk <- Block$new(hash_algorithm)
     blk$set_locations(location)
-    blk$set_translation(x$source_lang, text)
-    blk$source_lang <- x$source_lang
+    blk$set_translation(source_lang, text_normalize(dots, .concat = concat))
+    blk$source_lang <- source_lang
     return(blk)
 }
 

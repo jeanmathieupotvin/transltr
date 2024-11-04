@@ -54,6 +54,10 @@
 - Revamp current implementation of `text_normalize()`.
   - Make it less reliant on `gsub()`.
   - Evaluate whether it should be done in C for maximum efficiency.
+  - Users should be able to pass runtime values (use `<placeholder>` in strings).
+    - Example: `text_normalize("I ate", n, "bananas.") -> "I ate <placeholder:n> bananas."`
+  - Users should be able to indicate text to be left as is.
+    - Example: `text_normalize("{{I ate\n\n}}", "bananas.") -> "I ate\n\n bananas."`
 
 `[Scopes]`
 - Integrate scopes into `find_source()`, and class `Block`.

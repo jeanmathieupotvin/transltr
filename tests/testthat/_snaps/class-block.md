@@ -236,5 +236,37 @@
       merge_blocks(blk1, blk2, hash_algorithm = "error")
     Condition
       Error:
-      ! 'hash_algorithm' must be equal to sha1, or utf8.
+      ! 'hash_algorithm' must be equal to 'sha1', or 'utf8'.
+
+# as_block.call() validates x
+
+    Code
+      as_block(call("block"))
+    Condition
+      Error:
+      ! 'x' must be a 'call' object to 'transltr::translate()'.
+
+# as_block.call() validates strict
+
+    Code
+      as_block(translate_call, strict = 1L)
+    Condition
+      Error:
+      ! 'strict' must be a non-NA logical of length 1 ('TRUE' or 'FALSE').
+
+# as_block.call() validates location
+
+    Code
+      as_block(translate_call, location = 1L)
+    Condition
+      Error:
+      ! 'location' must be a 'Location' object.
+
+# as_block.call() validates validate
+
+    Code
+      as_block(translate_call, validate = 1L)
+    Condition
+      Error:
+      ! 'validate' must be a non-NA logical of length 1 ('TRUE' or 'FALSE').
 

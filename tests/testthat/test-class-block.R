@@ -21,6 +21,8 @@ blk2 <- block("en",
     en = "Hello, world!",
     el = "Γεια σου, Κόσμος!")
 
+translate_call <- call("translate")
+
 
 # Class: active bindings -------------------------------------------------------
 
@@ -458,5 +460,70 @@ test_that("merge_blocks() combines Block objects having different hashes", {
 # as_block() -------------------------------------------------------------------
 
 
-# FIXME: To be tested later once the API matures. This function will likely
-# change in a near future.
+test_that("as_block() works", {
+    expect_s3_class(as_block(translate_call), "Block")
+})
+
+
+# as_block.call() --------------------------------------------------------------
+
+
+test_that("as_block.call() returns a Block object", {
+    blk <- as_block(
+        call("translate", "Hello,", "world!"),
+        location       = location("test"),
+        hash_algorithm = "utf8")
+
+    expect_s3_class(blk, "Block")
+    expect_identical(blk$hash, "12351")
+    expect_identical(blk$hash_algorithm, "utf8")
+    expect_identical(blk$source_lang, "en")
+    expect_identical(blk$source_text, "Hello, world!")
+    expect_identical(blk$locations, list(test = location("test")))
+})
+
+test_that("as_block.call() validates x", {
+    expect_error(as_block(call("block")))
+    expect_snapshot(as_block(call("block")), error = TRUE)
+})
+
+test_that("as_block.call() validates strict", {
+    expect_error(as_block(translate_call, strict = 1L))
+    expect_snapshot(as_block(translate_call, strict = 1L), error = TRUE)
+})
+
+test_that("as_block.call() validates location", {
+    expect_error(as_block(translate_call, location = 1L))
+    expect_snapshot(as_block(translate_call, location = 1L), error = TRUE)
+})
+
+test_that("as_block.call() validates validate", {
+    expect_error(as_block(translate_call, validate = 1L))
+    expect_snapshot(as_block(translate_call, validate = 1L), error = TRUE)
+})
+
+test_that("as_block.call() extracts ... from x", {
+    # The second call is used to test that named
+    # arguments passed to ... are tolerated.
+    translate_call1 <- call("translate", "Hello, ", "world!")
+    translate_call2 <- call("translate", a = "Hello", b = ", world!",
+        concat      = "",
+        source_lang = "test")
+
+    expect_identical(as_block(translate_call1)$source_text, "Hello, world!")
+    expect_identical(as_block(translate_call2)$source_text, "Hello, world!")
+})
+
+test_that("as_block.call() extracts concat from x or sets it if not found", {
+    translate_call1 <- call("translate", "Hello", ", world!", concat = "")
+    translate_call2 <- call("translate", "Hello,", "world!")
+    expect_identical(as_block(translate_call1)$source_text, "Hello, world!")
+    expect_identical(as_block(translate_call2)$source_text, "Hello, world!")
+})
+
+test_that("as_block.call() extracts source_lang from x or sets it if not found", {
+    translate_call1 <- call("translate", "Hello", ", world!", source_lang = "test")
+    translate_call2 <- call("translate", "Hello,", "world!")
+    expect_identical(as_block(translate_call1)$source_lang, "test")
+    expect_identical(as_block(translate_call2)$source_lang, "en")
+})

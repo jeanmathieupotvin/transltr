@@ -26,7 +26,14 @@ merge_blocks(..., hash_algorithm = get_hash_algorithms())
 
 as_block(x, ...)
 
-\method{as_block}{call}(x, location = list(), hash_algorithm = get_hash_algorithms(), ...)
+\method{as_block}{call}(
+  x,
+  strict = FALSE,
+  location = transltr::location(),
+  hash_algorithm = get_hash_algorithms(),
+  validate = TRUE,
+  ...
+)
 }
 \arguments{
 \item{source_lang}{A non-empty and non-\link[base:NA]{NA} character string. The

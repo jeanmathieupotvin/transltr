@@ -217,9 +217,9 @@ of this method.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{Any number of character vectors. The source text to translate.
-Values can be empty and/or \link[base:NA]{NA}, but can lead to unexpected
-results.}
+\item{\code{...}}{Any number of literal character vectors. The source text to
+translate. Values can be empty and/or \link[base:NA]{NA}, but can lead to
+unexpected results.}
 
 \item{\code{lang}}{A non-empty and non-\link[base:NA]{NA} character string. The
 requested language.

@@ -13,9 +13,9 @@ translate(
 )
 }
 \arguments{
-\item{...}{Any number of character vectors. The source text to translate.
-Values can be empty and/or \link[base:NA]{NA}, but can lead to unexpected
-results.}
+\item{...}{Any number of literal character vectors. The source text to
+translate. Values can be empty and/or \link[base:NA]{NA}, but can lead to
+unexpected results.}
 
 \item{lang}{A non-empty and non-\link[base:NA]{NA} character string. The
 requested language.
