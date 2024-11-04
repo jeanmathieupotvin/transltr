@@ -44,6 +44,10 @@ Translate source text. This is an high-level interface to
 }
 \details{
 See \code{\link[=translator_set]{translator_set()}} for more information on scopes.
+
+It is strongly recommended to always include the namespace when using
+\code{\link[=translate]{translate()}}, i.e. \code{transltr::translate()}. Doing so ensures that there
+will be no ambiguity at runtime.
 }
 \examples{
 ## Create a Translator. This would normally be done

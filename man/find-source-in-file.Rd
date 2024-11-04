@@ -3,26 +3,69 @@
 \name{find_source_in_file}
 \alias{find_source_in_file}
 \alias{find_source_in_exprs}
-\alias{parse_file}
-\title{Placeholder}
+\alias{find_source_exprs}
+\title{Find Source Text}
 \usage{
 find_source_in_file(
   path = "",
   encoding = "UTF-8",
-  strict = FALSE,
+  strict = TRUE,
   hash_algorithm = get_hash_algorithms()
 )
 
 find_source_in_exprs(
-  .tokens = list(),
+  .tokens = utils::getParseData(),
   .path = "",
-  .strict = FALSE,
+  .strict = TRUE,
   .hash_algorithm = get_hash_algorithms()
 )
 
-parse_file(path = "", encoding = "UTF-8")
+find_source_exprs(path = "", encoding = "UTF-8")
+}
+\arguments{
+\item{path}{A non-empty and non-\link[base:NA]{NA} character string. A path to
+an \R source script.}
+
+\item{encoding}{A non-empty and non-\link[base:NA]{NA} character string. The
+underlying source character encoding. In almost all cases, this should
+be UTF-8. Other encodings are internally re-encoded to UTF-8 for
+portability.}
+
+\item{strict}{A non-\link[base:NA]{NA} logical value. Should only
+\emph{explicit calls}, i.e. \code{transltr::translate()}, be extracted? If \code{FALSE},
+calls to \emph{any} such function are extracted regardless of the underlying
+namespace, i.e. \code{translate()}.}
+
+\item{hash_algorithm}{A character string equal to one of the values returned
+by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}. The algorithm to use when hashing source
+information for identification purposes.}
+
+\item{.tokens}{A \code{\link[=data.frame]{data.frame}} returned by
+\code{\link[utils:getParseData]{utils::getParseData()}}. This can be a subset of the latter, but must
+always contain columns \code{line1}, \code{col1}, \code{line2}, \code{col2}, and \code{text}.}
+
+\item{.path, .strict, .hash_algorithm}{Same as \code{path}, \code{strict}, and
+\code{hash_algorithm}, but not validated for maximum efficiency. They
+are checked by an higher-level parent function.}
+}
+\value{
+\code{\link[=find_source_in_file]{find_source_in_file()}} and \code{\link[=find_source_in_exprs]{find_source_in_exprs()}} return a list of
+\code{\link{Block}} objects. It may contain duplicated elements, depending
+on the extracted contents.
+
+\code{\link[=find_source_exprs]{find_source_exprs()}} returns the same output as \code{\link[utils:getParseData]{utils::getParseData()}}.
+However, only \code{expr} tokens are returned.
 }
 \description{
-Placeholder.
+Find, and extract source text that requires translation from a single file,
+or from a set of tokenized \R expressions stemming from \code{\link[=parse]{parse()}}.
+
+These functions are the \emph{building blocks} of \code{\link[=find_source]{find_source()}} and
+\code{\link[=find_source_in_files]{find_source_in_files()}}. They are not meant to be used by regular users.
+}
+\seealso{
+\code{\link{Block}},
+\code{\link[=translate]{translate()}},
+\code{\link[=find_source]{find_source()}}
 }
 \keyword{internal}

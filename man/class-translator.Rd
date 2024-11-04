@@ -26,8 +26,8 @@ and \code{\link[=print]{print()}}.
 }}
 
 \item{id}{A non-empty and non-\link[base:NA]{NA} character string. A globally
-unique identifier for the underlying object. Beware of plausible
-collisions when using user-defined values.}
+unique identifier for the \code{\link{Translator}} object. Beware of
+plausible collisions when using user-defined values.}
 
 \item{hash_algorithm}{A character string equal to one of the values returned
 by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}. The algorithm to use when hashing source
@@ -61,8 +61,8 @@ are also somewhat lower-level, and in typical situations, users do not
 directly interact with them.
 \subsection{Translating Text}{
 
-Since it can be detected and processed by \code{\link[=find_translations]{find_translations()}}, it is
-recommended to use \code{\link[=translate]{translate()}} at all times. Method
+Since it can be detected and processed by \code{\link[=find_source]{find_source()}}, it is recommended
+to use \code{\link[=translate]{translate()}} at all times. Method
 \code{\link[=Translator]{Translator$translate()}} is the underlying workhorse function
 called by the former.
 }
@@ -191,8 +191,8 @@ Create a \code{\link{Translator}} object.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{A non-empty and non-\link[base:NA]{NA} character string. A globally
-unique identifier for the underlying object. Beware of plausible
-collisions when using user-defined values.}
+unique identifier for the \code{\link{Translator}} object. Beware of
+plausible collisions when using user-defined values.}
 
 \item{\code{hash_algorithm}}{A character string equal to one of the values returned
 by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}. The algorithm to use when hashing source

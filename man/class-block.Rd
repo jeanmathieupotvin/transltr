@@ -63,7 +63,15 @@ information for identification purposes.}
 
 \item{x}{Any \R object.}
 
+\item{strict}{A non-\link[base:NA]{NA} logical value. Should only
+\emph{explicit calls}, i.e. \code{transltr::translate()}, be extracted? If \code{FALSE},
+calls to \emph{any} such function are extracted regardless of the underlying
+namespace, i.e. \code{translate()}.}
+
 \item{location}{A \code{\link{Location}} object.}
+
+\item{validate}{A non-\link[base:NA]{NA} logical value. Should the other
+arguments be validated?}
 }
 \value{
 \code{\link[=block]{block()}}, \code{\link[=c]{c()}}, and \code{\link[=as_block]{as_block()}} return an \code{\link[R6:R6Class]{R6}} object of

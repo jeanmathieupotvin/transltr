@@ -32,9 +32,14 @@
 #'
 #' @param location A [`Location`][Location] object.
 #'
+#' @param validate A non-[NA][base::NA] logical value. Should the other
+#'   arguments be validated?
+#'
 #' @template param-source-lang
 #'
 #' @template param-hash-algorithm
+#'
+#' @template param-strict
 #'
 #' @returns
 #' [block()], [c()], and [as_block()] return an [`R6`][R6::R6] object of

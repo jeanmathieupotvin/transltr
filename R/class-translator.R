@@ -15,8 +15,8 @@
 #'
 #' ## Translating Text
 #'
-#' Since it can be detected and processed by [find_translations()], it is
-#' recommended to use [translate()] at all times. Method
+#' Since it can be detected and processed by [find_source()], it is recommended
+#' to use [translate()] at all times. Method
 #' [`Translator$translate()`][Translator] is the underlying workhorse function
 #' called by the former.
 #'

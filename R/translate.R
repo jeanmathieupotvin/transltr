@@ -3,7 +3,12 @@
 #' Translate source text. This is an high-level interface to
 #' [`Translator$translate()`][Translator].
 #'
+#' @details
 #' See [translator_set()] for more information on scopes.
+#'
+#' It is strongly recommended to always include the namespace when using
+#' [translate()], i.e. `transltr::translate()`. Doing so ensures that there
+#' will be no ambiguity at runtime.
 #'
 #' @template param-dots-source-text
 #'
@@ -87,19 +92,19 @@ translate <- function(...,
 #'
 #' @examples
 #' ## Typical ways to write source calls.
-#' is_translate_call(str2lang('translate("test")'), .strict = FALSE)  ## TRUE
-#' is_translate_call(str2lang('transltr::translate("test")'))  ## TRUE
-#' is_translate_call(str2lang('translate("test")'))  ## FALSE
+#' transltr:::is_translate_call(str2lang('translate()'), .strict = FALSE)  ## TRUE
+#' transltr:::is_translate_call(str2lang('transltr::translate()'))  ## TRUE
+#' transltr:::is_translate_call(str2lang('translate()'))  ## FALSE
 #'
 #' ## Quotes and backticks are also valid.
-#' is_translate_call(str2lang('"translate"("test")'), .strict = FALSE)  ## TRUE
-#' is_translate_call(str2lang('"translate"("test")'))  ## FALSE
+#' transltr:::is_translate_call(str2lang('"translate"()'), .strict = FALSE)  ## TRUE
+#' transltr:::is_translate_call(str2lang('"translate"()'))  ## FALSE
 #'
-#' is_translate_call(str2lang('`translate`("test")'), .strict = FALSE)  ## TRUE
-#' is_translate_call(str2lang('`translate`("test")'))  ## FALSE
+#' transltr:::is_translate_call(str2lang('`translate`()'), .strict = FALSE)  ## TRUE
+#' transltr:::is_translate_call(str2lang('`translate`()'))  ## FALSE
 #'
-#' is_translate_call(str2lang('"transltr"::`translate`("test")'))  ## TRUE
-#' is_translate_call(str2lang('`transltr`::"translate"("test")'))  ## TRUE
+#' transltr:::is_translate_call(str2lang('"transltr"::`translate`()'))  ## TRUE
+#' transltr:::is_translate_call(str2lang('`transltr`::"translate"()'))  ## TRUE
 #'
 #' @rdname is-translate-call
 #' @keywords internal

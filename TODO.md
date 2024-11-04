@@ -5,12 +5,6 @@
 
 # For Initial Release to CRAN
 
-`[find_source()]`
-- Update documentation and write tests for `as_block()`.
-- Integrate class `Translator` into `find_source()`.
-- Write documentation and tests for `find_source*()` functions.
-- Integrate local mock stored in `.local/` into `_mocks/`.
-
 `[PT/PB/PTF]`
 - **Change Translations Source File (TSF) based on Jérôme's feedback.**
   - Rename arguments `key` and `source_key` to `lang` and `source_lang`.
@@ -27,6 +21,8 @@
     - Rename TSF to Portable Translator File (PTF).
       - A PTF represents a Portable Translator (PT).
     - Rename source blocks to Portable Blocks (PB).
+    - Rename `read_translations()` and `write_translations()` to
+      `import_translator()`, and `export_translator()`.
   - Update user-level documentation on TSFs following all changes.
 - Implement `to_ptf()`.
   - Write documentation and tests for it.

@@ -36,19 +36,19 @@ cases. See Examples below. By design, it \strong{does not} detect calls to metho
 }
 \examples{
 ## Typical ways to write source calls.
-is_translate_call(str2lang('translate("test")'), .strict = FALSE)  ## TRUE
-is_translate_call(str2lang('transltr::translate("test")'))  ## TRUE
-is_translate_call(str2lang('translate("test")'))  ## FALSE
+transltr:::is_translate_call(str2lang('translate()'), .strict = FALSE)  ## TRUE
+transltr:::is_translate_call(str2lang('transltr::translate()'))  ## TRUE
+transltr:::is_translate_call(str2lang('translate()'))  ## FALSE
 
 ## Quotes and backticks are also valid.
-is_translate_call(str2lang('"translate"("test")'), .strict = FALSE)  ## TRUE
-is_translate_call(str2lang('"translate"("test")'))  ## FALSE
+transltr:::is_translate_call(str2lang('"translate"()'), .strict = FALSE)  ## TRUE
+transltr:::is_translate_call(str2lang('"translate"()'))  ## FALSE
 
-is_translate_call(str2lang('`translate`("test")'), .strict = FALSE)  ## TRUE
-is_translate_call(str2lang('`translate`("test")'))  ## FALSE
+transltr:::is_translate_call(str2lang('`translate`()'), .strict = FALSE)  ## TRUE
+transltr:::is_translate_call(str2lang('`translate`()'))  ## FALSE
 
-is_translate_call(str2lang('"transltr"::`translate`("test")'))  ## TRUE
-is_translate_call(str2lang('`transltr`::"translate"("test")'))  ## TRUE
+transltr:::is_translate_call(str2lang('"transltr"::`translate`()'))  ## TRUE
+transltr:::is_translate_call(str2lang('`transltr`::"translate"()'))  ## TRUE
 
 }
 \keyword{internal}
