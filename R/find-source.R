@@ -76,7 +76,7 @@ find_source_in_file <- function(
 {
     return(
         find_source_in_exprs(
-            parse_file(path, encoding),
+            find_source_exprs(path, encoding),
             path,
             strict,
             hash_algorithm))
@@ -107,7 +107,7 @@ find_source_in_exprs <- function(
 
 #' @rdname find-source-in-file
 #' @keywords internal
-parse_file <- function(path = "", encoding = "UTF-8") {
+find_source_exprs <- function(path = "", encoding = "UTF-8") {
     # We use read_text() and parse(text = .) because
     # the former re-encodes source text to encoding.
     text   <- read_text(path, encoding)
