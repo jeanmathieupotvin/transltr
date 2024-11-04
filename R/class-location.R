@@ -136,7 +136,7 @@ is_location <- function(x) {
 #' @rdname class-location
 #' @export
 format.Location <- function(x, how = c("long", "short"), ...) {
-    assert_arg(how)
+    assert_arg(how, TRUE)
     return(
         switch(how,
             long  = .format_long_location(x, ...),

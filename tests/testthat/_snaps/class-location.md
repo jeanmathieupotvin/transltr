@@ -84,7 +84,7 @@
       format(location(), "error")
     Condition
       Error:
-      ! 'how' must be equal to long, or short.
+      ! 'how' must be equal to 'long', or 'short'.
 
 # .format_short_location() throws an error if multiple ranges must be printed
 

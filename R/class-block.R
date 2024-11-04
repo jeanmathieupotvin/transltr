@@ -179,7 +179,7 @@ merge_blocks <- function(..., hash_algorithm = get_hash_algorithms()) {
         stops("values passed to '...' must all be 'Block' objects.")
     }
 
-    assert_arg(hash_algorithm)
+    assert_arg(hash_algorithm, TRUE)
     lapply(blocks, \(blk) blk$hash_algorithm <- hash_algorithm)
 
     groups <- split_ul(blocks, vapply_1c(blocks, `[[`, i = "hash"))

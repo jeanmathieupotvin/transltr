@@ -51,7 +51,7 @@ find_source_in_files <- function(
     # encoding is validated by read_text() below.
     assert_chr(paths)
     assert_lgl1(strict)
-    assert_arg(hash_algorithm)
+    assert_arg(hash_algorithm, TRUE)
 
     blocks <- lapply(paths, find_source_in_file,
         encoding       = encoding,

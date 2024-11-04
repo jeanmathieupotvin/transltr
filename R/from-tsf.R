@@ -270,7 +270,7 @@ from_tsf_blocks <- function(
     hash_algorithm   = get_hash_algorithms())
 {
     assert_arg(template_version)
-    assert_arg(hash_algorithm)
+    assert_arg(hash_algorithm, TRUE)
     return(
         switch(
             template_version,
