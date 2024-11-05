@@ -49,6 +49,7 @@ usethis::use_package("yaml")
 
 usethis::use_package("covr",           "Suggests")
 usethis::use_package("devtools",       "Suggests")
+usethis::use_package("lifecycle",      "Suggests")
 usethis::use_package("microbenchmark", "Suggests")
 usethis::use_package("usethis",        "Suggests")
 usethis::use_package("withr",          "Suggests")

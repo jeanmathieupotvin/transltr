@@ -1,9 +1,13 @@
 #' Get or Set Translator Objects
 #'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' Get or set the [`Translator`][Translator] object to use when calling
 #' [translate()]. It is registered within an internal cache managed by
 #' [`transltr`][transltr].
 #'
+#' @details
 #' Translations performed by [translate()] always have a `scope` specifying
 #' which [`Translator`][Translator] object must be used. This scope can be
 #' explicit, or implicit.

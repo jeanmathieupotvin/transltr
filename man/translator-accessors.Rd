@@ -29,6 +29,8 @@ to \code{scope}, or \code{NULL} if there is none.
 \code{\link[=translator_scopes]{translator_scopes()}} returns a character vector.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 Get or set the \code{\link{Translator}} object to use when calling
 \code{\link[=translate]{translate()}}. It is registered within an internal cache managed by
 \code{\link{transltr}}.
