@@ -62,17 +62,3 @@
       Error:
       ! 'verbose' must be a non-NA logical of length 1 ('TRUE' or 'FALSE').
 
-# find_source_in_file() outputs basic information if .verbose is true
-
-    Code
-      invisible(find_source_in_file(path_mock1, .verbose = TRUE))
-    Output
-      Extracted 2 source text(s) from './_mocks/scripts/find-source-1.R'.
-
----
-
-    Code
-      invisible(find_source_in_file(path_mock2, .verbose = TRUE))
-    Output
-      Extracted 10 source text(s) from './_mocks/scripts/find-source-2.R'.
-

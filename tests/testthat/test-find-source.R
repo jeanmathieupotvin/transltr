@@ -126,12 +126,8 @@ test_that("find_source_in_file() works", {
 })
 
 test_that("find_source_in_file() outputs basic information if .verbose is true", {
-    # invisible() is used because we only
-    # record what is returned by cat().
-    expect_output(find_source_in_file(path_mock1, .verbose = TRUE))
-    expect_output(find_source_in_file(path_mock2, .verbose = TRUE))
-    expect_snapshot(invisible(find_source_in_file(path_mock1, .verbose = TRUE)))
-    expect_snapshot(invisible(find_source_in_file(path_mock2, .verbose = TRUE)))
+    expect_output(find_source_in_file(path_mock1, .verbose = TRUE), "Extracted 2 source text")
+    expect_output(find_source_in_file(path_mock2, .verbose = TRUE), "Extracted 10 source text")
 })
 
 
