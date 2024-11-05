@@ -31,6 +31,7 @@
     - Write documentation and tests for it.
 
 `[Documentation]`
+- Write package-level documentation (`R/transltr-package.R`).
 - Run `R CMD check`.
 - Update architecture diagram.
 - Write small introduction to package in package documentation.
@@ -74,4 +75,5 @@
 - Build dedicated website with `pkgdown`.
 
 `[Miscellaneous]`
-- Revisit whether arg which of `str_strip_empty()` is required.
+- Revisit whether arg `which` of `str_strip_empty()` is required.
+- `format_vector()` needs to (better) accomodate vectors of length 1.

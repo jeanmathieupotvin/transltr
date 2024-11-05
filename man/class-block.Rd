@@ -95,6 +95,10 @@ A \code{\link{Block}} object is a collection of translations of a \emph{source t
 that can be used to safely manipulate the information it contains, but it
 is unlikely to be useful in typical circumstances. See class
 \code{\link{Translator}} instead.
+
+The name of the class is derived from what it conceptually represents: a
+\code{\link{Block}} is just a large piece of text potentially repeated in
+different languages, and processed as a unit.
 \subsection{Combining Block Objects}{
 
 \code{\link[=c]{c()}} can only combine \code{\link{Block}} objects having the same \code{hash}.

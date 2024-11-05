@@ -9,6 +9,10 @@
 #' is unlikely to be useful in typical circumstances. See class
 #' [`Translator`][Translator] instead.
 #'
+#' The name of the class is derived from what it conceptually represents: a
+#' [`Block`][Block] is just a large piece of text potentially repeated in
+#' different languages, and processed as a unit.
+#'
 #' ## Combining Block Objects
 #'
 #' [c()] can only combine [`Block`][Block] objects having the same `hash`.
