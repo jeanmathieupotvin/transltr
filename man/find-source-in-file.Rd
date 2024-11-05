@@ -4,13 +4,14 @@
 \alias{find_source_in_file}
 \alias{find_source_in_exprs}
 \alias{find_source_exprs}
-\title{Find Source Text}
+\title{Find Source Text in Expression Tokens}
 \usage{
 find_source_in_file(
   path = "",
   encoding = "UTF-8",
   strict = TRUE,
-  hash_algorithm = get_hash_algorithms()
+  hash_algorithm = get_hash_algorithms(),
+  .verbose = FALSE
 )
 
 find_source_in_exprs(
@@ -40,6 +41,10 @@ namespace, i.e. \code{translate()}.}
 by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}. The algorithm to use when hashing source
 information for identification purposes.}
 
+\item{.verbose}{Same as argument \code{verbose} of \code{\link[=find_source]{find_source()}}, but not
+validated for maximum efficiency. It is checked by an higher-level parent
+function.}
+
 \item{.tokens}{A \code{\link[=data.frame]{data.frame}} returned by
 \code{\link[utils:getParseData]{utils::getParseData()}}. This can be a subset of the latter, but must
 always contain columns \code{line1}, \code{col1}, \code{line2}, \code{col2}, and \code{text}.}
@@ -62,6 +67,10 @@ or from a set of tokenized \R expressions stemming from \code{\link[=parse]{pars
 
 These functions are the \emph{building blocks} of \code{\link[=find_source]{find_source()}} and
 \code{\link[=find_source_in_files]{find_source_in_files()}}. They are not meant to be used by regular users.
+}
+\details{
+\code{\link[=find_source_in_exprs]{find_source_in_exprs()}} silently skips parsing errors. See \code{\link[=find_source]{find_source()}}
+for more information.
 }
 \seealso{
 \code{\link{Block}},

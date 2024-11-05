@@ -9,6 +9,26 @@
 #' the set of [`Block`][Block] objects. It can later be exported, and imported
 #' via [write_translations()] and [read_translations()] respectively.
 #'
+#' ## Methodology
+#'
+#' Extracting source text from source code involves performing usual parsing
+#' operations. [find_source()] and [find_source_in_files()] go through these
+#' steps to extract source text from a single \R script.
+#'
+#'   1. It is read with [read_text()].
+#'   2. It is parsed with [parse()], and underlying tokens are extracted from
+#'      parsed expressions with [utils::getParseData()].
+#'   3. Each expression token (`expr`) is converted to language objects with
+#'      [str2lang()]. Parsing errors, and invalid expressions are silently
+#'      skipped.
+#'   4. Valid [`call`][call()] objects stemming from step 3 are filtered with
+#'      [is_translate_call()].
+#'   5. Calls to [translate()] stemming from step 4 are coerced to
+#'      [`Block`][Block] objects with [as_block()].
+#'
+#' [find_source()] further constructs a [`Translator`][Translator] object from
+#' [`Block`][Block] objects stemming from step 5.
+#'
 #' ## Limitations
 #'
 #' The current version of [`transltr`][transltr] can only handle **literal**
@@ -27,6 +47,9 @@
 #'   non-[NA][base::NA] values. It can be empty. It is used to to construct
 #'   a mapping of language codes to native language names. See field
 #'   [`Translator$native_languages`][Translator] for more information.
+#'
+#' @param verbose A non-[NA][base::NA] logical value. Should basic information
+#'   on extracted source texts be outputted?
 #'
 #' @template param-encoding
 #'
@@ -58,7 +81,8 @@ find_source <- function(
     strict           = TRUE,
     id               = uuid(),
     hash_algorithm   = get_hash_algorithms(),
-    native_languages = character())
+    native_languages = character(),
+    verbose          = FALSE)
 {
     assert_chr1(path)
     assert_chr(native_languages, TRUE)
@@ -78,7 +102,7 @@ find_source <- function(
         include.dirs = TRUE,
         no..         = TRUE)
 
-    blocks <- find_source_in_files(paths, encoding, strict, hash_algorithm)
+    blocks <- find_source_in_files(paths, encoding, strict, hash_algorithm, verbose)
     trans  <- Translator$new(id, hash_algorithm)
 
     storage.mode(native_languages) <- "list"
@@ -93,23 +117,21 @@ find_source_in_files <- function(
     paths          = character(),
     encoding       = "UTF-8",
     strict         = TRUE,
-    hash_algorithm = get_hash_algorithms())
+    hash_algorithm = get_hash_algorithms(),
+    verbose        = FALSE)
 {
     # encoding is validated by read_text() below.
     assert_chr(paths)
     assert_lgl1(strict)
     assert_arg(hash_algorithm, TRUE)
+    assert_lgl1(verbose)
 
-    blocks <- lapply(paths, find_source_in_file,
-        encoding       = encoding,
-        strict         = strict,
-        hash_algorithm = hash_algorithm)
-
+    blocks <- lapply(paths, find_source_in_file, encoding, strict, hash_algorithm, verbose)
     return(unlist(blocks, FALSE))
 }
 
 
-#' Find Source Text
+#' Find Source Text in Expression Tokens
 #'
 #' @description
 #' Find, and extract source text that requires translation from a single file,
@@ -129,11 +151,19 @@ find_source_in_files <- function(
 #'   `hash_algorithm`, but not validated for maximum efficiency. They
 #'   are checked by an higher-level parent function.
 #'
+#' @param .verbose Same as argument `verbose` of [find_source()], but not
+#'   validated for maximum efficiency. It is checked by an higher-level parent
+#'   function.
+#'
 #' @template param-encoding
 #'
 #' @template param-strict
 #'
 #' @template param-hash-algorithm
+#'
+#' @details
+#' [find_source_in_exprs()] silently skips parsing errors. See [find_source()]
+#' for more information.
 #'
 #' @returns
 #' [find_source_in_file()] and [find_source_in_exprs()] return a list of
@@ -154,14 +184,20 @@ find_source_in_file <- function(
     path           = "",
     encoding       = "UTF-8",
     strict         = TRUE,
-    hash_algorithm = get_hash_algorithms())
+    hash_algorithm = get_hash_algorithms(),
+    .verbose       = FALSE)
 {
-    return(
-        find_source_in_exprs(
-            find_source_exprs(path, encoding),
-            path,
-            strict,
-            hash_algorithm))
+    tokens <- find_source_exprs(path, encoding)
+    blocks <- find_source_in_exprs(tokens, path, strict, hash_algorithm)
+
+    if (.verbose) {
+        cat(sep = "\n", sprintf(
+            "Extracted %i source text(s) from '%s'.",
+            length(blocks),
+            gsub(getwd(), ".", path)))
+    }
+
+    return(blocks)
 }
 
 #' @rdname find-source-in-file
@@ -172,7 +208,13 @@ find_source_in_exprs <- function(
     .strict         = TRUE,
     .hash_algorithm = get_hash_algorithms())
 {
-    code      <- lapply(.tokens$text, str2lang)
+    # Parsing errors are skipped silently. This is required whenever
+    # native pipes are used. They introduce placeholders (_) in expr
+    # tokens, a special constant that makes no sense outside of the
+    # full context. Some tokens are sub-exprs and lack the former,
+    # which yields an error. tryCatch() introduces a non-negligible
+    # overhead, but it is the only viable solution.
+    code      <- lapply(.tokens$text, \(x) tryCatch(str2lang(x), error = \(c) NULL))
     is_call   <- vapply_1l(code, is_translate_call, .strict = .strict)
     locations <- map(location, moreArgs = list(path = .path),
         line1 = .tokens[is_call, "line1"],

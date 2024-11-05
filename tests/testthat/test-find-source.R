@@ -101,6 +101,11 @@ test_that("find_source_in_files() validates hash_algorithm", {
     expect_snapshot(find_source_in_files(path_mock1, hash_algorithm = 1L), error = TRUE)
 })
 
+test_that("find_source_in_files() validates verbose", {
+    expect_error(find_source_in_files(path_mock1, verbose = 1L))
+    expect_snapshot(find_source_in_files(path_mock1, verbose = 1L), error = TRUE)
+})
+
 
 # find_source_in_file() --------------------------------------------------------
 
@@ -118,6 +123,15 @@ test_that("find_source_in_file() works", {
     expect_length(blocks_mock2, 10L)
     expect_true(all(vapply_1l(blocks_mock1, is_block)))
     expect_true(all(vapply_1l(blocks_mock2, is_block)))
+})
+
+test_that("find_source_in_file() outputs basic information if .verbose is true", {
+    # invisible() is used because we only
+    # record what is returned by cat().
+    expect_output(find_source_in_file(path_mock1, .verbose = TRUE))
+    expect_output(find_source_in_file(path_mock2, .verbose = TRUE))
+    expect_snapshot(invisible(find_source_in_file(path_mock1, .verbose = TRUE)))
+    expect_snapshot(invisible(find_source_in_file(path_mock2, .verbose = TRUE)))
 })
 
 

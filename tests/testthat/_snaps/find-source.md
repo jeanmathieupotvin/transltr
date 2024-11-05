@@ -54,3 +54,25 @@
       Error:
       ! 'hash_algorithm' must be equal to 'sha1', or 'utf8'.
 
+# find_source_in_files() validates verbose
+
+    Code
+      find_source_in_files(path_mock1, verbose = 1L)
+    Condition
+      Error:
+      ! 'verbose' must be a non-NA logical of length 1 ('TRUE' or 'FALSE').
+
+# find_source_in_file() outputs basic information if .verbose is true
+
+    Code
+      invisible(find_source_in_file(path_mock1, .verbose = TRUE))
+    Output
+      Extracted 2 source text(s) from './_mocks/scripts/find-source-1.R'.
+
+---
+
+    Code
+      invisible(find_source_in_file(path_mock2, .verbose = TRUE))
+    Output
+      Extracted 10 source text(s) from './_mocks/scripts/find-source-2.R'.
+
