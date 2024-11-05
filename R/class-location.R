@@ -1,19 +1,31 @@
 #' Source Locations
 #'
-#' Structure and manipulate source locations. Class [`Location`][Location]
-#' is a more convenient alternative to [srcfile()].
+#' Store, structure, and manipulate source locations. Class
+#' [`Location`][Location] is a lighter alternative to [srcfile()] and
+#' related functionalities.
 #'
-#' A *source location* is defined as a set of one or more ranges referencing
-#' contents wihin a common *origin* that can be located via its underlying
-#' `path`. The latter can be anything: a file on disk, on a network, an object
-#' in memory, etc.
+#' A [`Location`][Location] is a set of one or more line/column ranges
+#' referencing contents (like text or source code) within a common *origin*
+#' identified by an underlying `path`. The latter is generic and can be
+#' *anything*: a file on disk, on a network, a pointer, a binding, etc. What
+#' matters is the underlying context.
 #'
-#' [`Location`][Location] objects may refer multiple distinct ranges within
-#' the same source script. This is why arguments `line1`, `col1`, `line2`, and
+#' [`Location`][Location] objects may refer to multiple distinct ranges for
+#' the the same origin. This is why arguments `line1`, `col1`, `line2`, and
 #' `col2` accept integer vectors (and not only scalar values).
 #'
-#' @param path A non-empty and non-[NA][base::NA] character string identifying
-#'   the origin of the range(s).
+#' ## Combining Location Objects
+#'
+#' [c()] can only combine [`Location`][Location] objects having the same
+#' `path`. In that case, the underlying ranges are combined into a set of
+#' non-duplicated range(s).
+#'
+#' [merge_locations()] is a generalized version of [c()] that handles any
+#' number of [`Location`][Location] objects having possibly different paths.
+#' It can be viewed as a vectorized version of [c()].
+#'
+#' @param path A non-empty and non-[NA][base::NA] character string. The origin
+#'   of the range(s).
 #'
 #' @param line1,col1 A non-empty integer vector of non-[NA][base::NA] values.
 #'   The (inclusive) starting point(s) of what is being referenced.
@@ -24,35 +36,50 @@
 #' @param x Any \R object for [is_location()]. An object of class
 #'   [`Location`][Location] for S3 methods [format()] and [print()].
 #'
+#' @param how A character string equal to `"long"` or `"short"`. The latter is
+#'   suitable for embedding [`Location`][Location] objects in
+#'   [messages][message()], and [conditions].
+#'
 #' @param ... Usage depends on the underlying function.
-#'   * Further arguments passed to or from other methods for [format()] and
-#'     [print()].
 #'   * Any number of [`Location`][Location] objects for [merge_locations()]
 #'     and S3 method [c()].
+#'   * Further arguments passed to or from other methods for [format()] and
+#'     [print()].
 #'
 #' @returns
-#' [location()] returns a named list of length 5 and of class
+#' [location()] and [c()] returns a named list of length 5 and of class
 #' [`Location`][Location]. It contains the values of `path`, `line1`, `col1`,
 #' `line2`, and `col2`.
 #'
-#' [is_location()] returns a logical.
+#' [is_location()] returns a logical value.
 #'
-#' [format()] returns a character. If `how` is equal to `"short"`, it is of
-#' length 1.
+#' [format()] returns a character vector. If `how` is equal to `"short"`, it
+#' is of length 1.
 #'
 #' [print()] returns argument `x` invisibly.
 #'
-#' [c()] returns a [`Location`][Location] object. It can only combine objects
-#' having the exact same `path`. In that case, ranges are combined into a
-#' coherent set of unique range(s).
+#' [merge_locations()] returns a list of (combined) [`Location`][Location]
+#' objects.
 #'
-#' [merge_locations()] returns a list of [`Location`][Location] objects. It is
-#' a generalized version of [c()] that handles [`Location`][Location] objects
-#' having different path(s).
+#' @examples
+#' ## Create Location objects.
+#' loc1 <- location("a", 1L, 2L, 3L, 4L)
+#' loc2 <- location("a", 5L, 6L, 7L, 8L)
+#' loc3 <- location("c", c(9L, 10L), c(11L, 12L), c(13L, 14L), c(15L, 16L))
+#'
+#' ## Combine Location objects.
+#' c(loc1, loc2)
+#' merge_locations(loc1, loc2, loc3)
+#'
+#' ## Using a Location object to reference text in an R
+#' ## character vector stored in a named environment.
+#' x <- "This is a string and it is held in memory for some purpose."
+#' location("<environment: R_GlobalEnv: x>", 1L, 11L, 1L, 16L)  ## "string"
 #'
 #' @aliases Location
 #' @rdname class-location
 #' @keywords internal
+#' @export
 location <- function(
     path  = tempfile(),
     line1 = 1L,
@@ -101,6 +128,7 @@ location <- function(
 
 #' @rdname class-location
 #' @keywords internal
+#' @export
 is_location <- function(x) {
     return(inherits(x, "Location"))
 }
@@ -108,11 +136,11 @@ is_location <- function(x) {
 #' @rdname class-location
 #' @export
 format.Location <- function(x, how = c("long", "short"), ...) {
-    assert_arg(how)
+    assert_arg(how, TRUE)
     return(
         switch(how,
-            long  = format_long_location(x, ...),
-            short = format_short_location(x, ...)))
+            long  = .format_long_location(x, ...),
+            short = .format_short_location(x, ...)))
 }
 
 #' @rdname class-location
@@ -149,6 +177,7 @@ c.Location <- function(...) {
 
 #' @rdname class-location
 #' @keywords internal
+#' @export
 merge_locations <- function(...) {
     if (!all(vapply_1l(locs <- list(...), is_location))) {
         stops("values passed to '...' must all be 'Location' objects.")
@@ -158,33 +187,25 @@ merge_locations <- function(...) {
     return(lapply(groups, \(group) do.call(c, group)))
 }
 
-format_long_location <- function(x, ...) {
-    # Align ranges by components for
-    # nicer outputs when printing.
-    ints   <- x[c("line1", "col1", "line2", "col2")]
-    chars  <- lapply(ints, encodeString, width = NULL, justify = "right")
-    ranges <- sprintf(
-        "line %s, column %s @ line %s, column %s",
-        chars[[1L]],
-        chars[[2L]],
-        chars[[3L]],
-        chars[[4L]])
 
-    x_str <- if (length(ranges) > 1L) {
-        c("<Location>",
-          "  Path  : " = x$path,
-          "  Ranges:"  = "",
-          sprintf("    [%i] %s", seq_along(ranges), ranges))
-    } else {
-        c("<Location>",
-          "  Path : " = x$path,
-          "  Range: " = ranges)
-    }
+# Internal functions -----------------------------------------------------------
 
-    return(paste0(names(x_str), x_str))
+
+.format_long_location <- function(x, ...) {
+    chars <- lapply(x, encodeString, width = NULL, justify = "right")
+    xlist <- list(
+        Path   = x$path,
+        Ranges = sprintf(
+            "line %s, column %s @ line %s, column %s",
+            chars[[2L]],
+            chars[[3L]],
+            chars[[4L]],
+            chars[[5L]]))
+
+    return(format_vector(xlist, "<Location>", .show_nokey = FALSE))
 }
 
-format_short_location <- function(x, ...) {
+.format_short_location <- function(x, ...) {
     if (length(x$line1) > 1L) {
         stops(
             "'line1', 'col1', 'line2', and 'col2' must all have ",

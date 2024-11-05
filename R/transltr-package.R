@@ -1,7 +1,5 @@
 #' transltr: A General Purpose Translator for R
 #'
-# TODO: write this section once class Translator, find_translations(), and
-# set_translator() are implemented.
 #' @section Getting Started:
 #' Placeholder for future documentation.
 #'

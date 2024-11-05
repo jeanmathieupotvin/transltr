@@ -13,7 +13,7 @@ usethis::use_description(
     fields     = list(
         Package     = "transltr",
         Title       = "A framework to support many languages in any R application",
-        Version     = "0.0.1.9002",
+        Version     = "0.0.1.9003",
         Language    = "en",
         Encoding    = "UTF-8",
         Roxygen     = "list(markdown = TRUE, r6 = TRUE)",
@@ -32,12 +32,12 @@ usethis::use_description(
                 role    = c("ctb", "fnd", "rev"),
                 comment = c(ORCID = "0000-0003-4950-5475")))',
         Description = "
-            An internationalization framework that enables full support of
-            many languages in any R application. Detect text to translate
-            within a project. Import and manage translations with a
-            user-friendly interface. Easily export source text that requires
-            translation to a plain text format that fosters collaboration with
-            other non-technical and external collaborators."))
+            An alternative to gettext() and xgettext() that enables support of
+            many languages in any R application. Find, and extract source text
+            that requires translation. Store, structure, and manipulate source
+            texts and translations via R6 classes exposing a user-friendly API.
+            Easily export and import to/from a plain text format that fosters
+            collaboration with other non-technical and external collaborators."))
 
 usethis::use_mit_license("Jean-Mathieu Potvin")
 
@@ -49,6 +49,7 @@ usethis::use_package("yaml")
 
 usethis::use_package("covr",           "Suggests")
 usethis::use_package("devtools",       "Suggests")
+usethis::use_package("lifecycle",      "Suggests")
 usethis::use_package("microbenchmark", "Suggests")
 usethis::use_package("usethis",        "Suggests")
 usethis::use_package("withr",          "Suggests")

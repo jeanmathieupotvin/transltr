@@ -8,7 +8,6 @@
 #'
 #' @note
 #' This header is included in the output of [read_text()].
-#'
 NULL
 
 Lorem Ipsum

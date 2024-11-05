@@ -18,10 +18,10 @@ language_keys:
     en: English
     fr: Français
     es: Español
-    jp: 日本語
+    ja: 日本語
 ---
 
-# `{{ 4f01c06503971d1c854ac42e0a4d09ee26498d82 }}`
+# `{{ ce06fb763aad57fd2b265a18a375d7daae86af7f }}`
 
 `file1`:
   - line  1, column   2 @ line    3, column  4224
@@ -66,7 +66,7 @@ las hojas "Letraset", las cuales contenian pasajes de Lorem Ipsum, y más
 recientemente con software de autoedición, como por ejemplo Aldus PageMaker, el
 cual incluye versiones de Lorem Ipsum.
 
-## jp
+## ja
 
 Lorem Ipsum は、印刷および植字業界の単なるダミー テキストです。
 Lorem Ipsum は 1500 年代以来業界の標準ダミー テキストであり、
@@ -77,7 +77,7 @@ Lorem Ipsum は 1500 年代以来業界の標準ダミー テキストであり�
 さらに最近では、Aldus PageMaker のようなデスクトップ パブリッシング ソフトウェアを使用しています
 Lorem Ipsum のバージョンを含む
 
-# `{{ b5e480d5ff9fa8583c5caa4c7b63f0719cc878e8 }}`
+# `{{ 256e0d707386d0fcd9abf10ad994000bdaa25812 }}`
 
 `file1`:
   - line 1, column 2 @ line 3, column 4
@@ -94,6 +94,6 @@ Bonjour le monde!
 
 ¡Hola Mundo!
 
-## jp
+## ja
 
 こんにちは世界！

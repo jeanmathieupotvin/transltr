@@ -76,8 +76,8 @@ Each block is parsed as a \code{\link{Block}} object internally.
 Package \code{\link{transltr}} uses so-called \emph{language keys} to uniquely
 identify a native language in a (possibly) more concise way. This is
 convenient for portability and universality. For example, \code{日本語} (Japanese
-or Nihongo) could be identified by the ASCII string \code{jp} (or \code{jp-utf8},
-\code{jp-eucjp}, etc.) in TSFs.
+or Nihongo) could be identified by the ASCII string \code{ja} (or \code{ja-utf8},
+\code{ja-eucjp}, etc.) in TSFs.
 
 Language keys can be (almost) any character string. Users have full control
 over them and are free to use whatever they want.

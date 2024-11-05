@@ -30,6 +30,7 @@ error messages.
 }
 \seealso{
 Other utility functions: 
+\code{\link{format_vector}()},
 \code{\link{split_ul}()},
 \code{\link{utc}()},
 \code{\link{vapply_1l}()}

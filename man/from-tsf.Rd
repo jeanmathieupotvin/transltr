@@ -66,9 +66,9 @@ Each element represents a different source \code{\link{Block}} object.}
 \item{template_version}{An integer. The translations source file's format
 version. See \code{\link[=get_template_versions]{get_template_versions()}} for available versions.}
 
-\item{hash_algorithm}{A character string. The algorithm to use when hashing
-source information for identification purposes. It must be a value returned
-by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}.}
+\item{hash_algorithm}{A character string equal to one of the values returned
+by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}. The algorithm to use when hashing source
+information for identification purposes.}
 
 \item{generated_by}{A character string. How did the translations source
 file was generated? This will most likely be a version of the package,
@@ -85,7 +85,7 @@ vector. It can be empty.
 \code{"日本語"}, etc.
 \item The names are \emph{keys} that uniquely identify corresponding languages.
 As such, they are referred to as \emph{language keys}. For example,
-\code{en}, \code{fr}, \code{jp}, etc.
+\code{en}, \code{fr}, \code{ja}, etc.
 }
 
 Users retain full control over names and keys, and are free to use

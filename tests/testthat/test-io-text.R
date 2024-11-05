@@ -9,7 +9,7 @@ test_that("read_text() returns a character vector", {
     lines <- read_text(mock_file_utf8_path)
 
     expect_type(lines, "character")
-    expect_length(lines, 52L)
+    expect_length(lines, 51L)
 })
 
 test_that("read_text() validates path", {

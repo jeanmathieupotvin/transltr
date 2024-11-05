@@ -6,7 +6,7 @@
 \alias{transltr-package}
 \title{transltr: A General Purpose Translator for R}
 \description{
-An internationalization framework that enables full support of many languages in any R application. Detect text to translate within a project. Import and manage translations with a user-friendly interface. Easily export source text that requires translation to a plain text format that fosters collaboration with other non-technical and external collaborators.
+An alternative to gettext() and xgettext() that enables support of many languages in any R application. Find, and extract source text that requires translation. Store, structure, and manipulate source texts and translations via R6 classes exposing a user-friendly API. Easily export and import to/from a plain text format that fosters collaboration with other non-technical and external collaborators.
 }
 \section{Getting Started}{
 

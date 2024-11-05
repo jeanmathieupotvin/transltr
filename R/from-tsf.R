@@ -99,7 +99,7 @@
 #'
 #' @template param-hash-algorithm
 #'
-#' @template param-language-keys
+#' @template to-rm-param-language-keys
 #'
 #' @returns
 #' This section is split according to the top-down hierarchy explained above.
@@ -229,7 +229,7 @@ split_tsf <- function(x = character()) {
 
     return(
         list(
-            header = strip_empty_strings(h_no_sep),
+            header = str_strip_empty(h_no_sep),
             blocks = x_split[-1L],
             rest   = rest))
 }
@@ -270,7 +270,7 @@ from_tsf_blocks <- function(
     hash_algorithm   = get_hash_algorithms())
 {
     assert_arg(template_version)
-    assert_arg(hash_algorithm)
+    assert_arg(hash_algorithm, TRUE)
     return(
         switch(
             template_version,
@@ -351,12 +351,16 @@ from_tsf_block_v1 <- function(
     hash    <- from_tsf_block_title_v1(t_split$TITLE_HASH[[1L]])
     src_key <- from_tsf_block_title_v1(t_split$TITLE_KEY_SRC[[1L]])
     src_txt <- from_tsf_block_txt_v1(t_split$TXT_SRC)
-    keys    <- lapply(t_split$TITLE_KEY_TXT, from_tsf_block_title_v1)
     locs    <- lapply(t_split[grepl("^LOC_SRC_", t_subs)], from_tsf_block_loc_v1)
     txts    <- lapply(t_split[grepl("^TXT_TRL_", t_subs)], from_tsf_block_txt_v1)
+    names(txts) <- lapply(t_split$TITLE_KEY_TXT, from_tsf_block_title_v1)
 
     # Step 2: create Block object.
-    blk <- .block(src_key, src_txt, hash_algorithm, keys, txts, locs)
+    blk <- Block$new(hash_algorithm)
+    blk$set_translation(src_key, src_txt)
+    blk$source_lang <- src_key
+    do.call(blk$set_locations,    locs)
+    do.call(blk$set_translations, txts)
 
     # Step 3: check source information.
     # Comparing hashes is equivalent to simultaneously
@@ -380,7 +384,7 @@ from_tsf_block_title_v1 <- function(token = tsf_block_line_token("TITLE_HASH")) 
 #' @keywords internal
 from_tsf_block_txt_v1 <- function(tokens = list()) {
     t_vals <- vapply_1c(tokens, `[[`, i = "value")
-    text   <- strip_empty_strings(t_vals)
+    text   <- str_strip_empty(t_vals)
 
     # Identify lines that require a new line
     # character for appending (empty lines).

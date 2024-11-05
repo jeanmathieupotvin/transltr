@@ -4,7 +4,7 @@ v <- c(1L, 2L, 3L)
 # to_string() ------------------------------------------------------------------
 
 
-test_that("to_string() generic function works", {
+test_that("to_string() works", {
     expect_type(to_string(1L), "character")
     expect_length(to_string(1L), 1L)
 })

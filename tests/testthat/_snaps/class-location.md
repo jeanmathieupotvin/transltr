@@ -84,9 +84,9 @@
       format(location(), "error")
     Condition
       Error:
-      ! 'how' must be equal to long, or short.
+      ! 'how' must be equal to 'long', or 'short'.
 
-# format_short_location() throws an error if multiple ranges must be printed
+# .format_short_location() throws an error if multiple ranges must be printed
 
     Code
       format(loc2, "short")
@@ -107,10 +107,10 @@
       print(loc2, "long")
     Output
       <Location>
-        Path  : tests/testthat/my-test-file
-        Ranges:
-          [1] line  1, column  22 @ line   10, column 1
-          [2] line 11, column 222 @ line 3333, column 4
+        Path: tests/testthat/my-test-file
+        Ranges: 
+          line  1, column  22 @ line   10, column 1
+          line 11, column 222 @ line 3333, column 4
 
 # c.Location() validates ...
 
