@@ -26,6 +26,7 @@ if (interactive()) {
     suppressMessages({
         require(covr)
         require(devtools)
+        require(lifecycle)
         require(microbenchmark)
         require(testthat)
         require(usethis)

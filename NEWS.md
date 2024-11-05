@@ -1,3 +1,78 @@
+# `transltr` 0.0.1.9003
+
+This version introduces yet another set of core mechanisms such as the
+`Translator` class. See their documentation for more information. We are
+near an initial publication to CRAN.
+
+## New features
+
+1. New class `Translator` and related mechanisms.
+   * This includes the constructor `translator()`.
+
+   * This includes the introspector `is_block()`.
+
+   * This includes S3 methods `format()`, and `print()`.
+
+2. New functions `translator_set()`, and `translator_get()`.
+
+3. New functions `language_set()`, and `language_get()`.
+
+4. New functions `translate()`, and `is_translate_call()`.
+   * It replaces an earlier version.
+
+   * Generic function `match_translate_call()` (and its methods) was deprecated.
+
+5. New functions `uuid()`, `uuid_raw()`, and `uuid_is()`.
+
+6. New functions `text_normalize()`, and `text_hash()`.
+
+7. New set of global constants were introduced.
+
+8. New internal function `format_vector()`.
+
+9. New internal utility function `map()`. It wraps `.mapply()`.
+
+## Changes
+
+1. All `key` arguments were renamed to `lang`. This includes `source_key`.
+
+2. All `find_*()` functions were renamed for consistency.
+
+3. Changes to the `Block` class.
+
+   * Private field `Block$.locations` is now an environment, where names are
+     extracted from field `Location$path`.
+
+   * Deprecate intrernal constructor `.block()` in favor of just using the
+     class' methods.
+
+   * Some error messages were simplified.
+
+   * `$set_*()` methods now return `NULL` for consistency with other `set_*()`
+     functions.
+
+   * Update the documentation.
+
+   * `as_block()` was revamped.
+
+4. Changes to the `Location` class.
+
+   * `format()` was simplified.
+
+   * Documentation was updated.
+
+5. More functions are now exported, but most of them are marked as being
+   internal.
+
+4. Some utility functions were renamed.
+
+## Fixes
+
+1. `assert_arg()` now always quote character values.
+
+2. Various typos in the code and in the documentation were fixed.
+
+
 # `transltr` 0.0.1.9002
 
 This version introduces many important core mechanisms such as the `Block`

@@ -45,7 +45,7 @@ get_hash_algorithms <- function() {
 #' @rdname transltr-params
 #' @keywords internal
 get_generated_by <- function() {
-    return("R package transltr 0.0.1.9002")
+    return("R package transltr 0.0.1.9003")
 }
 
 #' @include utc.R
