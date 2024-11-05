@@ -166,6 +166,6 @@
           en: English
           fr: Français
         Source Texts: 
-          256e0d7: Hello, world!
-          2ac373a: Farewell, world!
+          256e0d7 [en, fr]: Hello, world!
+          2ac373a [en, fr]: Farewell, world!
 

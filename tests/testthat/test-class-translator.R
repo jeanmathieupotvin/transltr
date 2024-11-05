@@ -405,8 +405,8 @@ test_that("format() returns a character", {
         "    en: English",
         "    fr: Français",
         "  Source Texts: ",
-        "    256e0d7: Hello, world!",
-        "    2ac373a: Farewell, world!"))
+        "    256e0d7 [en, fr]: Hello, world!",
+        "    2ac373a [en, fr]: Farewell, world!"))
 
     expect_type(fmt_trans_empty, "character")
     expect_length(fmt_trans_empty, 5L)

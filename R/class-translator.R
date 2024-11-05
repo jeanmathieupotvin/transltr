@@ -83,11 +83,22 @@ is_translator <- function(x) {
 #' @rdname class-translator
 #' @export
 format.Translator <- function(x, ...) {
+    if (!is.null(x$source_texts)) {
+        blocks <- lapply(x$hashes, x$get_block)
+        langs  <- lapply(blocks, \(b) to_string(b$languages, last_sep = ", "))
+
+        source_texts <- x$source_texts
+        hashes <- names(source_texts)  ## These are already reduced.
+        names(source_texts) <- sprintf("%s [%s]", hashes, langs)
+    } else {
+        source_texts <- .__STR_EMPTY_OBJ
+    }
+
     xlist <- list(
         Identifier     = x$id,
         Algorithm      = x$hash_algorithm,
         Languages      = x$native_languages %??% .__STR_EMPTY_OBJ,
-        `Source Texts` = x$source_texts %??% .__STR_EMPTY_OBJ)
+        `Source Texts` = source_texts)
 
     return(format_vector(xlist, "<Translator>", .show_nokey = FALSE))
 }
