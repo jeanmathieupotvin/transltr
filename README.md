@@ -10,9 +10,9 @@
 An alternative to `gettext()` and `xgettext()` that enables support of many
 languages in any R application. Find, and extract source text that requires
 translation. Store, structure, and manipulate source texts and translations
-via R6 classes exposing a user-friendly API. Easily export and import to/from
-a plain text format that fosters collaboration with other non-technical and
-external collaborators.
+via `R6` classes exposing a user-friendly API. Easily export and import to/
+from a plain text format that fosters collaboration with other non-technical
+and external collaborators.
 
 ## Why `transltr`?
 
@@ -45,7 +45,7 @@ purposes. For example, the user interface of a [Shiny application](https://shiny
 could be displayed in a language that differs from the server's internal locale.
 
 &#x2705; `transltr::translate()` works everywhere. It can always be located,
-and extracted automatically with `find_source()`.
+and extracted automatically with `transltr::find_source()`.
 
 &#x2705; `transltr` features are centralized, and thoroughly documented, even
 internal ones.
@@ -76,8 +76,7 @@ considered as being in a pre-beta stage until further notice.
 Write your programs as you normally would. Whenever you require a piece
 of text to be translated at runtime, wrap it with `transltr::translate()`.
 
-More to come later. See the proposed architecture below. You may also read
-`Rd` files in `man/`.
+This section will be completed later.
 
 ## Architecture
 
