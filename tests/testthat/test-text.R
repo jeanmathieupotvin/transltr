@@ -1,3 +1,7 @@
+mock_file_utf8_path  <- get_mock_path("io-text-utf8",  "txt")
+mock_file_eucjp_path <- get_mock_path("io-text-eucjp", "txt")
+
+
 # text_normalize() -------------------------------------------------------------
 
 
@@ -171,4 +175,65 @@ test_that("text_hash() returns a sha-1 hash wheen algorithm is sha1", {
 
 test_that("text_hash() returns an integer hash wheen algorithm is utf8", {
     expect_identical(text_hash("en", "Hello, world!", "utf8"), "12351")
+})
+
+
+# text_read() ------------------------------------------------------------------
+
+
+test_that("text_read() returns a character vector", {
+    lines <- text_read(mock_file_utf8_path)
+
+    expect_type(lines, "character")
+    expect_length(lines, 51L)
+})
+
+test_that("text_read() validates path", {
+    # Creates a directory within tempdir() and
+    # an empty file within this subdirectory.
+    temp_dir  <- withr::local_tempdir(pattern  = "a-test-directory")
+    temp_file <- withr::local_tempfile(pattern = "a-non-readable-file")
+
+    # Mark the file as being a binary executable.
+    # This makes it non-readable.
+    Sys.chmod(temp_file, "711")
+
+    expect_error(text_read(1L))
+    expect_error(text_read("a-non-existent-file.txt"))
+    expect_error(text_read(temp_dir))
+    expect_error(text_read(temp_file))
+
+    expect_snapshot(text_read(1L), error = TRUE)
+    expect_snapshot(text_read("a-non-existent-file.txt"), error = TRUE)
+})
+
+test_that("text_read() validates encoding", {
+    expect_error(text_read(mock_file_utf8_path, ""))
+    expect_snapshot(text_read(mock_file_utf8_path, ""), error = TRUE)
+})
+
+test_that("text_read() closes connection to file", {
+    # Register number of opened connections just
+    # before execution of text_read(). It should
+    # be the same after execution.
+    n_cons <- nrow(showConnections())
+    text_read(mock_file_utf8_path)
+
+    expect_identical(nrow(showConnections()), n_cons)
+})
+
+test_that("text_read() re-encodes input to utf-8", {
+    lines <- text_read(mock_file_eucjp_path, "EUC-JP")
+    chars <- utils::tail(lines, 1L)
+
+    expect_identical(chars, "あいうえお")
+    expect_identical(Encoding(chars), "UTF-8")
+})
+
+
+# text_write() -----------------------------------------------------------------
+
+
+test_that("text_write() returns a not yet implemented error", {
+    expect_error(text_write())
 })

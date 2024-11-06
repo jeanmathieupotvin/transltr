@@ -4,7 +4,7 @@
 #'
 #' @usage
 #' ## Expected usage in tests/testthat/test-find-source.R
-#' read_text(get_mock_path("scripts/find-source-2"))
+#' text_read(get_mock_path("scripts/find-source-2"))
 NULL
 
 # Typical use cases.

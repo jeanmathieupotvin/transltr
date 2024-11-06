@@ -176,7 +176,7 @@ useful.
 A collection of \strong{internal} mechanisms to convert \link{Translations Source Files}
 back into proper \R objects. Its contents is split, tokenized, parsed, and
 validated according to an underlying \code{template_version}. Typical users should
-always use \code{\link[=read_translations]{read_translations()}} instead.
+always use \code{\link[=translator_import]{translator_import()}} instead.
 }
 \details{
 All functions above follow an implicit top-down hierarchy. Conceptually,
@@ -254,7 +254,7 @@ implementation of \code{\link[=from_tsf_header]{from_tsf_header()}}.
 }
 \seealso{
 \link{Translations Source Files},
-\code{\link[=read_translations]{read_translations()}},
+\code{\link[=translator_import]{translator_import()}},
 \code{\link[=tsf_block_line_token]{tsf_block_line_token()}}
 }
 \concept{translations source files mechanisms}

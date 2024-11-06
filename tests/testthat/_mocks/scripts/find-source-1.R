@@ -4,7 +4,7 @@
 #'
 #' @usage
 #' ## Expected usage in tests/testthat/test-find-source.R
-#' read_text(get_mock_path("scripts/find-source-1"))
+#' text_read(get_mock_path("scripts/find-source-1"))
 #'
 #' @seealso [Source code](https://github.com/rstudio/shiny-examples/tree/main/001-hello)
 NULL

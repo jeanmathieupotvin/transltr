@@ -43,8 +43,6 @@ Collate:
     'class-translator.R'
     'find-source.R'
     'from-tsf.R'
-    'io-text.R'
-    'io-translations.R'
     'language.R'
     'strings.R'
     'text.R'

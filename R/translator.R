@@ -206,6 +206,47 @@ translator_scope_name <- function(x) {
 }
 
 
+#' Read and Write Translations Source Files
+#'
+#' Read [Translations Source Files] and parse them as [`Translator`][Translator]
+#' objects, or convert [`Translator`][Translator] objects back to
+#' [Translations Source Files].
+#'
+#' @template param-path
+#'
+#' @template param-encoding
+#'
+#' @param x An object of class [`Translator`][Translator].
+#'
+#' @returns
+#' [translator_import()] returns a [`Translator`][Translator] object if `path`
+#' points to a valid translations source file.
+#'
+#' [translator_export()] is not yet implemented and throws an error.
+#'
+#' @seealso [Translations Source Files]
+#'
+#' @rdname translator-io
+#' @export
+translator_import <- function(path = "", encoding = "UTF-8") {
+    tsf_raw    <- text_read(path, encoding = encoding)
+    tsf_parsed <- from_tsf(tsf_raw)
+
+    # TODO: call Translator$new() once class is implemented.
+    # Output below is temporary and for debugging purposes.
+    return(tsf_parsed[c("header", "blocks")])
+}
+
+#' @rdname translator-io
+#' @export
+translator_export <- function(x, path = "") {
+    return(.NotYetImplemented())
+}
+
+
+# Internals --------------------------------------------------------------------
+
+
 # This is an internal cache into which Translator objects
 # are registered via translator_set(). Translator objects
 # are R6 instances, and these are just fancy environments.

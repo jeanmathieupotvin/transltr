@@ -45,8 +45,8 @@
 #' @seealso [translate()],
 #'   [translator_set()],
 #'   [translator_get()],
-#'   [read_translations()],
-#'   [write_translations()]
+#'   [translator_import()],
+#'   [translator_export()]
 #'
 #' @examples
 #' ## Create a Translator manually.

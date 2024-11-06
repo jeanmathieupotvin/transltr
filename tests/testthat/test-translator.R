@@ -1,14 +1,15 @@
-#' Testing translator_set() and translator_get()
+#' Testing translator_*() functions
 #'
 #' It is hard to completely decouple unit tests of [translator_set()] and
-#' [translator_get()]. Test blocks are related by design because these two
-#' functions are tightly coupled. Each test block focuses on one of them,
-#' but uses the other one to either get or set test values.
+#' [translator_get()]. Since these two functions are very tightly coupled,
+#' their test blocks are also closely related by design. Each test block
+#' attempts to focus on one of them, but uses the other one to either get
+#' or set values.
 #'
 #' It is recommended to have a strong understanding of the call stack before
-#' reviewing these functions. The documentation of [sys.function()] is useful.
-#' The idea of using [evalq()] below was taken from the documentation of
-#' [gettext()].
+#' reviewing [translator_set()] and [translator_get()]. The documentation of
+#' [sys.function()] is useful. The idea of using [evalq()] below was taken
+#' from the documentation of [gettext()].
 #'
 #' When leaving `scope` as `NULL`, [on.exit()] should be used instead of
 #' [withr::defer()]. This is because the latter registers a callback function
@@ -18,6 +19,8 @@
 #' in the future.
 NULL
 
+
+mock_template_v1_path <- get_mock_path("tsf-v1", "md")
 
 # Ensure that the cache is empty.
 cache <- .__translators_cache__
@@ -181,6 +184,33 @@ test_that("translator_scope_name() returns a character string", {
     expect_identical(translator_scope_name(new.env()), "global")    # unnamed env
     expect_identical(translator_scope_name(named_env), "my-env")    # named env
     expect_identical(translator_scope_name(globalenv()), "global")  # global env
+})
+
+
+# translator_import() ----------------------------------------------------------
+
+
+# TODO: update unit tests once class Translator is implemented. There is not
+# much to test because everything is already covered by unit tests of lower-
+# level mechanisms.
+
+test_that("translator_import() returns a Translator object", {
+    skip("class Translator is not yet implemented")
+})
+
+test_that("translator_import() properly parses translations source files (version 1)", {
+    out <- translator_import(mock_template_v1_path)
+
+    expect_type(out, "list")
+    expect_length(out, 2L)
+})
+
+
+# translator_export() ---------------------------------------------------------
+
+
+test_that("translator_export() returns a not yet implemented error", {
+    expect_error(translator_export())
 })
 
 

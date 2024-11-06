@@ -7,7 +7,7 @@
 #'
 #' [find_source()] further constructs a [`Translator`][Translator] object from
 #' the set of [`Block`][Block] objects. It can later be exported, and imported
-#' via [write_translations()] and [read_translations()] respectively.
+#' via [translator_export()] and [translator_import()] respectively.
 #'
 #' ## Methodology
 #'
@@ -15,7 +15,7 @@
 #' operations. [find_source()] and [find_source_in_files()] go through these
 #' steps to extract source text from a single \R script.
 #'
-#'   1. It is read with [read_text()].
+#'   1. It is read with [text_read()].
 #'   2. It is parsed with [parse()], and underlying tokens are extracted from
 #'      parsed expressions with [utils::getParseData()].
 #'   3. Each expression token (`expr`) is converted to language objects with
@@ -70,8 +70,8 @@
 #'   [`Translator`][Translator],
 #'   [`Block`][Block],
 #'   [translate()],
-#'   [read_translations()],
-#'   [write_translations()]
+#'   [translator_import()],
+#'   [translator_export()]
 #'
 #' @rdname find-source
 #' @export
@@ -120,7 +120,7 @@ find_source_in_files <- function(
     hash_algorithm = get_hash_algorithms(),
     verbose        = FALSE)
 {
-    # encoding is validated by read_text() below.
+    # encoding is validated by text_read() below.
     assert_chr(paths)
     assert_lgl1(strict)
     assert_arg(hash_algorithm, TRUE)
@@ -235,9 +235,9 @@ find_source_in_exprs <- function(
 #' @rdname find-source-in-file
 #' @keywords internal
 find_source_exprs <- function(path = "", encoding = "UTF-8") {
-    # We use read_text() and parse(text = .) because
+    # We use text_read() and parse(text = .) because
     # the former re-encodes source text to encoding.
-    text   <- read_text(path, encoding)
+    text   <- text_read(path, encoding)
     parsed <- parse(text = text, keep.source = TRUE, encoding = encoding)
     tokens <- utils::getParseData(parsed, TRUE)
     return(tokens[tokens$token == "expr", ])

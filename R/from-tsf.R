@@ -3,7 +3,7 @@
 #' A collection of **internal** mechanisms to convert [Translations Source Files]
 #' back into proper \R objects. Its contents is split, tokenized, parsed, and
 #' validated according to an underlying `template_version`. Typical users should
-#' always use [read_translations()] instead.
+#' always use [translator_import()] instead.
 #'
 #' @details
 #' All functions above follow an implicit top-down hierarchy. Conceptually,
@@ -185,7 +185,7 @@
 #' implementation of [from_tsf_header()].
 #'
 #' @seealso [Translations Source Files],
-#'   [read_translations()],
+#'   [translator_import()],
 #'   [tsf_block_line_token()]
 #'
 #' @rdname from-tsf

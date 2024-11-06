@@ -73,14 +73,14 @@ in \R scripts, and convert them to \code{\link{Block}} objects via \code{\link[=
 
 \code{\link[=find_source]{find_source()}} further constructs a \code{\link{Translator}} object from
 the set of \code{\link{Block}} objects. It can later be exported, and imported
-via \code{\link[=write_translations]{write_translations()}} and \code{\link[=read_translations]{read_translations()}} respectively.
+via \code{\link[=translator_export]{translator_export()}} and \code{\link[=translator_import]{translator_import()}} respectively.
 \subsection{Methodology}{
 
 Extracting source text from source code involves performing usual parsing
 operations. \code{\link[=find_source]{find_source()}} and \code{\link[=find_source_in_files]{find_source_in_files()}} go through these
 steps to extract source text from a single \R script.
 \enumerate{
-\item It is read with \code{\link[=read_text]{read_text()}}.
+\item It is read with \code{\link[=text_read]{text_read()}}.
 \item It is parsed with \code{\link[=parse]{parse()}}, and underlying tokens are extracted from
 parsed expressions with \code{\link[utils:getParseData]{utils::getParseData()}}.
 \item Each expression token (\code{expr}) is converted to language objects with
@@ -108,6 +108,6 @@ plans to lift this limitation in the future.
 \code{\link{Translator}},
 \code{\link{Block}},
 \code{\link[=translate]{translate()}},
-\code{\link[=read_translations]{read_translations()}},
-\code{\link[=write_translations]{write_translations()}}
+\code{\link[=translator_import]{translator_import()}},
+\code{\link[=translator_export]{translator_export()}}
 }

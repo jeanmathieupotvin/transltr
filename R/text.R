@@ -123,3 +123,53 @@ text_hash <- function(.lang = "", .text = "", .algo = get_hash_algorithms()) {
             utf8 = as.character(sum(cumsum(utf8ToInt(x)))),
             NULL))
 }
+
+
+#' Low-level Text Input and Output
+#'
+#' [text_read()] and [text_write()] respectively wrap [base::readLines()] and
+#' [base::writeLines()]. They further validate their arguments, normalize
+#' file paths, and re-encode inputs to `UTF-8` before reading and writing.
+#'
+#' @template param-path
+#'
+#' @template param-encoding
+#'
+#' @param x A character vector. Lines of text to write.
+#'
+#' @returns
+#' [text_read()] returns a character vector.
+#'
+#' [text_write()] is not yet implemented and throws an error.
+#'
+#' @rdname text-io
+#' @keywords internal
+text_read <- function(path = "", encoding = "UTF-8") {
+    assert_chr1(path)
+    assert_chr1(encoding)
+
+    # Not super useful, but a little safer.
+    path <- normalizePath(path, mustWork = FALSE)
+
+    if (!utils::file_test("-f", path) ||
+        !utils::file_test("-r", path)) {
+        stops("'path' does not exist, is a directory, or is not readable.")
+    }
+
+    # This connection re-encodes input
+    # to UTF-8 from supplied encoding.
+    con <- file(path, "r", encoding = encoding)
+    on.exit(close(con, "r"))
+
+    # Setting encoding to UTF-8 explicitly marks
+    # UTF-8 characters as such. Since input was
+    # re-encoded to UTF-8 by file() above, this
+    # is safe. No need to call enc2utf8().
+    return(readLines(con, encoding = "UTF-8"))
+}
+
+#' @rdname text-io
+#' @keywords internal
+text_write <- function(x, path = "") {
+    return(.NotYetImplemented())
+}

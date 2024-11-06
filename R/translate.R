@@ -27,7 +27,7 @@
 #'
 #' @examples
 #' ## Create a Translator. This would normally be done
-#' ## automatically by find_source() or read_translations().
+#' ## automatically by find_source() or translator_import().
 #' my_translator <- translator(block("en", en = "Hello!", es = "¡Hola!"))
 #'
 #' ## Register it (implicitly, under 'global' scope).

@@ -17,11 +17,11 @@
 NULL
 
 
-mock_tsf_v1                  <- read_text(get_mock_path("tsf-v1", "md"))
-mock_tsf_v1_head             <- read_text(get_mock_path("tsf-v1-head", "md"))
-mock_tsf_v1_block_hello      <- read_text(get_mock_path("tsf-v1-block-hello", "md"))
-mock_tsf_v1_block_lorem      <- read_text(get_mock_path("tsf-v1-block-lorem", "md"))
-mock_tsf_v1_block_lorem_text <- read_text(get_mock_path("tsf-v1-block-lorem-text", "md"))
+mock_tsf_v1                  <- text_read(get_mock_path("tsf-v1", "md"))
+mock_tsf_v1_head             <- text_read(get_mock_path("tsf-v1-head", "md"))
+mock_tsf_v1_block_hello      <- text_read(get_mock_path("tsf-v1-block-hello", "md"))
+mock_tsf_v1_block_lorem      <- text_read(get_mock_path("tsf-v1-block-lorem", "md"))
+mock_tsf_v1_block_lorem_text <- text_read(get_mock_path("tsf-v1-block-lorem-text", "md"))
 
 # _t suffix stands for tokens.
 mock_tsf_v1_block_hello_t      <- tokenize_tsf_block_v1(mock_tsf_v1_block_hello)

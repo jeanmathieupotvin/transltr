@@ -1,3 +1,36 @@
+# `transltr` 0.0.1.9004
+
+This version is the penultimate development version prior to an initial
+release of version 0.0.1 (and submission to CRAN). It brings major changes
+to the Portable Translator Format/File (PTF), previously known as TSF.
+
+## New features
+
+None, for now.
+
+## Changes
+
+1. Functions `write_text()` and `read_text()` were respectively renamed to
+   `text_write()` and `text_read()` for consistency with other existing
+   `text_*()` functions.
+   * Source scripts `io-text.R` and `text.R` were merged during the process.
+   * Text scripts `test-io-text.R` and `test-texts.R` were also merged.
+
+2. Functions `write_translations()` and `read_translations()` were respectively
+   renamed to `translator_export()` and `translator_import()` for consistency
+   with other existing `translator_*()` functions.
+   * Source scripts `io-translations.R` and `translator.R` were merged during
+     the process.
+   * Text scripts `test-io-translations.R` and `test-translator.R` were also
+     merged.
+
+## Issues, and Fixes
+
+None, for now.
+
+
+---
+
 # `transltr` 0.0.1.9003
 
 This version introduces yet another set of core mechanisms such as the
@@ -73,6 +106,8 @@ near an initial publication to CRAN.
 2. Various typos in the code and in the documentation were fixed.
 
 
+---
+
 # `transltr` 0.0.1.9002
 
 This version introduces many important core mechanisms such as the `Block`
@@ -102,6 +137,8 @@ source texts from R scripts. It will be renamed in a future commit.
 
 8. Hundreds of new unit tests.
 
+
+---
 
 # `transltr` 0.0.1.9001
 
