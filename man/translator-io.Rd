@@ -3,7 +3,7 @@
 \name{translator_import}
 \alias{translator_import}
 \alias{translator_export}
-\title{Read and Write Translations Source Files}
+\title{Read and Write Portable Translators}
 \usage{
 translator_import(path = "", encoding = "UTF-8")
 
@@ -27,10 +27,10 @@ points to a valid translations source file.
 \code{\link[=translator_export]{translator_export()}} is not yet implemented and throws an error.
 }
 \description{
-Read \link{Translations Source Files} and parse them as \code{\link{Translator}}
+Read \link{Portable Translator Files} and parse them as \code{\link{Translator}}
 objects, or convert \code{\link{Translator}} objects back to
-\link{Translations Source Files}.
+\link{Portable Translators Files}.
 }
 \seealso{
-\link{Translations Source Files}
+\link{Portable Translators Files}
 }

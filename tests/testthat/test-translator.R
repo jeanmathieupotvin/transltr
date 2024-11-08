@@ -20,8 +20,6 @@
 NULL
 
 
-mock_template_v1_path <- get_mock_path("tsf-v1", "md")
-
 # Ensure that the cache is empty.
 cache <- .__translators_cache__
 rm(list = ls(envir = cache, all.names = TRUE), pos = cache)
@@ -190,23 +188,12 @@ test_that("translator_scope_name() returns a character string", {
 # translator_import() ----------------------------------------------------------
 
 
-# TODO: update unit tests once class Translator is implemented. There is not
-# much to test because everything is already covered by unit tests of lower-
-# level mechanisms.
-
-test_that("translator_import() returns a Translator object", {
-    skip("class Translator is not yet implemented")
-})
-
-test_that("translator_import() properly parses translations source files (version 1)", {
-    out <- translator_import(mock_template_v1_path)
-
-    expect_type(out, "list")
-    expect_length(out, 2L)
+test_that("translator_import() returns a not yet implemented error", {
+    expect_error(translator_import())
 })
 
 
-# translator_export() ---------------------------------------------------------
+# translator_export() ----------------------------------------------------------
 
 
 test_that("translator_export() returns a not yet implemented error", {

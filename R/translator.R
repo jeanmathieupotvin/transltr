@@ -206,11 +206,11 @@ translator_scope_name <- function(x) {
 }
 
 
-#' Read and Write Translations Source Files
+#' Read and Write Portable Translators
 #'
-#' Read [Translations Source Files] and parse them as [`Translator`][Translator]
+#' Read [Portable Translator Files] and parse them as [`Translator`][Translator]
 #' objects, or convert [`Translator`][Translator] objects back to
-#' [Translations Source Files].
+#' [Portable Translators Files].
 #'
 #' @template param-path
 #'
@@ -224,17 +224,12 @@ translator_scope_name <- function(x) {
 #'
 #' [translator_export()] is not yet implemented and throws an error.
 #'
-#' @seealso [Translations Source Files]
+#' @seealso [Portable Translators Files]
 #'
 #' @rdname translator-io
 #' @export
 translator_import <- function(path = "", encoding = "UTF-8") {
-    tsf_raw    <- text_read(path, encoding = encoding)
-    tsf_parsed <- from_tsf(tsf_raw)
-
-    # TODO: call Translator$new() once class is implemented.
-    # Output below is temporary and for debugging purposes.
-    return(tsf_parsed[c("header", "blocks")])
+    return(.NotYetImplemented())
 }
 
 #' @rdname translator-io

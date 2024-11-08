@@ -6,7 +6,9 @@ to the Portable Translator Format/File (PTF), previously known as TSF.
 
 ## New features
 
-None, for now.
+1. New revamped design for portable translations (it replaces the older Markdown
+   file).
+   - **To be completed.**
 
 ## Changes
 
@@ -23,6 +25,14 @@ None, for now.
      the process.
    * Text scripts `test-io-translations.R` and `test-translator.R` were also
      merged.
+
+3. Old design for portable translations is deprecated, including all related
+   mechanisms. It is replaced by a new design of Portable Objects (that are
+   distinct from `.po` files of `gettext()`). See New Features above.
+
+4. Class `Token` and related features were deprecated. Transitioning to YAML
+   removed the need to tokenize the contents of Markdown files. See #3 for more
+   information.
 
 ## Issues, and Fixes
 

@@ -5,30 +5,16 @@
 
 # For Initial Release to CRAN
 
-`[PT/PB/PTF]`
-- **Change Translations Source File (TSF) based on Jérôme's feedback.**
-  - Rename arguments `key` and `source_key` to `lang` and `source_lang`.
-    - This has consequences on scripts `from-tsf.R`, and `tsf.R`.
-    - This also has consequences on related test scripts.
-  - Simpliy header and change overall structure.
-  - Integrate class `Translator` into `from_tsf()`.
-  - Revisit `split_tsf()`, `from_tsf_header()`, and `from_tsf_header_v1()`.
-  - Revamp `from_tsf_block_v1()`, and lower-level mechanisms. It can be
-    simplified using latest work.
-  - Verify whether we could avoid tokenizing TSFs and get rid of
-    `tokenize_tsf_block_v1()`.
-  - Change names.
-    - Rename TSF to Portable Translator File (PTF).
-      - A PTF represents a Portable Translator (PT).
-    - Rename source blocks to Portable Blocks (PB).
-    - Rename `read_translations()` and `write_translations()` to
-      `import_translator()`, and `export_translator()`.
-  - Update user-level documentation on TSFs following all changes.
-- Implement `to_ptf()`.
-  - Write documentation and tests for it.
-  - Write required lower-level functions `write_translations()`, and
-    `write_text()`.
-    - Write documentation and tests for it.
+`[Portable]`
+- Get feedback from Jérôme on new design for portability.
+- Write new generic function `as_portable()`, and related S3 methods.
+  - Write S3 method `as_portable.Translator()`.
+  - Write S3 method `as_portable.Block()`.
+- Write S3 generic function `as_translator()`.
+  - Write S3 method `as_translator.PortableTranslator()`.
+- Write new S3 method `as_block.PortableBlock()`.
+- Write documenbtation on Portable Objects: Portable Translators, Portable
+  Blocks, and Portable Translations.
 
 `[Documentation]`
 - Write package-level documentation (`R/transltr-package.R`).
@@ -55,6 +41,11 @@
     - Example: `text_normalize("I ate", n, "bananas.") -> "I ate <placeholder:n> bananas."`
   - Users should be able to indicate text to be left as is.
     - Example: `text_normalize("{{I ate\n\n}}", "bananas.") -> "I ate\n\n bananas."`
+
+`[PO and POT files]`
+- Include full support of PO and POT files.
+  - `po_read()`
+  - `po_convert()`
 
 `[Scopes]`
 - Integrate scopes into `find_source()`, and class `Block`.
