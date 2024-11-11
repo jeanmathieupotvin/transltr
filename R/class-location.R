@@ -36,9 +36,14 @@
 #' @param x Any \R object for [is_location()]. An object of class
 #'   [`Location`][Location] for S3 methods [format()] and [print()].
 #'
-#' @param how A character string equal to `"long"` or `"short"`. The latter is
-#'   suitable for embedding [`Location`][Location] objects in
-#'   [messages][message()], and [conditions].
+#' @param how A character string equal to `"long"`, `"short"`, or `"shorter"`.
+#'   How to format range(s):
+#'
+#'   * `"long"` yields `"line <line1>, column <col1> @ line <line2>, column <col2>"`,
+#'   * `"short"` yields `"ln <line1>, col <col1> @ ln <line2>, col <col2>"`, and
+#'   * `"shorter"` yields `"<line1>,<col1> @ <line2>,<col2>"`.
+#'
+#'   Underlying `line1`, `col1`, `line2`, and `col2` values are always aligned.
 #'
 #' @param ... Usage depends on the underlying function.
 #'   * Any number of [`Location`][Location] objects for [merge_locations()]
@@ -135,12 +140,9 @@ is_location <- function(x) {
 
 #' @rdname class-location
 #' @export
-format.Location <- function(x, how = c("long", "short"), ...) {
-    assert_arg(how, TRUE)
-    return(
-        switch(how,
-            long  = .format_long_location(x, ...),
-            short = .format_short_location(x, ...)))
+format.Location <- function(x, how = c("long", "short", "shorter"), ...) {
+    xlist <- list(Path = x$path, Ranges = .location_format_range(x, how))
+    return(format_vector(xlist, "<Location>", .show_nokey = FALSE))
 }
 
 #' @rdname class-location
@@ -191,33 +193,15 @@ merge_locations <- function(...) {
 # Internal functions -----------------------------------------------------------
 
 
-.format_long_location <- function(x, ...) {
+.location_format_range <- function(x, how = c("long", "short", "shorter"), ...) {
+    assert_arg(how, TRUE)
+
+    fmt <- switch(how,
+        long    = "line %s, column %s @ line %s, column %s",
+        short   = "ln %s, col %s @ ln %s, col %s",
+        shorter = "%s,%s @ %s,%s")
+
+    # First elements of x is 'path'. It is ignored.
     chars <- lapply(x, encodeString, width = NULL, justify = "right")
-    xlist <- list(
-        Path   = x$path,
-        Ranges = sprintf(
-            "line %s, column %s @ line %s, column %s",
-            chars[[2L]],
-            chars[[3L]],
-            chars[[4L]],
-            chars[[5L]]))
-
-    return(format_vector(xlist, "<Location>", .show_nokey = FALSE))
-}
-
-.format_short_location <- function(x, ...) {
-    if (length(x$line1) > 1L) {
-        stops(
-            "'line1', 'col1', 'line2', and 'col2' must all have ",
-            "a length equal to 1 in order to use the 'short' format.")
-    }
-
-    return(
-        sprintf(
-            "%s: ln %s, col %s @ ln %s, col %s",
-            x$path,
-            x$line1,
-            x$col1,
-            x$line2,
-            x$col2))
+    return(sprintf(fmt, chars[[2L]], chars[[3L]], chars[[4L]], chars[[5L]]))
 }

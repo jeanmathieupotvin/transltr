@@ -6,21 +6,20 @@ to the Portable Translator Format/File (PTF), previously known as TSF.
 
 ## New features
 
-1. New revamped design for portable translations (it replaces the older Markdown
-   file).
+1. New design for portable translations (it replaces the older Markdown file).
    - **To be completed.**
 
 ## Changes
 
-1. Functions `write_text()` and `read_text()` were respectively renamed to
+1. Functions `write_text()` and `read_text()` are now respectively named
    `text_write()` and `text_read()` for consistency with other existing
    `text_*()` functions.
    * Source scripts `io-text.R` and `text.R` were merged during the process.
    * Text scripts `test-io-text.R` and `test-texts.R` were also merged.
 
-2. Functions `write_translations()` and `read_translations()` were respectively
-   renamed to `translator_export()` and `translator_import()` for consistency
-   with other existing `translator_*()` functions.
+2. Functions `write_translations()` and `read_translations()` are now
+   respectively named `translator_export()` and `translator_import()` for
+   consistency with other existing `translator_*()` functions.
    * Source scripts `io-translations.R` and `translator.R` were merged during
      the process.
    * Text scripts `test-io-translations.R` and `test-translator.R` were also
@@ -30,9 +29,13 @@ to the Portable Translator Format/File (PTF), previously known as TSF.
    mechanisms. It is replaced by a new design of Portable Objects (that are
    distinct from `.po` files of `gettext()`). See New Features above.
 
-4. Class `Token` and related features were deprecated. Transitioning to YAML
-   removed the need to tokenize the contents of Markdown files. See #3 for more
-   information.
+4. Class `Token` and related features are deprecated. Transitioning to YAML
+   removed the need to tokenize the contents of Markdown files. See #3 for
+   more information. YAML tags are a much better solution to identify data
+   structures.
+
+5. Revamp `format.Location()`. Argument `how` was repurposed and now controls
+   how to format ranges. There are three formats available. See documentation.
 
 ## Issues, and Fixes
 

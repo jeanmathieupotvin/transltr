@@ -88,29 +88,6 @@ test_that("is_location() returns a logical", {
 
 
 test_that("format() returns a character", {
-    expect_type(format(location(), "long"),  "character")
-    expect_type(format(location(), "short"), "character")
-    expect_length(format(location(), "long"),  3L)
-    expect_length(format(location(), "short"), 1L)
-})
-
-test_that("format() validates how", {
-    expect_error(format(location(), "error"))
-    expect_snapshot(format(location(), "error"), error = TRUE)
-})
-
-test_that(".format_short_location() throws an error if multiple ranges must be printed", {
-    expect_error(format(loc2, "short"))
-    expect_snapshot(format(loc2, "short"), error = TRUE)
-})
-
-test_that(".format_short_location() returns a character string", {
-    expect_identical(
-        format(location(path), "short"),
-        "tests/testthat/my-test-file: ln 1, col 1 @ ln 1, col 1")
-})
-
-test_that(".format_long_location() returns a character", {
     # This test block is a little bit
     # fragile, but hardcoding expected
     # values is much more simpler.
@@ -131,6 +108,28 @@ test_that(".format_long_location() returns a character", {
         "  Ranges: ",
         "    line  1, column  22 @ line   10, column 1",
         "    line 11, column 222 @ line 3333, column 4"))
+})
+
+test_that(".location_format_range() validates how", {
+    expect_error(format(location(), "error"))
+    expect_snapshot(format(location(), "error"), error = TRUE)
+})
+
+test_that(".location_format_range() formats ranges according to how", {
+    expect_identical(.location_format_range(loc1, "long"), "line 1, column 2 @ line 3, column 4")
+    expect_identical(.location_format_range(loc2, "long"), c(
+        "line  1, column  22 @ line   10, column 1",
+        "line 11, column 222 @ line 3333, column 4"))
+
+    expect_identical(.location_format_range(loc1, "short"), "ln 1, col 2 @ ln 3, col 4")
+    expect_identical(.location_format_range(loc2, "short"), c(
+        "ln  1, col  22 @ ln   10, col 1",
+        "ln 11, col 222 @ ln 3333, col 4"))
+
+    expect_identical(.location_format_range(loc1, "shorter"), "1,2 @ 3,4")
+    expect_identical(.location_format_range(loc2, "shorter"), c(
+        " 1, 22 @   10,1",
+        "11,222 @ 3333,4"))
 })
 
 

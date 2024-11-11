@@ -78,28 +78,22 @@
       Error:
       ! line1', 'col1', 'line2', and 'col2' must all have the same length.
 
-# format() validates how
+# .location_format_range() validates how
 
     Code
       format(location(), "error")
     Condition
       Error:
-      ! 'how' must be equal to 'long', or 'short'.
-
-# .format_short_location() throws an error if multiple ranges must be printed
-
-    Code
-      format(loc2, "short")
-    Condition
-      Error:
-      ! 'line1', 'col1', 'line2', and 'col2' must all have a length equal to 1 in order to use the 'short' format.
+      ! 'how' must be equal to 'long', 'short', or 'shorter'.
 
 # print() works
 
     Code
       print(loc1, "short")
     Output
-      tests/testthat/my-test-file: ln 1, col 2 @ ln 3, col 4
+      <Location>
+        Path: tests/testthat/my-test-file
+        Ranges: ln 1, col 2 @ ln 3, col 4
 
 ---
 
