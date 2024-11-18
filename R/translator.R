@@ -3,6 +3,8 @@
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
+#' **These features are experimental. Use with caution.**
+#'
 #' Get or set the [`Translator`][Translator] object to use when calling
 #' [translate()]. It is registered within an internal cache managed by
 #' [`transltr`][transltr].
