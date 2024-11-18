@@ -8,19 +8,22 @@
 \alias{print.Location}
 \alias{c.Location}
 \alias{merge_locations}
+\alias{as_location}
 \title{Source Locations}
 \usage{
 location(path = tempfile(), line1 = 1L, col1 = 1L, line2 = 1L, col2 = 1L)
 
 is_location(x)
 
-\method{format}{Location}(x, how = c("long", "short"), ...)
+\method{format}{Location}(x, how = c("long", "short", "shorter"), ...)
 
 \method{print}{Location}(x, ...)
 
 \method{c}{Location}(...)
 
 merge_locations(...)
+
+as_location(x, ...)
 }
 \arguments{
 \item{path}{A non-empty and non-\link[base:NA]{NA} character string. The origin
@@ -32,12 +35,17 @@ The (inclusive) starting point(s) of what is being referenced.}
 \item{line2, col2}{A non-empty integer vector of non-\link[base:NA]{NA} values.
 The (inclusive) end(s) of what is being referenced.}
 
-\item{x}{Any \R object for \code{\link[=is_location]{is_location()}}. An object of class
-\code{\link{Location}} for S3 methods \code{\link[=format]{format()}} and \code{\link[=print]{print()}}.}
+\item{x}{Any \R object.}
 
-\item{how}{A character string equal to \code{"long"} or \code{"short"}. The latter is
-suitable for embedding \code{\link{Location}} objects in
-\link[=message]{messages}, and \link{conditions}.}
+\item{how}{A character string equal to \code{"long"}, \code{"short"}, or \code{"shorter"}.
+How to format range(s):
+\itemize{
+\item \code{"long"} yields \code{"line <line1>, column <col1> @ line <line2>, column <col2>"},
+\item \code{"short"} yields \code{"ln <line1>, col <col1> @ ln <line2>, col <col2>"}, and
+\item \code{"shorter"} yields \code{"<line1>,<col1> @ <line2>,<col2>"}.
+}
+
+Underlying \code{line1}, \code{col1}, \code{line2}, and \code{col2} values are always aligned.}
 
 \item{...}{Usage depends on the underlying function.
 \itemize{
@@ -48,14 +56,13 @@ and S3 method \code{\link[=c]{c()}}.
 }}
 }
 \value{
-\code{\link[=location]{location()}} and \code{\link[=c]{c()}} returns a named list of length 5 and of class
-\code{\link{Location}}. It contains the values of \code{path}, \code{line1}, \code{col1},
-\code{line2}, and \code{col2}.
+\code{\link[=location]{location()}}, \code{\link[=c]{c()}}, and \code{\link[=as_location]{as_location()}} returns a named list of length
+5 and of class \code{\link{Location}}. It contains the values of \code{path},
+\code{line1}, \code{col1}, \code{line2}, and \code{col2}.
 
 \code{\link[=is_location]{is_location()}} returns a logical value.
 
-\code{\link[=format]{format()}} returns a character vector. If \code{how} is equal to \code{"short"}, it
-is of length 1.
+\code{\link[=format]{format()}} returns a character vector.
 
 \code{\link[=print]{print()}} returns argument \code{x} invisibly.
 

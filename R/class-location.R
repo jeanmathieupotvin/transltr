@@ -33,8 +33,7 @@
 #' @param line2,col2 A non-empty integer vector of non-[NA][base::NA] values.
 #'   The (inclusive) end(s) of what is being referenced.
 #'
-#' @param x Any \R object for [is_location()]. An object of class
-#'   [`Location`][Location] for S3 methods [format()] and [print()].
+#' @param x Any \R object.
 #'
 #' @param how A character string equal to `"long"`, `"short"`, or `"shorter"`.
 #'   How to format range(s):
@@ -52,14 +51,13 @@
 #'     [print()].
 #'
 #' @returns
-#' [location()] and [c()] returns a named list of length 5 and of class
-#' [`Location`][Location]. It contains the values of `path`, `line1`, `col1`,
-#' `line2`, and `col2`.
+#' [location()], [c()], and [as_location()] returns a named list of length
+#' 5 and of class [`Location`][Location]. It contains the values of `path`,
+#' `line1`, `col1`, `line2`, and `col2`.
 #'
 #' [is_location()] returns a logical value.
 #'
-#' [format()] returns a character vector. If `how` is equal to `"short"`, it
-#' is of length 1.
+#' [format()] returns a character vector.
 #'
 #' [print()] returns argument `x` invisibly.
 #'
@@ -108,7 +106,6 @@ location <- function(
     if (!all(length(line1) == c(length(col1), length(line2), length(col2)))) {
         stops("line1', 'col1', 'line2', and 'col2' must all have the same length.")
     }
-
     if (length(line1) > 1L) {
         # Remove duplicated ranges and sort the
         # remaining ones by their natural order.
@@ -187,6 +184,13 @@ merge_locations <- function(...) {
 
     groups <- split_ul(locs, vapply_1c(locs, `[[`, i = "path"))
     return(lapply(groups, \(group) do.call(c, group)))
+}
+
+#' @rdname class-location
+#' @keywords internal
+#' @export
+as_location <- function(x, ...) {
+    UseMethod("as_location")
 }
 
 
