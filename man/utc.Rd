@@ -15,13 +15,8 @@ Get the current Coordinated Universal Time (UTC).
 \details{
 The format is
 
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{"<Full Month>, <Day of Month>, <Year> @ <Hours>:<Minutes>:<Seconds> (UTC)".
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{"<Full Month> <Day>, <Year> @ <Hours>:<Minutes>:<Seconds> (UTC)".
 }\if{html}{\out{</div>}}
-}
-\note{
-The \code{\link[=utc]{utc()}} function is defined in its own script because it has its
-own test script. Keeping it separate from other utility functions is
-better for readability.
 }
 \seealso{
 Other utility functions: 
