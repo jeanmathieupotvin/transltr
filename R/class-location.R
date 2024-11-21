@@ -51,7 +51,7 @@
 #'     [print()].
 #'
 #' @returns
-#' [location()], [c()], and [as_location()] returns a named list of length
+#' [location()], [c()], and [as_location()] return a named list of length
 #' 5 and of class [`Location`][Location]. It contains the values of `path`,
 #' `line1`, `col1`, `line2`, and `col2`.
 #'

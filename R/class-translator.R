@@ -33,10 +33,10 @@
 #' @template param-hash-algorithm
 #'
 #' @returns
-#' [translator()] returns an [`R6`][R6::R6] object of class
-#' [`Translator`][Translator].
+#' [translator()], and [as_translator()] return an [`R6`][R6::R6] object of
+#' class [`Translator`][Translator].
 #'
-#' [is_block()] returns a logical value.
+#' [is_translator()] returns a logical value.
 #'
 #' [format()] returns a character vector.
 #'
@@ -72,6 +72,7 @@
 translator <- function(..., id = uuid(), hash_algorithm = get_hash_algorithms()) {
     trans <- Translator$new(id, hash_algorithm)
     dots  <- list(...)
+
     do.call(trans$set_blocks, dots[vapply_1l(dots, is_block)])
     do.call(trans$set_native_languages, dots[vapply_1l(dots, is.character)])
     return(trans)
@@ -221,8 +222,8 @@ Translator <- R6::R6Class("Translator",
                     "Update them by setting, or removing 'Block' objects.")
             }
             if (!length(private$.blocks)) {
-                # Otherwhise, assigning names to NULL
-                # would throw a non-semantic error.
+                # Assigning names to NULL would
+                # throw a non-semantic error.
                 return(NULL)
             }
 

@@ -121,6 +121,9 @@ translator_scopes <- function() {
 }
 
 
+# Scopes -----------------------------------------------------------------------
+
+
 #' Determine Scopes
 #'
 #' These functions work together to determine the underlying scope of
@@ -209,7 +212,10 @@ translator_scope_name <- function(x) {
 }
 
 
-#' Read and Write Portable Translators
+# I/O --------------------------------------------------------------------------
+
+
+#' Read and Write Translations
 #'
 #' Read [Portable Translator Files] and parse them as [`Translator`][Translator]
 #' objects, or convert [`Translator`][Translator] objects back to

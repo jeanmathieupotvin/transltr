@@ -125,6 +125,9 @@ text_hash <- function(.lang = "", .text = "", .algo = hash_algorithms()) {
 }
 
 
+# I/O --------------------------------------------------------------------------
+
+
 #' Low-level Text Input and Output
 #'
 #' [text_read()] and [text_write()] respectively wrap [base::readLines()] and
