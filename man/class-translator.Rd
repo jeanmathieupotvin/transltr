@@ -7,7 +7,7 @@
 \alias{print.Translator}
 \alias{as_translator}
 \alias{Translator}
-\title{Register Source Texts and Translations}
+\title{Source Texts, and Translations}
 \usage{
 translator(..., id = uuid(), hash_algorithm = hash_algorithms())
 
@@ -49,25 +49,32 @@ class \code{\link{Translator}}.
 \code{\link[=print]{print()}} returns argument \code{x} invisibly.
 }
 \description{
-Store, structure, and manipulate source text\strong{s} and their translations.
+Store, structure, and manipulate source text\strong{s}, and their translations.
 }
 \details{
-A \code{\link{Translator}} object is a collection of many source texts,
-and related translations. It exposes a set of methods that can be used to
-safely manipulate the information it contains. Since \code{\link[=translator]{translator()}} sets
-all required parameters at inception, it can be ignored most of the time.
+A \code{\link{Translator}} object encapsulates the source text of a
+project (or any other \emph{context}), and all related translations. It exposes
+a set of methods that can be used to manipulate this information, but it
+is designed in such a way that its methods can be ignored most of the time.
 
-It is worthwhile to note that internally, \code{\link{Translator}} objects
-are collections of \code{\link{Text}} objects. Texts are similar to
-Translators, but stores a single source text and their translations. They
-are also somewhat lower-level, and in typical situations, users do not
-directly interact with them.
+Under the hood, \code{\link{Translator}} objects are collections of
+\code{\link{Text}} objects. These do most of the work. They are treated as
+lower-level component, and in typical situations, users rarely interact
+with them.
 \subsection{Translating Text}{
 
 Since it can be detected and processed by \code{\link[=find_source]{find_source()}}, it is recommended
 to use \code{\link[=translate]{translate()}} at all times. Method
 \code{\link[=Translator]{Translator$translate()}} is the underlying workhorse function
 called by the former.
+}
+
+\subsection{Exporting, and Importing Translators}{
+
+\code{\link{Translator}} objects can be saved, and exported with
+\code{\link[=translator_write]{translator_write()}}.
+
+They can be imported back into an \R session with \code{\link[=translator_read]{translator_read()}}.
 }
 }
 \examples{
@@ -97,18 +104,18 @@ translator(
 language_source_set("en")
 
 ## Create Text objects.
-txt1 <- text(
+blk1 <- text(
   location("a", 1L, 2L, 3L, 4L),
   en = "Hello, world!",
   fr = "Bonjour, monde!")
-txt2 <- text(
+blk2 <- text(
   location("b", 5L, 6L, 7L, 8L),
   en = "Farewell, world!",
   fr = "Au revoir, monde!")
 
 ## Create a new Translator and register them.
 trans <- Translator$new()
-trans$set_texts(txt1, txt2)
+trans$set_texts(blk1, blk2)
 
 ## ------------------------------------------------
 ## Method `Translator$set_native_languages`
@@ -158,6 +165,7 @@ objects. This is a \strong{read-only} field.
 \item If there is none, \code{source_texts} is \code{NULL}.
 \item If there is one unique value, \code{source_texts} has
 a length equal to 1.
+\item Otherwise, a named character vector is returned.
 }}
 
 \item{\code{languages}}{A character vector of non-empty and
@@ -390,18 +398,18 @@ A \code{NULL}, invisibly.
 language_source_set("en")
 
 ## Create Text objects.
-txt1 <- text(
+blk1 <- text(
   location("a", 1L, 2L, 3L, 4L),
   en = "Hello, world!",
   fr = "Bonjour, monde!")
-txt2 <- text(
+blk2 <- text(
   location("b", 5L, 6L, 7L, 8L),
   en = "Farewell, world!",
   fr = "Au revoir, monde!")
 
 ## Create a new Translator and register them.
 trans <- Translator$new()
-trans$set_texts(txt1, txt2)
+trans$set_texts(blk1, blk2)
 }
 \if{html}{\out{</div>}}
 

@@ -44,6 +44,11 @@
 
 # Future Improvements
 
+`[translator_write()]`
+- Add an `overwrite` argument that is `TRUE` by default to prevent losing any
+  unsaved translations. This can happen by writing over an existing set of PTFs
+  before reading them first.
+
 `[update_translations()]`
 - Implement this function that updates existing PTF.
 - Implement interactive function `compare_translations()`, and related

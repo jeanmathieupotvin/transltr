@@ -1,19 +1,16 @@
-#' Register Source Texts and Translations
+#' Source Texts, and Translations
 #'
-#' Store, structure, and manipulate source text**s** and their translations.
+#' Store, structure, and manipulate source text**s**, and their translations.
 #'
-#' A [`Translator`][Translator] object is a collection of many source texts,
-#' and related translations. It exposes a set of methods that can be used to
-#' safely manipulate the information it contains. Since [translator()] sets
-#' all required parameters at inception, it can be ignored most of the time.
+#' A [`Translator`][Translator] object encapsulates the source text of a
+#' project (or any other *context*), and all related translations. It exposes
+#' a set of methods that can be used to manipulate this information, but it
+#' is designed in such a way that its methods can be ignored most of the time.
 #'
-#'
-
-#' It is worthwhile to note that internally, [`Translator`][Translator] objects
-#' are collections of [`Text`][Text] objects. Texts are similar to
-#' Translators, but stores a single source text and their translations. They
-#' are also somewhat lower-level, and in typical situations, users do not
-#' directly interact with them.
+#' Under the hood, [`Translator`][Translator] objects are collections of
+#' [`Text`][Text] objects. These do most of the work. They are treated as
+#' lower-level component, and in typical situations, users rarely interact
+#' with them.
 #'
 #' ## Translating Text
 #'
@@ -21,6 +18,13 @@
 #' to use [translate()] at all times. Method
 #' [`Translator$translate()`][Translator] is the underlying workhorse function
 #' called by the former.
+#'
+#' ## Exporting, and Importing Translators
+#'
+#' [`Translator`][Translator] objects can be saved, and exported with
+#' [translator_write()].
+#'
+#' They can be imported back into an \R session with [translator_read()].
 #'
 #' @param ... Usage depends on the underlying function.
 #'   * Any number of [`Text`][Text] objects, and/or named character
@@ -257,6 +261,7 @@ Translator <- R6::R6Class("Translator",
         #'   * If there is none, `source_texts` is `NULL`.
         #'   * If there is one unique value, `source_texts` has
         #'     a length equal to 1.
+        #'   * Otherwise, a named character vector is returned.
         source_langs = \(value) {
             if (!missing(value)) {
                 stops(
@@ -408,11 +413,11 @@ Translator <- R6::R6Class("Translator",
         #'
         #' @return A `NULL`, invisibly.
         set_text = \(..., source_lang = language_source_get()) {
-            txt <- text(...,
+            blk <- text(...,
                 source_lang    = source_lang,
                 hash_algorithm = private$.hash_algo)
 
-            self$set_texts(txt)
+            self$set_texts(blk)
             return(invisible())
         },
 
@@ -433,18 +438,18 @@ Translator <- R6::R6Class("Translator",
         #' language_source_set("en")
         #'
         #' ## Create Text objects.
-        #' txt1 <- text(
+        #' blk1 <- text(
         #'   location("a", 1L, 2L, 3L, 4L),
         #'   en = "Hello, world!",
         #'   fr = "Bonjour, monde!")
-        #' txt2 <- text(
+        #' blk2 <- text(
         #'   location("b", 5L, 6L, 7L, 8L),
         #'   en = "Farewell, world!",
         #'   fr = "Au revoir, monde!")
         #'
         #' ## Create a new Translator and register them.
         #' trans <- Translator$new()
-        #' trans$set_texts(txt1, txt2)
+        #' trans$set_texts(blk1, blk2)
         set_texts = \(...) {
             if (!...length()) {
                 return(invisible())

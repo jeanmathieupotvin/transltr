@@ -71,7 +71,7 @@ objects.
 }
 \description{
 Store, structure, and manipulate source locations. Class
-\code{\link{Location}} is a lighter alternative to \code{\link[=srcfile]{srcfile()}} and
+\code{\link{Location}} is a lighter alternative to \code{\link[=srcfile]{srcfile()}}, and other
 related functionalities.
 }
 \details{

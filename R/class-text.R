@@ -1,17 +1,16 @@
 #' Source Text
 #'
-#' Store, structure, and manipulate **a single** source text and its
+#' Store, structure, and manipulate **a single** source text, and its
 #' translations.
 #'
-#' A [`Text`][Text] object is a collection of translations of a *source text*
-#' (i.e. text extracted from \R source scripts). It exposes a set of methods
-#' that can be used to safely manipulate the information it contains, but it
-#' is unlikely to be useful in typical circumstances. See class
-#' [`Translator`][Translator] instead.
+#' A [`Text`][Text] object is a piece of text that is extracted from \R source
+#' scripts.
 #'
-#' The name of the class is derived from what it conceptually represents: a
-#' [`Text`][Text] is just a large piece of text potentially repeated in
-#' different languages, and processed as a unit.
+#'   * It (typically) has one or more [`Locations`][Location] within a project.
+#'   * It is complemented by any number of translations, and further attributes.
+#'
+#' The [`Text`][Text] class structures this information, and exposes a set of
+#' methods to manipulate it.
 #'
 #' ## Combining Text Objects
 #'

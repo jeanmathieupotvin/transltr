@@ -1,7 +1,7 @@
 #' Source Locations
 #'
 #' Store, structure, and manipulate source locations. Class
-#' [`Location`][Location] is a lighter alternative to [srcfile()] and
+#' [`Location`][Location] is a lighter alternative to [srcfile()], and other
 #' related functionalities.
 #'
 #' A [`Location`][Location] is a set of one or more line/column ranges

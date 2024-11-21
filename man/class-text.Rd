@@ -91,19 +91,19 @@ class \code{\link{Text}}.
 can be empty if all underlying \code{\link{Text}} objects are empty.
 }
 \description{
-Store, structure, and manipulate \strong{a single} source text and its
+Store, structure, and manipulate \strong{a single} source text, and its
 translations.
 }
 \details{
-A \code{\link{Text}} object is a collection of translations of a \emph{source text}
-(i.e. text extracted from \R source scripts). It exposes a set of methods
-that can be used to safely manipulate the information it contains, but it
-is unlikely to be useful in typical circumstances. See class
-\code{\link{Translator}} instead.
+A \code{\link{Text}} object is a piece of text that is extracted from \R source
+scripts.
+\itemize{
+\item It (typically) has one or more \code{\link[=Location]{Locations}} within a project.
+\item It is complemented by any number of translations, and further attributes.
+}
 
-The name of the class is derived from what it conceptually represents: a
-\code{\link{Text}} is just a large piece of text potentially repeated in
-different languages, and processed as a unit.
+The \code{\link{Text}} class structures this information, and exposes a set of
+methods to manipulate it.
 \subsection{Combining Text Objects}{
 
 \code{\link[=c]{c()}} can only combine \code{\link{Text}} objects having the same \code{hash}.
