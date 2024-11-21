@@ -51,6 +51,8 @@ test_that("language_set() throws an error if it fails to unset environment varia
     expect_error(language_set(NULL))
     expect_snapshot(error = TRUE, {
         ".__LGL_DEBUG_FLAG was set equal to TRUE to generate this error."
+        "Therefore, the language is empty in the error message because it"
+        "was reset before the flag triggers."
         language_set(NULL)
     })
 })
