@@ -13,6 +13,12 @@
 `[Portable]`
 - Write unit tests for functions
   - `constant()`,
+  - `language_source_set()`,
+  - `language_source_get()`,
+  - `as_translator()`,
+  - `as_location()`,
+  - `as_block.Block()`,
+  - `as_location.Location()`,
   - `text_write()`,
   - `portable()`,
   - `is_portable()`,
@@ -24,19 +30,13 @@
   - `format.PortableTranslator()`,
   - `format.PortableTranslations()`,
   - `print.Portable()`,
-  - `as_translator()`,
   - `as_translator.PortableTranslator()`,
-  - `as_block()`,
   - `as_block.PortableBlock()`,
-  - `as_block.Block()`,
   - `as_location.PortableLocation()`,
-  - `as_location.Location()`,
   - `translator_read()`,
   - `translator_write()`,
-  - `translations_read()`,
-  - `translations_write()`,
-  - `language_source_set()`, and
-  - `language_source_get()`.
+  - `translations_read()`, and
+  - `translations_write()`.
 
 `[Documentation]`
 - Run `R CMD check`.

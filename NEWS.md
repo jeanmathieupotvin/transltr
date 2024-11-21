@@ -55,29 +55,26 @@ to the Portable Translator Format/File (PTF), previously known as TSF.
    writes Portable Translator Files by default. See `translator_read()`, and
    `translator_write()`.
 
+5. New active binding `Translator$source_langs`. It returns `NULL` for empty
+   `Translator` objects, a named character vector for `Translator` objects
+   having `Block` objects with different `source_lang`, and a character string
+   otherwise.
+
 ## Changes
 
 1. Functions `write_text()` and `read_text()` are now respectively named
    `text_write()` and `text_read()` for consistency with other existing
    `text_*()` functions.
 
-   * Source scripts `io-text.R` and `text.R` were merged during the process.
-   * Text scripts `test-io-text.R` and `test-texts.R` were also merged.
-
 2. Functions `write_translations()` and `read_translations()` are now
    respectively named `translator_export()` and `translator_import()` for
    consistency with other existing `translator_*()` functions.
-
-   * Source scripts `io-translations.R` and `translator.R` were merged during
-     the process.
-   * Text scripts `test-io-translations.R` and `test-translator.R` were also
-     merged.
 
 3. Old design for portable translations is deprecated, including all related
    mechanisms. It is replaced by a new design of Portable Objects (that are
    distinct from `.po` files of `gettext()`). See New Features above.
 
-4. Class `Token` and related features are deprecated. Transitioning to YAML
+4. Class `Token`, and related features are deprecated. Transitioning to YAML
    removed the need to tokenize the contents of Markdown files. See #3 for
    more information. YAML tags are a much better solution to identify data
    structures.
@@ -91,6 +88,20 @@ to the Portable Translator Format/File (PTF), previously known as TSF.
    `get_*()` functions that used to rerturn "parameters* of the package are all
    deprecated, and were removed. They were either useless with newer designs,
    or replaced by the new internal `constant()` interface. See feature #3 above.
+
+8. `language_set()` has a new error message when it fails to reset current
+   language.
+
+9. `Translator$hashes` now returns a named character vector, where names are
+   reduced versions of the corresponding hashes.
+
+10. `translator()` now throws a warning if a language is missing an expected
+   corresponding native language.
+
+11. `Block` now calls `self$*` more frequently internally (whenever appropriate)
+    instead of `private$*`.
+
+12. Documentation, and code comments were updated almost everywhere.
 
 ## Issues, and Fixes
 
