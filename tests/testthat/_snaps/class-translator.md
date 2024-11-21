@@ -40,6 +40,15 @@
       ! 'source_texts' cannot be overwritten.
       Update them by setting, or removing 'Block' objects.
 
+# active binding source_langs validates value
+
+    Code
+      trans1$source_langs <- "new-source-lang"
+    Condition
+      Error:
+      ! 'source_langs' cannot be overwritten.
+      Update them by setting, or removing 'Block' objects.
+
 # active binding languages validates value
 
     Code

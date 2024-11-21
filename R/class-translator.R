@@ -248,6 +248,35 @@ Translator <- R6::R6Class("Translator",
             return(texts)
         },
 
+        #' @field source_langs A character vector of non-empty and
+        #'   non-[NA][base::NA] values, or `NULL`. The set of all
+        #'   `source_text` exposed by registered [`Block`][Block]
+        #'   objects. This is a **read-only** field.
+        #'   * If there is none, `source_texts` is `NULL`.
+        #'   * If there is one unique value, `source_texts` has
+        #'     a length equal to 1.
+        source_langs = \(value) {
+            if (!missing(value)) {
+                stops(
+                    "'source_langs' cannot be overwritten.\n",
+                    "Update them by setting, or removing 'Block' objects.")
+            }
+            if (!length(private$.blocks)) {
+                # Otherwhise, assigning names to NULL would
+                # throw a non-semantic error. See below.
+                return(NULL)
+            }
+
+            langs <- unlist(eapply(private$.blocks, `[[`, i = "source_lang"))
+
+            if (length(unique(langs)) > 1L) {
+                names(langs) <- private$.hash_reduce(names(langs))
+                return(langs)
+            }
+
+            return(langs[[1L]])
+        },
+
         #' @field languages A character vector of non-empty and
         #'   non-[NA][base::NA] values, or `NULL`. The set of all
         #'   `languages` (codes) exposed by registered [`Block`][Block]

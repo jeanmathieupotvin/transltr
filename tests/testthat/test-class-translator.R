@@ -105,6 +105,29 @@ test_that("active binding source_texts validates value", {
     expect_snapshot(trans1$source_texts <- 1L, error = TRUE)
 })
 
+test_that("active binding source_langs returns source languages", {
+    trans <- translator(
+        en = "English",
+        fr = "Français",
+        block(
+            en = "Hello, world!",
+            fr = "Bonjour, monde!",
+            source_lang = "en"),
+        block(
+            en = "Farewell, world!",
+            fr = "Au revoir, monde!",
+            source_lang = "fr"))
+
+    expect_null(Translator$new()$source_langs)
+    expect_identical(trans1$source_langs, "en")
+    expect_identical(trans$source_langs, c(`256e0d7` = "en", f3ae57a = "fr"))
+})
+
+test_that("active binding source_langs validates value", {
+    expect_error(trans1$source_langs <- "new-source-lang")
+    expect_snapshot(trans1$source_langs <- "new-source-lang", error = TRUE)
+})
+
 test_that("active binding languages returns languages", {
     # This implicitly checks that hashes are also sorted.
     expect_null(Translator$new()$languages)

@@ -10,6 +10,7 @@
 - Write package-level documentation (`R/transltr-package.R`).
 - Complete top-level `README`.
 
+`[Portable]`
 - Write unit tests for functions
   - `constant()`,
   - `text_write()`,
@@ -36,12 +37,6 @@
   - `translations_write()`,
   - `language_source_set()`, and
   - `language_source_get()`.
-- Update unit tests and documentation following latest modifications to
-  - `merge_blocks()`,
-  - `Block$hash_algorithm`,
-  - `translator()`, and
-  - `Translator$source_langs`.
-- Fix further miscellaneous encountered bugs.
 
 `[Documentation]`
 - Run `R CMD check`.
