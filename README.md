@@ -78,12 +78,6 @@ of text to be translated at runtime, wrap it with `transltr::translate()`.
 
 This section will be completed later.
 
-## Architecture
-
-The following diagram gives an overview of how the package works.
-
-![](man/figures/architecture-overview-user.png)
-
 ## Bugs and feedback
 
 Submit them [here](https://github.com/jeanmathieupotvin/transltr/issues/new).
