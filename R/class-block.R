@@ -311,7 +311,7 @@ Block <- R6::R6Class("Block",
                 private$.hash <- text_hash(
                     value,
                     self$get_translation(value),
-                    private$.hash_algo)
+                    self$hash_algorithm)
             }
 
             return(private$.source_lang)
@@ -326,7 +326,7 @@ Block <- R6::R6Class("Block",
                     "You may add a new translation before doing so.")
             }
 
-            return(self$get_translation(private$.source_lang))
+            return(self$get_translation(self$source_lang))
         },
 
         #' @field languages A character vector. Registered language
@@ -494,7 +494,7 @@ Block <- R6::R6Class("Block",
         rm_translation = \(lang = "") {
             assert_chr1(lang)
 
-            if (lang == private$.source_lang) {
+            if (lang == self$source_lang) {
                 stopf(
                     "'%s' is the current 'source_lang'. %s",
                     lang, "Set a new one before removing it.")

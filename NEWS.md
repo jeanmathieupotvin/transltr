@@ -55,7 +55,8 @@ to the Portable Translator Format/File (PTF), previously known as TSF.
 
 ## Issues, and Fixes
 
-None, for now.
+1. `Block$hash_algorithm` now only updates `Block$hash` if `Block$source_text`
+   (and `Block$source_lang`) is set.
 
 
 ---
