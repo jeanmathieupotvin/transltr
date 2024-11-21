@@ -81,9 +81,9 @@
 #' ## the underlying scope. This is done temporarily within the utils
 #' ## package for illustration purposes.
 #' evalq(envir = asNamespace("utils"), \() {
-#'    on.exit(translator_set(NULL))
-#'    translator_set(translator(id = sprintf("utils:%s", transltr::uuid())))
-#'    return(translator_get())
+#'   on.exit(translator_set(NULL))
+#'   translator_set(translator(id = sprintf("utils:%s", transltr::uuid())))
+#'   return(translator_get())
 #' })()
 #'
 #' @seealso [translate()]

@@ -51,17 +51,17 @@
 #' @examples
 #' ## Create a Translator manually.
 #' translator(
-#'     id = "test-translator",
-#'     en = "English",
-#'     fr = "Français",
+#'   id = "test-translator",
+#'   en = "English",
+#'   fr = "Français",
 #'     block("en",
-#'         location("a", 1L, 2L, 3L, 4L),
-#'         en = "Hello, world!",
-#'         fr = "Bonjour, monde!"),
+#'     location("a", 1L, 2L, 3L, 4L),
+#'     en = "Hello, world!",
+#'     fr = "Bonjour, monde!"),
 #'     block("en",
-#'         location("b", 5L, 6L, 7L, 8L),
-#'         en = "Farewell, world!",
-#'         fr = "Au revoir, monde!"))
+#'     location("b", 5L, 6L, 7L, 8L),
+#'     en = "Farewell, world!",
+#'     fr = "Au revoir, monde!"))
 #'
 #' @include constants.R
 #' @rdname class-translator
@@ -372,13 +372,13 @@ Translator <- R6::R6Class("Translator",
         #' @examples
         #' ## Create Block objects.
         #' blk1 <- block("en",
-        #'     location("a", 1L, 2L, 3L, 4L),
-        #'     en = "Hello, world!",
-        #'     fr = "Bonjour, monde!")
+        #'   location("a", 1L, 2L, 3L, 4L),
+        #'   en = "Hello, world!",
+        #'   fr = "Bonjour, monde!")
         #' blk2 <- block("en",
-        #'     location("b", 5L, 6L, 7L, 8L),
-        #'     en = "Farewell, world!",
-        #'     fr = "Au revoir, monde!")
+        #'   location("b", 5L, 6L, 7L, 8L),
+        #'   en = "Farewell, world!",
+        #'   fr = "Au revoir, monde!")
         #'
         #' ## Create a new Translator and register them.
         #' trans <- Translator$new()
@@ -407,9 +407,9 @@ Translator <- R6::R6Class("Translator",
         #' @examples
         #' trans <- Translator$new()
         #' trans$set_native_languages(
-        #'     en = "English",
-        #'     fr = "Français",
-        #'     ja = "日本語")
+        #'   en = "English",
+        #'   fr = "Français",
+        #'   ja = "日本語")
         set_native_languages = function(...) {
             if (!...length()) {
                 return(invisible())

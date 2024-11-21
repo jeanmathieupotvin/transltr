@@ -21,9 +21,9 @@
 #' @template param-source-lang-no-example
 #'
 #' @seealso
-#'   [`Translator`][Translator],
-#'   [translator_set()],
-#'   [language_set()]
+#' [`Translator`][Translator],
+#' [translator_set()],
+#' [language_set()]
 #'
 #' @examples
 #' ## Create a Translator. This would normally be done
