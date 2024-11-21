@@ -1,10 +1,14 @@
+language_source_set("en")
+withr::defer(language_source_set(NULL))
+
+
 # translate() ------------------------------------------------------------------
 
 
 test_that("translate() returns a character string", {
     withr::defer(translator_set(NULL, "test"))
     translator_set(
-        x     = translator(block("en", en = "Hello!", es = "¡Hola!")),
+        x     = translator(block(en = "Hello!", es = "¡Hola!")),
         scope = "test")
 
     out <- translate("Hello!", lang = "es", scope = "test")

@@ -58,6 +58,9 @@
 #' [merge_blocks()] returns a list of (combined) [`Block`][Block] objects.
 #'
 #' @examples
+#' ## Set source language.
+#' language_source_set("en")
+#'
 #' ## Create a Block object.
 #' block(
 #'   location("a", 1L, 2L, 3L, 4L),
@@ -233,7 +236,7 @@ as_block.call <- function(x,
     args        <- as.list(match.call(translate, x, expand.dots = FALSE))[-1L]
     dots        <- unlist(args$`...`, use.names = FALSE)
     concat      <- args$concat      %??% .__STR_FORMAL_CONCAT_DEFAULT
-    source_lang <- args$source_lang %??% .__STR_FORMAL_SOURCE_LANG_DEFAULT
+    source_lang <- args$source_lang %??% language_source_get()
 
     blk <- Block$new(hash_algorithm)
     blk$set_locations(location)

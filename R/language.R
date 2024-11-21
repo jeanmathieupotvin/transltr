@@ -1,20 +1,30 @@
 #' Get or Set Language
 #'
-#' Get or set the current language of [`transltr`][transltr]. It is registered
-#' as an environment variable named `TRANSLTR_LANGUAGE`.
+#' Get or set the current language and source language. They are registered as
+#' environment variables, and respectively named `TRANSLTR_LANGUAGE`, and
+#' `TRANSLTR_SOURCE_LANGUAGE`.
 #'
 #' [language_set()] leaves the underlying locale as is. To change an \R
 #' session's locale, use [Sys.setlocale()] or [Sys.setLanguage()] instead.
 #' See below for more information.
 #'
+#' [language_source_set()] sets the language of the source text (globally).
+#'
+#' Both the language and the source language can be changed locally. See
+#' [translate()] for more information.
+#'
 #' @template param-lang
 #'
-#' @returns
-#' [language_set()] returns `NULL` invisibly. It is used for its side-effect
-#' of setting environment variable `TRANSLTR_LANGUAGE`.
+#' @template param-source-lang-no-example
 #'
-#' [language_get()] returns a character string (possibly empty). It corresponds
-#' to the value of environment variable `TRANSLTR_LANGUAGE`.
+#' @returns
+#' [language_set()], and [language_source_set()] return `NULL`, invisibly. They
+#' are used for their side-effect of respectively setting environment variables
+#' `TRANSLTR_LANGUAGE` and `TRANSLTR_SOURCE_LANGUAGE`.
+#'
+#' [language_get()], and [language_source_get()] return a character string
+#' (possibly empty for the former). It corresponds to the value of underlying
+#' environment variables.
 #'
 #' @section Locales versus languages:
 #' A [locale](https://en.wikipedia.org/wiki/Locale_(computer_software)) is a
@@ -39,7 +49,7 @@
 #' the `language` parameter of the package. See Examples.
 #'
 #' @note
-#' An environment variable is used because it can be shared among different
+#' Environment variables are used because they can be shared among different
 #' processes. This matters when using parallel and/or concurrent \R sessions.
 #' It can further be shared among direct and transitive dependencies (other
 #' packages that rely on [`transltr`][transltr]).
@@ -63,7 +73,7 @@
 language_set <- function(lang = "en") {
     if (is.null(lang)) {
         if (!Sys.unsetenv("TRANSLTR_LANGUAGE") || .__LGL_DEBUG_FLAG) {
-            stops("failed to unset current language.")
+            stopf("failed to unset current language '%s'.", language_get())
         }
 
         return(invisible())
@@ -86,4 +96,36 @@ language_get <- function() {
     # Both cases leads to the same error. Therefore, there
     # is no need to distinguish these cases with unset = NA.
     return(Sys.getenv("TRANSLTR_LANGUAGE", unset = "", names = FALSE))
+}
+
+#' @rdname language-accessors
+#' @export
+language_source_set <- function(source_lang = "en") {
+    if (is.null(source_lang)) {
+        if (!Sys.unsetenv("TRANSLTR_SOURCE_LANGUAGE") || .__LGL_DEBUG_FLAG) {
+            stopf(
+                "failed to unset current source language '%s'.",
+                language_source_get())
+        }
+
+        return(invisible())
+    }
+
+    assert_chr1(source_lang)
+
+    if (!Sys.setenv(TRANSLTR_SOURCE_LANGUAGE = source_lang) || .__LGL_DEBUG_FLAG) {
+        stopf("failed to set source language '%s'.", source_lang)
+    }
+
+    return(invisible())
+}
+
+#' @rdname language-accessors
+#' @export
+language_source_get <- function() {
+    # It does not matter whether the environment variable
+    # is set equal to "" or truly unset (on some OS only).
+    # Both cases leads to the same error. Therefore, there
+    # is no need to distinguish these cases with unset = NA.
+    return(Sys.getenv("TRANSLTR_SOURCE_LANGUAGE", unset = "en", names = FALSE))
 }

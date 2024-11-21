@@ -49,6 +49,9 @@
 #'   [translator_export()]
 #'
 #' @examples
+#' #' ## Set source language.
+#' language_source_set("en")
+#'
 #' ## Create a Translator manually.
 #' translator(
 #'   id = "test-translator",
@@ -310,7 +313,8 @@ Translator <- R6::R6Class("Translator",
         #'
         #' @return A character string, or `NULL`. The corresponding translation
         #'   in the requested language, or `NULL` if none is available.
-        translate = \(..., lang = "", concat = " ", source_lang = "en") {
+            source_lang = source_language_get())
+        {
             assert_chr1(lang)
             assert_chr1(concat, TRUE)
             assert_chr1(source_lang)
@@ -370,6 +374,9 @@ Translator <- R6::R6Class("Translator",
         #' @return A `NULL`, invisibly.
         #'
         #' @examples
+        #' ## Set source language.
+        #' language_source_set("en")
+        #'
         #' ## Create Block objects.
         #' blk1 <- block(
         #'   location("a", 1L, 2L, 3L, 4L),

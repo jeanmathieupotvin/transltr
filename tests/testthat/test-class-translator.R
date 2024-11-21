@@ -1,3 +1,6 @@
+language_source_set("en")
+withr::defer(language_source_set(NULL))
+
 test_translator <- function() {
     return(
         translator(

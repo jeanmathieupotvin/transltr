@@ -9,6 +9,10 @@ to the Portable Translator Format/File (PTF), previously known as TSF.
 1. New design for portable translations (it replaces the older Markdown file).
    - **To be completed.**
 
+2. New functions `language_source_get()`, and `language_source_set()`. They
+   are identical to `language_get()`, and `language_set()`, but sets source
+   language instead.
+
 ## Changes
 
 1. Functions `write_text()` and `read_text()` are now respectively named

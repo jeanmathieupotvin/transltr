@@ -26,6 +26,9 @@
 #' [language_set()]
 #'
 #' @examples
+#' #' ## Set source language.
+#' language_source_set("en")
+#'
 #' ## Create a Translator. This would normally be done
 #' ## automatically by find_source() or translator_import().
 #' my_translator <- translator(block(en = "Hello!", es = "¡Hola!"))
@@ -41,11 +44,12 @@
 #' translate("Hello!", lang = "en") ## Outputs "Hello!".
 #'
 #' @export
-translate <- function(...,
+translate <- function(
+    ...,
     lang        = language_get(),
     scope       = NULL,
     concat      = " ",
-    source_lang = "en")
+    source_lang = language_source_get())
 {
     if (!is_translator(trans <- translator_get(scope))) {
         stopf(
