@@ -116,6 +116,12 @@ print.Translator <- function(x, ...) {
 
 #' @rdname class-translator
 #' @export
+as_translator <- function(x, ...) {
+    UseMethod("as_translator")
+}
+
+#' @rdname class-translator
+#' @export
 Translator <- R6::R6Class("Translator",
     lock_class   = TRUE,
     lock_objects = TRUE,

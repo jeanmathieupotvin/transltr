@@ -6,8 +6,41 @@ to the Portable Translator Format/File (PTF), previously known as TSF.
 
 ## New features
 
-1. New design for portable translations (it replaces the older Markdown file).
-   - **To be completed.**
+1. New features to import, and export translations (it replaces the older
+   Markdown file and related parsing mechanisms).
+
+   * Translations Source Files (TSF) are replaced by
+     Portable Translator/Translations File (PTF).
+   * PTF are generated from *Portable Objects*, which are intermediate classes
+     (between textual representations) and `R6` classes `Location`, `Block`,
+     and `Translator`. Their role is to ease bidirectional conversion process.
+   * `transltr` splits the state of a `Translator` object into multiple files:
+     one file for the `Translator` object itself, and further files for
+     translations (one per language).
+   * This new design introduces many new functions:
+
+     * `text_write()`,
+     * `portable()`,
+     * `is_portable()`,
+     * `portable_translator()`,
+     * `portable_block()`,
+     * `portable_location()`,
+     * `portable_translations()`,
+     * `format.Portable()`,
+     * `format.PortableTranslator()`,
+     * `format.PortableTranslations()`,
+     * `print.Portable()`,
+     * `as_translator()`,
+     * `as_translator.PortableTranslator()`,
+     * `as_block()`,
+     * `as_block.PortableBlock()`,
+     * `as_block.Block()`,
+     * `as_location.PortableLocation()`,
+     * `as_location.Location()`,
+     * `translator_read()`,
+     * `translator_write()`,
+     * `translations_read()`, and
+     * `translations_write()`.
 
 2. New functions `language_source_get()`, and `language_source_set()`. They
    are identical to `language_get()`, and `language_set()`, but sets source
@@ -27,12 +60,14 @@ to the Portable Translator Format/File (PTF), previously known as TSF.
 1. Functions `write_text()` and `read_text()` are now respectively named
    `text_write()` and `text_read()` for consistency with other existing
    `text_*()` functions.
+
    * Source scripts `io-text.R` and `text.R` were merged during the process.
    * Text scripts `test-io-text.R` and `test-texts.R` were also merged.
 
 2. Functions `write_translations()` and `read_translations()` are now
    respectively named `translator_export()` and `translator_import()` for
    consistency with other existing `translator_*()` functions.
+
    * Source scripts `io-translations.R` and `translator.R` were merged during
      the process.
    * Text scripts `test-io-translations.R` and `test-translator.R` were also
@@ -74,10 +109,9 @@ near an initial publication to CRAN.
 ## New features
 
 1. New class `Translator` and related mechanisms.
+
    * This includes the constructor `translator()`.
-
    * This includes the introspector `is_block()`.
-
    * This includes S3 methods `format()`, and `print()`.
 
 2. New functions `translator_set()`, and `translator_get()`.
@@ -85,8 +119,8 @@ near an initial publication to CRAN.
 3. New functions `language_set()`, and `language_get()`.
 
 4. New functions `translate()`, and `is_translate_call()`.
-   * It replaces an earlier version.
 
+   * It replaces an earlier version.
    * Generic function `match_translate_call()` (and its methods) was deprecated.
 
 5. New functions `uuid()`, `uuid_raw()`, and `uuid_is()`.
@@ -109,23 +143,17 @@ near an initial publication to CRAN.
 
    * Private field `Block$.locations` is now an environment, where names are
      extracted from field `Location$path`.
-
    * Deprecate intrernal constructor `.block()` in favor of just using the
      class' methods.
-
    * Some error messages were simplified.
-
    * `$set_*()` methods now return `NULL` for consistency with other `set_*()`
      functions.
-
    * Update the documentation.
-
    * `as_block()` was revamped.
 
 4. Changes to the `Location` class.
 
    * `format()` was simplified.
-
    * Documentation was updated.
 
 5. More functions are now exported, but most of them are marked as being
