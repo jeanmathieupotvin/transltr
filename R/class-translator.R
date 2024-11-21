@@ -174,7 +174,7 @@ Translator <- R6::R6Class("Translator",
         hash_algorithm = \(value) {
             if (!missing(value)) {
                 assert_chr1(value, x_name = "hash_algorithm")
-                assert_match(value, get_hash_algorithms(),
+                assert_match(value, hash_algorithms(),
                     quote_values = TRUE,
                     x_name       = "hash_algorithm")
 
@@ -281,7 +281,7 @@ Translator <- R6::R6Class("Translator",
         #' @template param-hash-algorithm
         #'
         #' @return An [`R6`][R6::R6] object of class [`Translator`][Translator].
-        initialize = \(id = uuid(), hash_algorithm = get_hash_algorithms()) {
+        initialize = \(id = uuid(), hash_algorithm = hash_algorithms()) {
             assert_chr1(id)
             assert_arg(hash_algorithm, TRUE)
 

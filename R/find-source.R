@@ -80,7 +80,7 @@ find_source <- function(
     encoding         = "UTF-8",
     strict           = TRUE,
     id               = uuid(),
-    hash_algorithm   = get_hash_algorithms(),
+    hash_algorithm   = hash_algorithms(),
     native_languages = character(),
     verbose          = FALSE)
 {
@@ -117,7 +117,7 @@ find_source_in_files <- function(
     paths          = character(),
     encoding       = "UTF-8",
     strict         = TRUE,
-    hash_algorithm = get_hash_algorithms(),
+    hash_algorithm = hash_algorithms(),
     verbose        = FALSE)
 {
     # encoding is validated by text_read() below.
@@ -184,7 +184,7 @@ find_source_in_file <- function(
     path           = "",
     encoding       = "UTF-8",
     strict         = TRUE,
-    hash_algorithm = get_hash_algorithms(),
+    hash_algorithm = hash_algorithms(),
     .verbose       = FALSE)
 {
     tokens <- find_source_exprs(path, encoding)
@@ -206,7 +206,7 @@ find_source_in_exprs <- function(
     .tokens         = utils::getParseData(),
     .path           = "",
     .strict         = TRUE,
-    .hash_algorithm = get_hash_algorithms())
+    .hash_algorithm = hash_algorithms())
 {
     # Parsing errors are skipped silently. This is required whenever
     # native pipes are used. They introduce placeholders (_) in expr

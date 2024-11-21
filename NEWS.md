@@ -48,6 +48,11 @@ to the Portable Translator Format/File (PTF), previously known as TSF.
 
 6. Argument `source_lang` of `block()` now comes after `...`.
 
+7. Function `get_hash_algorithms()` was renamed to `hash_algorithms()`. Other
+   `get_*()` functions that used to rerturn "parameters* of the package are all
+   deprecated, and were removed. They were either useless with newer designs,
+   or replaced by the new internal `constant()` interface. See feature #3 above.
+
 ## Issues, and Fixes
 
 None, for now.

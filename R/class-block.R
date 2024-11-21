@@ -190,7 +190,7 @@ c.Block <- function(...) {
 #' @rdname class-block
 #' @keywords internal
 #' @export
-merge_blocks <- function(..., hash_algorithm = get_hash_algorithms()) {
+merge_blocks <- function(..., hash_algorithm = hash_algorithms()) {
     if (!all(vapply_1l(blocks <- list(...), is_block))) {
         stops("values passed to '...' must all be 'Block' objects.")
     }
@@ -214,7 +214,7 @@ as_block <- function(x, ...) {
 as_block.call <- function(x,
     strict         = FALSE,
     location       = transltr::location(),
-    hash_algorithm = get_hash_algorithms(),
+    hash_algorithm = hash_algorithms(),
     validate       = TRUE,
     ...)
 {
@@ -282,7 +282,7 @@ Block <- R6::R6Class("Block",
         hash_algorithm = \(value) {
             if (!missing(value)) {
                 assert_chr1(value, x_name = "hash_algorithm")
-                assert_match(value, get_hash_algorithms(),
+                assert_match(value, hash_algorithms(),
                     quote_values = TRUE,
                     x_name       = "hash_algorithm")
 
@@ -373,7 +373,7 @@ Block <- R6::R6Class("Block",
         #' @template param-hash-algorithm
         #'
         #' @return An [`R6`][R6::R6] object of class [`Block`][Block].
-        initialize = \(hash_algorithm = get_hash_algorithms()) {
+        initialize = \(hash_algorithm = hash_algorithms()) {
             assert_arg(hash_algorithm, TRUE)
 
             # self$hash_algorithm is not used here
