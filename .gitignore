@@ -5,6 +5,10 @@
 # Place all temporary files there.
 .local
 
+# Ignore files created by transltr itself until we
+# provide translations for transltr (using itself).
+inst/transltr
+
 # Ignore common R side-files.
 .Rprof.out
 .Rproj.user

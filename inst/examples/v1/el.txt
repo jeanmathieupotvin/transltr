@@ -1,0 +1,33 @@
+# Portable Translations
+#
+# Instructions:
+#  - Edit each [[Translation]] section below by hand.
+#  - Translate what is in each preceding [[id]] section.
+#  - Remove any <none> placeholder before.
+#  - Use any text editor to do so.
+#  - Use encoding UTF-8 whenever you are prompted to choose.
+#  - Do not edit other sections.
+#  - You may split long sentences with new lines.
+%YAML 1.1
+---
+!<Translations>
+language: el
+native_language: Ελληνικά
+source_language: en
+source_native_language: English
+
+[[256e0d7]]
+
+Hello, world!
+
+[[Translation]]
+
+<none>
+
+[[2ac373a]]
+
+Farewell, world!
+
+[[Translation]]
+
+<none>

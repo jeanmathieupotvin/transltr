@@ -9,6 +9,7 @@
 ^codecov\.yml$
 ^COVERAGE$
 ^LICENSE\.md$
+^inst/transltr$
 ^man-roxygen$
 ^STATISTICS\.md$
 ^TODO\.md$

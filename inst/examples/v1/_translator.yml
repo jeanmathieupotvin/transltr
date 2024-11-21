@@ -1,16 +1,15 @@
 # Portable Translator
 #
 # Instructions:
-#  - You may add further fields to it.
-#  - You may edit fields identifier, languages, and translations.
+#  - You may edit fields identifier, languages, and translations_files.
 #  - Do not edit other fields by hand; edit source scripts instead.
-#  - Translations are stored in separate files (one per language).
+#  - Translations are stored in separate files. See translations_files.
 %YAML 1.1
 ---
 !<Translator>
 version: 1
 generated_by: R package transltr 0.0.1.9003
-generated_on: November 18, 2024 @ 17:35:26 (UTC)
+generated_on: November 20, 2024 @ 20:32:05 (UTC)
 identifier: test-translator
 hash_algorithm: sha1
 source_language: en
@@ -20,11 +19,11 @@ languages:
   es: Español
   fr: Français
   ja: 日本語
-translations:
-  el: !<TranslationsFile> el.txt
-  es: !<TranslationsFile> es.txt
-  fr: !<TranslationsFile> fr.txt
-  ja: !<TranslationsFile> ja.txt
+translations_files: !<TranslationsFiles>
+  el: el.txt
+  es: es.txt
+  fr: fr.txt
+  ja: ja.txt
 256e0d7: !<Block>
   hash: 256e0d707386d0fcd9abf10ad994000bdaa25812
   hash_algorithm: sha1

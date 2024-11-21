@@ -1,35 +1,33 @@
 # Portable Translations
 #
 # Instructions:
-#  - Edit each <Translation> section below by hand.
-#  - What must be translated is in each preceding <id> section.
+#  - Edit each [[Translation]] section below by hand.
+#  - Translate what is in each preceding [[id]] section.
+#  - Remove any <none> placeholder before.
 #  - Use any text editor to do so.
-#  - A single line break (new line) is interpreted as a space.
 #  - Use encoding UTF-8 whenever you are prompted to choose.
 #  - Do not edit other sections.
+#  - You may split long sentences with new lines.
 %YAML 1.1
 ---
+!<Translations>
 language: es
 native_language: Español
 source_language: en
 source_native_language: English
 
-
-# Translations
-%TXT
----
-<256e0d7>
+[[256e0d7]]
 
 Hello, world!
 
-<Translation>
+[[Translation]]
 
 ¡Hola Mundo!
 
-<2ac373a>
+[[2ac373a]]
 
 Farewell, world!
 
-<Translation>
+[[Translation]]
 
-{{ Erase this placeholder and add translation. }}
+<none>
