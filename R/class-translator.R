@@ -75,6 +75,15 @@ translator <- function(..., id = uuid(), hash_algorithm = hash_algorithms()) {
 
     do.call(trans$set_blocks, dots[vapply_1l(dots, is_block)])
     do.call(trans$set_native_languages, dots[vapply_1l(dots, is.character)])
+
+    # All language codes should have a
+    # corresponding native language name.
+    if (anyNA(m <- match(trans$languages, names(trans$native_languages)))) {
+        warning(call. = FALSE, sprintf(
+            "some languages are missing an equivalent native language name: %s.",
+            to_string(trans$languages[is.na(m)], TRUE, ", and ")))
+    }
+
     return(trans)
 }
 

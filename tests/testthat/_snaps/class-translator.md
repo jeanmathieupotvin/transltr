@@ -154,6 +154,21 @@
       Error:
       ! 'hash' must be equal to '256e0d7', or '2ac373a'.
 
+# translator() throws a warning if a language does not have a corresponding native language
+
+    Code
+      translator(id = "test-translator", en = "English", block(en = "Hello, world!",
+        fr = "Bonjour, monde!"))
+    Condition
+      Warning:
+      some languages are missing an equivalent native language name: 'fr'.
+    Output
+      <Translator>
+        Identifier: test-translator
+        Algorithm: sha1
+        Languages: English
+        Source Texts: Hello, world!
+
 # print() works
 
     Code

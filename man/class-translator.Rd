@@ -39,7 +39,7 @@ source information for identification purposes.}
 \item{x}{Any \R object.}
 }
 \value{
-\code{\link[=translator]{translator()}}, and \code{\link[=as_translator]{as_translator()}} returns an \code{\link[R6:R6Class]{R6}} object of
+\code{\link[=translator]{translator()}}, and \code{\link[=as_translator]{as_translator()}} return an \code{\link[R6:R6Class]{R6}} object of
 class \code{\link{Translator}}.
 
 \code{\link[=is_translator]{is_translator()}} returns a logical value.
@@ -234,7 +234,7 @@ of this method.
   ...,
   lang = language_get(),
   concat = constant("concat"),
-  source_lang = source_language_get()
+  source_lang = language_source_get()
 )}\if{html}{\out{</div>}}
 }
 
@@ -341,7 +341,7 @@ A \code{\link{Block}} object, or \code{NULL}.
 Simultaneously create and register a \code{\link{Block}}
 object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Translator$set_block(..., source_lang = source_language_get())}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Translator$set_block(..., source_lang = language_source_get())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

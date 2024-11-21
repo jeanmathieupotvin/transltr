@@ -31,7 +31,6 @@ trans2 <- translator(
         en = "Hello, world!",
         el = "Γεια σου, Κόσμος!"))
 
-
 # Extract private methods for testing purposes.
 hash_compress   <- trans1$.__enclos_env__$private$.hash_reduce
 hash_decompress <- trans1$.__enclos_env__$private$.hash_expand
@@ -376,6 +375,19 @@ test_that("translator() returns an R6 object of class Translator", {
     expect_identical(trans$source_texts, c(`12351` = "Hello, world!"))
     expect_identical(trans$languages, c("en", "fr"))
     expect_identical(trans$native_languages, c(en = "English", fr = "Français"))
+})
+
+test_that("translator() throws a warning if a language does not have a corresponding native language", {
+    expect_warning(
+        translator(
+            id = "test-translator",
+            en = "English",
+            block(en = "Hello, world!", fr = "Bonjour, monde!")))
+    expect_snapshot(
+        translator(
+            id = "test-translator",
+            en = "English",
+            block(en = "Hello, world!", fr = "Bonjour, monde!")))
 })
 
 
