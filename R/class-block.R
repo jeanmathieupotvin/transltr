@@ -59,7 +59,7 @@
 #'
 #' @examples
 #' ## Create a Block object.
-#' block("en",
+#' block(
 #'   location("a", 1L, 2L, 3L, 4L),
 #'   location("a", 1L, 2L, 3L, 4L),
 #'   location("b", 5L, 6L, 7L, 8L),
@@ -70,21 +70,21 @@
 #'   ja = "こんにちは世界！")
 #'
 #' ## Combine Blocks objects.
-#' b1 <- block("en",
+#' b1 <- block(
 #'   location("a", 1L, 2L, 3L, 4L),
 #'   en = "Hello, world!",
 #'   fr = "Bonjour, monde!",
 #'   es = "¡Hola Mundo!",
 #'   ja = "こんにちは世界！")
 #'
-#' b2 <- block("en",
+#' b2 <- block(
 #'   location("a", 5L, 6L, 7L, 8L),
 #'   en     = "Hello, world!",
 #'   fr     = "Bonjour, monde!",
 #'   es     = "¡Hola Mundo!",
 #'   `ja-2` = "こんにちは世界！")
 #'
-#' b3 <- block("fr",
+#' b3 <- block(
 #'   location("c", 1L, 2L, 3L, 4L),
 #'   en     = "Hello, world!",
 #'   fr     = "Bonjour, monde!",
@@ -98,7 +98,11 @@
 #' @rdname class-block
 #' @keywords internal
 #' @export
-block <- function(source_lang = "", ..., hash_algorithm = get_hash_algorithms()) {
+block <- function(
+    ...,
+    source_lang    = language_source_get(),
+    hash_algorithm = hash_algorithms())
+{
     assert_chr1(source_lang)
 
     dots  <- list(...)

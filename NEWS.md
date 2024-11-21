@@ -37,6 +37,8 @@ to the Portable Translator Format/File (PTF), previously known as TSF.
 5. Revamp `format.Location()`. Argument `how` was repurposed and now controls
    how to format ranges. There are three formats available. See documentation.
 
+6. Argument `source_lang` of `block()` now comes after `...`.
+
 ## Issues, and Fixes
 
 None, for now.

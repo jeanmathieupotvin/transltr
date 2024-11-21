@@ -1,6 +1,6 @@
 test_block <- function() {
     return(
-        block("en",
+        block(
             location("a", 1L, 2L, 3L, 4L),
             location("a", 1L, 2L, 3L, 4L),
             location("b", 5L, 6L, 7L, 8L),
@@ -15,7 +15,7 @@ test_block <- function() {
 # a permanent state change. Otherwise, a new object
 # is generated within the test_that() expression.
 blk1 <- test_block()
-blk2 <- block("en",
+blk2 <- block(
     location("c", 1L, 2L, 3L, 4L),
     location("d", 5L, 6L, 7L, 8L),
     en = "Hello, world!",
@@ -254,7 +254,7 @@ test_that("$rm_location() removes locations as expected", {
 
 
 test_that("block() returns an R6 object of class Block", {
-    blk <- block("en",
+    blk <- block(
         location("a"),
         location("b"),
         en = "Hello, world!",
@@ -279,8 +279,8 @@ test_that("block() validates source_lang", {
 })
 
 test_that("block() checks that there is at least one translation corresponding to source_lang", {
-    expect_error(block("en"))
-    expect_snapshot(block("en"), error = TRUE)
+    expect_error(block())
+    expect_snapshot(block(), error = TRUE)
 })
 
 
@@ -409,7 +409,6 @@ test_that("c.Block() does not mutate its arguments", {
     out <- c(blk, blk2)
     expect_identical(blk, test_block())
     expect_identical(blk2, block(
-        "en",
         location("c", 1L, 2L, 3L, 4L),
         location("d", 5L, 6L, 7L, 8L),
         en = "Hello, world!",
@@ -440,16 +439,15 @@ test_that("merge_blocks() validates hash_algorithm", {
 })
 
 test_that("merge_blocks() combines Block objects having different hashes", {
-    blk1  <- block("en", location("en"), en = "Hello, world!")
-    blk2  <- block("en", location("el"), en = "Hello, world!", el = "Γεια σου, Κόσμος!")
-    blk3  <- block("fr", location("fr"), fr =  "Bonjour, monde!")
+    blk1  <- block(location("en"), en = "Hello, world!")
+    blk2  <- block(location("el"), en = "Hello, world!", el = "Γεια σου, Κόσμος!")
+    blk3  <- block(location("fr"), fr =  "Bonjour, monde!", source_lang = "fr")
     out   <- merge_blocks(blk1, blk2, blk3)
     langs <- vapply_1c(out, `[[`, i = "source_lang")
 
     expect_length(out, 2L)
     expect_identical(out[[which(langs == "fr")]], blk3)
     expect_identical(out[[which(langs == "en")]], block(
-        "en",
         location("en"),
         location("el"),
         en = "Hello, world!",

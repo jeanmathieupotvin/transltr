@@ -54,11 +54,11 @@
 #'   id = "test-translator",
 #'   en = "English",
 #'   fr = "Français",
-#'     block("en",
+#'   block(
 #'     location("a", 1L, 2L, 3L, 4L),
 #'     en = "Hello, world!",
 #'     fr = "Bonjour, monde!"),
-#'     block("en",
+#'   block(
 #'     location("b", 5L, 6L, 7L, 8L),
 #'     en = "Farewell, world!",
 #'     fr = "Au revoir, monde!"))
@@ -346,13 +346,13 @@ Translator <- R6::R6Class("Translator",
         #' @description Simultaneously create and register a [`Block`][Block]
         #'   object.
         #'
-        #' @param source_lang Passed as is to [block()].
-        #'
         #' @param ... Passed as is to [block()].
         #'
+        #' @param source_lang Passed as is to [block()].
+        #'
         #' @return A `NULL`, invisibly.
-        set_block = \(source_lang = "", ...) {
-            blk <- block(source_lang, ..., hash_algorithm = private$.hash_algo)
+        set_block = \(..., source_lang = source_language_get()) {
+            blk <- block(..., source_lang, hash_algorithm = private$.hash_algo)
             self$set_blocks(blk)
             return(invisible())
         },
@@ -371,11 +371,11 @@ Translator <- R6::R6Class("Translator",
         #'
         #' @examples
         #' ## Create Block objects.
-        #' blk1 <- block("en",
+        #' blk1 <- block(
         #'   location("a", 1L, 2L, 3L, 4L),
         #'   en = "Hello, world!",
         #'   fr = "Bonjour, monde!")
-        #' blk2 <- block("en",
+        #' blk2 <- block(
         #'   location("b", 5L, 6L, 7L, 8L),
         #'   en = "Farewell, world!",
         #'   fr = "Au revoir, monde!")

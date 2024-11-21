@@ -4,11 +4,11 @@ test_translator <- function() {
             id = "test-translator",
             en = "English",
             fr = "Français",
-            block("en",
+            block(
                 location("a", 1L, 2L, 3L, 4L),
                 en = "Hello, world!",
                 fr = "Bonjour, monde!"),
-            block("en",
+            block(
                 location("b", 5L, 6L, 7L, 8L),
                 en = "Farewell, world!",
                 fr = "Au revoir, monde!")))
@@ -23,7 +23,7 @@ trans2 <- translator(
     id = "test-translator-2",
     en = "English",
     el = "Ελληνικά",
-    block("en",
+    block(
         location("c", 5L, 6L, 7L, 8L),
         en = "Hello, world!",
         el = "Γεια σου, Κόσμος!"))
@@ -111,7 +111,7 @@ test_that("active binding languages returns languages", {
 
 test_that("active binding languages drops duplicated languages", {
     trans <- test_translator()
-    trans$set_block("en", en = "Hello, world!", el = "Γεια σου, Κόσμος!")
+    trans$set_block(en = "Hello, world!", el = "Γεια σου, Κόσμος!")
     expect_identical(trans$languages, c("el", "en", "fr"))
 })
 
@@ -238,13 +238,13 @@ test_that("$get_block() validates hash", {
 })
 
 test_that("$set_block() returns null invisibly", {
-    expect_null(test_translator()$set_block("en", en = "Bye bye!"))
-    expect_invisible(test_translator()$set_block("en", en = "Bye bye!"))
+    expect_null(test_translator()$set_block(en = "Bye bye!"))
+    expect_invisible(test_translator()$set_block(en = "Bye bye!"))
 })
 
 test_that("$set_block() creates and registers a Block object", {
     trans <- test_translator()
-    trans$set_block("en", en = "Bye bye!", location("a"))
+    trans$set_block(en = "Bye bye!", location("a"))
     blk <- trans$get_block(text_hash("en", "Bye bye!", "sha1"))
 
     expect_s3_class(blk, "Block")
@@ -255,8 +255,8 @@ test_that("$set_block() creates and registers a Block object", {
 
 test_that("$set_blocks() returns null invisibly", {
     trans <- Translator$new()
-    blk1  <- block("en", en = "Bye bye!", location("a"))
-    blk2  <- block("fr", fr = "À la prochaine!", location("b"))
+    blk1  <- block(en = "Bye bye!", location("a"))
+    blk2  <- block(fr = "À la prochaine!", location("b"), source_lang = "fr")
 
     # Case ... is empty.
     expect_null(trans$set_blocks())
@@ -269,8 +269,8 @@ test_that("$set_blocks() returns null invisibly", {
 
 test_that("$set_blocks() registers Block objects", {
     trans <- Translator$new()
-    blk1  <- block("en", en = "Bye bye!", location("a"))
-    blk2  <- block("fr", fr = "À la prochaine!", location("b"))
+    blk1  <- block(en = "Bye bye!", location("a"))
+    blk2  <- block(fr = "À la prochaine!", location("b"), source_lang = "fr")
     trans$set_blocks(blk1, blk2)
 
     expect_identical(trans$get_block(text_hash("en", "Bye bye!", "sha1")),        blk1)
@@ -278,9 +278,9 @@ test_that("$set_blocks() registers Block objects", {
 })
 
 test_that("$set_blocks() validates ...", {
-    expect_error(Translator$new()$set_blocks(1L, block("en", en = "Bye bye!")))
+    expect_error(Translator$new()$set_blocks(1L, block(en = "Bye bye!")))
     expect_snapshot(error = TRUE, {
-        Translator$new()$set_blocks(1L, block("en", en = "Bye bye!"))
+        Translator$new()$set_blocks(1L, block(en = "Bye bye!"))
     })
 })
 
@@ -358,7 +358,7 @@ test_that("translator() returns an R6 object of class Translator", {
         id = "test-translator",
         en = "English",
         fr = "Français",
-        block("en",
+        block(
             location("a", 1L, 2L, 3L, 4L),
             en = "Hello, world!",
             fr = "Bonjour, monde!"),
