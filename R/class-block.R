@@ -19,10 +19,13 @@
 #' This is equivalent to having the same `hash_algorithm`, `source_lang`,
 #' and `source_text`. In that case, the underlying translations and
 #' [`Location`][Location] objects are combined, and a new object is returned.
+#' It throws an error if all [`Block`][Block] objects are empty (they have no
+#' set `source_lang`).
 #'
 #' [merge_blocks()] is a generalized version of [c()] that handles any number
 #' of [`Block`][Block] objects having possibly different hashes. It can be
-#' viewed as a vectorized version of [c()].
+#' viewed as a vectorized version of [c()]. It silently ignores, and drops
+#' all empty [`Block`][Block] objects.
 #'
 #' @param x Any \R object.
 #'
@@ -55,7 +58,8 @@
 #'
 #' [print()] returns argument `x` invisibly.
 #'
-#' [merge_blocks()] returns a list of (combined) [`Block`][Block] objects.
+#' [merge_blocks()] returns a list of (combined) [`Block`][Block] objects. It
+#' can be empty if all underlying [`Block`][Block] objects are empty.
 #'
 #' @examples
 #' ## Set source language.
@@ -171,6 +175,9 @@ c.Block <- function(...) {
     if (!all(hashes[[1L]] == hashes[-1L])) {
         stops("all 'hash' must be equal in order to combine multiple 'Block' objects.")
     }
+    if (hashes[[1L]] == constant("unset")) {
+        stops("all 'Block' objects have no source language set.")
+    }
 
     # Names of inputs are stripped. Otherwise,
     # unlist() alters named character vectors
@@ -198,7 +205,13 @@ merge_blocks <- function(..., hash_algorithm = hash_algorithms()) {
     assert_arg(hash_algorithm, TRUE)
     lapply(blocks, \(blk) blk$hash_algorithm <- hash_algorithm)
 
-    groups <- split_ul(blocks, vapply_1c(blocks, `[[`, i = "hash"))
+    # Blocks with no hash have no set source text
+    # and source language. These Blocks cannot be
+    # merged and must be ignored.
+    hashes <- vapply_1c(blocks, `[[`, i = "hash")
+    is_set <- hashes != constant("unset")
+    groups <- split_ul(blocks[is_set], hashes[is_set])
+
     return(lapply(groups, \(group) do.call(c, group)))
 }
 

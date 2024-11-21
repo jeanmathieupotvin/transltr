@@ -97,6 +97,11 @@ to the Portable Translator Format/File (PTF), previously known as TSF.
 1. `Block$hash_algorithm` now only updates `Block$hash` if `Block$source_text`
    (and `Block$source_lang`) is set.
 
+2. `c.Block()` now throws an error if all `Block` objects are empty. A `Block`
+   object is empty if it has no set `source_lang`.
+
+3. `merge_blocks()` now silently ignores, and drops empty `Block` objects.
+
 
 ---
 

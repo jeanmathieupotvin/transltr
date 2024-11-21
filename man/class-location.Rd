@@ -56,7 +56,7 @@ and S3 method \code{\link[=c]{c()}}.
 }}
 }
 \value{
-\code{\link[=location]{location()}}, \code{\link[=c]{c()}}, and \code{\link[=as_location]{as_location()}} returns a named list of length
+\code{\link[=location]{location()}}, \code{\link[=c]{c()}}, and \code{\link[=as_location]{as_location()}} return a named list of length
 5 and of class \code{\link{Location}}. It contains the values of \code{path},
 \code{line1}, \code{col1}, \code{line2}, and \code{col2}.
 

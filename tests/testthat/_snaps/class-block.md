@@ -167,7 +167,7 @@
 # block() validates source_lang
 
     Code
-      block("")
+      block(source_lang = "")
     Condition
       Error:
       ! 'source_lang' must be a non-NA and non-empty character of length 1.
@@ -175,7 +175,7 @@
 # block() checks that there is at least one translation corresponding to source_lang
 
     Code
-      block("en")
+      block()
     Condition
       Error:
       ! a translation corresponding to 'source_lang' must be passed to '...'.
@@ -221,6 +221,14 @@
     Condition
       Error:
       ! all 'hash' must be equal in order to combine multiple 'Block' objects.
+
+# c.Block() throws an error if source languages are not set
+
+    Code
+      c(Block$new(), Block$new())
+    Condition
+      Error:
+      ! all 'Block' objects have no source language set.
 
 # merge_blocks() validates ...
 

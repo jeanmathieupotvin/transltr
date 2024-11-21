@@ -87,7 +87,8 @@ class \code{\link{Block}}.
 
 \code{\link[=print]{print()}} returns argument \code{x} invisibly.
 
-\code{\link[=merge_blocks]{merge_blocks()}} returns a list of (combined) \code{\link{Block}} objects.
+\code{\link[=merge_blocks]{merge_blocks()}} returns a list of (combined) \code{\link{Block}} objects. It
+can be empty if all underlying \code{\link{Block}} objects are empty.
 }
 \description{
 Store, structure, and manipulate \strong{a single} source text and its
@@ -109,10 +110,13 @@ different languages, and processed as a unit.
 This is equivalent to having the same \code{hash_algorithm}, \code{source_lang},
 and \code{source_text}. In that case, the underlying translations and
 \code{\link{Location}} objects are combined, and a new object is returned.
+It throws an error if all \code{\link{Block}} objects are empty (they have no
+set \code{source_lang}).
 
 \code{\link[=merge_blocks]{merge_blocks()}} is a generalized version of \code{\link[=c]{c()}} that handles any number
 of \code{\link{Block}} objects having possibly different hashes. It can be
-viewed as a vectorized version of \code{\link[=c]{c()}}.
+viewed as a vectorized version of \code{\link[=c]{c()}}. It silently ignores, and drops
+all empty \code{\link{Block}} objects.
 }
 }
 \examples{

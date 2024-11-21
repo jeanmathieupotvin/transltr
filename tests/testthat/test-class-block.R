@@ -277,8 +277,8 @@ test_that("block() returns an R6 object of class Block", {
 })
 
 test_that("block() validates source_lang", {
-    expect_error(block(""))
-    expect_snapshot(block(""), error = TRUE)
+    expect_error(block(source_lang = ""))
+    expect_snapshot(block(source_lang = ""), error = TRUE)
 })
 
 test_that("block() checks that there is at least one translation corresponding to source_lang", {
@@ -404,6 +404,11 @@ test_that("c.Block() throws an error if hashes are not equal", {
     })
 })
 
+test_that("c.Block() throws an error if source languages are not set", {
+    expect_error(c(Block$new(), Block$new()))
+    expect_snapshot(c(Block$new(), Block$new()), error = TRUE)
+})
+
 test_that("c.Block() does not mutate its arguments", {
     # This test was added after discovering c.Block() was
     # mutating and returning ..1 instead of returning a
@@ -451,6 +456,20 @@ test_that("merge_blocks() combines Block objects having different hashes", {
     expect_length(out, 2L)
     expect_identical(out[[which(langs == "fr")]], blk3)
     expect_identical(out[[which(langs == "en")]], block(
+        location("en"),
+        location("el"),
+        en = "Hello, world!",
+        el = "Γεια σου, Κόσμος!"))
+})
+
+test_that("merge_blocks() ignores Block objects with no set source language", {
+    blk1  <- block(location("en"), en = "Hello, world!")
+    blk2  <- block(location("el"), en = "Hello, world!", el = "Γεια σου, Κόσμος!")
+    blk3  <- Block$new()
+    out   <- merge_blocks(blk1, blk2, blk3)
+
+    expect_length(out, 1L)
+    expect_identical(out[[1L]], block(
         location("en"),
         location("el"),
         en = "Hello, world!",
