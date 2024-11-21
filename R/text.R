@@ -143,7 +143,12 @@ text_hash <- function(.lang = "", .text = "", .algo = hash_algorithms()) {
 #' @returns
 #' [text_read()] returns a character vector.
 #'
-#' [text_write()] is not yet implemented and throws an error.
+#' [text_write()] returns `NULL`, invisibly.
+#'
+#' @seealso
+#' [readLines()],
+#' [writeLines()],
+#' [enc2utf8()]
 #'
 #' @rdname text-io
 #' @keywords internal
@@ -173,6 +178,18 @@ text_read <- function(path = "", encoding = "UTF-8") {
 
 #' @rdname text-io
 #' @keywords internal
-text_write <- function(x, path = "") {
-    return(.NotYetImplemented())
+text_write <- function(x = character(), path = "") {
+    assert_chr(x)
+    assert_chr1(path)
+
+    # Not super useful, but a little safer.
+    path <- normalizePath(path, mustWork = FALSE)
+    con  <- file(path, "w", encoding = "UTF-8")
+    on.exit(close(con, "w"))
+
+    # Character elements are explicitly
+    # re-encoded to UTF-8 before writing.
+    # Therefore, we can pass the text by
+    # bytes directly (this is faster).
+    return(writeLines(enc2utf8(x), con, sep = "\n", useBytes = TRUE))
 }
