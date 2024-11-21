@@ -69,7 +69,7 @@
 #' @include constants.R
 #' @rdname class-translator
 #' @export
-translator <- function(..., id = uuid(), hash_algorithm = get_hash_algorithms()) {
+translator <- function(..., id = uuid(), hash_algorithm = hash_algorithms()) {
     trans <- Translator$new(id, hash_algorithm)
     dots  <- list(...)
 
