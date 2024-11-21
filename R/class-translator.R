@@ -324,7 +324,7 @@ Translator <- R6::R6Class("Translator",
             ...,
             lang        = language_get(),
             concat      = constant("concat"),
-            source_lang = source_language_get())
+            source_lang = language_source_get())
         {
             assert_chr1(lang)
             assert_chr1(concat, TRUE)
@@ -366,8 +366,11 @@ Translator <- R6::R6Class("Translator",
         #' @param source_lang Passed as is to [block()].
         #'
         #' @return A `NULL`, invisibly.
-        set_block = \(..., source_lang = source_language_get()) {
-            blk <- block(..., source_lang, hash_algorithm = private$.hash_algo)
+        set_block = \(..., source_lang = language_source_get()) {
+            blk <- block(...,
+                source_lang    = source_lang,
+                hash_algorithm = private$.hash_algo)
+
             self$set_blocks(blk)
             return(invisible())
         },

@@ -108,7 +108,7 @@
 # $set_blocks() validates ...
 
     Code
-      Translator$new()$set_blocks(1L, block("en", en = "Bye bye!"))
+      Translator$new()$set_blocks(1L, block(en = "Bye bye!"))
     Condition
       Error:
       ! values passed to '...' must all be 'Block' objects.
