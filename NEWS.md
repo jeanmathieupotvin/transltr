@@ -18,6 +18,10 @@ to the Portable Translator Format/File (PTF), previously known as TSF.
    constants requires a name, i.e. `constant("placeholder")`. This is much
    cleaner.
 
+4. New option `transltr.default.path`. This is where `transltr` reads, and
+   writes Portable Translator Files by default. See `translator_read()`, and
+   `translator_write()`.
+
 ## Changes
 
 1. Functions `write_text()` and `read_text()` are now respectively named
