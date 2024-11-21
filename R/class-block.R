@@ -287,10 +287,13 @@ Block <- R6::R6Class("Block",
                     x_name       = "hash_algorithm")
 
                 private$.hash_algo <- value
-                private$.hash      <- text_hash(
-                    private$.source_lang,
-                    self$get_translation(private$.source_lang),
-                    private$.hash_algo)
+
+                if (!is.null(source_text <- self$source_text)) {
+                    private$.hash <- text_hash(
+                        self$source_lang,
+                        source_text,
+                        value)
+                }
             }
 
             return(private$.hash_algo)
