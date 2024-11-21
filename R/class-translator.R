@@ -94,13 +94,13 @@ format.Translator <- function(x, ...) {
         hashes <- names(source_texts)  ## These are already reduced.
         names(source_texts) <- sprintf("%s [%s]", hashes, langs)
     } else {
-        source_texts <- .__STR_EMPTY_OBJ
+        source_texts <- constant("placeholder")
     }
 
     xlist <- list(
         Identifier     = x$id,
         Algorithm      = x$hash_algorithm,
-        Languages      = x$native_languages %??% .__STR_EMPTY_OBJ,
+        Languages      = x$native_languages %??% constant("empty"),
         `Source Texts` = source_texts)
 
     return(format_vector(xlist, "<Translator>", .show_nokey = FALSE))
@@ -120,8 +120,8 @@ Translator <- R6::R6Class("Translator",
     lock_objects = TRUE,
     cloneable    = FALSE,
     private      = list(
-        .id           = .__STR_UNDEFINED,  # See $id
-        .hash_algo    = .__STR_UNDEFINED,  # See $hash_algorithm
+        .id           = constant("unset"), # See $id
+        .hash_algo    = constant("unset"), # See $hash_algorithm
         .native_langs = NULL,              # See $native_languages, $initialize -> new.env()
         .blocks       = NULL,              # See $intialize -> new.env()
 
@@ -313,6 +313,10 @@ Translator <- R6::R6Class("Translator",
         #'
         #' @return A character string, or `NULL`. The corresponding translation
         #'   in the requested language, or `NULL` if none is available.
+        translate = \(
+            ...,
+            lang        = language_get(),
+            concat      = constant("concat"),
             source_lang = source_language_get())
         {
             assert_chr1(lang)

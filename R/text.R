@@ -92,7 +92,7 @@
 #'
 #' @rdname text
 #' @keywords internal
-text_normalize <- function(..., .concat = " ") {
+text_normalize <- function(..., .concat = constant("concat")) {
     dots  <- c(...)
     empty <- which(!nzchar(dots)[-length(dots)])
     dots  <- dots |>

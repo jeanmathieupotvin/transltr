@@ -48,7 +48,7 @@ translate <- function(
     ...,
     lang        = language_get(),
     scope       = NULL,
-    concat      = " ",
+    concat      = constant("concat"),
     source_lang = language_source_get())
 {
     if (!is_translator(trans <- translator_get(scope))) {

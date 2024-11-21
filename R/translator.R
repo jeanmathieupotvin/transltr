@@ -182,7 +182,8 @@ translator_scope <- function() {
     # may still use this function as is to translate
     # itself, because which.max() will return 1 (and
     # match scope "transltr" in scopes).
-    return(scopes[[which.max(!match(scopes, .__CHR_EXCLUDED_NS, 0L))]])
+    excluded_ns <- c("base", "transltr")
+    return(scopes[[which.max(!match(scopes, excluded_ns, 0L))]])
 }
 
 #' @rdname translator-scope

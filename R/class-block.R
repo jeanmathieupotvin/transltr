@@ -135,8 +135,8 @@ is_block <- function(x) {
 #' @rdname class-block
 #' @export
 format.Block <- function(x, ...) {
-    trans <- if (length(x$translations)) x$translations else .__STR_EMPTY_OBJ
-    locs  <- unlist(lapply(x$locations, format), TRUE, FALSE) %??% .__STR_EMPTY_OBJ
+    trans <- if (length(x$translations)) x$translations else constant("empty")
+    locs  <- unlist(lapply(x$locations, format), TRUE, FALSE) %??% constant("empty")
     xlist <- list(
         Hash          = x$hash,
         `Source Lang` = x$source_lang,
@@ -235,7 +235,7 @@ as_block.call <- function(x,
     # name of the underlying function.
     args        <- as.list(match.call(translate, x, expand.dots = FALSE))[-1L]
     dots        <- unlist(args$`...`, use.names = FALSE)
-    concat      <- args$concat      %??% .__STR_FORMAL_CONCAT_DEFAULT
+    concat      <- args$concat      %??% constant("concat")
     source_lang <- args$source_lang %??% language_source_get()
 
     blk <- Block$new(hash_algorithm)
@@ -253,9 +253,9 @@ Block <- R6::R6Class("Block",
     lock_objects = TRUE,
     cloneable    = FALSE,
     private      = list(
-        .hash         = .__STR_UNDEFINED,  # See $hash
-        .hash_algo    = .__STR_UNDEFINED,  # See $hash_algorithm
-        .source_lang  = .__STR_UNDEFINED,  # See $source_lang
+        .hash         = constant("unset"), # See $hash
+        .hash_algo    = constant("unset"), # See $hash_algorithm
+        .source_lang  = constant("unset"), # See $source_lang
         .translations = NULL,              # See $translations
         .locations    = NULL               # See $locations
     ),

@@ -13,6 +13,11 @@ to the Portable Translator Format/File (PTF), previously known as TSF.
    are identical to `language_get()`, and `language_set()`, but sets source
    language instead.
 
+3. New internal interface for constants. They are now encapsulated by a new
+   `constant()` function (which is just a `switch()` statement). Fetching
+   constants requires a name, i.e. `constant("placeholder")`. This is much
+   cleaner.
+
 ## Changes
 
 1. Functions `write_text()` and `read_text()` are now respectively named
