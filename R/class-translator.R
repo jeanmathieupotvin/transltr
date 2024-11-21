@@ -222,7 +222,8 @@ Translator <- R6::R6Class("Translator",
             }
 
             hashes <- eapply(private$.blocks, `[[`, i = "hash")
-            return(unlist(hashes, use.names = FALSE))
+            names(hashes) <- private$.hash_reduce(names(hashes))
+            return(unlist(hashes))
         },
 
         #' @field source_texts A character vector of non-empty and

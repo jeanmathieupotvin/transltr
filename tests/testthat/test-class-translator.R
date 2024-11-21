@@ -65,7 +65,7 @@ test_that("active binding hash_algorithm sets new value", {
     expect_identical(trans$hash_algorithm, "utf8")
 
     # Test that Blocks objects' hash_algorithm are updated.
-    expect_identical(trans$hashes, c("12351", "17818"))
+    expect_identical(trans$hashes, c(`12351` = "12351", `17818` = "17818"))
     expect_identical(trans$get_block("12351")$hash, "12351")
     expect_identical(trans$get_block("17818")$hash, "17818")
 
@@ -84,8 +84,8 @@ test_that("active binding hash_algorithm validates value", {
 test_that("active binding hashes returns hashes", {
     expect_null(Translator$new()$hashes)
     expect_identical(trans1$hashes, c(
-        "256e0d707386d0fcd9abf10ad994000bdaa25812",
-        "2ac373aa699a6712cdaddbead28031d537de29bc"))
+        `256e0d7` = "256e0d707386d0fcd9abf10ad994000bdaa25812",
+        `2ac373a` = "2ac373aa699a6712cdaddbead28031d537de29bc"))
 })
 
 test_that("active binding hashes validates value", {
@@ -348,7 +348,7 @@ test_that("$rm_block() removes Block objects as expected", {
     trans <- test_translator()
     trans$rm_block("256e0d7")
     expect_length(trans$hashes, 1L)
-    expect_identical(trans$hashes, "2ac373aa699a6712cdaddbead28031d537de29bc")
+    expect_identical(trans$hashes, c(`2ac373a` = "2ac373aa699a6712cdaddbead28031d537de29bc"))
 })
 
 
@@ -371,7 +371,7 @@ test_that("translator() returns an R6 object of class Translator", {
     expect_s3_class(trans, c("Translator", "R6"), exact = TRUE)
     expect_identical(trans$id, "test-translator")
     expect_identical(trans$hash_algorithm, "utf8")
-    expect_identical(trans$hashes, "12351")
+    expect_identical(trans$hashes, c(`12351` = "12351"))
     expect_identical(trans$source_texts, c(`12351` = "Hello, world!"))
     expect_identical(trans$languages, c("en", "fr"))
     expect_identical(trans$native_languages, c(en = "English", fr = "Français"))

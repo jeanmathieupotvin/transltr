@@ -24,8 +24,18 @@ test_that("find_source() returns a Translator object", {
     expect_identical(out$id, "test-find-source")
     expect_identical(out$hash_algorithm, "utf8")
     expect_identical(out$hashes, c(
-        "950", "951", "952", "10991", "954", "955",
-        "956", "957", "958",  "960", "15878", "948"))
+        `950`   = "950",
+        `951`   = "951",
+        `952`   = "952",
+        `10991` = "10991",
+        `954`   = "954",
+        `955`   = "955",
+        `956`   = "956",
+        `957`   = "957",
+        `958`   = "958",
+        `960`   = "960",
+        `15878` = "15878",
+        `948`   = "948"))
     expect_identical(out$source_texts, c(
         `950`   = "d",
         `951`   = "e",
