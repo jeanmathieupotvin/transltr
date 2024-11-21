@@ -63,16 +63,16 @@ test_that("translator_set() sets translator objects", {
     })()
 
     scope_stats <- evalq(envir = asNamespace("stats"), \() {
-        translator_set(translator(id = "stats"))
-        id <- translator_get()$id
-        translator_set(NULL)
+        transltr::translator_set(transltr::translator(id = "stats"))
+        id <- transltr::translator_get()$id
+        transltr::translator_set(NULL)
         return(id)
     })()
 
     scope_utils <- evalq(envir = asNamespace("utils"), \() {
-        translator_set(translator(id = "utils"))
-        id <- translator_get()$id
-        translator_set(NULL)
+        transltr::translator_set(transltr::translator(id = "utils"))
+        id <- transltr::translator_get()$id
+        transltr::translator_set(NULL)
         return(id)
     })()
 
@@ -91,12 +91,12 @@ test_that("translator_set() unsets translator objects", {
         translator_set(NULL)
     })()
     evalq(envir = asNamespace("stats"), \() {
-        translator_set(translator(id = "stats"))
-        translator_set(NULL)
+        transltr::translator_set(transltr::translator(id = "stats"))
+        transltr::translator_set(NULL)
     })()
     evalq(envir = asNamespace("utils"), \() {
-        translator_set(translator(id = "utils"))
-        translator_set(NULL)
+        transltr::translator_set(transltr::translator(id = "utils"))
+        transltr::translator_set(NULL)
     })()
 
     expect_null(translator_get("global"))

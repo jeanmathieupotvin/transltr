@@ -1,41 +1,41 @@
-#' Source Text and Translations
+#' Source Text
 #'
 #' Store, structure, and manipulate **a single** source text and its
 #' translations.
 #'
-#' A [`Block`][Block] object is a collection of translations of a *source text*
+#' A [`Text`][Text] object is a collection of translations of a *source text*
 #' (i.e. text extracted from \R source scripts). It exposes a set of methods
 #' that can be used to safely manipulate the information it contains, but it
 #' is unlikely to be useful in typical circumstances. See class
 #' [`Translator`][Translator] instead.
 #'
 #' The name of the class is derived from what it conceptually represents: a
-#' [`Block`][Block] is just a large piece of text potentially repeated in
+#' [`Text`][Text] is just a large piece of text potentially repeated in
 #' different languages, and processed as a unit.
 #'
-#' ## Combining Block Objects
+#' ## Combining Text Objects
 #'
-#' [c()] can only combine [`Block`][Block] objects having the same `hash`.
+#' [c()] can only combine [`Text`][Text] objects having the same `hash`.
 #' This is equivalent to having the same `hash_algorithm`, `source_lang`,
 #' and `source_text`. In that case, the underlying translations and
 #' [`Location`][Location] objects are combined, and a new object is returned.
-#' It throws an error if all [`Block`][Block] objects are empty (they have no
+#' It throws an error if all [`Text`][Text] objects are empty (they have no
 #' set `source_lang`).
 #'
-#' [merge_blocks()] is a generalized version of [c()] that handles any number
-#' of [`Block`][Block] objects having possibly different hashes. It can be
+#' [merge_texts()] is a generalized version of [c()] that handles any number
+#' of [`Text`][Text] objects having possibly different hashes. It can be
 #' viewed as a vectorized version of [c()]. It silently ignores, and drops
-#' all empty [`Block`][Block] objects.
+#' all empty [`Text`][Text] objects.
 #'
 #' @param x Any \R object.
 #'
 #' @param ... Usage depends on the underlying function.
 #'   * Any number of [`Location`][Location] objects, and/or named character
-#'     strings for [block()] (in no preferred order).
-#'   * Any number of [`Block`][Block] objects for [merge_blocks()] and S3
+#'     strings for [text()] (in no preferred order).
+#'   * Any number of [`Text`][Text] objects for [merge_texts()] and S3
 #'     method [c()].
 #'   * Further arguments passed to or from other methods for [format()],
-#'     [print()], and [as_block()].
+#'     [print()], and [as_text()].
 #'
 #' @param location A [`Location`][Location] object.
 #'
@@ -49,24 +49,24 @@
 #' @template param-strict
 #'
 #' @returns
-#' [block()], [c()], and [as_block()] return an [`R6`][R6::R6] object of
-#' class [`Block`][Block].
+#' [text()], [c()], and [as_text()] return an [`R6`][R6::R6] object of
+#' class [`Text`][Text].
 #'
-#' [is_block()] returns a logical value.
+#' [is_text()] returns a logical value.
 #'
 #' [format()] returns a character vector.
 #'
 #' [print()] returns argument `x` invisibly.
 #'
-#' [merge_blocks()] returns a list of (combined) [`Block`][Block] objects. It
-#' can be empty if all underlying [`Block`][Block] objects are empty.
+#' [merge_texts()] returns a list of (combined) [`Text`][Text] objects. It
+#' can be empty if all underlying [`Text`][Text] objects are empty.
 #'
 #' @examples
 #' ## Set source language.
 #' language_source_set("en")
 #'
-#' ## Create a Block object.
-#' block(
+#' ## Create a Text object.
+#' text(
 #'   location("a", 1L, 2L, 3L, 4L),
 #'   location("a", 1L, 2L, 3L, 4L),
 #'   location("b", 5L, 6L, 7L, 8L),
@@ -76,22 +76,22 @@
 #'   es = "¡Hola Mundo!",
 #'   ja = "こんにちは世界！")
 #'
-#' ## Combine Blocks objects.
-#' b1 <- block(
+#' ## Combine Texts objects.
+#' b1 <- text(
 #'   location("a", 1L, 2L, 3L, 4L),
 #'   en = "Hello, world!",
 #'   fr = "Bonjour, monde!",
 #'   es = "¡Hola Mundo!",
 #'   ja = "こんにちは世界！")
 #'
-#' b2 <- block(
+#' b2 <- text(
 #'   location("a", 5L, 6L, 7L, 8L),
 #'   en     = "Hello, world!",
 #'   fr     = "Bonjour, monde!",
 #'   es     = "¡Hola Mundo!",
 #'   `ja-2` = "こんにちは世界！")
 #'
-#' b3 <- block(
+#' b3 <- text(
 #'   location("c", 1L, 2L, 3L, 4L),
 #'   en     = "Hello, world!",
 #'   fr     = "Bonjour, monde!",
@@ -99,13 +99,13 @@
 #'   `ja-2` = "こんにちは世界！")
 #'
 #' c(b1, b2)
-#' merge_blocks(b1, b2, b3)
+#' merge_texts(b1, b2, b3)
 #'
 #' @include constants.R
-#' @rdname class-block
+#' @rdname class-text
 #' @keywords internal
 #' @export
-block <- function(
+text <- function(
     ...,
     source_lang    = language_source_get(),
     hash_algorithm = hash_algorithms())
@@ -122,23 +122,23 @@ block <- function(
             "It is treated as the source text.")
     }
 
-    blk <- Block$new(hash_algorithm)
-    do.call(blk$set_translations, texts)
-    do.call(blk$set_locations, locs)
-    blk$source_lang <- source_lang
-    return(blk)
+    txt <- Text$new(hash_algorithm)
+    do.call(txt$set_translations, texts)
+    do.call(txt$set_locations, locs)
+    txt$source_lang <- source_lang
+    return(txt)
 }
 
-#' @rdname class-block
+#' @rdname class-text
 #' @keywords internal
 #' @export
-is_block <- function(x) {
-    return(inherits(x, "Block"))
+is_text <- function(x) {
+    return(inherits(x, "Text"))
 }
 
-#' @rdname class-block
+#' @rdname class-text
 #' @export
-format.Block <- function(x, ...) {
+format.Text <- function(x, ...) {
     trans <- if (length(x$translations)) x$translations else constant("empty")
     locs  <- unlist(lapply(x$locations, format), TRUE, FALSE) %??% constant("empty")
     xlist <- list(
@@ -148,83 +148,83 @@ format.Block <- function(x, ...) {
         Translations  = trans,
         Locations     = locs)
 
-    return(format_vector(xlist, "<Block>", .show_nokey = FALSE))
+    return(format_vector(xlist, "<Text>", .show_nokey = FALSE))
 }
 
-#' @rdname class-block
+#' @rdname class-text
 #' @export
-print.Block <- function(x, ...) {
+print.Text <- function(x, ...) {
     cat(format(x, ...), sep = "\n")
     return(invisible(x))
 }
 
-#' @rdname class-block
+#' @rdname class-text
 #' @export
-c.Block <- function(...) {
+c.Text <- function(...) {
     if (...length() < 2L) {
         return(..1)
     }
-    if (!all(vapply_1l(blocks <- list(...), is_block))) {
-        stops("values passed to '...' must all be 'Block' objects.")
+    if (!all(vapply_1l(texts <- list(...), is_text))) {
+        stops("values passed to '...' must all be 'Text' objects.")
     }
 
-    hashes <- vapply_1c(blocks, `[[`, i = "hash")
+    hashes <- vapply_1c(texts, `[[`, i = "hash")
 
     # Checking hashes simultaneously checks equality
     # of hash_algorithm, source_lang and source_text.
     if (!all(hashes[[1L]] == hashes[-1L])) {
-        stops("all 'hash' must be equal in order to combine multiple 'Block' objects.")
+        stops("all 'hash' must be equal in order to combine multiple 'Text' objects.")
     }
     if (hashes[[1L]] == constant("unset")) {
-        stops("all 'Block' objects have no source language set.")
+        stops("all 'Text' objects have no source language set.")
     }
 
     # Names of inputs are stripped. Otherwise,
     # unlist() alters named character vectors
     # stemming from $languages.
-    names(blocks) <- NULL
+    names(texts) <- NULL
 
-    trans <- unlist(lapply(blocks, `[[`, i = "translations"))
-    locs  <- unlist(lapply(blocks, `[[`, i = "locations"), FALSE)
+    trans <- unlist(lapply(texts, `[[`, i = "translations"))
+    locs  <- unlist(lapply(texts, `[[`, i = "locations"), FALSE)
 
-    blk <- Block$new(..1$hash_algorithm)
-    do.call(blk$set_translations, as.list(trans))
-    do.call(blk$set_locations, locs)
-    blk$source_lang <- ..1$source_lang
-    return(blk)
+    txt <- Text$new(..1$hash_algorithm)
+    do.call(txt$set_translations, as.list(trans))
+    do.call(txt$set_locations, locs)
+    txt$source_lang <- ..1$source_lang
+    return(txt)
 }
 
-#' @rdname class-block
+#' @rdname class-text
 #' @keywords internal
 #' @export
-merge_blocks <- function(..., hash_algorithm = hash_algorithms()) {
-    if (!all(vapply_1l(blocks <- list(...), is_block))) {
-        stops("values passed to '...' must all be 'Block' objects.")
+merge_texts <- function(..., hash_algorithm = hash_algorithms()) {
+    if (!all(vapply_1l(texts <- list(...), is_text))) {
+        stops("values passed to '...' must all be 'Text' objects.")
     }
 
     assert_arg(hash_algorithm, TRUE)
-    lapply(blocks, \(blk) blk$hash_algorithm <- hash_algorithm)
+    lapply(texts, \(txt) txt$hash_algorithm <- hash_algorithm)
 
-    # Blocks with no hash have no set source text
-    # and source language. These Blocks cannot be
+    # Texts with no hash have no set source text
+    # and source language. These Texts cannot be
     # merged and must be ignored.
-    hashes <- vapply_1c(blocks, `[[`, i = "hash")
+    hashes <- vapply_1c(texts, `[[`, i = "hash")
     is_set <- hashes != constant("unset")
-    groups <- split_ul(blocks[is_set], hashes[is_set])
+    groups <- split_ul(texts[is_set], hashes[is_set])
 
     return(lapply(groups, \(group) do.call(c, group)))
 }
 
-#' @rdname class-block
+#' @rdname class-text
 #' @keywords internal
 #' @export
-as_block <- function(x, ...) {
-    UseMethod("as_block")
+as_text <- function(x, ...) {
+    UseMethod("as_text")
 }
 
-#' @rdname class-block
+#' @rdname class-text
 #' @export
-as_block.call <- function(x,
+as_text.call <- function(x,
     strict         = FALSE,
     location       = transltr::location(),
     hash_algorithm = hash_algorithms(),
@@ -251,17 +251,17 @@ as_block.call <- function(x,
     concat      <- args$concat      %??% constant("concat")
     source_lang <- args$source_lang %??% language_source_get()
 
-    blk <- Block$new(hash_algorithm)
-    blk$set_locations(location)
-    blk$set_translation(source_lang, text_normalize(dots, .concat = concat))
-    blk$source_lang <- source_lang
-    return(blk)
+    txt <- Text$new(hash_algorithm)
+    txt$set_locations(location)
+    txt$set_translation(source_lang, text_normalize(dots, .concat = concat))
+    txt$source_lang <- source_lang
+    return(txt)
 }
 
-#' @rdname class-block
+#' @rdname class-text
 #' @keywords internal
 #' @export
-Block <- R6::R6Class("Block",
+Text <- R6::R6Class("Text",
     lock_class   = TRUE,
     lock_objects = TRUE,
     cloneable    = FALSE,
@@ -276,7 +276,7 @@ Block <- R6::R6Class("Block",
         #' @field hash A non-empty and non-[NA][base::NA] character string. A
         #'   reproducible hash generated from `source_lang` and `source_text`,
         #'   and by using the algorithm specified by `hash_algorithm`. It is
-        #'   used as a unique identifier for the underlying [`Block`][Block]
+        #'   used as a unique identifier for the underlying [`Text`][Text]
         #'   object.
         #'
         #'   This is a **read-only** field. It is automatically updated
@@ -384,11 +384,11 @@ Block <- R6::R6Class("Block",
         }
     ),
     public = list(
-        #' @description Create a [`Block`][Block] object.
+        #' @description Create a [`Text`][Text] object.
         #'
         #' @template param-hash-algorithm
         #'
-        #' @return An [`R6`][R6::R6] object of class [`Block`][Block].
+        #' @return An [`R6`][R6::R6] object of class [`Text`][Text].
         initialize = \(hash_algorithm = hash_algorithms()) {
             assert_arg(hash_algorithm, TRUE)
 
@@ -425,9 +425,9 @@ Block <- R6::R6Class("Block",
         #'
         #' @examples
         #' ## Registering source_lang and source_text.
-        #' blk <- Block$new()
-        #' blk$set_translation("en", "Hello, world!")
-        #' blk$source_lang <- "en"
+        #' txt <- Text$new()
+        #' txt$set_translation("en", "Hello, world!")
+        #' txt$source_lang <- "en"
         set_translation = \(lang = "", text = "") {
             assert_chr1(lang)
             assert_chr1(text, TRUE)
@@ -447,8 +447,8 @@ Block <- R6::R6Class("Block",
         #' @return A `NULL`, invisibly.
         #'
         #' @examples
-        #' blk <- Block$new()
-        #' blk$set_translations(en = "Hello, world!", fr = "Bonjour, monde!")
+        #' txt <- Text$new()
+        #' txt$set_translations(en = "Hello, world!", fr = "Bonjour, monde!")
         set_translations = \(...) {
             if (!...length()) {
                 return(invisible())
@@ -498,12 +498,12 @@ Block <- R6::R6Class("Block",
         #'
         #' @examples
         #' ## Removing source_lang and source_text.
-        #' blk <- Block$new()
-        #' blk$set_translations(en = "Hello, world!", fr = "Bonjour, monde!")
-        #' blk$source_lang <- "en"
+        #' txt <- Text$new()
+        #' txt$set_translations(en = "Hello, world!", fr = "Bonjour, monde!")
+        #' txt$source_lang <- "en"
         #'
-        #' blk$source_lang <- "fr"
-        #' blk$rm_translation("en")
+        #' txt$source_lang <- "fr"
+        #' txt$rm_translation("en")
         rm_translation = \(lang = "") {
             assert_chr1(lang)
 

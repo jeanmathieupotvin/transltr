@@ -24,7 +24,7 @@ translations_files: !<TranslationsFiles>
   es: es.txt
   fr: fr.txt
   ja: ja.txt
-256e0d7: !<Block>
+256e0d7: !<Text>
   hash: 256e0d707386d0fcd9abf10ad994000bdaa25812
   hash_algorithm: sha1
   source_language: en
@@ -37,7 +37,7 @@ translations_files: !<TranslationsFiles>
     - !<Location>
       path: b
       ranges: line 5, column 6 @ line 7, column 8
-2ac373a: !<Block>
+2ac373a: !<Text>
   hash: 2ac373aa699a6712cdaddbead28031d537de29bc
   hash_algorithm: sha1
   source_language: en

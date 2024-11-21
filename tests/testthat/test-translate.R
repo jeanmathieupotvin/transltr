@@ -11,7 +11,7 @@ test_that("translate() returns a character string", {
         x = translator(
             en = "English",
             es = "Español",
-            block(en = "Hello!", es = "¡Hola!")),
+            text(en = "Hello!", es = "¡Hola!")),
         scope = "test")
 
     out <- translate("Hello!", lang = "es", scope = "test")
@@ -29,26 +29,32 @@ test_that("translate() works with implicit scopes", {
     # To test further scopes stemming from namespaces and named
     # environments, we use evalq(). Each call below simulates a
     # function in a package. It calls functions that infer scope
-    # from the underlying namespace. block() is not exported, and
-    # is not on the search path in normal circumstances. We must
-    # fetch it explicitly from the package.
+    # from the underlying namespace.
     out_global <- evalq(envir = globalenv(), \() {
         on.exit(translator_set(NULL))
-        blk <- transltr::block(en = "Hello!", fr = "Bonjour!")
-        translator_set(translator(en = "English", fr = "Français", blk))
+        translator_set(translator(
+            en = "English",
+            fr = "Français",
+            text(en = "Hello!", fr = "Bonjour!")))
         return(translate("Hello!", lang = "fr"))
     })()
+
     out_stats <- evalq(envir = asNamespace("stats"), \() {
-        on.exit(translator_set(NULL))
-        blk <- transltr::block(en = "Hello!", es = "¡Hola!")
-        translator_set(translator(en = "English", es = "Español", blk))
-        return(translate("Hello!", lang = "es"))
+        on.exit(transltr::translator_set(NULL))
+        transltr::translator_set(transltr::translator(
+            en = "English",
+            es = "Español",
+            transltr::text(en = "Hello!", es = "¡Hola!")))
+        return(transltr::translate("Hello!", lang = "es"))
     })()
+
     out_utils <- evalq(envir = asNamespace("utils"), \() {
-        on.exit(translator_set(NULL))
-        blk <- transltr::block(en = "Hello!", ja = "こんにちは！")
-        translator_set(translator(en = "English", ja = "日本語", blk))
-        return(translate("Hello!", lang = "ja"))
+        on.exit(transltr::translator_set(NULL))
+        transltr::translator_set(transltr::translator(
+            en = "English",
+            ja = "日本語",
+            transltr::text(en = "Hello!", ja = "こんにちは！")))
+        return(transltr::translate("Hello!", lang = "ja"))
     })()
 
     expect_identical(out_global, "Bonjour!")

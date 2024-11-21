@@ -43,6 +43,6 @@ become available in the future.
 }
 \seealso{
 \code{\link{Translator}},
-\code{\link{Block}}
+\code{\link{Text}}
 }
 \keyword{internal}

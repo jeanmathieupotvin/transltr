@@ -1,4 +1,4 @@
-#' Source Texts and Translations
+#' Register Source Texts and Translations
 #'
 #' Store, structure, and manipulate source text**s** and their translations.
 #'
@@ -7,8 +7,10 @@
 #' safely manipulate the information it contains. Since [translator()] sets
 #' all required parameters at inception, it can be ignored most of the time.
 #'
+#'
+
 #' It is worthwhile to note that internally, [`Translator`][Translator] objects
-#' are collections of [`Block`][Block] objects. Blocks are similar to
+#' are collections of [`Text`][Text] objects. Texts are similar to
 #' Translators, but stores a single source text and their translations. They
 #' are also somewhat lower-level, and in typical situations, users do not
 #' directly interact with them.
@@ -21,7 +23,7 @@
 #' called by the former.
 #'
 #' @param ... Usage depends on the underlying function.
-#'   * Any number of [`Block`][Block] objects, and/or named character
+#'   * Any number of [`Text`][Text] objects, and/or named character
 #'     strings for [translator()] (in no preferred order).
 #'   * Further arguments passed to or from other methods for [format()],
 #'     and [print()].
@@ -57,11 +59,11 @@
 #'   id = "test-translator",
 #'   en = "English",
 #'   fr = "Français",
-#'   block(
+#'   text(
 #'     location("a", 1L, 2L, 3L, 4L),
 #'     en = "Hello, world!",
 #'     fr = "Bonjour, monde!"),
-#'   block(
+#'   text(
 #'     location("b", 5L, 6L, 7L, 8L),
 #'     en = "Farewell, world!",
 #'     fr = "Au revoir, monde!"))
@@ -73,7 +75,7 @@ translator <- function(..., id = uuid(), hash_algorithm = hash_algorithms()) {
     trans <- Translator$new(id, hash_algorithm)
     dots  <- list(...)
 
-    do.call(trans$set_blocks, dots[vapply_1l(dots, is_block)])
+    do.call(trans$set_texts, dots[vapply_1l(dots, is_text)])
     do.call(trans$set_native_languages, dots[vapply_1l(dots, is.character)])
 
     # All language codes should have a
@@ -97,8 +99,8 @@ is_translator <- function(x) {
 #' @export
 format.Translator <- function(x, ...) {
     if (!is.null(x$source_texts)) {
-        blocks <- lapply(x$hashes, x$get_block)
-        langs  <- lapply(blocks, \(b) to_string(b$languages, last_sep = ", "))
+        texts <- lapply(x$hashes, x$get_text)
+        langs  <- lapply(texts, \(b) to_string(b$languages, last_sep = ", "))
 
         source_texts <- x$source_texts
         hashes <- names(source_texts)  ## These are already reduced.
@@ -139,7 +141,7 @@ Translator <- R6::R6Class("Translator",
         .id           = constant("unset"), # See $id
         .hash_algo    = constant("unset"), # See $hash_algorithm
         .native_langs = NULL,              # See $native_languages, $initialize -> new.env()
-        .blocks       = NULL,              # See $intialize -> new.env()
+        .texts       = NULL,               # See $intialize -> new.env()
 
         # @description Compress a hash.
         #
@@ -165,7 +167,7 @@ Translator <- R6::R6Class("Translator",
         # @return A character string. It returns "<notfound>" if `hash` does
         #   not match a registered (full) hash.
         .hash_expand  = \(hash = "") {
-            hashes <- names(private$.blocks)
+            hashes <- names(private$.texts)
             pos    <- charmatch(hash, hashes, 0L)
 
             # Any string that is not a registered hash
@@ -194,16 +196,16 @@ Translator <- R6::R6Class("Translator",
                     quote_values = TRUE,
                     x_name       = "hash_algorithm")
 
-                # Update hash_algorithm of each Block.
-                eapply(private$.blocks, \(blk) blk$hash_algorithm <- value)
+                # Update hash_algorithm of each Text.
+                eapply(private$.texts, \(txt) txt$hash_algorithm <- value)
 
                 # Update object's hash_algorithm.
                 private$.hash_algo <- value
 
-                # Reassign updated Block under new hashes.
-                blocks          <- as.list(private$.blocks)
-                private$.blocks <- new.env(parent = emptyenv())
-                do.call(self$set_blocks, blocks)
+                # Reassign updated Text under new hashes.
+                texts          <- as.list(private$.texts)
+                private$.texts <- new.env(parent = emptyenv())
+                do.call(self$set_texts, texts)
             }
 
             return(private$.hash_algo)
@@ -211,46 +213,46 @@ Translator <- R6::R6Class("Translator",
 
         #' @field hashes A character vector of non-empty and non-[NA][base::NA]
         #'   values, or `NULL`. The set of all `hash` exposed by registered
-        #'   [`Block`][Block] objects. If there is none, `hashes` is `NULL`.
+        #'   [`Text`][Text] objects. If there is none, `hashes` is `NULL`.
         #'   This is a **read-only** field. It is automatically updated
         #'   whenever field `hash_algorithm` is updated.
         hashes = \(value) {
             if (!missing(value)) {
                 stops(
                     "'hashes' cannot be overwritten.\n",
-                    "Update them by setting 'hash_algorithm', and by setting, or removing 'Block' objects.")
+                    "Update them by setting 'hash_algorithm', and by setting, or removing 'Text' objects.")
             }
 
-            hashes <- eapply(private$.blocks, `[[`, i = "hash")
+            hashes <- eapply(private$.texts, `[[`, i = "hash")
             names(hashes) <- private$.hash_reduce(names(hashes))
             return(unlist(hashes))
         },
 
         #' @field source_texts A character vector of non-empty and
         #'   non-[NA][base::NA] values, or `NULL`. The set of all
-        #'   `source_text` exposed by registered [`Block`][Block]
+        #'   `source_text` exposed by registered [`Text`][Text]
         #'   objects. If there is none, `source_texts` is `NULL`.
         #'   This is a **read-only** field.
         source_texts = \(value) {
             if (!missing(value)) {
                 stops(
                     "'source_texts' cannot be overwritten.\n",
-                    "Update them by setting, or removing 'Block' objects.")
+                    "Update them by setting, or removing 'Text' objects.")
             }
-            if (!length(private$.blocks)) {
+            if (!length(private$.texts)) {
                 # Assigning names to NULL would
                 # throw a non-semantic error.
                 return(NULL)
             }
 
-            texts <- unlist(eapply(private$.blocks, `[[`, i = "source_text"))
+            texts <- unlist(eapply(private$.texts, `[[`, i = "source_text"))
             names(texts) <- private$.hash_reduce(names(texts))
             return(texts)
         },
 
         #' @field source_langs A character vector of non-empty and
         #'   non-[NA][base::NA] values, or `NULL`. The set of all
-        #'   `source_text` exposed by registered [`Block`][Block]
+        #'   `source_text` exposed by registered [`Text`][Text]
         #'   objects. This is a **read-only** field.
         #'   * If there is none, `source_texts` is `NULL`.
         #'   * If there is one unique value, `source_texts` has
@@ -259,15 +261,15 @@ Translator <- R6::R6Class("Translator",
             if (!missing(value)) {
                 stops(
                     "'source_langs' cannot be overwritten.\n",
-                    "Update them by setting, or removing 'Block' objects.")
+                    "Update them by setting, or removing 'Text' objects.")
             }
-            if (!length(private$.blocks)) {
+            if (!length(private$.texts)) {
                 # Otherwhise, assigning names to NULL would
                 # throw a non-semantic error. See below.
                 return(NULL)
             }
 
-            langs <- unlist(eapply(private$.blocks, `[[`, i = "source_lang"))
+            langs <- unlist(eapply(private$.texts, `[[`, i = "source_lang"))
 
             if (length(unique(langs)) > 1L) {
                 names(langs) <- private$.hash_reduce(names(langs))
@@ -279,17 +281,17 @@ Translator <- R6::R6Class("Translator",
 
         #' @field languages A character vector of non-empty and
         #'   non-[NA][base::NA] values, or `NULL`. The set of all
-        #'   `languages` (codes) exposed by registered [`Block`][Block]
+        #'   `languages` (codes) exposed by registered [`Text`][Text]
         #'   objects. If there is none, `languages` is `NULL`.
         #'   This is a **read-only** field.
         languages = \(value) {
             if (!missing(value)) {
                 stops(
                     "'languages' cannot be overwritten.\n",
-                    "Update them by setting, or removing 'Block' objects.")
+                    "Update them by setting, or removing 'Text' objects.")
             }
 
-            langs <- eapply(private$.blocks, `[[`, i = "languages")
+            langs <- eapply(private$.texts, `[[`, i = "languages")
             return(sort(unique(unlist(langs, use.names = FALSE))))
         },
 
@@ -334,7 +336,7 @@ Translator <- R6::R6Class("Translator",
             private$.id           <- id
             private$.hash_algo    <- hash_algorithm
             private$.native_langs <- new.env(parent = emptyenv())
-            private$.blocks       <- new.env(parent = emptyenv())
+            private$.texts        <- new.env(parent = emptyenv())
             return(self)
         },
 
@@ -382,45 +384,45 @@ Translator <- R6::R6Class("Translator",
         #'   translation is not available (either `hash` or `lang` is not
         #'   registered).
         get_translation = \(hash = "", lang = "") {
-            if (is.null(blk <- self$get_block(hash))) {
+            if (is.null(txt <- self$get_text(hash))) {
                 return(NULL)
             }
 
-            return(blk$get_translation(lang))
+            return(txt$get_translation(lang))
         },
 
-        #' @description Extract a [`Block`][Block] object.
+        #' @description Extract a [`Text`][Text] object.
         #'
-        #' @return A [`Block`][Block] object, or `NULL`.
-        get_block = \(hash = "") {
+        #' @return A [`Text`][Text] object, or `NULL`.
+        get_text = \(hash = "") {
             assert_chr1(hash)
-            return(private$.blocks[[private$.hash_expand(hash)]])
+            return(private$.texts[[private$.hash_expand(hash)]])
         },
 
-        #' @description Simultaneously create and register a [`Block`][Block]
+        #' @description Simultaneously create and register a [`Text`][Text]
         #'   object.
         #'
-        #' @param ... Passed as is to [block()].
+        #' @param ... Passed as is to [text()].
         #'
-        #' @param source_lang Passed as is to [block()].
+        #' @param source_lang Passed as is to [text()].
         #'
         #' @return A `NULL`, invisibly.
-        set_block = \(..., source_lang = language_source_get()) {
-            blk <- block(...,
+        set_text = \(..., source_lang = language_source_get()) {
+            txt <- text(...,
                 source_lang    = source_lang,
                 hash_algorithm = private$.hash_algo)
 
-            self$set_blocks(blk)
+            self$set_texts(txt)
             return(invisible())
         },
 
-        #' @description Register one or more [`Block`][Block] objects.
+        #' @description Register one or more [`Text`][Text] objects.
         #'
-        #' @param ... Any number of [`Block`][Block] objects.
+        #' @param ... Any number of [`Text`][Text] objects.
         #'
-        #' @details This method calls [merge_blocks()] to merge all
+        #' @details This method calls [merge_texts()] to merge all
         #'   values passed to `...` together with previously registered
-        #'   [`Block`][Block] objects. The underlying registered source
+        #'   [`Text`][Text] objects. The underlying registered source
         #'   texts, translations, and [`Location`][Location] objects
         #'   won't be duplicated.
         #'
@@ -430,29 +432,29 @@ Translator <- R6::R6Class("Translator",
         #' ## Set source language.
         #' language_source_set("en")
         #'
-        #' ## Create Block objects.
-        #' blk1 <- block(
+        #' ## Create Text objects.
+        #' txt1 <- text(
         #'   location("a", 1L, 2L, 3L, 4L),
         #'   en = "Hello, world!",
         #'   fr = "Bonjour, monde!")
-        #' blk2 <- block(
+        #' txt2 <- text(
         #'   location("b", 5L, 6L, 7L, 8L),
         #'   en = "Farewell, world!",
         #'   fr = "Au revoir, monde!")
         #'
         #' ## Create a new Translator and register them.
         #' trans <- Translator$new()
-        #' trans$set_blocks(blk1, blk2)
-        set_blocks = \(...) {
+        #' trans$set_texts(txt1, txt2)
+        set_texts = \(...) {
             if (!...length()) {
                 return(invisible())
             }
 
-            args   <- c(as.list(private$.blocks), list(...), hash_algorithm = private$.hash_algo)
-            blocks <- do.call(merge_blocks, args)
-            names(blocks) <- vapply_1c(blocks, `[[`, i = "hash")
+            args   <- c(as.list(private$.texts), list(...), hash_algorithm = private$.hash_algo)
+            texts <- do.call(merge_texts, args)
+            names(texts) <- vapply_1c(texts, `[[`, i = "hash")
 
-            list2env(blocks, private$.blocks)
+            list2env(texts, private$.texts)
             return(invisible())
         },
 
@@ -488,12 +490,12 @@ Translator <- R6::R6Class("Translator",
         #' @description Remove a registered location.
         #'
         #' @param hash A non-empty and non-[NA][base::NA] character string
-        #'   identifying the [`Block`][Block] object to be removed.
+        #'   identifying the [`Text`][Text] object to be removed.
         #'
         #' @return A `NULL`, invisibly.
-        rm_block = \(hash = "") {
-            if (!length(private$.blocks)) {
-                stops("there are no registered 'Block' objects to remove.")
+        rm_text = \(hash = "") {
+            if (!length(private$.texts)) {
+                stops("there are no registered 'Text' objects to remove.")
             }
 
             assert_chr1(hash)
@@ -501,7 +503,7 @@ Translator <- R6::R6Class("Translator",
                 private$.hash_reduce(self$hashes),
                 quote_values = TRUE)
 
-            rm(list = private$.hash_expand(hash), envir = private$.blocks)
+            rm(list = private$.hash_expand(hash), envir = private$.texts)
             return(invisible())
         }
     )

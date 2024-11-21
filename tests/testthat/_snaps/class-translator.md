@@ -29,7 +29,7 @@
     Condition
       Error:
       ! 'hashes' cannot be overwritten.
-      Update them by setting 'hash_algorithm', and by setting, or removing 'Block' objects.
+      Update them by setting 'hash_algorithm', and by setting, or removing 'Text' objects.
 
 # active binding source_texts validates value
 
@@ -38,7 +38,7 @@
     Condition
       Error:
       ! 'source_texts' cannot be overwritten.
-      Update them by setting, or removing 'Block' objects.
+      Update them by setting, or removing 'Text' objects.
 
 # active binding source_langs validates value
 
@@ -47,7 +47,7 @@
     Condition
       Error:
       ! 'source_langs' cannot be overwritten.
-      Update them by setting, or removing 'Block' objects.
+      Update them by setting, or removing 'Text' objects.
 
 # active binding languages validates value
 
@@ -56,7 +56,7 @@
     Condition
       Error:
       ! 'languages' cannot be overwritten.
-      Update them by setting, or removing 'Block' objects.
+      Update them by setting, or removing 'Text' objects.
 
 # active binding native_languages validates value
 
@@ -106,21 +106,21 @@
       Error:
       ! 'source_lang' must be a non-NA and non-empty character of length 1.
 
-# $get_block() validates hash
+# $get_text() validates hash
 
     Code
-      trans1$get_block(hash = 1L)
+      trans1$get_text(hash = 1L)
     Condition
       Error:
       ! 'hash' must be a non-NA and non-empty character of length 1.
 
-# $set_blocks() validates ...
+# $set_texts() validates ...
 
     Code
-      Translator$new()$set_blocks(1L, block(en = "Bye bye!"))
+      Translator$new()$set_texts(1L, text(en = "Bye bye!"))
     Condition
       Error:
-      ! values passed to '...' must all be 'Block' objects.
+      ! values passed to '...' must all be 'Text' objects.
 
 # $set_native_languages() validates ...
 
@@ -139,18 +139,18 @@
       Error:
       ! '...' must have names.
 
-# $rm_block() throws an error if there are no Block objects to remove
+# $rm_text() throws an error if there are no Text objects to remove
 
     Code
-      Translator$new()$rm_block("error")
+      Translator$new()$rm_text("error")
     Condition
       Error:
-      ! there are no registered 'Block' objects to remove.
+      ! there are no registered 'Text' objects to remove.
 
-# $rm_block() validates hash
+# $rm_text() validates hash
 
     Code
-      trans1$rm_block(1L)
+      trans1$rm_text(1L)
     Condition
       Error:
       ! 'hash' must be a non-NA and non-empty character of length 1.
@@ -158,7 +158,7 @@
 ---
 
     Code
-      trans1$rm_block("error")
+      trans1$rm_text("error")
     Condition
       Error:
       ! 'hash' must be equal to '256e0d7', or '2ac373a'.
@@ -166,7 +166,7 @@
 # translator() throws a warning if a language does not have a corresponding native language
 
     Code
-      translator(id = "test-translator", en = "English", block(en = "Hello, world!",
+      translator(id = "test-translator", en = "English", text(en = "Hello, world!",
         fr = "Bonjour, monde!"))
     Condition
       Warning:

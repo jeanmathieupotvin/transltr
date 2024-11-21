@@ -7,7 +7,7 @@
 \alias{print.Translator}
 \alias{as_translator}
 \alias{Translator}
-\title{Source Texts and Translations}
+\title{Register Source Texts and Translations}
 \usage{
 translator(..., id = uuid(), hash_algorithm = hash_algorithms())
 
@@ -22,7 +22,7 @@ as_translator(x, ...)
 \arguments{
 \item{...}{Usage depends on the underlying function.
 \itemize{
-\item Any number of \code{\link{Block}} objects, and/or named character
+\item Any number of \code{\link{Text}} objects, and/or named character
 strings for \code{\link[=translator]{translator()}} (in no preferred order).
 \item Further arguments passed to or from other methods for \code{\link[=format]{format()}},
 and \code{\link[=print]{print()}}.
@@ -58,7 +58,7 @@ safely manipulate the information it contains. Since \code{\link[=translator]{tr
 all required parameters at inception, it can be ignored most of the time.
 
 It is worthwhile to note that internally, \code{\link{Translator}} objects
-are collections of \code{\link{Block}} objects. Blocks are similar to
+are collections of \code{\link{Text}} objects. Texts are similar to
 Translators, but stores a single source text and their translations. They
 are also somewhat lower-level, and in typical situations, users do not
 directly interact with them.
@@ -79,36 +79,36 @@ translator(
   id = "test-translator",
   en = "English",
   fr = "Français",
-  block(
+  text(
     location("a", 1L, 2L, 3L, 4L),
     en = "Hello, world!",
     fr = "Bonjour, monde!"),
-  block(
+  text(
     location("b", 5L, 6L, 7L, 8L),
     en = "Farewell, world!",
     fr = "Au revoir, monde!"))
 
 
 ## ------------------------------------------------
-## Method `Translator$set_blocks`
+## Method `Translator$set_texts`
 ## ------------------------------------------------
 
 ## Set source language.
 language_source_set("en")
 
-## Create Block objects.
-blk1 <- block(
+## Create Text objects.
+txt1 <- text(
   location("a", 1L, 2L, 3L, 4L),
   en = "Hello, world!",
   fr = "Bonjour, monde!")
-blk2 <- block(
+txt2 <- text(
   location("b", 5L, 6L, 7L, 8L),
   en = "Farewell, world!",
   fr = "Au revoir, monde!")
 
 ## Create a new Translator and register them.
 trans <- Translator$new()
-trans$set_blocks(blk1, blk2)
+trans$set_texts(txt1, txt2)
 
 ## ------------------------------------------------
 ## Method `Translator$set_native_languages`
@@ -140,19 +140,19 @@ source information for identification purposes.}
 
 \item{\code{hashes}}{A character vector of non-empty and non-\link[base:NA]{NA}
 values, or \code{NULL}. The set of all \code{hash} exposed by registered
-\code{\link{Block}} objects. If there is none, \code{hashes} is \code{NULL}.
+\code{\link{Text}} objects. If there is none, \code{hashes} is \code{NULL}.
 This is a \strong{read-only} field. It is automatically updated
 whenever field \code{hash_algorithm} is updated.}
 
 \item{\code{source_texts}}{A character vector of non-empty and
 non-\link[base:NA]{NA} values, or \code{NULL}. The set of all
-\code{source_text} exposed by registered \code{\link{Block}}
+\code{source_text} exposed by registered \code{\link{Text}}
 objects. If there is none, \code{source_texts} is \code{NULL}.
 This is a \strong{read-only} field.}
 
 \item{\code{source_langs}}{A character vector of non-empty and
 non-\link[base:NA]{NA} values, or \code{NULL}. The set of all
-\code{source_text} exposed by registered \code{\link{Block}}
+\code{source_text} exposed by registered \code{\link{Text}}
 objects. This is a \strong{read-only} field.
 \itemize{
 \item If there is none, \code{source_texts} is \code{NULL}.
@@ -162,7 +162,7 @@ a length equal to 1.
 
 \item{\code{languages}}{A character vector of non-empty and
 non-\link[base:NA]{NA} values, or \code{NULL}. The set of all
-\code{languages} (codes) exposed by registered \code{\link{Block}}
+\code{languages} (codes) exposed by registered \code{\link{Text}}
 objects. If there is none, \code{languages} is \code{NULL}.
 This is a \strong{read-only} field.}
 
@@ -190,11 +190,11 @@ more information.}
 \item \href{#method-Translator-new}{\code{Translator$new()}}
 \item \href{#method-Translator-translate}{\code{Translator$translate()}}
 \item \href{#method-Translator-get_translation}{\code{Translator$get_translation()}}
-\item \href{#method-Translator-get_block}{\code{Translator$get_block()}}
-\item \href{#method-Translator-set_block}{\code{Translator$set_block()}}
-\item \href{#method-Translator-set_blocks}{\code{Translator$set_blocks()}}
+\item \href{#method-Translator-get_text}{\code{Translator$get_text()}}
+\item \href{#method-Translator-set_text}{\code{Translator$set_text()}}
+\item \href{#method-Translator-set_texts}{\code{Translator$set_texts()}}
 \item \href{#method-Translator-set_native_languages}{\code{Translator$set_native_languages()}}
-\item \href{#method-Translator-rm_block}{\code{Translator$rm_block()}}
+\item \href{#method-Translator-rm_text}{\code{Translator$rm_text()}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -291,7 +291,7 @@ Extract a translation, or source texts.
 \describe{
 \item{\code{hash}}{A non-empty and non-\link[base:NA]{NA} character string. The
 unique identifier of the requested source text, or its underlying
-\code{\link{Block}} object.}
+\code{\link{Text}} object.}
 
 \item{\code{lang}}{A non-empty and non-\link[base:NA]{NA} character string. The
 requested language.
@@ -313,12 +313,12 @@ registered).
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Translator-get_block"></a>}}
-\if{latex}{\out{\hypertarget{method-Translator-get_block}{}}}
-\subsection{Method \code{get_block()}}{
-Extract a \code{\link{Block}} object.
+\if{html}{\out{<a id="method-Translator-get_text"></a>}}
+\if{latex}{\out{\hypertarget{method-Translator-get_text}{}}}
+\subsection{Method \code{get_text()}}{
+Extract a \code{\link{Text}} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Translator$get_block(hash = "")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Translator$get_text(hash = "")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -326,30 +326,30 @@ Extract a \code{\link{Block}} object.
 \describe{
 \item{\code{hash}}{A non-empty and non-\link[base:NA]{NA} character string. The
 unique identifier of the requested source text, or its underlying
-\code{\link{Block}} object.}
+\code{\link{Text}} object.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{\link{Block}} object, or \code{NULL}.
+A \code{\link{Text}} object, or \code{NULL}.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Translator-set_block"></a>}}
-\if{latex}{\out{\hypertarget{method-Translator-set_block}{}}}
-\subsection{Method \code{set_block()}}{
-Simultaneously create and register a \code{\link{Block}}
+\if{html}{\out{<a id="method-Translator-set_text"></a>}}
+\if{latex}{\out{\hypertarget{method-Translator-set_text}{}}}
+\subsection{Method \code{set_text()}}{
+Simultaneously create and register a \code{\link{Text}}
 object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Translator$set_block(..., source_lang = language_source_get())}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Translator$set_text(..., source_lang = language_source_get())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{Passed as is to \code{\link[=block]{block()}}.}
+\item{\code{...}}{Passed as is to \code{\link[=text]{text()}}.}
 
-\item{\code{source_lang}}{Passed as is to \code{\link[=block]{block()}}.}
+\item{\code{source_lang}}{Passed as is to \code{\link[=text]{text()}}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -358,25 +358,25 @@ A \code{NULL}, invisibly.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Translator-set_blocks"></a>}}
-\if{latex}{\out{\hypertarget{method-Translator-set_blocks}{}}}
-\subsection{Method \code{set_blocks()}}{
-Register one or more \code{\link{Block}} objects.
+\if{html}{\out{<a id="method-Translator-set_texts"></a>}}
+\if{latex}{\out{\hypertarget{method-Translator-set_texts}{}}}
+\subsection{Method \code{set_texts()}}{
+Register one or more \code{\link{Text}} objects.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Translator$set_blocks(...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Translator$set_texts(...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{Any number of \code{\link{Block}} objects.}
+\item{\code{...}}{Any number of \code{\link{Text}} objects.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Details}{
-This method calls \code{\link[=merge_blocks]{merge_blocks()}} to merge all
+This method calls \code{\link[=merge_texts]{merge_texts()}} to merge all
 values passed to \code{...} together with previously registered
-\code{\link{Block}} objects. The underlying registered source
+\code{\link{Text}} objects. The underlying registered source
 texts, translations, and \code{\link{Location}} objects
 won't be duplicated.
 }
@@ -389,19 +389,19 @@ A \code{NULL}, invisibly.
 \preformatted{## Set source language.
 language_source_set("en")
 
-## Create Block objects.
-blk1 <- block(
+## Create Text objects.
+txt1 <- text(
   location("a", 1L, 2L, 3L, 4L),
   en = "Hello, world!",
   fr = "Bonjour, monde!")
-blk2 <- block(
+txt2 <- text(
   location("b", 5L, 6L, 7L, 8L),
   en = "Farewell, world!",
   fr = "Au revoir, monde!")
 
 ## Create a new Translator and register them.
 trans <- Translator$new()
-trans$set_blocks(blk1, blk2)
+trans$set_texts(txt1, txt2)
 }
 \if{html}{\out{</div>}}
 
@@ -443,19 +443,19 @@ trans$set_native_languages(
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Translator-rm_block"></a>}}
-\if{latex}{\out{\hypertarget{method-Translator-rm_block}{}}}
-\subsection{Method \code{rm_block()}}{
+\if{html}{\out{<a id="method-Translator-rm_text"></a>}}
+\if{latex}{\out{\hypertarget{method-Translator-rm_text}{}}}
+\subsection{Method \code{rm_text()}}{
 Remove a registered location.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Translator$rm_block(hash = "")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Translator$rm_text(hash = "")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{hash}}{A non-empty and non-\link[base:NA]{NA} character string
-identifying the \code{\link{Block}} object to be removed.}
+identifying the \code{\link{Text}} object to be removed.}
 }
 \if{html}{\out{</div>}}
 }

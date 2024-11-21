@@ -36,7 +36,7 @@
 #'
 #' @seealso
 #' [`Translator`][Translator],
-#' [`Block`][Block]
+#' [`Text`][Text]
 #'
 #' @export
 #' @keywords internal

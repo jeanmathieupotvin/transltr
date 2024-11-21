@@ -31,7 +31,7 @@
 #'
 #' ## Create a Translator. This would normally be done
 #' ## automatically by find_source() or translator_import().
-#' my_translator <- translator(block(en = "Hello!", es = "¡Hola!"))
+#' my_translator <- translator(text(en = "Hello!", es = "¡Hola!"))
 #'
 #' ## Register it (implicitly, under 'global' scope).
 #' translator_set(my_translator)

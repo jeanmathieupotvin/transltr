@@ -36,9 +36,9 @@ Imports:
     yaml
 Collate: 
     'assert.R'
-    'constants.R'
-    'class-block.R'
     'class-location.R'
+    'constants.R'
+    'class-text.R'
     'class-translator.R'
     'find-source.R'
     'hash-algorithms.R'

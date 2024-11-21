@@ -3,8 +3,8 @@ path_mock2    <- get_mock_path("scripts/find-source-2")
 path_mock_dir <- dirname(path_mock1)
 tokens_mock1  <- find_source_exprs(path_mock1)
 tokens_mock2  <- find_source_exprs(path_mock2)
-blocks_mock1  <- find_source_in_exprs(tokens_mock1, path_mock1)
-blocks_mock2  <- find_source_in_exprs(tokens_mock2, path_mock2)
+texts_mock1   <- find_source_in_exprs(tokens_mock1, path_mock1)
+texts_mock2   <- find_source_in_exprs(tokens_mock2, path_mock2)
 
 
 # find_source() ----------------------------------------------------------------
@@ -83,17 +83,17 @@ test_that("find_source() ignores files not having file extensions R or Rprofile"
 # find_source_in_files() -------------------------------------------------------
 
 
-test_that("find_source_in_files() returns a list of Block objects", {
+test_that("find_source_in_files() returns a list of Text objects", {
     paths <- c(path_mock1, path_mock2)
-    blocks_mode_strict     <- find_source_in_files(paths)
-    blocks_mode_not_strict <- find_source_in_files(paths, strict = FALSE)
+    texts_mode_strict     <- find_source_in_files(paths)
+    texts_mode_not_strict <- find_source_in_files(paths, strict = FALSE)
 
-    expect_type(blocks_mode_strict,     "list")
-    expect_type(blocks_mode_not_strict, "list")
-    expect_length(blocks_mode_strict,     12L)
-    expect_length(blocks_mode_not_strict, 18L)
-    expect_true(all(vapply_1l(blocks_mode_strict, is_block)))
-    expect_true(all(vapply_1l(blocks_mode_not_strict, is_block)))
+    expect_type(texts_mode_strict,     "list")
+    expect_type(texts_mode_not_strict, "list")
+    expect_length(texts_mode_strict,     12L)
+    expect_length(texts_mode_not_strict, 18L)
+    expect_true(all(vapply_1l(texts_mode_strict, is_text)))
+    expect_true(all(vapply_1l(texts_mode_not_strict, is_text)))
 })
 
 test_that("find_source_in_files() validates paths", {
@@ -124,15 +124,15 @@ test_that("find_source_in_file() works", {
     # This function is just a semantic wrapper for
     # find_source_in_exprs() and therefore, we only
     # check if it returns the output of the former.
-    blocks_mock1 <- find_source_in_file(path_mock1)
-    blocks_mock2 <- find_source_in_file(path_mock2)
+    texts_mock1 <- find_source_in_file(path_mock1)
+    texts_mock2 <- find_source_in_file(path_mock2)
 
-    expect_type(blocks_mock1, "list")
-    expect_type(blocks_mock2, "list")
-    expect_length(blocks_mock1, 2L)
-    expect_length(blocks_mock2, 10L)
-    expect_true(all(vapply_1l(blocks_mock1, is_block)))
-    expect_true(all(vapply_1l(blocks_mock2, is_block)))
+    expect_type(texts_mock1, "list")
+    expect_type(texts_mock2, "list")
+    expect_length(texts_mock1, 2L)
+    expect_length(texts_mock2, 10L)
+    expect_true(all(vapply_1l(texts_mock1, is_text)))
+    expect_true(all(vapply_1l(texts_mock2, is_text)))
 })
 
 test_that("find_source_in_file() outputs basic information if .verbose is true", {
@@ -144,30 +144,30 @@ test_that("find_source_in_file() outputs basic information if .verbose is true",
 # find_source_in_exprs() -------------------------------------------------------
 
 
-test_that("find_source_in_exprs() returns a list of Block objects", {
-    expect_type(blocks_mock1, "list")
-    expect_type(blocks_mock2, "list")
-    expect_length(blocks_mock1, 2L)
-    expect_length(blocks_mock2, 10L)
-    expect_true(all(vapply_1l(blocks_mock1, is_block)))
-    expect_true(all(vapply_1l(blocks_mock2, is_block)))
+test_that("find_source_in_exprs() returns a list of Text objects", {
+    expect_type(texts_mock1, "list")
+    expect_type(texts_mock2, "list")
+    expect_length(texts_mock1, 2L)
+    expect_length(texts_mock2, 10L)
+    expect_true(all(vapply_1l(texts_mock1, is_text)))
+    expect_true(all(vapply_1l(texts_mock2, is_text)))
 })
 
 test_that("find_source_in_exprs() only processes explicit calls if .strict is true", {
     # See the documentation of is_translate_call() for
     # more information on implicit and explicit calls.
-    source_texts1 <- vapply_1c(blocks_mock1, `[[`, i = "source_text")
-    source_texts2 <- vapply_1c(blocks_mock2, `[[`, i = "source_text")
+    source_texts1 <- vapply_1c(texts_mock1, `[[`, i = "source_text")
+    source_texts2 <- vapply_1c(texts_mock2, `[[`, i = "source_text")
 
     expect_identical(source_texts1, c("Hello Shiny!", "Number of bins:"))
     expect_identical(source_texts2, c("b", "d", "e", "f", "h", "i", "j", "k", "l", "n"))
 })
 
 test_that("find_source_in_exprs() processes all calls if .strict is false", {
-    blocks_mock1  <- find_source_in_exprs(tokens_mock1, path_mock1, FALSE)
-    blocks_mock2  <- find_source_in_exprs(tokens_mock2, path_mock2, FALSE)
-    source_texts1 <- vapply_1c(blocks_mock1, `[[`, i = "source_text")
-    source_texts2 <- vapply_1c(blocks_mock2, `[[`, i = "source_text")
+    texts_mock1  <- find_source_in_exprs(tokens_mock1, path_mock1, FALSE)
+    texts_mock2  <- find_source_in_exprs(tokens_mock2, path_mock2, FALSE)
+    source_texts1 <- vapply_1c(texts_mock1, `[[`, i = "source_text")
+    source_texts2 <- vapply_1c(texts_mock2, `[[`, i = "source_text")
 
     expect_identical(source_texts1, c(
         "Hello Shiny!",
@@ -183,8 +183,8 @@ test_that("find_source_in_exprs() processes all calls if .strict is false", {
 test_that("find_source_in_exprs() uses source locations returned by the parser", {
     # Locations were determined manually by
     # inspecting mock script find-source-1.
-    blocks_mock <- find_source_in_exprs(tokens_mock1, path_mock1, FALSE)
-    locations   <- unlist(lapply(blocks_mock, `[[`, i = "locations"), FALSE, FALSE)
+    texts_mock <- find_source_in_exprs(tokens_mock1, path_mock1, FALSE)
+    locations   <- unlist(lapply(texts_mock, `[[`, i = "locations"), FALSE, FALSE)
 
     expect_identical(locations, list(
         location(path_mock1, 21L, 23L, 21L, 57L),

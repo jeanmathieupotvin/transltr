@@ -4,12 +4,12 @@
 \alias{portable}
 \alias{Portable}
 \alias{PortableTranslator}
-\alias{PortableBlock}
+\alias{PortableText}
 \alias{PortableLocation}
 \alias{PortableTranslations}
 \alias{is_portable}
 \alias{portable_translator}
-\alias{portable_block}
+\alias{portable_text}
 \alias{portable_location}
 \alias{portable_translations}
 \alias{format.Portable}
@@ -17,8 +17,8 @@
 \alias{format.PortableTranslations}
 \alias{print.Portable}
 \alias{as_translator.PortableTranslator}
-\alias{as_block.PortableBlock}
-\alias{as_block.Block}
+\alias{as_text.PortableText}
+\alias{as_text.Text}
 \alias{as_location.PortableLocation}
 \alias{as_location.Location}
 \title{Portable Objects}
@@ -29,7 +29,7 @@ is_portable(x)
 
 portable_translator(x = translator(), set_translations = FALSE)
 
-portable_block(x = block(), set_translations = FALSE)
+portable_text(x = text(), set_translations = FALSE)
 
 portable_location(x = location())
 
@@ -55,9 +55,9 @@ portable_translations(
 
 \method{as_translator}{PortableTranslator}(x, set_translations_files = TRUE, ...)
 
-\method{as_block}{PortableBlock}(x, ...)
+\method{as_text}{PortableText}(x, ...)
 
-\method{as_block}{Block}(x, ...)
+\method{as_text}{Text}(x, ...)
 
 \method{as_location}{PortableLocation}(x, ...)
 
@@ -68,7 +68,7 @@ portable_translations(
 \itemize{
 \item A \code{\link{Translator}} object for \code{\link[=portable_translator]{portable_translator()}}, and
 \code{\link[=portable_translations]{portable_translations()}}.
-\item A \code{\link{Block}} object for \code{\link[=portable_block]{portable_block()}}.
+\item A \code{\link{Text}} object for \code{\link[=portable_text]{portable_text()}}.
 \item A \code{\link{Location}} object for \code{\link[=portable_location]{portable_location()}}.
 \item Any \R object for all other functions, and methods.
 }}
@@ -81,7 +81,7 @@ class \code{Portable}, if any. It may be empty.}
 An optional identifier for the underlying data type. See Details below.}
 
 \item{set_translations}{A non-\link[base:NA]{NA} logical value. Should
-translations be included in the resulting \code{\link[=portable]{PortableBlock}}
+translations be included in the resulting \code{\link[=portable]{PortableText}}
 object? If \code{FALSE}, field \code{translations} is set equal to \code{NULL}.}
 
 \item{lang}{A non-empty and non-\link[base:NA]{NA} character string. The
@@ -122,8 +122,8 @@ identical to \code{x}. See above for more information.
 \code{\link[=portable_translator]{portable_translator()}} returns an S3 object of class
 \code{\link[=portable]{PortableTranslator}}.
 
-\code{\link[=portable_block]{portable_block()}} returns an S3 object of class
-\code{\link[=portable]{PortableBlock}}.
+\code{\link[=portable_text]{portable_text()}} returns an S3 object of class
+\code{\link[=portable]{PortableText}}.
 
 \code{\link[=portable_location]{portable_location()}} returns an S3 object of class
 \code{\link[=portable]{PortableLocation}}.
@@ -174,7 +174,7 @@ above (as the first element).
 }
 \description{
 This help page describes all \strong{internal} mechanisms required for exporting
-and importing \code{\link{Translator}} objects, \code{\link{Block}}
+and importing \code{\link{Translator}} objects, \code{\link{Text}}
 objects, \code{\link{Location}} objects, and underlying translations.
 
 Portable objects are intermediaries between \code{\link{transltr}} objects
@@ -190,7 +190,7 @@ enforces certain parameters and therefore, \code{\link[=print]{print()}} always 
 string.
 
 Portable objects can be converted back to their equivalent \emph{non-portable}
-versions by using \code{\link[=as_translator]{as_translator()}}, \code{\link[=as_block]{as_block()}}, and/or \code{\link[=as_location]{as_location()}}.
+versions by using \code{\link[=as_translator]{as_translator()}}, \code{\link[=as_text]{as_text()}}, and/or \code{\link[=as_location]{as_location()}}.
 The appropriate methods are used internally by \code{\link[=translator_import]{translator_import()}} (as
 handlers passed to \code{\link[yaml:yaml.load]{yaml::yaml.load()}}).
 \subsection{Low-level Constructor}{
@@ -208,22 +208,22 @@ information.
 
 \subsection{Constructing Portable Objects}{
 
-Classes \code{\link{Translator}}, \code{\link{Block}}, and
+Classes \code{\link{Translator}}, \code{\link{Text}}, and
 \code{\link{Location}} each have a corresponding \code{\link[=portable]{Portable}}
 class. Portable objects are always constructed from their \emph{non-portable}
 equivalents using the appropriate \code{\link[=portable]{portable_*()}} constructor.
 }
 }
 \note{
-Methods \code{\link[=as_location.Location]{as_location.Location()}}, and \code{\link[=as_block.Block]{as_block.Block()}} are trivial
+Methods \code{\link[=as_location.Location]{as_location.Location()}}, and \code{\link[=as_text.Text]{as_text.Text()}} are trivial
 identity functions returning their argument. As such, they are never
 useful. However, they are internally required by \code{\link[=translator_import]{translator_import()}}.
 
 A \code{\link[=portable]{PortableTranslator}} object contains any number of
-\code{\link[=portable]{PortableBlock}} objects, and these objects further contain
+\code{\link[=portable]{PortableText}} objects, and these objects further contain
 any number of \code{\link[=portable]{PortableLocation}} objects. Therefore,
-\code{\link[=as_translator.PortableTranslator]{as_translator.PortableTranslator()}} must call \code{\link[=as_block.PortableBlock]{as_block.PortableBlock()}}
-on each \code{\link[=portable]{PortableBlock}} object, and \code{\link[=as_block.PortableBlock]{as_block.PortableBlock()}}
+\code{\link[=as_translator.PortableTranslator]{as_translator.PortableTranslator()}} must call \code{\link[=as_text.PortableText]{as_text.PortableText()}}
+on each \code{\link[=portable]{PortableText}} object, and \code{\link[=as_text.PortableText]{as_text.PortableText()}}
 must further call \code{\link[=as_location.PortableLocation]{as_location.PortableLocation()}} on each
 \code{\link[=portable]{PortableLocation}} object. This follows the usual hierarchy
 of \code{\link{transltr}} classes.
@@ -232,10 +232,10 @@ When using these methods as \emph{handlers} passed to \code{\link[yaml:yaml.load
 this hierarchy is reversed. \code{\link[=portable]{PortableLocation}} objects are
 converted \strong{first} via \code{\link[=as_location.PortableLocation]{as_location.PortableLocation()}}, and passed as
 \code{\link{Location}} objects to the next handler,
-\code{\link[=as_block.PortableBlock]{as_block.PortableBlock()}}. The latter calls \code{\link[=as_location]{as_location()}} on each
+\code{\link[=as_text.PortableText]{as_text.PortableText()}}. The latter calls \code{\link[=as_location]{as_location()}} on each
 \code{\link{Location}} object, and therefore, a trivial
 \code{\link[=as_location.Location]{as_location.Location()}} method is required to accomodate this reversed
-process. The same is true for \code{\link{Block}} objects passed to
+process. The same is true for \code{\link{Text}} objects passed to
 \code{\link[=as_translator.PortableTranslator]{as_translator.PortableTranslator()}}.
 
 Since \code{\link[=portable]{PortableTranslator}} objects are the outer most objects,
@@ -265,31 +265,31 @@ class \code{\link{Translator}} for more information.}
 \item{\code{translations_files}}{A named list. File names for related
 \code{\link[=portable]{PortableTranslations}} objects (one for each language
 listed in \code{languages}).}
-\item{\code{...}}{Further named \code{\link[=portable]{PortableBlock}} objects, if any.}
+\item{\code{...}}{Further named \code{\link[=portable]{PortableText}} objects, if any.}
 }
 }
 
-\section{Class PortableBlock}{
+\section{Class PortableText}{
 
-A \code{\link[=portable]{PortableBlock}} object is a named list of length 6 containing
+A \code{\link[=portable]{PortableText}} object is a named list of length 6 containing
 the following elements.
 
 \describe{
-\item{\code{hash}}{See active binding \code{hash} of class \code{\link{Block}}. It is
+\item{\code{hash}}{See active binding \code{hash} of class \code{\link{Text}}. It is
 \code{NULL} if \code{source_language} is unset.}
 \item{\code{hash_algorithm}}{See active binding \code{hash_algorithm} of class
-\code{\link{Block}}.}
+\code{\link{Text}}.}
 \item{\code{source_language}}{See active binding \code{source_lang} of class
-\code{\link{Block}}. It is \code{NULL} if unset.}
+\code{\link{Text}}. It is \code{NULL} if unset.}
 \item{\code{source_text}}{See active binding \code{source_text} of class
-\code{\link{Block}}. It is automatically wrapped to a maximum of 80
+\code{\link{Text}}. It is automatically wrapped to a maximum of 80
 characters per line. It is \code{NULL} if \code{source_language} is unset.}
 \item{\code{translations}}{A \code{NULL}, unless \code{set_translations} is \code{TRUE}. In
 that case, a named list, where elements are translations, and names are
 languages. Each translation is automatically wrapped to a maximum of 80
 characters per line.}
 \item{\code{locations}}{See active binding \code{locations} of class
-\code{\link{Block}}.}
+\code{\link{Text}}.}
 }
 }
 

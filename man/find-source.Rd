@@ -61,7 +61,7 @@ A set of paths to \R source scripts that must be searched.}
 \code{\link[=find_source]{find_source()}} returns an \code{\link[R6:R6Class]{R6}} object of class
 \code{\link{Translator}}.
 
-\code{\link[=find_source_in_files]{find_source_in_files()}} returns a list of \code{\link{Block}} objects. It may
+\code{\link[=find_source_in_files]{find_source_in_files()}} returns a list of \code{\link{Text}} objects. It may
 contain duplicated elements, depending on the extracted contents.
 }
 \description{
@@ -69,10 +69,10 @@ Find, and extract source text that requires translation.
 }
 \details{
 \code{\link[=find_source]{find_source()}} and \code{\link[=find_source_in_files]{find_source_in_files()}} look for calls to \code{\link[=translate]{translate()}}
-in \R scripts, and convert them to \code{\link{Block}} objects via \code{\link[=as_block]{as_block()}}.
+in \R scripts, and convert them to \code{\link{Text}} objects via \code{\link[=as_text]{as_text()}}.
 
 \code{\link[=find_source]{find_source()}} further constructs a \code{\link{Translator}} object from
-the set of \code{\link{Block}} objects. It can later be exported, and imported
+the set of \code{\link{Text}} objects. It can later be exported, and imported
 via \code{\link[=translator_export]{translator_export()}} and \code{\link[=translator_import]{translator_import()}} respectively.
 \subsection{Methodology}{
 
@@ -89,11 +89,11 @@ skipped.
 \item Valid \code{\link[=call]{call}} objects stemming from step 3 are filtered with
 \code{\link[=is_translate_call]{is_translate_call()}}.
 \item Calls to \code{\link[=translate]{translate()}} stemming from step 4 are coerced to
-\code{\link{Block}} objects with \code{\link[=as_block]{as_block()}}.
+\code{\link{Text}} objects with \code{\link[=as_text]{as_text()}}.
 }
 
 \code{\link[=find_source]{find_source()}} further constructs a \code{\link{Translator}} object from
-\code{\link{Block}} objects stemming from step 5.
+\code{\link{Text}} objects stemming from step 5.
 }
 
 \subsection{Limitations}{
@@ -106,7 +106,7 @@ plans to lift this limitation in the future.
 }
 \seealso{
 \code{\link{Translator}},
-\code{\link{Block}},
+\code{\link{Text}},
 \code{\link[=translate]{translate()}},
 \code{\link[=translator_import]{translator_import()}},
 \code{\link[=translator_export]{translator_export()}}

@@ -314,7 +314,7 @@ translator_read <- function(
             merge.warning = TRUE,
             handlers      = list(
                 Translator = as_translator.PortableTranslator,
-                Block      = as_block.PortableBlock,
+                Text       = as_text.PortableText,
                 Location   = as_location.PortableLocation))
     },
     error = \(cond) {
@@ -338,7 +338,7 @@ translator_read <- function(
         lang  <- tr$language
         texts <- lapply(tr$translations, `[[`, i = "translation")
         texts <- texts[!vapply_1l(texts, is.null)]
-        map(\(hash, text) trans$get_block(hash)$set_translation(lang, text),
+        map(\(hash, text) trans$get_text(hash)$set_translation(lang, text),
             hash = names(texts),
             text = texts)
     })

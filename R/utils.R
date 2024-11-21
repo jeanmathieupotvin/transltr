@@ -152,7 +152,7 @@ split_ul <- function(...) {
 #'
 #' @note
 #' [format_vector()] is the *workhorse* function of all S3 [format()] methods:
-#' [format.Translator()], [format.Block()], and [format.Location()].
+#' [format.Translator()], [format.Text()], and [format.Location()].
 #'
 #' @examples
 #' x <- list(

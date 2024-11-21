@@ -2,7 +2,7 @@
 #'
 #' @description
 #' This help page describes all **internal** mechanisms required for exporting
-#' and importing [`Translator`][Translator] objects, [`Block`][Block]
+#' and importing [`Translator`][Translator] objects, [`Text`][Text]
 #' objects, [`Location`][Location] objects, and underlying translations.
 #'
 #' Portable objects are intermediaries between [`transltr`][transltr] objects
@@ -18,7 +18,7 @@
 #' string.
 #'
 #' Portable objects can be converted back to their equivalent *non-portable*
-#' versions by using [as_translator()], [as_block()], and/or [as_location()].
+#' versions by using [as_translator()], [as_text()], and/or [as_location()].
 #' The appropriate methods are used internally by [translator_import()] (as
 #' handlers passed to [yaml::yaml.load()]).
 #'
@@ -35,7 +35,7 @@
 #'
 #' ## Constructing Portable Objects
 #'
-#' Classes [`Translator`][Translator], [`Block`][Block], and
+#' Classes [`Translator`][Translator], [`Text`][Text], and
 #' [`Location`][Location] each have a corresponding [`Portable`][portable()]
 #' class. Portable objects are always constructed from their *non-portable*
 #' equivalents using the appropriate [`portable_*()`][portable()] constructor.
@@ -43,7 +43,7 @@
 #' @param x Usage depends on the underlying function.
 #'   * A [`Translator`][Translator] object for [portable_translator()], and
 #'     [portable_translations()].
-#'   * A [`Block`][Block] object for [portable_block()].
+#'   * A [`Text`][Text] object for [portable_text()].
 #'   * A [`Location`][Location] object for [portable_location()].
 #'   * Any \R object for all other functions, and methods.
 #'
@@ -55,7 +55,7 @@
 #'   An optional identifier for the underlying data type. See Details below.
 #'
 #' @param set_translations A non-[NA][base::NA] logical value. Should
-#'   translations be included in the resulting [`PortableBlock`][portable()]
+#'   translations be included in the resulting [`PortableText`][portable()]
 #'   object? If `FALSE`, field `translations` is set equal to `NULL`.
 #'
 #' @param set_instructions A non-[NA][base::NA] logical value. Should
@@ -87,8 +87,8 @@
 #' [portable_translator()] returns an S3 object of class
 #' [`PortableTranslator`][portable()].
 #'
-#' [portable_block()] returns an S3 object of class
-#' [`PortableBlock`][portable()].
+#' [portable_text()] returns an S3 object of class
+#' [`PortableText`][portable()].
 #'
 #' [portable_location()] returns an S3 object of class
 #' [`PortableLocation`][portable()].
@@ -156,29 +156,29 @@
 #'   \item{`translations_files`}{A named list. File names for related
 #'     [`PortableTranslations`][portable()] objects (one for each language
 #'     listed in `languages`).}
-#'   \item{`...`}{Further named [`PortableBlock`][portable()] objects, if any.}
+#'   \item{`...`}{Further named [`PortableText`][portable()] objects, if any.}
 #' }
 #'
-#' @section Class PortableBlock:
-#' A [`PortableBlock`][portable()] object is a named list of length 6 containing
+#' @section Class PortableText:
+#' A [`PortableText`][portable()] object is a named list of length 6 containing
 #' the following elements.
 #'
 #' \describe{
-#'   \item{`hash`}{See active binding `hash` of class [`Block`][Block]. It is
+#'   \item{`hash`}{See active binding `hash` of class [`Text`][Text]. It is
 #'     `NULL` if `source_language` is unset.}
 #'   \item{`hash_algorithm`}{See active binding `hash_algorithm` of class
-#'     [`Block`][Block].}
+#'     [`Text`][Text].}
 #'   \item{`source_language`}{See active binding `source_lang` of class
-#'     [`Block`][Block]. It is `NULL` if unset.}
+#'     [`Text`][Text]. It is `NULL` if unset.}
 #'   \item{`source_text`}{See active binding `source_text` of class
-#'     [`Block`][Block]. It is automatically wrapped to a maximum of 80
+#'     [`Text`][Text]. It is automatically wrapped to a maximum of 80
 #'     characters per line. It is `NULL` if `source_language` is unset.}
 #'   \item{`translations`}{A `NULL`, unless `set_translations` is `TRUE`. In
 #'     that case, a named list, where elements are translations, and names are
 #'     languages. Each translation is automatically wrapped to a maximum of 80
 #'     characters per line.}
 #'   \item{`locations`}{See active binding `locations` of class
-#'     [`Block`][Block].}
+#'     [`Text`][Text].}
 #' }
 #'
 #' @section Class PortableLocation:
@@ -255,15 +255,15 @@
 #' This stream is printed after the YAML string (which acts as a header).
 #'
 #' @note
-#' Methods [as_location.Location()], and [as_block.Block()] are trivial
+#' Methods [as_location.Location()], and [as_text.Text()] are trivial
 #' identity functions returning their argument. As such, they are never
 #' useful. However, they are internally required by [translator_import()].
 #'
 #' A [`PortableTranslator`][portable()] object contains any number of
-#' [`PortableBlock`][portable()] objects, and these objects further contain
+#' [`PortableText`][portable()] objects, and these objects further contain
 #' any number of [`PortableLocation`][portable()] objects. Therefore,
-#' [as_translator.PortableTranslator()] must call [as_block.PortableBlock()]
-#' on each [`PortableBlock`][portable()] object, and [as_block.PortableBlock()]
+#' [as_translator.PortableTranslator()] must call [as_text.PortableText()]
+#' on each [`PortableText`][portable()] object, and [as_text.PortableText()]
 #' must further call [as_location.PortableLocation()] on each
 #' [`PortableLocation`][portable()] object. This follows the usual hierarchy
 #' of [`transltr`][transltr] classes.
@@ -272,10 +272,10 @@
 #' this hierarchy is reversed. [`PortableLocation`][portable()] objects are
 #' converted **first** via [as_location.PortableLocation()], and passed as
 #' [`Location`][Location] objects to the next handler,
-#' [as_block.PortableBlock()]. The latter calls [as_location()] on each
+#' [as_text.PortableText()]. The latter calls [as_location()] on each
 #' [`Location`][Location] object, and therefore, a trivial
 #' [as_location.Location()] method is required to accomodate this reversed
-#' process. The same is true for [`Block`][Block] objects passed to
+#' process. The same is true for [`Text`][Text] objects passed to
 #' [as_translator.PortableTranslator()].
 #'
 #' Since [`PortableTranslator`][portable()] objects are the outer most objects,
@@ -292,7 +292,7 @@
 #' @aliases
 #' Portable
 #' PortableTranslator
-#' PortableBlock
+#' PortableText
 #' PortableLocation
 #' PortableTranslations
 #'
@@ -322,7 +322,7 @@ portable_translator <- function(x = translator(), set_translations = FALSE) {
         stops("'x' must be a 'Translator' object.")
     }
     if (length(source_lang <- x$source_langs) > 1L) {
-        stops("all 'Block' objects of 'x' must have the same 'source_lang'.")
+        stops("all 'Text' objects of 'x' must have the same 'source_lang'.")
     }
 
     # It makes no sense to create a
@@ -337,7 +337,7 @@ portable_translator <- function(x = translator(), set_translations = FALSE) {
     attr(files, "tag") <- "TranslationsFiles"
 
     # Header fields are called as such because
-    # they appear before PortableBlocks in the
+    # they appear before PortableTexts in the
     # output.
     header <- list(
         version            = 1L,
@@ -349,22 +349,22 @@ portable_translator <- function(x = translator(), set_translations = FALSE) {
         languages          = native_langs,
         translations_files = files)
 
-    # Extract Block objects and create
-    # PortableBlock objects from them.
-    blocks <- lapply(
-        lapply(x$hashes, x$get_block),
-        portable_block,
+    # Extract Text objects and create
+    # PortableText objects from them.
+    texts <- lapply(
+        lapply(x$hashes, x$get_text),
+        portable_text,
         set_translations = set_translations)
 
-    out <- c(header, blocks)
+    out <- c(header, texts)
     return(portable(out, "PortableTranslator", "Translator"))
 }
 
 #' @rdname portable
 #' @keywords internal
-portable_block <- function(x = block(), set_translations = FALSE) {
-    if (!is_block(x)) {
-        stops("'x' must be a 'Block' object.")
+portable_text <- function(x = text(), set_translations = FALSE) {
+    if (!is_text(x)) {
+        stops("'x' must be a 'Text' object.")
     }
 
     assert_lgl1(set_translations)
@@ -394,7 +394,7 @@ portable_block <- function(x = block(), set_translations = FALSE) {
     }
 
     names(out$locations) <- NULL
-    return(portable(out, "PortableBlock", "Block"))
+    return(portable(out, "PortableText", "Text"))
 }
 
 #' @rdname portable
@@ -424,14 +424,14 @@ portable_translations <- function(
 
     assert_chr1(placeholder)
 
-    blocks       <- lapply(x$hashes, x$get_block)
+    texts        <- lapply(x$hashes, x$get_text)
     native_langs <- x$native_languages
     source_lang  <- x$source_langs
 
     # Since all source_lang must be equal,
     # it does not matter which one is chosen.
     if (length(source_lang) > 1L) {
-        stops("all 'Block' objects of 'x' must have the same 'source_lang'.")
+        stops("all 'Text' objects of 'x' must have the same 'source_lang'.")
     }
 
     # It makes no sense to create a
@@ -450,9 +450,9 @@ portable_translations <- function(
             native_language        = native_langs[[lang]],
             source_language        = source_lang,
             source_native_language = native_langs[[source_lang]],
-            translations           = lapply(blocks, \(blk) {
-                source <- blk$source_text
-                text   <- blk$get_translation(lang)
+            translations           = lapply(texts, \(txt) {
+                source <- txt$source_text
+                text   <- txt$get_translation(lang)
 
                 # strwrap() returns character(0)
                 # if input is NULL, but we need
@@ -577,23 +577,23 @@ as_translator.PortableTranslator <- function(
         attr(trans, "translations_files") <- x$translations_files
     }
 
-    do.call(trans$set_blocks, lapply(x[vapply_1l(x, is_block)], as_block))
+    do.call(trans$set_texts, lapply(x[vapply_1l(x, is_text)], as_text))
     do.call(trans$set_native_languages, x$languages)
     return(trans)
 }
 
 #' @rdname portable
 #' @export
-as_block.PortableBlock <- function(x, ...) {
+as_text.PortableText <- function(x, ...) {
     # `[[` must be used here to prevent partial matching
     # to hash_algorithm in the unlikely case that hash is
     # missing. This could happen if users mess with their
     # portable objects.
-    label <- sprintf("Block '%s': ", x[["hash"]] %??% constant("unknown"))
-    blk   <- Block$new(hash_algorithm <- x$hash_algorithm)
+    label <- sprintf("Text '%s': ", x[["hash"]] %??% constant("unknown"))
+    txt   <- Text$new(hash_algorithm <- x$hash_algorithm)
 
-    do.call(blk$set_locations, lapply(x$locations, as_location))
-    do.call(blk$set_translations, x$translations %??% list())
+    do.call(txt$set_locations, lapply(x$locations, as_location))
+    do.call(txt$set_translations, x$translations %??% list())
 
     if (!is.null(source_language <- x$source_language)) {
         # This can only happen if a PortableTranslator
@@ -605,22 +605,22 @@ as_block.PortableBlock <- function(x, ...) {
         }
 
         source_text <- text_normalize(x$source_text)
-        blk$set_translation(source_language, source_text)
-        blk$source_lang <- source_language
+        txt$set_translation(source_language, source_text)
+        txt$source_lang <- source_language
     }
-    if (x[["hash"]] %??% constant("unset") != blk$hash) {
+    if (x[["hash"]] %??% constant("unset") != txt$hash) {
         warning(call. = FALSE,
             label,
-            sprintf("hash is not equal to expected hash ('%s').", blk$hash),
+            sprintf("hash is not equal to expected hash ('%s').", txt$hash),
             " The latter will be used.")
     }
 
-    return(blk)
+    return(txt)
 }
 
 #' @rdname portable
 #' @export
-as_block.Block <- function(x, ...) {
+as_text.Text <- function(x, ...) {
     return(x)
 }
 

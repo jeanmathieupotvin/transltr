@@ -67,7 +67,7 @@ a name (or if it is empty), \verb{<nokey>} is printed, unless \code{.show_nokey}
 }
 \note{
 \code{\link[=format_vector]{format_vector()}} is the \emph{workhorse} function of all S3 \code{\link[=format]{format()}} methods:
-\code{\link[=format.Translator]{format.Translator()}}, \code{\link[=format.Block]{format.Block()}}, and \code{\link[=format.Location]{format.Location()}}.
+\code{\link[=format.Translator]{format.Translator()}}, \code{\link[=format.Text]{format.Text()}}, and \code{\link[=format.Location]{format.Location()}}.
 }
 \examples{
 x <- list(

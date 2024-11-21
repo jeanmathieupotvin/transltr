@@ -3,10 +3,10 @@
 #' Find, and extract source text that requires translation.
 #'
 #' [find_source()] and [find_source_in_files()] look for calls to [translate()]
-#' in \R scripts, and convert them to [`Block`][Block] objects via [as_block()].
+#' in \R scripts, and convert them to [`Text`][Text] objects via [as_text()].
 #'
 #' [find_source()] further constructs a [`Translator`][Translator] object from
-#' the set of [`Block`][Block] objects. It can later be exported, and imported
+#' the set of [`Text`][Text] objects. It can later be exported, and imported
 #' via [translator_export()] and [translator_import()] respectively.
 #'
 #' ## Methodology
@@ -24,10 +24,10 @@
 #'   4. Valid [`call`][call()] objects stemming from step 3 are filtered with
 #'      [is_translate_call()].
 #'   5. Calls to [translate()] stemming from step 4 are coerced to
-#'      [`Block`][Block] objects with [as_block()].
+#'      [`Text`][Text] objects with [as_text()].
 #'
 #' [find_source()] further constructs a [`Translator`][Translator] object from
-#' [`Block`][Block] objects stemming from step 5.
+#' [`Text`][Text] objects stemming from step 5.
 #'
 #' ## Limitations
 #'
@@ -63,12 +63,12 @@
 #' [find_source()] returns an [`R6`][R6::R6] object of class
 #' [`Translator`][Translator].
 #'
-#' [find_source_in_files()] returns a list of [`Block`][Block] objects. It may
+#' [find_source_in_files()] returns a list of [`Text`][Text] objects. It may
 #' contain duplicated elements, depending on the extracted contents.
 #'
 #' @seealso
 #'   [`Translator`][Translator],
-#'   [`Block`][Block],
+#'   [`Text`][Text],
 #'   [translate()],
 #'   [translator_import()],
 #'   [translator_export()]
@@ -102,12 +102,12 @@ find_source <- function(
         include.dirs = TRUE,
         no..         = TRUE)
 
-    blocks <- find_source_in_files(paths, encoding, strict, hash_algorithm, verbose)
-    trans  <- Translator$new(id, hash_algorithm)
+    texts <- find_source_in_files(paths, encoding, strict, hash_algorithm, verbose)
+    trans <- Translator$new(id, hash_algorithm)
 
     storage.mode(native_languages) <- "list"
     do.call(trans$set_native_languages, native_languages)
-    do.call(trans$set_blocks, blocks)
+    do.call(trans$set_texts, texts)
     return(trans)
 }
 
@@ -126,8 +126,12 @@ find_source_in_files <- function(
     assert_arg(hash_algorithm, TRUE)
     assert_lgl1(verbose)
 
-    blocks <- lapply(paths, find_source_in_file, encoding, strict, hash_algorithm, verbose)
-    return(unlist(blocks, FALSE))
+    texts <- lapply(paths, find_source_in_file,
+        encoding,
+        strict,
+        hash_algorithm,
+        verbose)
+    return(unlist(texts, FALSE))
 }
 
 
@@ -167,14 +171,14 @@ find_source_in_files <- function(
 #'
 #' @returns
 #' [find_source_in_file()] and [find_source_in_exprs()] return a list of
-#' [`Block`][Block] objects. It may contain duplicated elements, depending
+#' [`Text`][Text] objects. It may contain duplicated elements, depending
 #' on the extracted contents.
 #'
 #' [find_source_exprs()] returns the same output as [utils::getParseData()].
 #' However, only `expr` tokens are returned.
 #'
 #' @seealso
-#'   [`Block`][Block],
+#'   [`Text`][Text],
 #'   [translate()],
 #'   [find_source()]
 #'
@@ -188,16 +192,16 @@ find_source_in_file <- function(
     .verbose       = FALSE)
 {
     tokens <- find_source_exprs(path, encoding)
-    blocks <- find_source_in_exprs(tokens, path, strict, hash_algorithm)
+    texts  <- find_source_in_exprs(tokens, path, strict, hash_algorithm)
 
     if (.verbose) {
         cat(sep = "\n", sprintf(
             "Extracted %i source text(s) from '%s'.",
-            length(blocks),
+            length(texts),
             gsub(getwd(), ".", path)))
     }
 
-    return(blocks)
+    return(texts)
 }
 
 #' @rdname find-source-in-file
@@ -223,7 +227,7 @@ find_source_in_exprs <- function(
         col2  = .tokens[is_call, "col2"])
 
     return(
-        map(as_block,
+        map(as_text,
             x        = code[is_call],
             location = locations,
             moreArgs = list(

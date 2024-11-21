@@ -55,7 +55,7 @@ are checked by an higher-level parent function.}
 }
 \value{
 \code{\link[=find_source_in_file]{find_source_in_file()}} and \code{\link[=find_source_in_exprs]{find_source_in_exprs()}} return a list of
-\code{\link{Block}} objects. It may contain duplicated elements, depending
+\code{\link{Text}} objects. It may contain duplicated elements, depending
 on the extracted contents.
 
 \code{\link[=find_source_exprs]{find_source_exprs()}} returns the same output as \code{\link[utils:getParseData]{utils::getParseData()}}.
@@ -73,7 +73,7 @@ These functions are the \emph{building blocks} of \code{\link[=find_source]{find
 for more information.
 }
 \seealso{
-\code{\link{Block}},
+\code{\link{Text}},
 \code{\link[=translate]{translate()}},
 \code{\link[=find_source]{find_source()}}
 }

@@ -12,7 +12,7 @@ to the Portable Translator Format/File (PTF), previously known as TSF.
    * Translations Source Files (TSF) are replaced by
      Portable Translator/Translations File (PTF).
    * PTF are generated from *Portable Objects*, which are intermediate classes
-     (between textual representations) and `R6` classes `Location`, `Block`,
+     (between textual representations) and `R6` classes `Location`, `Text`,
      and `Translator`. Their role is to ease bidirectional conversion process.
    * `transltr` splits the state of a `Translator` object into multiple files:
      one file for the `Translator` object itself, and further files for
@@ -23,7 +23,7 @@ to the Portable Translator Format/File (PTF), previously known as TSF.
      * `portable()`,
      * `is_portable()`,
      * `portable_translator()`,
-     * `portable_block()`,
+     * `portable_text()`,
      * `portable_location()`,
      * `portable_translations()`,
      * `format.Portable()`,
@@ -32,9 +32,8 @@ to the Portable Translator Format/File (PTF), previously known as TSF.
      * `print.Portable()`,
      * `as_translator()`,
      * `as_translator.PortableTranslator()`,
-     * `as_block()`,
-     * `as_block.PortableBlock()`,
-     * `as_block.Block()`,
+     * `as_text.PortableText()`,
+     * `as_text.Text()`,
      * `as_location.PortableLocation()`,
      * `as_location.Location()`,
      * `translator_read()`,
@@ -57,61 +56,64 @@ to the Portable Translator Format/File (PTF), previously known as TSF.
 
 5. New active binding `Translator$source_langs`. It returns `NULL` for empty
    `Translator` objects, a named character vector for `Translator` objects
-   having `Block` objects with different `source_lang`, and a character string
+   having `Text` objects with different `source_lang`, and a character string
    otherwise.
 
 ## Changes
 
-1. Functions `write_text()` and `read_text()` are now respectively named
+1. Class `Block` was renamed to `Text` for better semantics. It is referred to
+   as such below and above.
+
+2. Functions `write_text()` and `read_text()` are now respectively named
    `text_write()` and `text_read()` for consistency with other existing
    `text_*()` functions.
 
-2. Functions `write_translations()` and `read_translations()` are now
+3. Functions `write_translations()` and `read_translations()` are now
    respectively named `translator_export()` and `translator_import()` for
    consistency with other existing `translator_*()` functions.
 
-3. Old design for portable translations is deprecated, including all related
+4. Old design for portable translations is deprecated, including all related
    mechanisms. It is replaced by a new design of Portable Objects (that are
    distinct from `.po` files of `gettext()`). See New Features above.
 
-4. Class `Token`, and related features are deprecated. Transitioning to YAML
+5. Class `Token`, and related features are deprecated. Transitioning to YAML
    removed the need to tokenize the contents of Markdown files. See #3 for
    more information. YAML tags are a much better solution to identify data
    structures.
 
-5. Revamp `format.Location()`. Argument `how` was repurposed and now controls
+6. Revamp `format.Location()`. Argument `how` was repurposed and now controls
    how to format ranges. There are three formats available. See documentation.
 
-6. Argument `source_lang` of `block()` now comes after `...`.
+7. Argument `source_lang` of `text()` now comes after `...`.
 
-7. Function `get_hash_algorithms()` was renamed to `hash_algorithms()`. Other
+8. Function `get_hash_algorithms()` was renamed to `hash_algorithms()`. Other
    `get_*()` functions that used to rerturn "parameters* of the package are all
    deprecated, and were removed. They were either useless with newer designs,
    or replaced by the new internal `constant()` interface. See feature #3 above.
 
-8. `language_set()` has a new error message when it fails to reset current
+9. `language_set()` has a new error message when it fails to reset current
    language.
 
-9. `Translator$hashes` now returns a named character vector, where names are
+10. `Translator$hashes` now returns a named character vector, where names are
    reduced versions of the corresponding hashes.
 
-10. `translator()` now throws a warning if a language is missing an expected
+11. `translator()` now throws a warning if a language is missing an expected
    corresponding native language.
 
-11. `Block` now calls `self$*` more frequently internally (whenever appropriate)
+12. `Text` now calls `self$*` more frequently internally (whenever appropriate)
     instead of `private$*`.
 
-12. Documentation, and code comments were updated almost everywhere.
+13. Documentation, and code comments were updated almost everywhere.
 
 ## Issues, and Fixes
 
-1. `Block$hash_algorithm` now only updates `Block$hash` if `Block$source_text`
-   (and `Block$source_lang`) is set.
+1. `Text$hash_algorithm` now only updates `Text$hash` if `Text$source_text`
+   (and `Text$source_lang`) is set.
 
-2. `c.Block()` now throws an error if all `Block` objects are empty. A `Block`
+2. `c.Text()` now throws an error if all `Text` objects are empty. A `Text`
    object is empty if it has no set `source_lang`.
 
-3. `merge_blocks()` now silently ignores, and drops empty `Block` objects.
+3. `merge_texts()` now silently ignores, and drops empty `Text` objects.
 
 
 ---

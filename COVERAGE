@@ -1,12 +1,12 @@
-transltr Coverage: 71.92%
+transltr Coverage: 72.14%
 R/portable.R: 0.00%
 R/translator.R: 27.50%
 R/language.R: 80.00%
 R/text.R: 85.71%
 R/class-location.R: 98.28%
-R/class-translator.R: 98.52%
+R/class-translator.R: 99.26%
 R/assert.R: 100.00%
-R/class-block.R: 100.00%
+R/class-text.R: 100.00%
 R/constants.R: 100.00%
 R/find-source.R: 100.00%
 R/hash-algorithms.R: 100.00%

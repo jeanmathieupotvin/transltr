@@ -6,7 +6,6 @@
 # For Initial Release to CRAN
 
 `[Utilities]`
-- Rename class `Block` to `Text`.
 - Write package-level documentation (`R/transltr-package.R`).
 - Complete top-level `README`.
 
@@ -17,13 +16,13 @@
   - `language_source_get()`,
   - `as_translator()`,
   - `as_location()`,
-  - `as_block.Block()`,
   - `as_location.Location()`,
+  - `as_text.Text()`,
   - `text_write()`,
   - `portable()`,
   - `is_portable()`,
   - `portable_translator()`,
-  - `portable_block()`,
+  - `portable_text()`,
   - `portable_location()`,
   - `portable_translations()`,
   - `format.Portable()`,
@@ -31,7 +30,7 @@
   - `format.PortableTranslations()`,
   - `print.Portable()`,
   - `as_translator.PortableTranslator()`,
-  - `as_block.PortableBlock()`,
+  - `as_text.PortableText()`,
   - `as_location.PortableLocation()`,
   - `translator_read()`,
   - `translator_write()`,
@@ -72,7 +71,7 @@
   - `find_source(, gettext = TRUE)`, etc.
 
 `[Scopes]`
-- Integrate scopes into `find_source()`, and class `Block`.
+- Integrate scopes into `find_source()`, and class `Text`.
 - Revisit `translator_scope()`.
   - I think the call stack can be traversed more efficiently by looping
     on enclosures of evaluation frames.
