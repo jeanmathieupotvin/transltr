@@ -243,8 +243,6 @@ translator_scope_name <- function(x) {
 #' both have well-defined internal representations referred to as
 #' [Portable Objects][portable()].
 #'
-#' ## Reading Portable Translations Files
-#'
 #' The easiest way to import translations is to use [translator_read()]. This
 #' function is designed to read all related PTFs, extract their contents, and
 #' construct a suitable [`Translator`][Translator] object from it. This is the
@@ -267,11 +265,10 @@ translator_scope_name <- function(x) {
 #'   Its parent directories are automatically created using [dir.create()] if
 #'   they do not exist.
 #'
-#'   By default, [transltor_read()], and [translator_write()] respectively reads
-#'   from, and writes to a default location given by global \R [option][options]
-#'   `transltr.default.path`. It points to a standard
+#'   By default, [translator_read()], and [translator_write()] respectively
+#'   reads from, and writes to a default location given by global \R
+#'   [option][options] `transltr.default.path`. It points to a standard
 #'   **Portable Translator File**. See Details below.
-
 #'
 #' @param x An object of class [`Translator`][Translator].
 #'

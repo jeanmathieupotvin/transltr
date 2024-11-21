@@ -51,8 +51,8 @@
 #' @seealso [translate()],
 #'   [translator_set()],
 #'   [translator_get()],
-#'   [translator_import()],
-#'   [translator_export()]
+#'   [translator_read()],
+#'   [translator_write()]
 #'
 #' @examples
 #' #' ## Set source language.

@@ -131,8 +131,8 @@ trans$set_native_languages(
 \code{\link[=translate]{translate()}},
 \code{\link[=translator_set]{translator_set()}},
 \code{\link[=translator_get]{translator_get()}},
-\code{\link[=translator_import]{translator_import()}},
-\code{\link[=translator_export]{translator_export()}}
+\code{\link[=translator_read]{translator_read()}},
+\code{\link[=translator_write]{translator_write()}}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}

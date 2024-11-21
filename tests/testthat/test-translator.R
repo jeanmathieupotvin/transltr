@@ -185,19 +185,19 @@ test_that("translator_scope_name() returns a character string", {
 })
 
 
-# translator_import() ----------------------------------------------------------
+# translator_read() ------------------------------------------------------------
 
 
-test_that("translator_import() returns a not yet implemented error", {
-    expect_error(translator_import())
+test_that("translator_read() returns a not yet implemented error", {
+    expect_error(translator_read())
 })
 
 
-# translator_export() ----------------------------------------------------------
+# translator_write() -----------------------------------------------------------
 
 
-test_that("translator_export() returns a not yet implemented error", {
-    expect_error(translator_export())
+test_that("translator_write() returns a not yet implemented error", {
+    expect_error(translator_write())
 })
 
 

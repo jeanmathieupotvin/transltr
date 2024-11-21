@@ -191,7 +191,7 @@ string.
 
 Portable objects can be converted back to their equivalent \emph{non-portable}
 versions by using \code{\link[=as_translator]{as_translator()}}, \code{\link[=as_text]{as_text()}}, and/or \code{\link[=as_location]{as_location()}}.
-The appropriate methods are used internally by \code{\link[=translator_import]{translator_import()}} (as
+The appropriate methods are used internally by \code{\link[=translator_read]{translator_read()}} (as
 handlers passed to \code{\link[yaml:yaml.load]{yaml::yaml.load()}}).
 \subsection{Low-level Constructor}{
 
@@ -217,7 +217,7 @@ equivalents using the appropriate \code{\link[=portable]{portable_*()}} construc
 \note{
 Methods \code{\link[=as_location.Location]{as_location.Location()}}, and \code{\link[=as_text.Text]{as_text.Text()}} are trivial
 identity functions returning their argument. As such, they are never
-useful. However, they are internally required by \code{\link[=translator_import]{translator_import()}}.
+useful. However, they are internally required by \code{\link[=translator_read]{translator_read()}}.
 
 A \code{\link[=portable]{PortableTranslator}} object contains any number of
 \code{\link[=portable]{PortableText}} objects, and these objects further contain

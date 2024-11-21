@@ -30,7 +30,7 @@
 #' language_source_set("en")
 #'
 #' ## Create a Translator. This would normally be done
-#' ## automatically by find_source() or translator_import().
+#' ## automatically by find_source() or translator_read().
 #' my_translator <- translator(text(en = "Hello!", es = "¡Hola!"))
 #'
 #' ## Register it (implicitly, under 'global' scope).

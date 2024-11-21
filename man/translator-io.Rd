@@ -20,9 +20,9 @@ translations_write(x = translator(), path = "", lang = "")
 Its parent directories are automatically created using \code{\link[=dir.create]{dir.create()}} if
 they do not exist.
 
-By default, \code{\link[=transltor_read]{transltor_read()}}, and \code{\link[=translator_write]{translator_write()}} respectively reads
-from, and writes to a default location given by global \R \link[=options]{option}
-\code{transltr.default.path}. It points to a standard
+By default, \code{\link[=translator_read]{translator_read()}}, and \code{\link[=translator_write]{translator_write()}} respectively
+reads from, and writes to a default location given by global \R
+\link[=options]{option} \code{transltr.default.path}. It points to a standard
 \strong{Portable Translator File}. See Details below.}
 
 \item{encoding}{A non-empty and non-\link[base:NA]{NA} character string. The
@@ -83,7 +83,6 @@ As such, a PTF may refer to a \emph{Portable Translator File}, a
 Translations are closely tied by design. It is worthwhile to know that they
 both have well-defined internal representations referred to as
 \link[=portable]{Portable Objects}.
-\subsection{Reading Portable Translations Files}{
 
 The easiest way to import translations is to use \code{\link[=translator_read]{translator_read()}}. This
 function is designed to read all related PTFs, extract their contents, and
@@ -93,8 +92,6 @@ preferred interface. The same is true for \code{\link[=translator_write]{transla
 Users may read, or write individual Portable Translations Files with
 \code{\link[=translations_read]{translations_read()}}, and \code{\link[=translations_write]{translations_write()}}, respectively. This
 can be useful for debugging purposes.
-}
-
 \subsection{Encodings}{
 
 \strong{The preferred encoding is (and should always be) UTF-8.} If another

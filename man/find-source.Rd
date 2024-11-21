@@ -73,7 +73,7 @@ in \R scripts, and convert them to \code{\link{Text}} objects via \code{\link[=a
 
 \code{\link[=find_source]{find_source()}} further constructs a \code{\link{Translator}} object from
 the set of \code{\link{Text}} objects. It can later be exported, and imported
-via \code{\link[=translator_export]{translator_export()}} and \code{\link[=translator_import]{translator_import()}} respectively.
+via \code{\link[=translator_write]{translator_write()}} and \code{\link[=translator_read]{translator_read()}} respectively.
 \subsection{Methodology}{
 
 Extracting source text from source code involves performing usual parsing
@@ -108,6 +108,6 @@ plans to lift this limitation in the future.
 \code{\link{Translator}},
 \code{\link{Text}},
 \code{\link[=translate]{translate()}},
-\code{\link[=translator_import]{translator_import()}},
-\code{\link[=translator_export]{translator_export()}}
+\code{\link[=translator_read]{translator_read()}},
+\code{\link[=translator_write]{translator_write()}}
 }

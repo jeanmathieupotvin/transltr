@@ -7,7 +7,7 @@
 #'
 #' [find_source()] further constructs a [`Translator`][Translator] object from
 #' the set of [`Text`][Text] objects. It can later be exported, and imported
-#' via [translator_export()] and [translator_import()] respectively.
+#' via [translator_write()] and [translator_read()] respectively.
 #'
 #' ## Methodology
 #'
@@ -70,8 +70,8 @@
 #'   [`Translator`][Translator],
 #'   [`Text`][Text],
 #'   [translate()],
-#'   [translator_import()],
-#'   [translator_export()]
+#'   [translator_read()],
+#'   [translator_write()]
 #'
 #' @rdname find-source
 #' @export

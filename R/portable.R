@@ -19,7 +19,7 @@
 #'
 #' Portable objects can be converted back to their equivalent *non-portable*
 #' versions by using [as_translator()], [as_text()], and/or [as_location()].
-#' The appropriate methods are used internally by [translator_import()] (as
+#' The appropriate methods are used internally by [translator_read()] (as
 #' handlers passed to [yaml::yaml.load()]).
 #'
 #' ## Low-level Constructor
@@ -257,7 +257,7 @@
 #' @note
 #' Methods [as_location.Location()], and [as_text.Text()] are trivial
 #' identity functions returning their argument. As such, they are never
-#' useful. However, they are internally required by [translator_import()].
+#' useful. However, they are internally required by [translator_read()].
 #'
 #' A [`PortableTranslator`][portable()] object contains any number of
 #' [`PortableText`][portable()] objects, and these objects further contain
