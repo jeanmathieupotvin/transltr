@@ -5,14 +5,13 @@
 
 # For Initial Release to CRAN
 
-`[Portable]`
-- Update documentation for classes
-  - `PortableTranslator`,
-  - `PortableBlock`,
-  - `PortableLocation`, and
-  - `PortableTranslations`.
-- Update side-files used for illustration purposes.
+`[Utilities]`
+- Rename class `Block` to `Text`.
+- Write package-level documentation (`R/transltr-package.R`).
+- Complete top-level `README`.
+
 - Write unit tests for functions
+  - `constant()`,
   - `text_write()`,
   - `portable()`,
   - `is_portable()`,
@@ -22,34 +21,32 @@
   - `portable_translations()`,
   - `format.Portable()`,
   - `format.PortableTranslator()`,
-  - `format.PortableTranslations()`, and
-  - `print.Portable()`, and
-  - `translator_export()`.
-- Finish writing functions (including documentation and unit tests).
-  - `as_translator.PortableTranslator()`,
-  - `as_block.PortableBlock()`,
-  - `as_location.PortableLocation()`,
-  - `as_translator.Translator()`,
-  - `as_block.Block()`,
-  - `as_location.Location()`,
+  - `format.PortableTranslations()`,
+  - `print.Portable()`,
   - `as_translator()`,
-  - `as_block()`, and
-  - `translator_import()`.
-
-`[Utilities]`
-- Write `source_language_set()`, and `source_language_get()`.
-- Introduce new option `transltr.default_dir`.
-- Rename class `Block` to `SourceText`.
+  - `as_translator.PortableTranslator()`,
+  - `as_block()`,
+  - `as_block.PortableBlock()`,
+  - `as_block.Block()`,
+  - `as_location.PortableLocation()`,
+  - `as_location.Location()`,
+  - `translator_read()`,
+  - `translator_write()`,
+  - `translations_read()`,
+  - `translations_write()`,
+  - `language_source_set()`, and
+  - `language_source_get()`.
+- Update unit tests and documentation following latest modifications to
+  - `merge_blocks()`,
+  - `Block$hash_algorithm`,
+  - `translator()`, and
+  - `Translator$source_langs`.
+- Fix further miscellaneous encountered bugs.
 
 `[Documentation]`
-- Write package-level documentation (`R/transltr-package.R`).
 - Run `R CMD check`.
-- Remove architecture diagram.
-- Write small introduction to package in package documentation.
 - Final update of side-files: `DESCRIPTION`, `.Rbuildignore`, `COVERAGE`,
   `NAMESPACE`, `STATISTICS`, and `NEWS`.
-  - This should be very minor changes, mostly just a final check.
-- Complete top-level `README`.
 
 # Future Improvements
 
@@ -58,8 +55,8 @@
 - Implement interactive function `compare_translations()`, and related
   functions `update_show()`, `update_accept()`, and `update_reject()`.
 
-`[text_*()]`
-- Evaluate feasability of rewriting `text_normalize()` and `text_hash()` in C.
+`[text_normalize()]`
+- Evaluate feasability of rewriting `text_normalize()` in C.
   - These functions are central to everything else and deserves the fastest implementation.
   - Evaluate which C library is the best to compute fast SHA-1 hashes.
 - Revamp current implementation of `text_normalize()`.
@@ -68,6 +65,10 @@
     - Example: `text_normalize("I ate", n, "bananas.") -> "I ate <placeholder:n> bananas."`
   - Users should be able to indicate text to be left as is.
     - Example: `text_normalize("I ate{{\n\n}}", "bananas.") -> "I ate\n\n bananas."`
+
+`[text_hash()]`
+- Evaluate feasability of rewriting `text_hash()` in C.
+- Offer new hashing algorithms that are faster, such as `xxhash`.
 
 `[PO and POT files]`
 - Include full support of PO and POT files with functions such as

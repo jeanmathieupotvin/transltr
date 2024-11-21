@@ -12,7 +12,11 @@
 \alias{Block}
 \title{Source Text and Translations}
 \usage{
-block(source_lang = "", ..., hash_algorithm = get_hash_algorithms())
+block(
+  ...,
+  source_lang = language_source_get(),
+  hash_algorithm = hash_algorithms()
+)
 
 is_block(x)
 
@@ -22,7 +26,7 @@ is_block(x)
 
 \method{c}{Block}(...)
 
-merge_blocks(..., hash_algorithm = get_hash_algorithms())
+merge_blocks(..., hash_algorithm = hash_algorithms())
 
 as_block(x, ...)
 
@@ -30,12 +34,22 @@ as_block(x, ...)
   x,
   strict = FALSE,
   location = transltr::location(),
-  hash_algorithm = get_hash_algorithms(),
+  hash_algorithm = hash_algorithms(),
   validate = TRUE,
   ...
 )
 }
 \arguments{
+\item{...}{Usage depends on the underlying function.
+\itemize{
+\item Any number of \code{\link{Location}} objects, and/or named character
+strings for \code{\link[=block]{block()}} (in no preferred order).
+\item Any number of \code{\link{Block}} objects for \code{\link[=merge_blocks]{merge_blocks()}} and S3
+method \code{\link[=c]{c()}}.
+\item Further arguments passed to or from other methods for \code{\link[=format]{format()}},
+\code{\link[=print]{print()}}, and \code{\link[=as_block]{as_block()}}.
+}}
+
 \item{source_lang}{A non-empty and non-\link[base:NA]{NA} character string. The
 language of the (untranslated) source text.
 
@@ -47,19 +61,9 @@ stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
 Doing so maximizes portability and cross-compatibility between packages.}
 
-\item{...}{Usage depends on the underlying function.
-\itemize{
-\item Any number of \code{\link{Location}} objects, and/or named character
-strings for \code{\link[=block]{block()}} (in no preferred order).
-\item Any number of \code{\link{Block}} objects for \code{\link[=merge_blocks]{merge_blocks()}} and S3
-method \code{\link[=c]{c()}}.
-\item Further arguments passed to or from other methods for \code{\link[=format]{format()}},
-\code{\link[=print]{print()}}, and \code{\link[=as_block]{as_block()}}.
-}}
-
-\item{hash_algorithm}{A character string equal to one of the values returned
-by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}. The algorithm to use when hashing source
-information for identification purposes.}
+\item{hash_algorithm}{A character string equal to one of the values
+returned by \code{\link[=hash_algorithms]{hash_algorithms()}}. The algorithm to use when hashing
+source information for identification purposes.}
 
 \item{x}{Any \R object.}
 
@@ -112,38 +116,41 @@ viewed as a vectorized version of \code{\link[=c]{c()}}.
 }
 }
 \examples{
+## Set source language.
+language_source_set("en")
+
 ## Create a Block object.
-block("en",
-    location("a", 1L, 2L, 3L, 4L),
-    location("a", 1L, 2L, 3L, 4L),
-    location("b", 5L, 6L, 7L, 8L),
-    location("c", c(9L, 10L), c(11L, 12L), c(13L, 14L), c(15L, 16L)),
-    en = "Hello, world!",
-    fr = "Bonjour, monde!",
-    es = "¡Hola Mundo!",
-    ja = "こんにちは世界！")
+block(
+  location("a", 1L, 2L, 3L, 4L),
+  location("a", 1L, 2L, 3L, 4L),
+  location("b", 5L, 6L, 7L, 8L),
+  location("c", c(9L, 10L), c(11L, 12L), c(13L, 14L), c(15L, 16L)),
+  en = "Hello, world!",
+  fr = "Bonjour, monde!",
+  es = "¡Hola Mundo!",
+  ja = "こんにちは世界！")
 
 ## Combine Blocks objects.
-b1 <- block("en",
-    location("a", 1L, 2L, 3L, 4L),
-    en = "Hello, world!",
-    fr = "Bonjour, monde!",
-    es = "¡Hola Mundo!",
-    ja = "こんにちは世界！")
+b1 <- block(
+  location("a", 1L, 2L, 3L, 4L),
+  en = "Hello, world!",
+  fr = "Bonjour, monde!",
+  es = "¡Hola Mundo!",
+  ja = "こんにちは世界！")
 
-b2 <- block("en",
-    location("a", 5L, 6L, 7L, 8L),
-    en     = "Hello, world!",
-    fr     = "Bonjour, monde!",
-    es     = "¡Hola Mundo!",
-    `ja-2` = "こんにちは世界！")
+b2 <- block(
+  location("a", 5L, 6L, 7L, 8L),
+  en     = "Hello, world!",
+  fr     = "Bonjour, monde!",
+  es     = "¡Hola Mundo!",
+  `ja-2` = "こんにちは世界！")
 
-b3 <- block("fr",
-    location("c", 1L, 2L, 3L, 4L),
-    en     = "Hello, world!",
-    fr     = "Bonjour, monde!",
-    `es-2` = "¡Hola Mundo!",
-    `ja-2` = "こんにちは世界！")
+b3 <- block(
+  location("c", 1L, 2L, 3L, 4L),
+  en     = "Hello, world!",
+  fr     = "Bonjour, monde!",
+  `es-2` = "¡Hola Mundo!",
+  `ja-2` = "こんにちは世界！")
 
 c(b1, b2)
 merge_blocks(b1, b2, b3)
@@ -190,9 +197,9 @@ object.
 This is a \strong{read-only} field. It is automatically updated
 whenever fields \code{source_lang} and/or \code{hash_algorithm} are updated.}
 
-\item{\code{hash_algorithm}}{A character string equal to one of the values returned
-by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}. The algorithm to use when hashing source
-information for identification purposes.}
+\item{\code{hash_algorithm}}{A character string equal to one of the values
+returned by \code{\link[=hash_algorithms]{hash_algorithms()}}. The algorithm to use when hashing
+source information for identification purposes.}
 
 \item{\code{source_lang}}{A non-empty and non-\link[base:NA]{NA} character string. The
 language of the (untranslated) source text.
@@ -242,15 +249,15 @@ to update it.}
 \subsection{Method \code{new()}}{
 Create a \code{\link{Block}} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Block$new(hash_algorithm = get_hash_algorithms())}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Block$new(hash_algorithm = hash_algorithms())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{hash_algorithm}}{A character string equal to one of the values returned
-by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}. The algorithm to use when hashing source
-information for identification purposes.}
+\item{\code{hash_algorithm}}{A character string equal to one of the values
+returned by \code{\link[=hash_algorithms]{hash_algorithms()}}. The algorithm to use when hashing
+source information for identification purposes.}
 }
 \if{html}{\out{</div>}}
 }

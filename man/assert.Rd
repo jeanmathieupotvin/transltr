@@ -186,12 +186,12 @@ x <- "my string"
 ## string. While this works fine, having to deal with many similar
 ## structures across the whole project is cumbersome.
 if (!is.character(x) || length(x) != 1L || !nzchar(x) || is.na(x)) {
-    stop("'x' must be a must be a non-NA and non-empty character of length 1.")
+  stop("'x' must be a must be a non-NA and non-empty character of length 1.")
 }
 
 ## The call to if () can be simplified with is_chr1().
 if (!transltr:::is_chr1(x, allow_empty_string = FALSE)) {
-    stop("'x' must be a must be a non-NA and non-empty character of length 1.")
+  stop("'x' must be a must be a non-NA and non-empty character of length 1.")
 }
 
 ## The whole structure can be replaced by a single call to assert_chr1().

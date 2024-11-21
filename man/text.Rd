@@ -5,9 +5,9 @@
 \alias{text_hash}
 \title{Normalize Text}
 \usage{
-text_normalize(..., .concat = " ")
+text_normalize(..., .concat = constant("concat"))
 
-text_hash(.lang = "", .text = "", .algo = get_hash_algorithms())
+text_hash(.lang = "", .text = "", .algo = hash_algorithms())
 }
 \arguments{
 \item{...}{Any number of character vectors.}

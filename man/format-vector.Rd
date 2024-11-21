@@ -71,16 +71,16 @@ a name (or if it is empty), \verb{<nokey>} is printed, unless \code{.show_nokey}
 }
 \examples{
 x <- list(
-    FirstName = "John",
-    LastName  = "Doe",
-    Address   = list(
-        StreetAddress = "123 Main Street",
-        City          = "Montreal",
-        Province      = "Quebec",
-        PostalCode    = "H0H 0H0"),
-    Notes = c(
-        "Send mail to",
-        "address above."))
+  FirstName = "John",
+  LastName  = "Doe",
+  Address   = list(
+    StreetAddress = "123 Main Street",
+    City          = "Montreal",
+    Province      = "Quebec",
+    PostalCode    = "H0H 0H0"),
+  Notes = c(
+    "Send mail to",
+    "address above."))
 
 cat(transltr:::format_vector(x, "<JohnDoe>"), sep = "\n")
 cat(transltr:::format_vector(x, "<JohnDoe>", .show_nokey = FALSE), sep = "\n")

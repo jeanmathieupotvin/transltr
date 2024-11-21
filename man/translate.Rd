@@ -8,8 +8,8 @@ translate(
   ...,
   lang = language_get(),
   scope = NULL,
-  concat = " ",
-  source_lang = "en"
+  concat = constant("concat"),
+  source_lang = language_source_get()
 )
 }
 \arguments{
@@ -50,9 +50,12 @@ It is strongly recommended to always include the namespace when using
 will be no ambiguity at runtime.
 }
 \examples{
+#' ## Set source language.
+language_source_set("en")
+
 ## Create a Translator. This would normally be done
 ## automatically by find_source() or translator_import().
-my_translator <- translator(block("en", en = "Hello!", es = "¡Hola!"))
+my_translator <- translator(block(en = "Hello!", es = "¡Hola!"))
 
 ## Register it (implicitly, under 'global' scope).
 translator_set(my_translator)

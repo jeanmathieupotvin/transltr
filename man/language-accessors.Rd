@@ -3,11 +3,17 @@
 \name{language_set}
 \alias{language_set}
 \alias{language_get}
+\alias{language_source_set}
+\alias{language_source_get}
 \title{Get or Set Language}
 \usage{
 language_set(lang = "en")
 
 language_get()
+
+language_source_set(source_lang = "en")
+
+language_source_get()
 }
 \arguments{
 \item{lang}{A non-empty and non-\link[base:NA]{NA} character string. The
@@ -20,25 +26,37 @@ stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/IETF_language_tag}{IETF BCP 47}, or
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
 Doing so maximizes portability and cross-compatibility between packages.}
+
+\item{source_lang}{A non-empty and non-\link[base:NA]{NA} character string. The
+language of the (untranslated) source text. See argument \code{lang} for more
+information.}
 }
 \value{
-\code{\link[=language_set]{language_set()}} returns \code{NULL} invisibly. It is used for its side-effect
-of setting environment variable \code{TRANSLTR_LANGUAGE}.
+\code{\link[=language_set]{language_set()}}, and \code{\link[=language_source_set]{language_source_set()}} return \code{NULL}, invisibly. They
+are used for their side-effect of respectively setting environment variables
+\code{TRANSLTR_LANGUAGE} and \code{TRANSLTR_SOURCE_LANGUAGE}.
 
-\code{\link[=language_get]{language_get()}} returns a character string (possibly empty). It corresponds
-to the value of environment variable \code{TRANSLTR_LANGUAGE}.
+\code{\link[=language_get]{language_get()}}, and \code{\link[=language_source_get]{language_source_get()}} return a character string
+(possibly empty for the former). It corresponds to the value of underlying
+environment variables.
 }
 \description{
-Get or set the current language of \code{\link{transltr}}. It is registered
-as an environment variable named \code{TRANSLTR_LANGUAGE}.
+Get or set the current language and source language. They are registered as
+environment variables, and respectively named \code{TRANSLTR_LANGUAGE}, and
+\code{TRANSLTR_SOURCE_LANGUAGE}.
 }
 \details{
 \code{\link[=language_set]{language_set()}} leaves the underlying locale as is. To change an \R
 session's locale, use \code{\link[=Sys.setlocale]{Sys.setlocale()}} or \code{\link[=Sys.setLanguage]{Sys.setLanguage()}} instead.
 See below for more information.
+
+\code{\link[=language_source_set]{language_source_set()}} sets the language of the source text (globally).
+
+Both the language and the source language can be changed locally. See
+\code{\link[=translate]{translate()}} for more information.
 }
 \note{
-An environment variable is used because it can be shared among different
+Environment variables are used because they can be shared among different
 processes. This matters when using parallel and/or concurrent \R sessions.
 It can further be shared among direct and transitive dependencies (other
 packages that rely on \code{\link{transltr}}).

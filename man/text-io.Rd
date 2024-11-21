@@ -7,7 +7,7 @@
 \usage{
 text_read(path = "", encoding = "UTF-8")
 
-text_write(x, path = "")
+text_write(x = character(), path = "")
 }
 \arguments{
 \item{path}{A character string. A path to a file to read text from,
@@ -23,11 +23,16 @@ portability.}
 \value{
 \code{\link[=text_read]{text_read()}} returns a character vector.
 
-\code{\link[=text_write]{text_write()}} is not yet implemented and throws an error.
+\code{\link[=text_write]{text_write()}} returns \code{NULL}, invisibly.
 }
 \description{
 \code{\link[=text_read]{text_read()}} and \code{\link[=text_write]{text_write()}} respectively wrap \code{\link[base:readLines]{base::readLines()}} and
 \code{\link[base:writeLines]{base::writeLines()}}. They further validate their arguments, normalize
 file paths, and re-encode inputs to \code{UTF-8} before reading and writing.
+}
+\seealso{
+\code{\link[=readLines]{readLines()}},
+\code{\link[=writeLines]{writeLines()}},
+\code{\link[=enc2utf8]{enc2utf8()}}
 }
 \keyword{internal}
