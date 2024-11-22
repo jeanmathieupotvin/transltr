@@ -7,7 +7,7 @@
 \alias{print.Translator}
 \alias{as_translator}
 \alias{Translator}
-\title{Source Texts, and Translations}
+\title{Source Texts and Translations}
 \usage{
 translator(..., id = uuid(), hash_algorithm = hash_algorithms())
 

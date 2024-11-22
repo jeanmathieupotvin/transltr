@@ -1,4 +1,4 @@
-#' Source Texts, and Translations
+#' Source Texts and Translations
 #'
 #' Store, structure, and manipulate source text**s**, and their translations.
 #'
