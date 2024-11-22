@@ -5,7 +5,6 @@
 
 # For Initial Release to CRAN
 
-`[Portable]`
 - Write unit tests for functions
   - `constant()`,
   - `language_source_set()`,
@@ -32,8 +31,6 @@
   - `translator_write()`,
   - `translations_read()`, and
   - `translations_write()`.
-
-`[Documentation]`
 - Final update of side-files `COVERAGE`, and `STATISTICS`.
 
 # Future Improvements
