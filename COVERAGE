@@ -1,6 +1,6 @@
-transltr Coverage: 72.14%
+transltr Coverage: 72.34%
 R/portable.R: 0.00%
-R/translator.R: 27.50%
+R/translator.R: 29.17%
 R/language.R: 80.00%
 R/text.R: 85.71%
 R/class-location.R: 98.28%

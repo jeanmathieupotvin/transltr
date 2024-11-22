@@ -110,7 +110,6 @@ text_normalize <- function(..., .concat = constant("concat")) {
 }
 
 #' @rdname text
-#' @importFrom digest sha1
 #' @keywords internal
 text_hash <- function(.lang = "", .text = "", .algo = hash_algorithms()) {
     x <- sprintf("%s:%s", .lang, .text)

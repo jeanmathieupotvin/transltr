@@ -12,8 +12,8 @@ usethis::use_description(
     check_name = TRUE,
     fields     = list(
         Package     = "transltr",
-        Title       = "A framework to support many languages in any R application",
-        Version     = "0.0.1.9004",
+        Title       = "A Light Internationalization Framework for R",
+        Version     = "0.0.1",
         Language    = "en",
         Encoding    = "UTF-8",
         Roxygen     = "list(markdown = TRUE, r6 = TRUE)",
@@ -32,21 +32,21 @@ usethis::use_description(
                 role    = c("ctb", "fnd", "rev"),
                 comment = c(ORCID = "0000-0003-4950-5475")))',
         Description = "
-            An alternative to gettext() and xgettext() that enables support of
-            many languages in any R application. Find, and extract source text
-            that requires translation. Store, structure, and manipulate source
-            texts and translations via R6 classes exposing a user-friendly API.
-            Easily export and import to/from a plain text format that fosters
-            collaboration with other non-technical and external collaborators."))
+            An alternative to gettext(), xgettext(), and other related R
+            features. Incorporate translations and support many languages
+            in any R application while keeping the locale unchanged. Find,
+            extract, structure, and manipulate source text. Export it to a
+            textual format that fosters collaboration. Complement it with
+            translations and import everything back into R sessions."))
 
 usethis::use_mit_license("Jean-Mathieu Potvin")
 
 usethis::use_testthat(parallel = FALSE)
+
 usethis::use_package("digest")
 usethis::use_package("R6")
 usethis::use_package("utils")
 usethis::use_package("yaml")
-
 usethis::use_package("covr",           "Suggests")
 usethis::use_package("devtools",       "Suggests")
 usethis::use_package("lifecycle",      "Suggests")

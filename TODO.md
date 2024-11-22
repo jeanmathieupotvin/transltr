@@ -5,10 +5,6 @@
 
 # For Initial Release to CRAN
 
-`[Utilities]`
-- Write package-level documentation (`R/transltr-package.R`).
-- Complete top-level `README`.
-
 `[Portable]`
 - Write unit tests for functions
   - `constant()`,
@@ -38,9 +34,7 @@
   - `translations_write()`.
 
 `[Documentation]`
-- Run `R CMD check`.
-- Final update of side-files: `DESCRIPTION`, `.Rbuildignore`, `COVERAGE`,
-  `NAMESPACE`, `STATISTICS`, and `NEWS`.
+- Final update of side-files `COVERAGE`, and `STATISTICS`.
 
 # Future Improvements
 
@@ -53,6 +47,10 @@
 - Implement this function that updates existing PTF.
 - Implement interactive function `compare_translations()`, and related
   functions `update_show()`, `update_accept()`, and `update_reject()`.
+
+`[translate()]`
+- It should be able to handle `sprintf()` placeholders natively.
+- It should be able to handle plural formats natively via an intuitive notation.
 
 `[text_normalize()]`
 - Evaluate feasability of rewriting `text_normalize()` in C.
@@ -97,3 +95,4 @@
 - Revisit whether arg `which` of `str_strip_empty()` is required.
 - `format_vector()` needs to (better) accomodate vectors of length 1.
   - It should be rewritten.
+- Provide translations for the package itself using `transltr`.

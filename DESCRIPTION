@@ -1,18 +1,17 @@
 Package: transltr
-Title: A framework to support many languages in any R application
-Version: 0.0.1.9004
+Title: A Light Internationalization Framework for R
+Version: 0.0.1
 Authors@R: c(
     person("Jean-Mathieu", "Potvin", , "jeanmathieupotvin@ununoctium.dev", role = c("aut", "cre")),
     person("Jérôme", "Lavoué", , "jerome.lavoue@umontreal.ca", role = c("ctb", "fnd", "rev"),
            comment = c(ORCID = "0000-0003-4950-5475"))
   )
-Description: An alternative to gettext() and xgettext() that enables
-    support of many languages in any R application. Find, and extract
-    source text that requires translation. Store, structure, and
-    manipulate source texts and translations via R6 classes exposing a
-    user-friendly API.  Easily export and import to/from a plain text
-    format that fosters collaboration with other non-technical and
-    external collaborators.
+Description: An alternative to gettext(), xgettext(), and other related R
+    features. Incorporate translations and support many languages in any R
+    application while keeping the locale unchanged. Find, extract,
+    structure, and manipulate source text. Export it to a textual format
+    that fosters collaboration. Complement it with translations and import
+    everything back into R sessions.
 License: MIT + file LICENSE
 URL: https://github.com/jeanmathieupotvin/transltr
 BugReports: https://github.com/jeanmathieupotvin/transltr/issues/new
@@ -20,7 +19,7 @@ Encoding: UTF-8
 Language: en
 Roxygen: list(markdown = TRUE, r6 = TRUE)
 RoxygenNote: 7.3.2
-Suggests:
+Suggests: 
     covr,
     devtools,
     lifecycle,
@@ -29,12 +28,12 @@ Suggests:
     usethis,
     withr
 Config/testthat/edition: 3
-Imports:
+Imports: 
     digest,
     R6,
     utils,
     yaml
-Collate:
+Collate: 
     'assert.R'
     'class-location.R'
     'constants.R'
