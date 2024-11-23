@@ -54,9 +54,8 @@ method \code{\link[=c]{c()}}.
 language of the (untranslated) source text.
 
 A language is usually a code (of two or three letters) for a native
-language name. For example, \code{ja} is a code for \code{日本語} (Japanese). While
-users retain full control over codes, it is best to use language codes
-stemming from well-known schemes such as
+language name. While users retain full control over codes, it is best
+to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/IETF_language_tag}{IETF BCP 47}, or
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
 Doing so maximizes portability and cross-compatibility between packages.}
@@ -131,30 +130,26 @@ text(
   location("c", c(9L, 10L), c(11L, 12L), c(13L, 14L), c(15L, 16L)),
   en = "Hello, world!",
   fr = "Bonjour, monde!",
-  es = "¡Hola Mundo!",
-  ja = "こんにちは世界！")
+  es = "¡Hola Mundo!")
 
 ## Combine Texts objects.
 b1 <- text(
   location("a", 1L, 2L, 3L, 4L),
   en = "Hello, world!",
   fr = "Bonjour, monde!",
-  es = "¡Hola Mundo!",
-  ja = "こんにちは世界！")
+  es = "¡Hola Mundo!")
 
 b2 <- text(
   location("a", 5L, 6L, 7L, 8L),
-  en     = "Hello, world!",
-  fr     = "Bonjour, monde!",
-  es     = "¡Hola Mundo!",
-  `ja-2` = "こんにちは世界！")
+  en  = "Hello, world!",
+  fr2 = "Bonjour, monde!",
+  es  = "¡Hola Mundo!")
 
 b3 <- text(
   location("c", 1L, 2L, 3L, 4L),
-  en     = "Hello, world!",
-  fr     = "Bonjour, monde!",
-  `es-2` = "¡Hola Mundo!",
-  `ja-2` = "こんにちは世界！")
+  en  = "Hello, world!",
+  fr  = "Bonjour, monde!",
+  es2 = "¡Hola Mundo!")
 
 c(b1, b2)
 merge_texts(b1, b2, b3)
@@ -209,9 +204,8 @@ source information for identification purposes.}
 language of the (untranslated) source text.
 
 A language is usually a code (of two or three letters) for a native
-language name. For example, \code{ja} is a code for \code{日本語} (Japanese). While
-users retain full control over codes, it is best to use language codes
-stemming from well-known schemes such as
+language name. While users retain full control over codes, it is best
+to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/IETF_language_tag}{IETF BCP 47}, or
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
 Doing so maximizes portability and cross-compatibility between packages.}
@@ -282,12 +276,11 @@ Extract a translation, or the source text.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{lang}}{A non-empty and non-\link[base:NA]{NA} character string. The
-requested language.
+underlying language.
 
 A language is usually a code (of two or three letters) for a native
-language name. For example, \code{ja} is a code for \code{日本語} (Japanese). While
-users retain full control over codes, it is best to use language codes
-stemming from well-known schemes such as
+language name. While users retain full control over codes, it is best
+to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/IETF_language_tag}{IETF BCP 47}, or
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
 Doing so maximizes portability and cross-compatibility between packages.}
@@ -312,12 +305,11 @@ Register a translation, or the source text.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{lang}}{A non-empty and non-\link[base:NA]{NA} character string. The
-requested language.
+underlying language.
 
 A language is usually a code (of two or three letters) for a native
-language name. For example, \code{ja} is a code for \code{日本語} (Japanese). While
-users retain full control over codes, it is best to use language codes
-stemming from well-known schemes such as
+language name. While users retain full control over codes, it is best
+to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/IETF_language_tag}{IETF BCP 47}, or
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
 Doing so maximizes portability and cross-compatibility between packages.}

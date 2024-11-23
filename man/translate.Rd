@@ -18,12 +18,11 @@ translate. Values can be empty and/or \link[base:NA]{NA}, but can lead to
 unexpected results.}
 
 \item{lang}{A non-empty and non-\link[base:NA]{NA} character string. The
-requested language.
+underlying language.
 
 A language is usually a code (of two or three letters) for a native
-language name. For example, \code{ja} is a code for \code{日本語} (Japanese). While
-users retain full control over codes, it is best to use language codes
-stemming from well-known schemes such as
+language name. While users retain full control over codes, it is best
+to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/IETF_language_tag}{IETF BCP 47}, or
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
 Doing so maximizes portability and cross-compatibility between packages.}

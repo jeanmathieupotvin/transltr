@@ -475,8 +475,7 @@ Translator <- R6::R6Class("Translator",
         #' trans <- Translator$new()
         #' trans$set_native_languages(
         #'   en = "English",
-        #'   fr = "Français",
-        #'   ja = "日本語")
+        #'   fr = "Français")
         set_native_languages = function(...) {
             if (!...length()) {
                 return(invisible())

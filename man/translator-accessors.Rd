@@ -98,9 +98,10 @@ is.null(translator_get(NULL)) ## TRUE
 ## the underlying scope. This is done temporarily within the utils
 ## package for illustration purposes.
 evalq(envir = asNamespace("utils"), \() {
-  on.exit(translator_set(NULL))
-  translator_set(translator(id = sprintf("utils:\%s", transltr::uuid())))
-  return(translator_get())
+  on.exit(transltr::translator_set(NULL))
+  transltr::translator_set(
+    transltr::translator(id = sprintf("utils:\%s", transltr::uuid())))
+  return(transltr::translator_get())
 })()
 
 }
