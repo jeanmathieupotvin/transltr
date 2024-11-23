@@ -236,12 +236,13 @@
 #'
 #' [[Translation]]
 #'
-#' Its underlying translation. This will be NULL (placeholder) until someone
-#' actually completes the section. Single line breaks are interpreted as single
-#' spaces, like Markdown, and other text formats do. This allows translators to
-#' avoid writing cumbersome, and unintuitive long strings.
+#' Its underlying translation, or a '<none>' placeholder to be removed by the
+#' translator in charge of actually completing the section. Single line breaks
+#' are interpreted as single spaces, like Markdown, and other text formats do.
+#' This allows translators to avoid writing cumbersome, and unintuitive long
+#' strings.
 #'
-#' [[hash]]
+#' [[another hash]]
 #'
 #' Another source text.
 #'

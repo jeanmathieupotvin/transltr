@@ -41,8 +41,8 @@
 #' bring more robust scoping mechanisms.
 #'
 #' @section Reference semantics:
-#' [`Translator`][Translator] objects are [`R6`][R6::R6Class()] objects, and
-#' [`R6`][R6::R6Class()] are stored as [environments][environment()]. In \R,
+#' [`Translator`][Translator] objects are [`R6`][R6::R6] objects, and
+#' [`R6`][R6::R6] are stored as [environments][environment()]. In \R,
 #' environments have reference semantics (they are not copied when changed).
 #' Therefore, a [`Translator`][Translator] object only need to be set once,
 #' and may be modified afterwards without having to call [translator_set()]
@@ -75,17 +75,23 @@
 #' ## Unregister a Translator object (for implicit and explicit scopes).
 #' translator_set(NULL)
 #' translator_set(NULL, "global")
-#' is.null(translator_get(NULL)) ## TRUE
+#' is.null(translator_get(NULL))  ## TRUE
 #'
-#' ## Setting and getting a Translator object, while letting them infer
-#' ## the underlying scope. This is done temporarily within the utils
-#' ## package for illustration purposes.
+#' ## Setting and getting a Translator object while letting the package
+#' ## infer the underlying scope. This is done temporarily within the
+#' ## utils package for illustration purposes.
 #' evalq(envir = asNamespace("utils"), \() {
 #'   on.exit(transltr::translator_set(NULL))
 #'   transltr::translator_set(
 #'     transltr::translator(id = sprintf("utils:%s", transltr::uuid())))
 #'   return(transltr::translator_get())
 #' })()
+#'
+#' ## List all active scopes.
+#' ## This can be useful to avoid collisions.
+#' translator_set(scope = "scope1")
+#' translator_set(scope = "scope2")
+#' translator_scopes()
 #'
 #' @seealso [translate()]
 #'
@@ -226,23 +232,53 @@ translator_scope_name <- function(x) {
 #' *Portable Translators Files*.
 #'
 #' @details
+#' [translator_write()] creates two types of file: a single
+#' *Portable Translator File*, and further *Portable Translations Files*. Both
+#' can be referred to as `PTF` files, and jointly represents all the information
+#' contained within a [`Translator`][Translator] object. As such, PTF files are
+#' closely tied by design.
+#'
+#' Portable Translator Files are useful to developers.
+#'
+#' Portable Translations Files are useful to non-technical collaborators such
+#' as translators.
+#'
+#' Both types have well-defined internal representations referred to as
+#' [Portable Objects][portable()].
+#'
+#' ## Portable Translator File
+#'
 #' A Portable Translator File (PTF) is a human-friendly, cross language,
 #' and textual representation (serialization) of a [`Translator`][Translator]
-#' object and its underlying translations. The format heavily relies on
-#' [YAML 1.1](https://yaml.org/spec/1.1/), a popular data serialization
-#' format. However, users do not actually have to know anything about YAML
-#' to read, or write [`Translator`][Translator] objects.
+#' object. The format heavily relies on [YAML 1.1](https://yaml.org/spec/1.1/),
+#' a popular data serialization format. However, users do not actually have to
+#' know anything about YAML to read, or write [`Translator`][Translator]
+#' objects.
 #'
 #' Portable Translator Files are snapshots of [`Translator`][Translator]
-#' objects. To ease collaboration and maintenance, translations are grouped
-#' by language, and stored in separate files. These files are always listed
-#' by the `translations_files` field of a PTF.
+#' objects. To ease collaboration and maintenance, translations are grouped by
+#' language, and stored in separate Portable Translations Files). These files
+#' are listed and referenced by the `translations_files` field of a Portable
+#' Translator File. See class [PortableTranslator][portable()] for more
+#' information.
 #'
-#' As such, a PTF may refer to a *Portable Translator File*, a
-#' *Portable Translations File*, or both. Portable Translators and Portable
-#' Translations are closely tied by design. It is worthwhile to know that they
-#' both have well-defined internal representations referred to as
-#' [Portable Objects][portable()].
+#' It is worthwhile to note that [translator_write()] never creates a Portable
+#' Translations File for the source language itself. Attempting to translate
+#' text from the source language to itself makes no sense.
+#'
+#' ## Portable Translations File
+#'
+#' A Portable Translations File (PTF) is a human-friendly, cross language,
+#' and textual representation (serialization) of the translations contained
+#' by a [`Translator`][Translator] object. It has two parts:
+#'
+#'   1. it starts with a YAML header stating basic information on source and
+#'      target language, and
+#'   2. a stream of unindented (flat) and named sections.
+#'
+#' See class [PortableTranslations][portable()] for more information.
+#'
+#' ## Working with PTF files
 #'
 #' The easiest way to import translations is to use [translator_read()]. This
 #' function is designed to read all related PTFs, extract their contents, and
@@ -251,7 +287,7 @@ translator_scope_name <- function(x) {
 #'
 #' Users may read, or write individual Portable Translations Files with
 #' [translations_read()], and [translations_write()], respectively. This
-#' can be useful for debugging purposes.
+#' can be useful for debugging purposes. See Examples below.
 #'
 #' ## Encodings
 #'
@@ -278,12 +314,16 @@ translator_scope_name <- function(x) {
 #' @template param-lang
 #'
 #' @returns
-#' [translator_read()] returns a [`Translator`][Translator] object. This is
-#' an [R6::R6Class()] instance under the hood.
+#' [translator_read()] returns an [`R6`][R6::R6] object of class
+#' [`Translator`][Translator].
 #'
 #' [translator_write()] returns `NULL`, invisibly. It is used for its
-#' side-effect of creating Portable Translator Files, and Portable Translations
+#' side-effect of creating Portable Translator Files and Portable Translations
 #' Files.
+#'
+#'   * It writes a Portable Translator File to `path`.
+#'   * It writes further Portable Translations File in the same directory as
+#'     `path`. One file per non-source (native) language is created.
 #'
 #' [translations_read()] returns an S3 object of class
 #' [`PortableTranslations`][portable()]. Consider using [translator_read()]
@@ -296,6 +336,70 @@ translator_scope_name <- function(x) {
 #' [`Translator`][Translator],
 #' [`Portable`][portable()],
 #' [UTF-8](https://en.wikipedia.org/wiki/UTF-8)
+#'
+#' @examples
+#' # In what follows, ASCII characters are preferred because R has poor
+#' # support for non-ASCII characters used in man pages, and they must
+#' # be used cautiously. In practice, any alphabet (any UTF-8 character)
+#' # may be used to represent native languages and translations.
+#'
+#' # Set source language.
+#' language_source_set("en")
+#'
+#' # Define a location where Portable Translator Files are written.
+#' temp_path <- path <- tempfile(pattern = "_translator_", fileext = ".yml")
+#'
+#' # Create a Translator object.
+#' # This would normally be done automatically
+#' # by find_source(), or translator_read().
+#' x <- translator(
+#'   id = "test-translator",
+#'   en = "English",
+#'   es = "Español",
+#'   fr = "Français",
+#'   text(
+#'     en = "Hello, world!",
+#'     fr = "Bonjour, monde!"),
+#'   text(
+#'     en = "Hello, world!",
+#'     fr = "Bonjour, monde!"),
+#'   text(
+#'     en = "Farewell, world!",
+#'     fr = "Au revoir, monde!"))
+#'
+#' # Export it.
+#' # This creates 3 files:
+#' #
+#' #   1. 1 Portable Translator File for the Translator object, and
+#' #   2. 2 Portable Translations Files (one for each non-source language).
+#' #      The file for language "es" contains placeholders for future
+#' #      translations.
+#' translator_write(x, temp_path)
+#' translator_read(temp_path)
+#'
+#' # Inspect their (raw) contents.
+#' cat(readLines(temp_path), sep = "\n")
+#' cat(readLines(file.path(dirname(temp_path), "fr.txt")), sep = "\n")
+#' cat(readLines(file.path(dirname(temp_path), "es.txt")), sep = "\n")
+#'
+#' # Translations can be read individually.
+#' # They are serialized as a YAML string
+#' # (on-the-fly) before being displayed.
+#' translations_read(file.path(dirname(temp_path), "fr.txt"))
+#' translations_read(file.path(dirname(temp_path), "es.txt"))
+#'
+#' # This is rarely useful, but translations can also be
+#' # exported individually. You may use this to add a new
+#' # language, as long as
+#' #
+#' #   1. it has a corresponding entry in the underlying Translator object, and
+#' #   2. it has corresponding entries in the underlying Portable Translator
+#' #      File (fields languages and translations_files must be updated).
+#' #
+#' # Users should always used translator_write() instead.
+#' x$set_native_languages(el = "Greek")
+#' translations_write(x, file.path(dirname(temp_path), "el.txt"), "el")
+#' translations_read(file.path(dirname(temp_path), "el.txt"))
 #'
 #' @rdname translator-io
 #' @export

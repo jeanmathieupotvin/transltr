@@ -104,6 +104,35 @@ character vectors. This means it cannot process values passed to argument
 plans to lift this limitation in the future.
 }
 }
+\examples{
+# Create a directory containing dummy R
+# scripts for illustration purposes.
+temp_dir   <- file.path(tempdir(TRUE), "find-source")
+temp_files <- file.path(temp_dir, c("ex-script-1.R", "ex-script-2.R"))
+dir.create(temp_dir, showWarnings = FALSE, recursive = TRUE)
+
+cat(
+  "translate('Not strict: Hello, world!')",
+  "transltr::translate('Strict: Farewell, world!')",
+  sep  = "\n",
+  file = temp_files[[1L]])
+cat(
+  "transltr::translate('Strict: Hello, world!')",
+  "translate('Not strict: Farewell, world!')",
+  sep  = "\n",
+  file = temp_files[[2L]])
+
+# Extract explicit calls to transltr::translate()
+# from source scripts (strict = TRUE).
+find_source(temp_dir, strict = TRUE, verbose = TRUE)
+find_source_in_files(temp_files, strict = TRUE, verbose = TRUE)
+
+# Extract calls to any translate() function
+# from source scripts (strict = FALSE).
+find_source(temp_dir, strict = FALSE, verbose = TRUE)
+find_source_in_files(temp_files, strict = FALSE, verbose = TRUE)
+
+}
 \seealso{
 \code{\link{Translator}},
 \code{\link{Text}},

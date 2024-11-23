@@ -41,6 +41,10 @@ produce different values for different inputs.
 Further methods such as \href{https://github.com/Cyan4973/xxHash}{\code{xxhash}} will
 become available in the future.
 }
+\examples{
+hash_algorithms()
+
+}
 \seealso{
 \code{\link{Translator}},
 \code{\link{Text}}

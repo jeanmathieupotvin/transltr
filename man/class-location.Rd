@@ -96,19 +96,31 @@ It can be viewed as a vectorized version of \code{\link[=c]{c()}}.
 }
 }
 \examples{
-## Create Location objects.
-loc1 <- location("a", 1L, 2L, 3L, 4L)
-loc2 <- location("a", 5L, 6L, 7L, 8L)
-loc3 <- location("c", c(9L, 10L), c(11L, 12L), c(13L, 14L), c(15L, 16L))
+# Create Location objects.
+loc1 <- location("file-a", 1L, 2L, 3L, 4L)
+loc2 <- location("file-a", 5L, 6L, 7L, 8L)
+loc3 <- location("file-c", c(9L, 10L), c(11L, 12L), c(13L, 14L), c(15L, 16L))
 
-## Combine Location objects.
+is_location(loc1)    ## TRUE
+is_location(list())  ## FALSE
+
+# Combine Location objects.
+# They must have the same path.
 c(loc1, loc2)
+
+# Otherwise, c() throws an error.
+\dontrun{c(loc1, loc3)}
+
+# Location objects with different paths can be merged.
+# This groups Location objects according to their paths
+# and calls c() on each group. It returns a list.
 merge_locations(loc1, loc2, loc3)
 
-## Using a Location object to reference text in an R
-## character vector stored in a named environment.
+# The path of a Location object can be whatever fits the context.
+# Below is an example that references text in a character vector
+# bound to variable x in the global environment.
 x <- "This is a string and it is held in memory for some purpose."
-location("<environment: R_GlobalEnv: x>", 1L, 11L, 1L, 16L)  ## "string"
+location("<environment: R_GlobalEnv: x>", 1L, 11L, 1L, 16L)
 
 }
 \keyword{internal}

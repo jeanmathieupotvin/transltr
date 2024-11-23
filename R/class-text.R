@@ -61,40 +61,55 @@
 #' can be empty if all underlying [`Text`][Text] objects are empty.
 #'
 #' @examples
-#' ## Set source language.
+#' # Set source language.
 #' language_source_set("en")
 #'
-#' ## Create a Text object.
-#' text(
+#' # Create Text objects.
+#' txt1 <- text(
 #'   location("a", 1L, 2L, 3L, 4L),
 #'   location("a", 1L, 2L, 3L, 4L),
 #'   location("b", 5L, 6L, 7L, 8L),
 #'   location("c", c(9L, 10L), c(11L, 12L), c(13L, 14L), c(15L, 16L)),
 #'   en = "Hello, world!",
 #'   fr = "Bonjour, monde!",
-#'   es = "¡Hola Mundo!")
+#'   es = "¡Hola, mundo!")
 #'
-#' ## Combine Texts objects.
-#' b1 <- text(
+#' txt2 <- text(
 #'   location("a", 1L, 2L, 3L, 4L),
 #'   en = "Hello, world!",
 #'   fr = "Bonjour, monde!",
-#'   es = "¡Hola Mundo!")
+#'   es = "¡Hola, mundo!")
 #'
-#' b2 <- text(
+#' txt3 <- text(
+#'   source_lang = "fr2",
 #'   location("a", 5L, 6L, 7L, 8L),
 #'   en  = "Hello, world!",
-#'   fr2 = "Bonjour, monde!",
-#'   es  = "¡Hola Mundo!")
+#'   fr2 = "Bonjour le monde!",
+#'   es  = "¡Hola, mundo!")
 #'
-#' b3 <- text(
-#'   location("c", 1L, 2L, 3L, 4L),
-#'   en  = "Hello, world!",
-#'   fr  = "Bonjour, monde!",
-#'   es2 = "¡Hola Mundo!")
+#' is_location(txt1)  ## TRUE
+#' is_location("")    ## FALSE
 #'
-#' c(b1, b2)
-#' merge_texts(b1, b2, b3)
+#' # Combine Texts objects.
+#' # They must have the same hash
+#' # (same souce_text, source_lang, and hash_algorithm).
+#' c(txt1, txt2)
+#'
+#' # Otherwise, c() throws an error.
+#' \dontrun{c(txt1, txt33)}
+#'
+#' # Text objects with different hashes can be merged.
+#' # This groups Text objects according to their hashes
+#' # and calls c() on each group. It returns a list.
+#' merge_texts(txt1, txt2, txt3)
+#'
+#' # Objects can be coerced to a Text object with as_text(). Below is an
+#' # example for call objects. This is for illustration purposes only,
+#' # and the latter should not be used. It is worthwhile to note that this
+#' # method is used internally by find_source(). Use this function instead.
+#' translate_call <- str2lang("transltr::translate('Hello, world!')")
+#' translate_loc  <- location("example in class-text", 2L, 32L, 2L, 68L)
+#' as_text(translate_call, location = translate_loc)
 #'
 #' @include constants.R
 #' @rdname class-text
@@ -384,6 +399,10 @@ Text <- R6::R6Class("Text",
         #' @template param-hash-algorithm
         #'
         #' @return An [`R6`][R6::R6] object of class [`Text`][Text].
+        #'
+        #' @examples
+        #' # Consider using text() instead.
+        #' txt <- Text$new()
         initialize = \(hash_algorithm = hash_algorithms()) {
             assert_arg(hash_algorithm, TRUE)
 
@@ -403,6 +422,13 @@ Text <- R6::R6Class("Text",
         #'
         #' @return A character string. `NULL` is returned if the requested
         #'   translation is not available.
+        #'
+        #' @examples
+        #' txt <- Text$new()
+        #' txt$set_translation("en", "Hello, world!")
+        #'
+        #' txt$get_translation("en")  ## Outputs "Hello, world!"
+        #' txt$get_translation("fr")  ## Outputs NULL
         get_translation = \(lang = "") {
             assert_chr1(lang)
             return(private$.translations[[lang]])
@@ -419,7 +445,7 @@ Text <- R6::R6Class("Text",
         #' @return A `NULL`, invisibly.
         #'
         #' @examples
-        #' ## Registering source_lang and source_text.
+        #' # Register a pair of source_lang and source_text.
         #' txt <- Text$new()
         #' txt$set_translation("en", "Hello, world!")
         #' txt$source_lang <- "en"
@@ -467,6 +493,13 @@ Text <- R6::R6Class("Text",
         #'   paths and/or ranges won't be duplicated.
         #'
         #' @return A `NULL`, invisibly.
+        #'
+        #' @examples
+        #' txt <- Text$new()
+        #' txt$set_locations(
+        #'   location("a", 1L, 2L, 3L, 4L),
+        #'   location("a", 1L, 2L, 3L, 4L),
+        #'   location("b", 5L, 6L, 7L, 8L))
         set_locations = \(...) {
             if (!...length()) {
                 return(invisible())
@@ -492,11 +525,11 @@ Text <- R6::R6Class("Text",
         #' @return A `NULL`, invisibly.
         #'
         #' @examples
-        #' ## Removing source_lang and source_text.
         #' txt <- Text$new()
         #' txt$set_translations(en = "Hello, world!", fr = "Bonjour, monde!")
         #' txt$source_lang <- "en"
         #'
+        #' # Remove source_lang and source_text.
         #' txt$source_lang <- "fr"
         #' txt$rm_translation("en")
         rm_translation = \(lang = "") {
@@ -521,6 +554,14 @@ Text <- R6::R6Class("Text",
         #'   identifying a [`Location`][Location] object to be removed.
         #'
         #' @return A `NULL`, invisibly.
+        #'
+        #' @examples
+        #' txt <- Text$new()
+        #' txt$set_locations(
+        #'   location("a", 1L, 2L, 3L, 4L),
+        #'   location("b", 5L, 6L, 7L, 8L))
+        #'
+        #' txt$rm_location("a")
         rm_location = \(path = "") {
             assert_chr1(path)
             assert_match(path, names(private$.locations), quote_values = TRUE)

@@ -34,6 +34,18 @@ A character string, or \code{NULL} if value passed to \code{which} is unavailabl
 Fetch shared constants used by \code{\link{transltr}}. Constants ensure
 consistency among all features of the package.
 }
+\examples{
+constant("generated-by")  ## Outputs "R package transltr 0.0.1"
+constant("concat")        ## Outputs " "
+constant("empty")         ## Outputs "<none>"
+constant("placeholder")   ## Outputs "<none>"
+constant("unset")         ## Outputs "<unset>"
+constant("unknown")       ## Outputs "<unknown>"
+
+# NULL is returned if which has no corresponding entry.
+constant("undefined")
+
+}
 \seealso{
 \code{\link[=hash_algorithms]{hash_algorithms()}}
 }

@@ -92,17 +92,23 @@ translator_get("global")
 ## Unregister a Translator object (for implicit and explicit scopes).
 translator_set(NULL)
 translator_set(NULL, "global")
-is.null(translator_get(NULL)) ## TRUE
+is.null(translator_get(NULL))  ## TRUE
 
-## Setting and getting a Translator object, while letting them infer
-## the underlying scope. This is done temporarily within the utils
-## package for illustration purposes.
+## Setting and getting a Translator object while letting the package
+## infer the underlying scope. This is done temporarily within the
+## utils package for illustration purposes.
 evalq(envir = asNamespace("utils"), \() {
   on.exit(transltr::translator_set(NULL))
   transltr::translator_set(
     transltr::translator(id = sprintf("utils:\%s", transltr::uuid())))
   return(transltr::translator_get())
 })()
+
+## List all active scopes.
+## This can be useful to avoid collisions.
+translator_set(scope = "scope1")
+translator_set(scope = "scope2")
+translator_scopes()
 
 }
 \seealso{

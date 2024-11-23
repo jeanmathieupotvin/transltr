@@ -42,11 +42,18 @@ generating UUIDs. See \code{\link[=set.seed]{set.seed()}} for more information.
 }
 \note{
 UUIDs are designed to be globally unique (collisions are extremely unlikely)
-and are sometimes called GUIDs or \emph{Globally Unique Identifiers}. There are
+and are sometimes called GUIDs (\emph{Globally Unique Identifiers}). There are
 several UUID versions with slightly different purposes.
 
 Package \code{\link{transltr}} uses random identifiers (version 4/variant 1,
 also known as DCE 1.1, ISO/IEC 11578:1996).
+}
+\examples{
+uuid()
+uuid_raw()
+uuid_is(uuid())      ## TRUE
+uuid_is(uuid_raw())  ## FALSE, uuid_raw() does not return a string.
+
 }
 \seealso{
 \href{https://www.rfc-editor.org/rfc/rfc4122}{RFC4122},

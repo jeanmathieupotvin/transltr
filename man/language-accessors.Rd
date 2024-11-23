@@ -85,17 +85,21 @@ the \code{language} parameter of the package. See Examples.
 }
 
 \examples{
-## Change the language parameter (globally).
+# Change the language parameters (globally).
+language_source_set("en")
 language_set("fr")
-language_get()  ## Outputs "fr".
 
-## Change both the language parameter and the locale.
-## Note that you control how languages are named for language_set(),
-## but not for Sys.setLanguage().
+language_source_get()  ## Outputs "en"
+language_get()         ## Outputs "fr"
+
+# Change both the language parameter and the locale.
+# Note that while users control how languages are named
+# for language_set(), they do not for Sys.setLanguage().
 language_set("fr")
 Sys.setLanguage("fr-CA")
 
 ## Reset settings.
+language_source_set(NULL)
 language_set(NULL)
 
 }

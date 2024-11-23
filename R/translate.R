@@ -26,22 +26,33 @@
 #' [language_set()]
 #'
 #' @examples
-#' #' ## Set source language.
+#' # Set source language.
 #' language_source_set("en")
 #'
-#' ## Create a Translator. This would normally be done
-#' ## automatically by find_source() or translator_read().
-#' my_translator <- translator(text(en = "Hello!", es = "¡Hola!"))
+#' # Create a Translator object.
+#' # This would normally be done automatically
+#' # by find_source(), or translator_read().
+#' x <- translator(
+#'   id = "test-translator",
+#'   en = "English",
+#'   fr = "Français",
+#'   text(
+#'     en = "Hello, world!",
+#'     fr = "Bonjour, monde!"),
+#'   text(
+#'     en = "Farewell, world!",
+#'     fr = "Au revoir, monde!"))
 #'
-#' ## Register it (implicitly, under 'global' scope).
-#' translator_set(my_translator)
+#' # Register it (implicitly, under 'global' scope).
+#' translator_set(x)
 #'
-#' ## Set current language.
-#' language_set("es")
+#' # Set current language.
+#' language_set("fr")
 #'
-#' ## Request translations.
-#' translate("Hello!") ## Outputs "¡Hola!".
-#' translate("Hello!", lang = "en") ## Outputs "Hello!".
+#' # Request translations.
+#' translate("Hello, world!")                  ## Outputs "Bonjour, monde!"
+#' translate("Farewell, world!", lang = "fr")  ## Outputs "Au revoir, monde!"
+#' translate("Hello, world!",    lang = "en")  ## Outputs "Hello, world!"
 #'
 #' @export
 translate <- function(

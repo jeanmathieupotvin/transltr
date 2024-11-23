@@ -5,7 +5,6 @@
 
 # For Initial Release to CRAN
 
-- Include examples for all exported functions.
 - Write unit tests for functions
   - `constant()`,
   - `language_source_set()`,

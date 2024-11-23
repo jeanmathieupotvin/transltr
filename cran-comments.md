@@ -22,5 +22,5 @@ checking CRAN incoming feasibility ... [3s/18s] NOTE
 ## Comments
 
 * This is a new release.
-* PDF manual contains some necessary non-ASCII characters (`ç`). It does not
-  yield an error.
+* PDF manual contains some necessary non-ASCII characters such as `ç`, `ñ`,
+  and `¡`. They did not generate error when building the manual.

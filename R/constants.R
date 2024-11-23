@@ -20,6 +20,17 @@
 #'
 #' @seealso [hash_algorithms()]
 #'
+#' @examples
+#' constant("generated-by")  ## Outputs "R package transltr 0.0.1"
+#' constant("concat")        ## Outputs " "
+#' constant("empty")         ## Outputs "<none>"
+#' constant("placeholder")   ## Outputs "<none>"
+#' constant("unset")         ## Outputs "<unset>"
+#' constant("unknown")       ## Outputs "<unknown>"
+#'
+#' # NULL is returned if which has no corresponding entry.
+#' constant("undefined")
+#'
 #' @rdname constants
 #' @export
 #' @keywords internal
@@ -34,7 +45,7 @@ constant <- function(
 {
     return(
         switch(which[[1L]],
-            `generated-by` = "R package transltr 0.0.1.9003",
+            `generated-by` = "R package transltr 0.0.1",
             concat         = " ",
             empty          = "<none>",
             placeholder    = "<none>",

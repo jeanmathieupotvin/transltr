@@ -38,6 +38,9 @@
 #' [`Translator`][Translator],
 #' [`Text`][Text]
 #'
+#' @examples
+#' hash_algorithms()
+#'
 #' @export
 #' @keywords internal
 hash_algorithms <- function() {
