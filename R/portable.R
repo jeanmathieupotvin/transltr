@@ -116,17 +116,17 @@
 #'      If `set_instructions` is `FALSE`, it returns a character vector of
 #'      length 2:
 #'
-#'        1. a string of YAML comments, and
-#'        2. the output of [format.Portable()].
+#'      1. a string of YAML comments, and
+#'      2. the output of [format.Portable()].
 #'
 #'   2. If `how` is equal to `"flat"`, it returns a character vector of
 #'      length 2:
 #'
-#'        1. the output of [format.Portable()] applied on all elements of
-#'           `x` except for field `translations`, and
-#'        2. a character string of pairs of source text and translation
-#'           constructed from field `translations`, and formatted according
-#'           to what section Class PortableTranslations describes.
+#'      1. the output of [format.Portable()] applied on all elements of
+#'         `x` except for field `translations`, and
+#'      2. a character string of pairs of source text and translation
+#'         constructed from field `translations`, and formatted according
+#'         to what section Class PortableTranslations describes.
 #'
 #'      If `set_instructions` is `TRUE`, it returns a character vector of
 #'      length 3. A YAML string of comments is appended to the elements listed
