@@ -168,7 +168,7 @@ c.Text <- function(...) {
     # Checking hashes simultaneously checks equality
     # of hash_algorithm, source_lang and source_text.
     if (!all(hashes[[1L]] == hashes[-1L])) {
-        stops("all 'hash' must be equal in order to combine multiple 'Text' objects.")
+        stops("all 'hash' must be equal in order to combine 'Text' objects.")
     }
     if (hashes[[1L]] == constant("unset")) {
         stops("all 'Text' objects have no source language set.")

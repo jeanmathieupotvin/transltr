@@ -220,7 +220,7 @@
       c(txt1, txt2)
     Condition
       Error:
-      ! all 'hash' must be equal in order to combine multiple 'Text' objects.
+      ! all 'hash' must be equal in order to combine 'Text' objects.
 
 # c.Text() throws an error if source languages are not set
 

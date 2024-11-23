@@ -120,7 +120,7 @@
       c(location("a"), location("b"))
     Condition
       Error:
-      ! all 'path' must be equal in order to combine multiple 'Location' objects.
+      ! all 'path' must be equal in order to combine 'Location' objects.
 
 # merge_locations() validates ...
 

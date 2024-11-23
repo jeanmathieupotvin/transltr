@@ -162,7 +162,7 @@ c.Location <- function(...) {
     paths <- vapply_1c(locs, `[[`, i = "path")
 
     if (!all(paths[[1L]] == paths[-1L])) {
-        stops("all 'path' must be equal in order to combine multiple 'Location' objects.")
+        stops("all 'path' must be equal in order to combine 'Location' objects.")
     }
 
     return(
