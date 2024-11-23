@@ -24,7 +24,7 @@ usethis::use_description(
                 given   = "Jean-Mathieu",
                 family  = "Potvin",
                 email   = "jeanmathieupotvin@ununoctium.dev",
-                role    = c("aut", "cre")),
+                role    = c("aut", "cre", "cph")),
             utils::person(
                 given   = "Jérôme",
                 family  = "Lavoué",

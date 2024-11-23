@@ -5,6 +5,8 @@
 
 # For Initial Release to CRAN
 
+- Remove all Japanase characters from Rd files.
+- Include examples for all exported functions.
 - Write unit tests for functions
   - `constant()`,
   - `language_source_set()`,

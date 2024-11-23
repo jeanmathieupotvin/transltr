@@ -123,7 +123,7 @@ The comprehensive technical documentation of
 \href{https://www.gnu.org/software/gettext/manual/gettext.html}{GNU \code{gettext}}.
 }
 \author{
-\strong{Maintainer}: Jean-Mathieu Potvin \email{jeanmathieupotvin@ununoctium.dev}
+\strong{Maintainer}: Jean-Mathieu Potvin \email{jeanmathieupotvin@ununoctium.dev} [copyright holder]
 
 Other contributors:
 \itemize{

@@ -31,5 +31,8 @@ usethis::use_readme_md(open = FALSE)
 usethis::use_cran_badge()
 usethis::use_lifecycle_badge("experimental")
 
+# Create cran-comments.md.
+usethis::use_cran_comments()
+
 # Create file R/transltr-package.R.
 usethis::use_package_doc(open = FALSE)

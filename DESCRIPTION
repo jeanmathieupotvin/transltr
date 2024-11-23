@@ -2,7 +2,7 @@ Package: transltr
 Title: A Light Internationalization Framework for R
 Version: 0.0.1
 Authors@R: c(
-    person("Jean-Mathieu", "Potvin", , "jeanmathieupotvin@ununoctium.dev", role = c("aut", "cre")),
+    person("Jean-Mathieu", "Potvin", , "jeanmathieupotvin@ununoctium.dev", role = c("aut", "cre", "cph")),
     person("Jérôme", "Lavoué", , "jerome.lavoue@umontreal.ca", role = c("ctb", "fnd", "rev"),
            comment = c(ORCID = "0000-0003-4950-5475"))
   )
@@ -19,7 +19,7 @@ Encoding: UTF-8
 Language: en
 Roxygen: list(markdown = TRUE, r6 = TRUE)
 RoxygenNote: 7.3.2
-Suggests: 
+Suggests:
     covr,
     devtools,
     lifecycle,
@@ -28,12 +28,12 @@ Suggests:
     usethis,
     withr
 Config/testthat/edition: 3
-Imports: 
+Imports:
     digest,
     R6,
     utils,
     yaml
-Collate: 
+Collate:
     'assert.R'
     'class-location.R'
     'constants.R'
