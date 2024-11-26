@@ -67,7 +67,8 @@ portable_translations(
 \item{x}{Usage depends on the underlying function.
 \itemize{
 \item A \code{\link{Translator}} object for \code{\link[=portable_translator]{portable_translator()}}, and
-\code{\link[=portable_translations]{portable_translations()}}.
+\code{\link[=portable_translations]{portable_translations()}}. All underlying \code{\link{Text}} objects must
+have a common source language.
 \item A \code{\link{Text}} object for \code{\link[=portable_text]{portable_text()}}.
 \item A \code{\link{Location}} object for \code{\link[=portable_location]{portable_location()}}.
 \item Any \R object for all other functions, and methods.

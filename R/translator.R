@@ -298,6 +298,12 @@ translator_scope_name <- function(x) {
 #' [translator_write()], and [translations_write()] enforces UTF-8. This
 #' cannot be changed.
 #'
+#' ## Requirements
+#'
+#' To export a [`Translator`][Translator], the underlying registered
+#' [`Text`][Text] objects must have the same source language (the same
+#' [`Text$source_lang`][Text] value). An error is thrown otherwise.
+#'
 #' @param path A character string. A path to a file to read from, or write to.
 #'   Its parent directories are automatically created using [dir.create()] if
 #'   they do not exist.
@@ -347,7 +353,7 @@ translator_scope_name <- function(x) {
 #' language_source_set("en")
 #'
 #' # Define a location where Portable Translator Files are written.
-#' temp_path <- path <- tempfile(pattern = "_translator_", fileext = ".yml")
+#' temp_path <- tempfile(pattern = "_translator_", fileext = ".yml")
 #'
 #' # Create a Translator object.
 #' # This would normally be done automatically

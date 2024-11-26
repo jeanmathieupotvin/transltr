@@ -139,6 +139,13 @@ has to be updated. Encodings should be known, never inferred.
 \code{\link[=translator_write]{translator_write()}}, and \code{\link[=translations_write]{translations_write()}} enforces UTF-8. This
 cannot be changed.
 }
+
+\subsection{Requirements}{
+
+To export a \code{\link{Translator}}, the underlying registered
+\code{\link{Text}} objects must have the same source language (the same
+\code{\link[=Text]{Text$source_lang}} value). An error is thrown otherwise.
+}
 }
 \examples{
 # In what follows, ASCII characters are preferred because R has poor
@@ -150,7 +157,7 @@ cannot be changed.
 language_source_set("en")
 
 # Define a location where Portable Translator Files are written.
-temp_path <- path <- tempfile(pattern = "_translator_", fileext = ".yml")
+temp_path <- tempfile(pattern = "_translator_", fileext = ".yml")
 
 # Create a Translator object.
 # This would normally be done automatically

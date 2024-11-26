@@ -42,7 +42,8 @@
 #'
 #' @param x Usage depends on the underlying function.
 #'   * A [`Translator`][Translator] object for [portable_translator()], and
-#'     [portable_translations()].
+#'     [portable_translations()]. All underlying [`Text`][Text] objects must
+#'     have a common source language.
 #'   * A [`Text`][Text] object for [portable_text()].
 #'   * A [`Location`][Location] object for [portable_location()].
 #'   * Any \R object for all other functions, and methods.
@@ -578,7 +579,14 @@ as_translator.PortableTranslator <- function(
         attr(trans, "translations_files") <- x$translations_files
     }
 
-    do.call(trans$set_texts, lapply(x[vapply_1l(x, is_text)], as_text))
+    # FIXME: why is this needed, and as_text.PortableText() does not need it?
+    # Not so sure why Texts are not registered.
+    is_txt <- vapply_1l(x, \(x) {
+        tag <- attr(x, which = "tag")
+        return(is_text(x) || (!is.null(tag) && tag == "Text"))
+    })
+
+    do.call(trans$set_texts, lapply(x[is_txt], as_text))
     do.call(trans$set_native_languages, x$languages)
     return(trans)
 }
