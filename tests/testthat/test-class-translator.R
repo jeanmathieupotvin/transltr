@@ -476,3 +476,11 @@ test_that("print() returns x invisibly", {
     expect_invisible(print(trans1))
     expect_identical(print(trans1), trans1)
 })
+
+
+# as_translator() --------------------------------------------------------------
+
+
+test_that("as_translator() works", {
+    expect_s3_class(as_translator(portable_translator(trans1)), "Translator")
+})
