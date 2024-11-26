@@ -69,62 +69,136 @@ to use \code{\link[=translate]{translate()}} at all times. Method
 called by the former.
 }
 
-\subsection{Exporting, and Importing Translators}{
+\subsection{Exporting and Importing Translators}{
 
 \code{\link{Translator}} objects can be saved, and exported with
 \code{\link[=translator_write]{translator_write()}}.
 
 They can be imported back into an \R session with \code{\link[=translator_read]{translator_read()}}.
 }
+
+\subsection{Coercion}{
+
+\code{\link[=as_translator]{as_translator()}} is an S3 generic function that attempts to coerce its
+argument into a suitable \code{\link{Translator}} object. It currently
+has no methods (aside from \link[=portable]{internal ones}), but users may
+extend it by defining their own methods.
+}
 }
 \examples{
-#' ## Set source language.
+# Set source language.
 language_source_set("en")
 
-## Create a Translator manually.
-translator(
+# Create a Translator object.
+# This would normally be done automatically
+# by find_source(), or translator_read().
+trans <- translator(
   id = "test-translator",
   en = "English",
+  es = "Español",
   fr = "Français",
   text(
     location("a", 1L, 2L, 3L, 4L),
     en = "Hello, world!",
     fr = "Bonjour, monde!"),
   text(
-    location("b", 5L, 6L, 7L, 8L),
+    location("b", 1L, 2L, 3L, 4L),
     en = "Farewell, world!",
     fr = "Au revoir, monde!"))
 
+is_translator(trans)
+
+# Translator objects has a specific format.
+# print() calls format() internally, as expected.
+print(trans)
+
+
+## ------------------------------------------------
+## Method `Translator$new`
+## ------------------------------------------------
+
+# Consider using translator() instead.
+trans <- Translator$new()
+
+## ------------------------------------------------
+## Method `Translator$translate`
+## ------------------------------------------------
+
+trans <- Translator$new()
+trans$set_text(en = "Hello, world!", fr = "Bonjour, monde!")
+
+# Consider using translate() instead.
+trans$translate("Hello, world!", lang = "en")  ## Outputs "Hello, world!"
+trans$translate("Hello, world!", lang = "fr")  ## Outputs "Bonjour, monde!"
+
+## ------------------------------------------------
+## Method `Translator$get_translation`
+## ------------------------------------------------
+
+trans <- Translator$new()
+trans$set_text(en = "Hello, world!")
+
+# Consider using translate() instead.
+trans$get_translation("256e0d7", "en")  ## Outputs "Hello, world!"
+
+## ------------------------------------------------
+## Method `Translator$get_text`
+## ------------------------------------------------
+
+trans <- Translator$new()
+trans$set_text(en = "Hello, world!")
+
+trans$get_translation("256e0d7", "en")  ## Outputs "Hello, world!"
+
+## ------------------------------------------------
+## Method `Translator$set_text`
+## ------------------------------------------------
+
+trans <- Translator$new()
+
+trans$set_text(en = "Hello, world!", location())
 
 ## ------------------------------------------------
 ## Method `Translator$set_texts`
 ## ------------------------------------------------
 
-## Set source language.
+# Set source language.
 language_source_set("en")
 
-## Create Text objects.
-blk1 <- text(
+trans <- Translator$new()
+
+# Create Text objects.
+txt1 <- text(
   location("a", 1L, 2L, 3L, 4L),
   en = "Hello, world!",
   fr = "Bonjour, monde!")
-blk2 <- text(
+
+txt2 <- text(
   location("b", 5L, 6L, 7L, 8L),
   en = "Farewell, world!",
   fr = "Au revoir, monde!")
 
-## Create a new Translator and register them.
-trans <- Translator$new()
-trans$set_texts(blk1, blk2)
+trans$set_texts(txt1, txt2)
 
 ## ------------------------------------------------
 ## Method `Translator$set_native_languages`
 ## ------------------------------------------------
 
 trans <- Translator$new()
-trans$set_native_languages(
-  en = "English",
-  fr = "Français")
+
+trans$set_native_languages(en = "English", fr = "Français")
+
+# Remove existing entries.
+trans$set_native_languages(fr = NULL)
+
+## ------------------------------------------------
+## Method `Translator$rm_text`
+## ------------------------------------------------
+
+trans <- Translator$new()
+trans$set_text(en = "Hello, world!")
+
+trans$rm_text("256e0d7")
 }
 \seealso{
 \code{\link[=translate]{translate()}},
@@ -174,8 +248,8 @@ objects. If there is none, \code{languages} is \code{NULL}.
 This is a \strong{read-only} field.}
 
 \item{\code{native_languages}}{A named character vector of non-empty and
-non-\link[base:NA]{NA} values, or \code{NULL}. An optional, but useful map
-of \code{languages} (codes) to native language names. Names are codes,
+non-\link[base:NA]{NA} values, or \code{NULL}. A map (bijection) of
+\code{languages} (codes) to native language names. Names are codes,
 and values are native languages. If there is none,
 \code{native_languages} is \code{NULL}.
 
@@ -229,6 +303,15 @@ source information for identification purposes.}
 \subsection{Returns}{
 An \code{\link[R6:R6Class]{R6}} object of class \code{\link{Translator}}.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{# Consider using translator() instead.
+trans <- Translator$new()
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Translator-translate"></a>}}
@@ -282,6 +365,19 @@ fetched via method \code{\link[=Translator]{Translator$get_translation()}}.
 A character string, or \code{NULL}. The corresponding translation
 in the requested language, or \code{NULL} if none is available.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{trans <- Translator$new()
+trans$set_text(en = "Hello, world!", fr = "Bonjour, monde!")
+
+# Consider using translate() instead.
+trans$translate("Hello, world!", lang = "en")  ## Outputs "Hello, world!"
+trans$translate("Hello, world!", lang = "fr")  ## Outputs "Bonjour, monde!"
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Translator-get_translation"></a>}}
@@ -316,6 +412,18 @@ A character string. \code{NULL} is returned if the requested
 translation is not available (either \code{hash} or \code{lang} is not
 registered).
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{trans <- Translator$new()
+trans$set_text(en = "Hello, world!")
+
+# Consider using translate() instead.
+trans$get_translation("256e0d7", "en")  ## Outputs "Hello, world!"
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Translator-get_text"></a>}}
@@ -338,6 +446,17 @@ unique identifier of the requested source text, or its underlying
 \subsection{Returns}{
 A \code{\link{Text}} object, or \code{NULL}.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{trans <- Translator$new()
+trans$set_text(en = "Hello, world!")
+
+trans$get_translation("256e0d7", "en")  ## Outputs "Hello, world!"
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Translator-set_text"></a>}}
@@ -361,6 +480,16 @@ object.
 \subsection{Returns}{
 A \code{NULL}, invisibly.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{trans <- Translator$new()
+
+trans$set_text(en = "Hello, world!", location())
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Translator-set_texts"></a>}}
@@ -391,22 +520,23 @@ A \code{NULL}, invisibly.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{## Set source language.
+\preformatted{# Set source language.
 language_source_set("en")
 
-## Create Text objects.
-blk1 <- text(
+trans <- Translator$new()
+
+# Create Text objects.
+txt1 <- text(
   location("a", 1L, 2L, 3L, 4L),
   en = "Hello, world!",
   fr = "Bonjour, monde!")
-blk2 <- text(
+
+txt2 <- text(
   location("b", 5L, 6L, 7L, 8L),
   en = "Farewell, world!",
   fr = "Au revoir, monde!")
 
-## Create a new Translator and register them.
-trans <- Translator$new()
-trans$set_texts(blk1, blk2)
+trans$set_texts(txt1, txt2)
 }
 \if{html}{\out{</div>}}
 
@@ -437,9 +567,11 @@ A \code{NULL}, invisibly.
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{trans <- Translator$new()
-trans$set_native_languages(
-  en = "English",
-  fr = "Français")
+
+trans$set_native_languages(en = "English", fr = "Français")
+
+# Remove existing entries.
+trans$set_native_languages(fr = NULL)
 }
 \if{html}{\out{</div>}}
 
@@ -466,5 +598,16 @@ identifying the \code{\link{Text}} object to be removed.}
 \subsection{Returns}{
 A \code{NULL}, invisibly.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{trans <- Translator$new()
+trans$set_text(en = "Hello, world!")
+
+trans$rm_text("256e0d7")
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 }

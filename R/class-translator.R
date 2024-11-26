@@ -334,6 +334,10 @@ Translator <- R6::R6Class("Translator",
         #' @template param-hash-algorithm
         #'
         #' @return An [`R6`][R6::R6] object of class [`Translator`][Translator].
+        #'
+        #' @examples
+        #' # Consider using translator() instead.
+        #' trans <- Translator$new()
         initialize = \(id = uuid(), hash_algorithm = hash_algorithms()) {
             assert_chr1(id)
             assert_arg(hash_algorithm, TRUE)
@@ -366,6 +370,14 @@ Translator <- R6::R6Class("Translator",
         #'
         #' @return A character string, or `NULL`. The corresponding translation
         #'   in the requested language, or `NULL` if none is available.
+        #'
+        #' @examples
+        #' trans <- Translator$new()
+        #' trans$set_text(en = "Hello, world!", fr = "Bonjour, monde!")
+        #'
+        #' # Consider using translate() instead.
+        #' trans$translate("Hello, world!", lang = "en")  ## Outputs "Hello, world!"
+        #' trans$translate("Hello, world!", lang = "fr")  ## Outputs "Bonjour, monde!"
         translate = \(
             ...,
             lang        = language_get(),
@@ -388,6 +400,13 @@ Translator <- R6::R6Class("Translator",
         #' @return A character string. `NULL` is returned if the requested
         #'   translation is not available (either `hash` or `lang` is not
         #'   registered).
+        #'
+        #' @examples
+        #' trans <- Translator$new()
+        #' trans$set_text(en = "Hello, world!")
+        #'
+        #' # Consider using translate() instead.
+        #' trans$get_translation("256e0d7", "en")  ## Outputs "Hello, world!"
         get_translation = \(hash = "", lang = "") {
             if (is.null(txt <- self$get_text(hash))) {
                 return(NULL)
@@ -399,6 +418,12 @@ Translator <- R6::R6Class("Translator",
         #' @description Extract a [`Text`][Text] object.
         #'
         #' @return A [`Text`][Text] object, or `NULL`.
+        #'
+        #' @examples
+        #' trans <- Translator$new()
+        #' trans$set_text(en = "Hello, world!")
+        #'
+        #' trans$get_translation("256e0d7", "en")  ## Outputs "Hello, world!"
         get_text = \(hash = "") {
             assert_chr1(hash)
             return(private$.texts[[private$.hash_expand(hash)]])
@@ -412,12 +437,17 @@ Translator <- R6::R6Class("Translator",
         #' @param source_lang Passed as is to [text()].
         #'
         #' @return A `NULL`, invisibly.
+        #'
+        #' @examples
+        #' trans <- Translator$new()
+        #'
+        #' trans$set_text(en = "Hello, world!", location())
         set_text = \(..., source_lang = language_source_get()) {
-            blk <- text(...,
+            txt <- text(...,
                 source_lang    = source_lang,
                 hash_algorithm = private$.hash_algo)
 
-            self$set_texts(blk)
+            self$set_texts(txt)
             return(invisible())
         },
 
@@ -434,22 +464,23 @@ Translator <- R6::R6Class("Translator",
         #' @return A `NULL`, invisibly.
         #'
         #' @examples
-        #' ## Set source language.
+        #' # Set source language.
         #' language_source_set("en")
         #'
-        #' ## Create Text objects.
-        #' blk1 <- text(
+        #' trans <- Translator$new()
+        #'
+        #' # Create Text objects.
+        #' txt1 <- text(
         #'   location("a", 1L, 2L, 3L, 4L),
         #'   en = "Hello, world!",
         #'   fr = "Bonjour, monde!")
-        #' blk2 <- text(
+        #'
+        #' txt2 <- text(
         #'   location("b", 5L, 6L, 7L, 8L),
         #'   en = "Farewell, world!",
         #'   fr = "Au revoir, monde!")
         #'
-        #' ## Create a new Translator and register them.
-        #' trans <- Translator$new()
-        #' trans$set_texts(blk1, blk2)
+        #' trans$set_texts(txt1, txt2)
         set_texts = \(...) {
             if (!...length()) {
                 return(invisible())
@@ -473,9 +504,11 @@ Translator <- R6::R6Class("Translator",
         #'
         #' @examples
         #' trans <- Translator$new()
-        #' trans$set_native_languages(
-        #'   en = "English",
-        #'   fr = "Français")
+        #'
+        #' trans$set_native_languages(en = "English", fr = "Français")
+        #'
+        #' # Remove existing entries.
+        #' trans$set_native_languages(fr = NULL)
         set_native_languages = function(...) {
             if (!...length()) {
                 return(invisible())
@@ -497,6 +530,12 @@ Translator <- R6::R6Class("Translator",
         #'   identifying the [`Text`][Text] object to be removed.
         #'
         #' @return A `NULL`, invisibly.
+        #'
+        #' @examples
+        #' trans <- Translator$new()
+        #' trans$set_text(en = "Hello, world!")
+        #'
+        #' trans$rm_text("256e0d7")
         rm_text = \(hash = "") {
             if (!length(private$.texts)) {
                 stops("there are no registered 'Text' objects to remove.")
