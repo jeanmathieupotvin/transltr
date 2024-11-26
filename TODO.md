@@ -6,9 +6,6 @@
 # For Initial Release to CRAN
 
 - Write unit tests for functions
-  - `as_location()`,
-  - `as_location.Location()`,
-  - `as_text.Text()`,
   - `text_write()`,
   - `portable()`,
   - `is_portable()`,

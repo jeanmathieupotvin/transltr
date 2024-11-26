@@ -208,3 +208,11 @@ test_that("merge_locations() combines Location objects having different paths", 
     expect_identical(out[[2L]], location("b", c(3L, 4L), c(3L, 4L), c(3L, 4L), c(3L, 4L)))
     expect_identical(out[[3L]], location("c", 5L, 5L, 5L, 5L))
 })
+
+
+# as_location() ----------------------------------------------------------------
+
+
+test_that("as_location() works", {
+    expect_s3_class(as_location(portable_location()), "Location")
+})
