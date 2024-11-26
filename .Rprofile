@@ -33,54 +33,48 @@ if (interactive()) {
         require(withr)
     })
 
-    # Create a shorter alias for microbenchmark::microbenchmark().
-    .mb <- microbenchmark::microbenchmark
+    # Attach aliases, and small dev tools.
+    # Names are as small as possible by design.
+    attach(name = "tools:transltr:dev", what = local({
+        # Exhaustive build checks.
+        .ck  <- \() devtools::check(remote = TRUE, manual = TRUE)
+        .man <- \() devtools::build_manual()
 
-    # Generate a plain text coverage report (file COVERAGE) with covr.
-    .re <- function() {
-        on.exit(close(con))
-        con <- file("COVERAGE", "wt", FALSE, "UTF-8")
-        cov <- covr::package_coverage()
-        sink(con, type = "message")
-        print(cov)
-        sink(NULL, type = "message")
-        return(invisible())
-    }
+        # Shorter aliases.
+        .mb <- microbenchmark::microbenchmark
 
-    # Test a particular file. Omit prefix `test-` and file extension.
-    .tf <- function(file = "") {
-        path <- file.path("tests", "testthat", sprintf("test-%s.R", file))
-        return(testthat::test_file(path))
-    }
+        # Test a particular file.
+        # Omit prefix `test-` and file extension.
+        .tf <- \(file = "") {
+            path <- file.path("tests", "testthat", sprintf("test-%s.R", file))
+            return(testthat::test_file(path))
+        }
 
-    # Profile R code.
-    # Call .pf() to start the profiler and .pf(NULL) to stop it.
-    .pf <- function(file = ".Rprof.out") {
-        return(
-            Rprof(
-                filename         = file,
-                interval         = 0.01,
-                memory.profiling = TRUE,
-                line.profiling   = TRUE))
-    }
+        # Profile R code.
+        # Call .pf() to start the profiler and .pf(NULL) to stop it.
+        .pf <- \(file = ".Rprof.out") {
+            return(
+                Rprof(
+                    filename         = file,
+                    interval         = 0.01,
+                    memory.profiling = TRUE,
+                    line.profiling   = TRUE))
+        }
 
-    # View results stemming from R profiler.
-    .sp <- function(file = ".Rprof.out") {
-        out <- summaryRprof(
-            filename  = file,
-            chunksize = 5000,
-            memory    = "both",
-            lines     = "show")$by.line
+        # View results stemming from R profiler.
+        .sp <- \(file = ".Rprof.out") {
+            out <- summaryRprof(
+                filename  = file,
+                chunksize = 5000,
+                memory    = "both",
+                lines     = "show")$by.line
 
-        View(out, "R Profiler Results")
-        return(invisible(out))
-    }
+            View(out, "R Profiler Results")
+            return(invisible(out))
+        }
 
-    # Clear global environment, but keep aliases.
-    .rm <- function() {
-        objs <- ls(".GlobalEnv", all.names = TRUE)
-        keep <- c(".mb", ".pf", ".re", ".rm", ".sp", ".tf")
-        objs <- objs[-match(keep, objs, 0L)]
-        return(rm(list = objs, envir = globalenv()))
-    }
+        # Return this local environment
+        # (to attach it to the search path).
+        environment()
+    }))
 }

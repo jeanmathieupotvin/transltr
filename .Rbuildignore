@@ -11,7 +11,6 @@
 ^\.Rprof\.out$
 
 ^codecov\.yml$
-^COVERAGE$
 ^LICENSE\.md$
 
 ^NEWS\.0\.md$
