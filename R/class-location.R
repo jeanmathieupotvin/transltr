@@ -24,6 +24,13 @@
 #' number of [`Location`][Location] objects having possibly different paths.
 #' It can be viewed as a vectorized version of [c()].
 #'
+#' ## Coercion
+#'
+#' [as_location()] is an S3 generic function that attempts to coerce its
+#' argument into a suitable [`Location`][Location] object. It currently has no
+#' methods (aside from [internal ones][portable()]), but users may extend it by
+#' defining their own methods.
+#'
 #' @param path A non-empty and non-[NA][base::NA] character string. The origin
 #'   of the range(s).
 #'
@@ -70,8 +77,13 @@
 #' loc2 <- location("file-a", 5L, 6L, 7L, 8L)
 #' loc3 <- location("file-c", c(9L, 10L), c(11L, 12L), c(13L, 14L), c(15L, 16L))
 #'
-#' is_location(loc1)    ## TRUE
-#' is_location(list())  ## FALSE
+#' is_location(loc1)  ## TRUE
+#'
+#' # There are multiple ways to format Location objects.
+#' # print() calls format() internally, as expected.
+#' print(loc3)
+#' print(loc3, how = "short")
+#' print(loc3, how = "shorter")
 #'
 #' # Combine Location objects.
 #' # They must have the same path.

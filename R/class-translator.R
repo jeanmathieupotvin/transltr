@@ -19,12 +19,19 @@
 #' [`Translator$translate()`][Translator] is the underlying workhorse function
 #' called by the former.
 #'
-#' ## Exporting, and Importing Translators
+#' ## Exporting and Importing Translators
 #'
 #' [`Translator`][Translator] objects can be saved, and exported with
 #' [translator_write()].
 #'
 #' They can be imported back into an \R session with [translator_read()].
+#'
+#' ## Coercion
+#'
+#' [as_translator()] is an S3 generic function that attempts to coerce its
+#' argument into a suitable [`Translator`][Translator] object. It currently
+#' has no methods (aside from [internal ones][portable()]), but users may
+#' extend it by defining their own methods.
 #'
 #' @param ... Usage depends on the underlying function.
 #'   * Any number of [`Text`][Text] objects, and/or named character
@@ -55,22 +62,31 @@
 #'   [translator_write()]
 #'
 #' @examples
-#' #' ## Set source language.
+#' # Set source language.
 #' language_source_set("en")
 #'
-#' ## Create a Translator manually.
-#' translator(
+#' # Create a Translator object.
+#' # This would normally be done automatically
+#' # by find_source(), or translator_read().
+#' trans <- translator(
 #'   id = "test-translator",
 #'   en = "English",
+#'   es = "Español",
 #'   fr = "Français",
 #'   text(
 #'     location("a", 1L, 2L, 3L, 4L),
 #'     en = "Hello, world!",
 #'     fr = "Bonjour, monde!"),
 #'   text(
-#'     location("b", 5L, 6L, 7L, 8L),
+#'     location("b", 1L, 2L, 3L, 4L),
 #'     en = "Farewell, world!",
 #'     fr = "Au revoir, monde!"))
+#'
+#' is_translator(trans)
+#'
+#' # Translator objects has a specific format.
+#' # print() calls format() internally, as expected.
+#' print(trans)
 #'
 #' @include constants.R
 #' @rdname class-translator
@@ -301,8 +317,8 @@ Translator <- R6::R6Class("Translator",
         },
 
         #' @field native_languages A named character vector of non-empty and
-        #'   non-[NA][base::NA] values, or `NULL`. An optional, but useful map
-        #'   of `languages` (codes) to native language names. Names are codes,
+        #'   non-[NA][base::NA] values, or `NULL`. A map (bijection) of
+        #'   `languages` (codes) to native language names. Names are codes,
         #'   and values are native languages. If there is none,
         #'   `native_languages` is `NULL`.
         #'

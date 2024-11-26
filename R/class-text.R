@@ -26,6 +26,14 @@
 #' viewed as a vectorized version of [c()]. It silently ignores, and drops
 #' all empty [`Text`][Text] objects.
 #'
+#' ## Coercion
+#'
+#' [as_text()] is an S3 generic function that attempts to coerce its argument
+#' into a suitable [`Text`][Text] object. [as_text.call()] is the method used
+#' by [find_source()] to coerce a [`call`][call] object to a [`Text`][Text]
+#' object. While it *can* be used, it should be avoided most of the time. Users
+#' may extend it by defining their own methods.
+#'
 #' @param x Any \R object.
 #'
 #' @param ... Usage depends on the underlying function.
@@ -87,8 +95,13 @@
 #'   fr2 = "Bonjour le monde!",
 #'   es  = "¡Hola, mundo!")
 #'
-#' is_location(txt1)  ## TRUE
-#' is_location("")    ## FALSE
+#' is_text(txt1)
+#'
+#' # Texts objects has a specific format.
+#' # print() calls format() internally, as expected.
+#' print(txt1)
+#' print(txt2)
+#' print(txt3)
 #'
 #' # Combine Texts objects.
 #' # They must have the same hash

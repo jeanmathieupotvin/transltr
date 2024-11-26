@@ -164,9 +164,6 @@ x <- translator(
     en = "Hello, world!",
     fr = "Bonjour, monde!"),
   text(
-    en = "Hello, world!",
-    fr = "Bonjour, monde!"),
-  text(
     en = "Farewell, world!",
     fr = "Au revoir, monde!"))
 

@@ -117,6 +117,15 @@ of \code{\link{Text}} objects having possibly different hashes. It can be
 viewed as a vectorized version of \code{\link[=c]{c()}}. It silently ignores, and drops
 all empty \code{\link{Text}} objects.
 }
+
+\subsection{Coercion}{
+
+\code{\link[=as_text]{as_text()}} is an S3 generic function that attempts to coerce its argument
+into a suitable \code{\link{Text}} object. \code{\link[=as_text.call]{as_text.call()}} is the method used
+by \code{\link[=find_source]{find_source()}} to coerce a \code{\link{call}} object to a \code{\link{Text}}
+object. While it \emph{can} be used, it should be avoided most of the time. Users
+may extend it by defining their own methods.
+}
 }
 \examples{
 # Set source language.
@@ -145,8 +154,13 @@ txt3 <- text(
   fr2 = "Bonjour le monde!",
   es  = "¡Hola, mundo!")
 
-is_location(txt1)  ## TRUE
-is_location("")    ## FALSE
+is_text(txt1)
+
+# Texts objects has a specific format.
+# print() calls format() internally, as expected.
+print(txt1)
+print(txt2)
+print(txt3)
 
 # Combine Texts objects.
 # They must have the same hash
