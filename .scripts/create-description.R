@@ -18,7 +18,7 @@ usethis::use_description(
         Encoding    = "UTF-8",
         Roxygen     = "list(markdown = TRUE, r6 = TRUE)",
         URL         = "https://github.com/jeanmathieupotvin/transltr",
-        BugReports  = "https://github.com/jeanmathieupotvin/transltr/issues/new",
+        BugReports  = "https://github.com/jeanmathieupotvin/transltr/issues",
         `Authors@R` = 'c(
             utils::person(
                 given   = "Jean-Mathieu",

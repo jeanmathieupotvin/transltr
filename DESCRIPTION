@@ -2,9 +2,13 @@ Package: transltr
 Title: A Light Internationalization Framework for R
 Version: 0.0.1
 Authors@R: c(
-    person("Jean-Mathieu", "Potvin", , "jeanmathieupotvin@ununoctium.dev", role = c("aut", "cre", "cph")),
-    person("Jérôme", "Lavoué", , "jerome.lavoue@umontreal.ca", role = c("ctb", "fnd", "rev"),
-           comment = c(ORCID = "0000-0003-4950-5475"))
+    person("Jean-Mathieu", "Potvin",
+        role  = c("aut", "cre", "cph"),
+        email = "jeanmathieupotvin@ununoctium.dev"),
+    person("Jérôme", "Lavoué",
+        role    = c("ctb", "fnd", "rev"),
+        email   = "jerome.lavoue@umontreal.ca",
+        comment = c(ORCID = "0000-0003-4950-5475"))
   )
 Description: An alternative to gettext(), xgettext(), and other related R
     features. Incorporate translations and support many languages in any R
@@ -14,7 +18,7 @@ Description: An alternative to gettext(), xgettext(), and other related R
     everything back into R sessions.
 License: MIT + file LICENSE
 URL: https://github.com/jeanmathieupotvin/transltr
-BugReports: https://github.com/jeanmathieupotvin/transltr/issues/new
+BugReports: https://github.com/jeanmathieupotvin/transltr/issues
 Encoding: UTF-8
 Language: en
 Roxygen: list(markdown = TRUE, r6 = TRUE)
