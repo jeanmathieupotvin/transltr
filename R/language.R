@@ -19,12 +19,16 @@
 #'
 #' @returns
 #' [language_set()], and [language_source_set()] return `NULL`, invisibly. They
-#' are used for their side-effect of respectively setting environment variables
-#' `TRANSLTR_LANGUAGE` and `TRANSLTR_SOURCE_LANGUAGE`.
+#' are used for their side-effect of setting environment variables
+#' `TRANSLTR_LANGUAGE` and `TRANSLTR_SOURCE_LANGUAGE`, respectively.
 #'
 #' [language_get()], and [language_source_get()] return a character string
-#' (possibly empty for the former). It corresponds to the value of underlying
-#' environment variables.
+#' corresponding to the value of environment variables `TRANSLTR_LANGUAGE`
+#' and `TRANSLTR_SOURCE_LANGUAGE`, respectively.
+#'
+#'   * [language_source_get()] returns a default value equal to `"en"` if
+#'     `TRANSLTR_SOURCE_LANGUAGE` unset.
+#'   * [language_get()] never returns a default value.
 #'
 #' @section Locales versus languages:
 #' A [locale](https://en.wikipedia.org/wiki/Locale_(computer_software)) is a
@@ -127,9 +131,5 @@ language_source_set <- function(source_lang = "en") {
 #' @rdname language-accessors
 #' @export
 language_source_get <- function() {
-    # It does not matter whether the environment variable
-    # is set equal to "" or truly unset (on some OS only).
-    # Both cases leads to the same error. Therefore, there
-    # is no need to distinguish these cases with unset = NA.
     return(Sys.getenv("TRANSLTR_SOURCE_LANGUAGE", unset = "en", names = FALSE))
 }

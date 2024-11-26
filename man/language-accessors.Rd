@@ -32,12 +32,17 @@ information.}
 }
 \value{
 \code{\link[=language_set]{language_set()}}, and \code{\link[=language_source_set]{language_source_set()}} return \code{NULL}, invisibly. They
-are used for their side-effect of respectively setting environment variables
-\code{TRANSLTR_LANGUAGE} and \code{TRANSLTR_SOURCE_LANGUAGE}.
+are used for their side-effect of setting environment variables
+\code{TRANSLTR_LANGUAGE} and \code{TRANSLTR_SOURCE_LANGUAGE}, respectively.
 
 \code{\link[=language_get]{language_get()}}, and \code{\link[=language_source_get]{language_source_get()}} return a character string
-(possibly empty for the former). It corresponds to the value of underlying
-environment variables.
+corresponding to the value of environment variables \code{TRANSLTR_LANGUAGE}
+and \code{TRANSLTR_SOURCE_LANGUAGE}, respectively.
+\itemize{
+\item \code{\link[=language_source_get]{language_source_get()}} returns a default value equal to \code{"en"} if
+\code{TRANSLTR_SOURCE_LANGUAGE} unset.
+\item \code{\link[=language_get]{language_get()}} never returns a default value.
+}
 }
 \description{
 Get or set the current language and source language. They are registered as

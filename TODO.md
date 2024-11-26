@@ -31,9 +31,15 @@
   - `translator_write()`,
   - `translations_read()`, and
   - `translations_write()`.
-- Final update of side-files `COVERAGE`, and `STATISTICS`.
+- Final update of side-file `STATISTICS`.
 
 # Future Improvements
+
+`[Miscellaneous]`
+- Revisit whether `str_*()` functions are still required.
+- `format_vector()` needs to (better) accomodate vectors of length 1.
+  - It should be rewritten.
+- Provide translations for the package itself using `transltr`.
 
 `[translator_write()]`
 - Add an `overwrite` argument that is `TRUE` by default to prevent losing any
@@ -87,9 +93,3 @@
 - Review older documentation for consistency.
 - Write introductory vignette.
 - Build dedicated website with `pkgdown`.
-
-`[Miscellaneous]`
-- Revisit whether arg `which` of `str_strip_empty()` is required.
-- `format_vector()` needs to (better) accomodate vectors of length 1.
-  - It should be rewritten.
-- Provide translations for the package itself using `transltr`.
