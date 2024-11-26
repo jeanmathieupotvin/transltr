@@ -6,8 +6,6 @@
 # For Initial Release to CRAN
 
 - Write unit tests for functions
-  - `language_source_set()`,
-  - `language_source_get()`,
   - `as_translator()`,
   - `as_location()`,
   - `as_location.Location()`,
@@ -38,8 +36,10 @@
 `[Miscellaneous]`
 - Revisit whether `str_*()` functions are still required.
 - `format_vector()` needs to (better) accomodate vectors of length 1.
-  - It should be rewritten.
 - Provide translations for the package itself using `transltr`.
+- Should mechanisms such as `translate()` return source text if requested `lang`
+  is not available? This would be as simple as updating the return value of
+  `Text$get_translation()`, as everything else depends on it.
 
 `[translator_write()]`
 - Add an `overwrite` argument that is `TRUE` by default to prevent losing any

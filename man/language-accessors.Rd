@@ -11,7 +11,7 @@ language_set(lang = "en")
 
 language_get()
 
-language_source_set(source_lang = "en")
+language_source_set(lang = "en")
 
 language_source_get()
 }
@@ -25,39 +25,33 @@ to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/IETF_language_tag}{IETF BCP 47}, or
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
 Doing so maximizes portability and cross-compatibility between packages.}
-
-\item{source_lang}{A non-empty and non-\link[base:NA]{NA} character string. The
-language of the (untranslated) source text. See argument \code{lang} for more
-information.}
 }
 \value{
 \code{\link[=language_set]{language_set()}}, and \code{\link[=language_source_set]{language_source_set()}} return \code{NULL}, invisibly. They
 are used for their side-effect of setting environment variables
 \code{TRANSLTR_LANGUAGE} and \code{TRANSLTR_SOURCE_LANGUAGE}, respectively.
 
-\code{\link[=language_get]{language_get()}}, and \code{\link[=language_source_get]{language_source_get()}} return a character string
-corresponding to the value of environment variables \code{TRANSLTR_LANGUAGE}
-and \code{TRANSLTR_SOURCE_LANGUAGE}, respectively.
-\itemize{
-\item \code{\link[=language_source_get]{language_source_get()}} returns a default value equal to \code{"en"} if
-\code{TRANSLTR_SOURCE_LANGUAGE} unset.
-\item \code{\link[=language_get]{language_get()}} never returns a default value.
-}
+\code{\link[=language_get]{language_get()}} returns a character string. It is the current value of
+environment variable \code{TRANSLTR_LANGUAGE}. It is empty if the latter is
+unset.
+
+\code{\link[=language_source_get]{language_source_get()}} returns a character string. It is the current value
+of environment variable \code{TRANSLTR_SOURCE_LANGUAGE}. It returns \code{"en"} if the
+latter is unset.
 }
 \description{
-Get or set the current language and source language. They are registered as
-environment variables, and respectively named \code{TRANSLTR_LANGUAGE}, and
-\code{TRANSLTR_SOURCE_LANGUAGE}.
+Get or set the current language and source language (globally).
+
+They are registered as environment variables named
+\code{TRANSLTR_LANGUAGE}, and \code{TRANSLTR_SOURCE_LANGUAGE}.
 }
 \details{
-\code{\link[=language_set]{language_set()}} leaves the underlying locale as is. To change an \R
-session's locale, use \code{\link[=Sys.setlocale]{Sys.setlocale()}} or \code{\link[=Sys.setLanguage]{Sys.setLanguage()}} instead.
-See below for more information.
-
-\code{\link[=language_source_set]{language_source_set()}} sets the language of the source text (globally).
-
-Both the language and the source language can be changed locally. See
+The language and the source language can be changed locally. See
 \code{\link[=translate]{translate()}} for more information.
+
+The underlying locale is left as is. To change an \R session's locale,
+use \code{\link[=Sys.setlocale]{Sys.setlocale()}} or \code{\link[=Sys.setLanguage]{Sys.setLanguage()}} instead. See below for more
+information.
 }
 \note{
 Environment variables are used because they can be shared among different
@@ -94,8 +88,8 @@ the \code{language} parameter of the package. See Examples.
 language_source_set("en")
 language_set("fr")
 
-language_source_get()  ## Outputs "en"
-language_get()         ## Outputs "fr"
+language_source_get()  ## Outputs "en".
+language_get()         ## Outputs "fr".
 
 # Change both the language parameter and the locale.
 # Note that while users control how languages are named
@@ -103,8 +97,11 @@ language_get()         ## Outputs "fr"
 language_set("fr")
 Sys.setLanguage("fr-CA")
 
-## Reset settings.
+# Reset settings.
 language_source_set(NULL)
 language_set(NULL)
+
+# Source language has a default value.
+language_source_get()  ## Outputs "en".
 
 }

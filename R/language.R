@@ -1,34 +1,33 @@
 #' Get or Set Language
 #'
-#' Get or set the current language and source language. They are registered as
-#' environment variables, and respectively named `TRANSLTR_LANGUAGE`, and
-#' `TRANSLTR_SOURCE_LANGUAGE`.
+#' @description
+#' Get or set the current language and source language (globally).
 #'
-#' [language_set()] leaves the underlying locale as is. To change an \R
-#' session's locale, use [Sys.setlocale()] or [Sys.setLanguage()] instead.
-#' See below for more information.
+#' They are registered as environment variables named
+#' `TRANSLTR_LANGUAGE`, and `TRANSLTR_SOURCE_LANGUAGE`.
 #'
-#' [language_source_set()] sets the language of the source text (globally).
-#'
-#' Both the language and the source language can be changed locally. See
+#' @details
+#' The language and the source language can be changed locally. See
 #' [translate()] for more information.
 #'
-#' @template param-lang
+#' The underlying locale is left as is. To change an \R session's locale,
+#' use [Sys.setlocale()] or [Sys.setLanguage()] instead. See below for more
+#' information.
 #'
-#' @template param-source-lang-no-example
+#' @template param-lang
 #'
 #' @returns
 #' [language_set()], and [language_source_set()] return `NULL`, invisibly. They
 #' are used for their side-effect of setting environment variables
 #' `TRANSLTR_LANGUAGE` and `TRANSLTR_SOURCE_LANGUAGE`, respectively.
 #'
-#' [language_get()], and [language_source_get()] return a character string
-#' corresponding to the value of environment variables `TRANSLTR_LANGUAGE`
-#' and `TRANSLTR_SOURCE_LANGUAGE`, respectively.
+#' [language_get()] returns a character string. It is the current value of
+#' environment variable `TRANSLTR_LANGUAGE`. It is empty if the latter is
+#' unset.
 #'
-#'   * [language_source_get()] returns a default value equal to `"en"` if
-#'     `TRANSLTR_SOURCE_LANGUAGE` unset.
-#'   * [language_get()] never returns a default value.
+#' [language_source_get()] returns a character string. It is the current value
+#' of environment variable `TRANSLTR_SOURCE_LANGUAGE`. It returns `"en"` if the
+#' latter is unset.
 #'
 #' @section Locales versus languages:
 #' A [locale](https://en.wikipedia.org/wiki/Locale_(computer_software)) is a
@@ -63,8 +62,8 @@
 #' language_source_set("en")
 #' language_set("fr")
 #'
-#' language_source_get()  ## Outputs "en"
-#' language_get()         ## Outputs "fr"
+#' language_source_get()  ## Outputs "en".
+#' language_get()         ## Outputs "fr".
 #'
 #' # Change both the language parameter and the locale.
 #' # Note that while users control how languages are named
@@ -72,9 +71,12 @@
 #' language_set("fr")
 #' Sys.setLanguage("fr-CA")
 #'
-#' ## Reset settings.
+#' # Reset settings.
 #' language_source_set(NULL)
 #' language_set(NULL)
+#'
+#' # Source language has a default value.
+#' language_source_get()  ## Outputs "en".
 #'
 #' @rdname language-accessors
 #' @export
@@ -108,8 +110,8 @@ language_get <- function() {
 
 #' @rdname language-accessors
 #' @export
-language_source_set <- function(source_lang = "en") {
-    if (is.null(source_lang)) {
+language_source_set <- function(lang = "en") {
+    if (is.null(lang)) {
         if (!Sys.unsetenv("TRANSLTR_SOURCE_LANGUAGE") || .__LGL_DEBUG_FLAG) {
             stopf(
                 "failed to unset current source language '%s'.",
@@ -119,10 +121,10 @@ language_source_set <- function(source_lang = "en") {
         return(invisible())
     }
 
-    assert_chr1(source_lang)
+    assert_chr1(lang)
 
-    if (!Sys.setenv(TRANSLTR_SOURCE_LANGUAGE = source_lang) || .__LGL_DEBUG_FLAG) {
-        stopf("failed to set source language '%s'.", source_lang)
+    if (!Sys.setenv(TRANSLTR_SOURCE_LANGUAGE = lang) || .__LGL_DEBUG_FLAG) {
+        stopf("failed to set source language '%s'.", lang)
     }
 
     return(invisible())
@@ -131,5 +133,6 @@ language_source_set <- function(source_lang = "en") {
 #' @rdname language-accessors
 #' @export
 language_source_get <- function() {
-    return(Sys.getenv("TRANSLTR_SOURCE_LANGUAGE", unset = "en", names = FALSE))
+    x <- Sys.getenv("TRANSLTR_SOURCE_LANGUAGE", unset = "", names = FALSE)
+    return(if (nzchar(x)) x else "en")
 }
