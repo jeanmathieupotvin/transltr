@@ -6,7 +6,6 @@
 # For Initial Release to CRAN
 
 - Write unit tests for functions
-  - `constant()`,
   - `language_source_set()`,
   - `language_source_get()`,
   - `as_translator()`,
@@ -31,6 +30,7 @@
   - `translator_write()`,
   - `translations_read()`, and
   - `translations_write()`.
+
 - Final update of side-file `STATISTICS`.
 
 # Future Improvements
@@ -93,3 +93,16 @@
 - Review older documentation for consistency.
 - Write introductory vignette.
 - Build dedicated website with `pkgdown`.
+
+`[Testing]`
+- Evaluate whether unit tests should be refactored using `describe()` and `it()`
+  from package `testthat`.
+  - I do not agree with the following statement:
+
+    ```
+    Use describe to verify that you implement the right things
+    and use test_that() to ensure you do the things right.
+    ```
+
+  - I believe these functions can restructure `test_that()` blocks, especially
+    in large testing scripts.

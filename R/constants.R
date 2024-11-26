@@ -29,7 +29,7 @@
 #' constant("unknown")       ## Outputs "<unknown>"
 #'
 #' # NULL is returned if which has no corresponding entry.
-#' constant("undefined")
+#' constant("__undefined__")
 #'
 #' @rdname constants
 #' @export
@@ -43,8 +43,10 @@ constant <- function(
         "unset",
         "unknown"))
 {
+    assert_chr1(which)
+
     return(
-        switch(which[[1L]],
+        switch(which,
             `generated-by` = "R package transltr 0.0.1",
             concat         = " ",
             empty          = "<none>",

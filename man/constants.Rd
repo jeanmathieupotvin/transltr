@@ -43,7 +43,7 @@ constant("unset")         ## Outputs "<unset>"
 constant("unknown")       ## Outputs "<unknown>"
 
 # NULL is returned if which has no corresponding entry.
-constant("undefined")
+constant("__undefined__")
 
 }
 \seealso{
