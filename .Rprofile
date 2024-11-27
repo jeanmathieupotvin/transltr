@@ -74,7 +74,7 @@ if (interactive()) {
         }
 
         # Clear global environment.
-        .rm <- \() rm(list = ls(globalenv()))
+        .rm <- \() rm(list = ls(name = globalenv()), pos = globalenv())
 
         # Return this local environment
         # (to attach it to the search path).
