@@ -14,6 +14,22 @@
       Error:
       ! 'tag' must be a non-NA and non-empty character of length 1.
 
+# portable_translator() validates x
+
+    Code
+      portable_translator(1L)
+    Condition
+      Error:
+      ! 'x' must be a 'Translator' object.
+
+# portable_translator() throws an error if there are multiple source languages
+
+    Code
+      portable_translator(trans)
+    Condition
+      Error:
+      ! all 'Text' objects of 'x' must have the same 'source_lang'.
+
 # portable_text() validates x
 
     Code
