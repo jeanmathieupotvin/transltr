@@ -14,3 +14,11 @@
       Error:
       ! 'tag' must be a non-NA and non-empty character of length 1.
 
+# portable_location() validates x
+
+    Code
+      portable_location(1L)
+    Condition
+      Error:
+      ! 'x' must be a 'Location' object.
+

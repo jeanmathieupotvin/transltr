@@ -38,6 +38,25 @@ test_that("is_portable() returns a logical", {
 })
 
 
+# portable_location() ----------------------------------------------------------
+
+
+test_that("portable_location() returns an S3 object of class PortableLocation", {
+    loc <- location("test-file", 1L, 2L, 3L, 4L)
+    out <- portable_location(loc)
+
+    expect_s3_class(out, "PortableLocation")
+    expect_identical(attr(out, "tag"), "Location")
+    expect_identical(out$path, out$path)
+    expect_identical(out$ranges, "line 1, column 2 @ line 3, column 4")
+})
+
+test_that("portable_location() validates x", {
+    expect_error(portable_location(1L))
+    expect_snapshot(portable_location(1L), error = TRUE)
+})
+
+
 # Degenerate as_*() methods ----------------------------------------------------
 
 
