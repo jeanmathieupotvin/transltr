@@ -385,7 +385,9 @@ portable_text <- function(x = text(), set_translations = FALSE) {
     if (x$hash != constant("unset")) {
         out$hash            <- x$hash
         out$source_language <- x$source_lang
-        out$source_text     <- strwrap(x$source_text, 80L)
+        out$source_text     <- paste0(
+            strwrap(x$source_text, 80L),
+            collapse = "\n")
     }
     if (set_translations) {
         # Source text is already extracted above.
@@ -393,7 +395,9 @@ portable_text <- function(x = text(), set_translations = FALSE) {
 
         # Lists are preferable when using yaml::as.yaml()
         # because names are retained and used as keys.
-        out$translations <- lapply(texts, strwrap, 80L)
+        out$translations <- lapply(texts, \(text) {
+            return(paste0(strwrap(text, 80L), collapse = "\n"))
+        })
     }
 
     names(out$locations) <- NULL
