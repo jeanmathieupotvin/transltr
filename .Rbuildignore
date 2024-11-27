@@ -15,7 +15,6 @@
 
 ^NEWS\.0\.md$
 ^STATISTICS\.md$
-^TODO\.md$
 ^cran-comments\.md$
 
 ^inst/transltr$
