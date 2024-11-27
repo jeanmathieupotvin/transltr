@@ -298,6 +298,7 @@
 #' PortableLocation
 #' PortableTranslations
 #'
+#' @rdname class-portable
 #' @keywords internal
 portable <- function(x, super = character(), tag = NULL) {
     assert_chr(super, TRUE)
@@ -311,13 +312,13 @@ portable <- function(x, super = character(), tag = NULL) {
     return(x)
 }
 
-#' @rdname portable
+#' @rdname class-portable
 #' @keywords internal
 is_portable <- function(x) {
     return(inherits(x, "Portable"))
 }
 
-#' @rdname portable
+#' @rdname class-portable
 #' @keywords internal
 portable_translator <- function(x = translator(), set_translations = FALSE) {
     if (!is_translator(x)) {
@@ -362,7 +363,7 @@ portable_translator <- function(x = translator(), set_translations = FALSE) {
     return(portable(out, "PortableTranslator", "Translator"))
 }
 
-#' @rdname portable
+#' @rdname class-portable
 #' @keywords internal
 portable_text <- function(x = text(), set_translations = FALSE) {
     if (!is_text(x)) {
@@ -399,7 +400,7 @@ portable_text <- function(x = text(), set_translations = FALSE) {
     return(portable(out, "PortableText", "Text"))
 }
 
-#' @rdname portable
+#' @rdname class-portable
 #' @keywords internal
 portable_location <- function(x = location()) {
     if (!is_location(x)) {
@@ -413,7 +414,7 @@ portable_location <- function(x = location()) {
     return(portable(out, "PortableLocation", "Location"))
 }
 
-#' @rdname portable
+#' @rdname class-portable
 #' @keywords internal
 portable_translations <- function(
     x           = translator(),
@@ -472,7 +473,7 @@ portable_translations <- function(
     return(out)
 }
 
-#' @rdname portable
+#' @rdname class-portable
 #' @export
 format.Portable <- function(x, ...) {
     return(
@@ -483,7 +484,7 @@ format.Portable <- function(x, ...) {
             indent.mapping.sequence = TRUE))
 }
 
-#' @rdname portable
+#' @rdname class-portable
 #' @export
 format.PortableTranslator <- function(x, set_instructions = FALSE, ...) {
     assert_lgl1(set_instructions)
@@ -503,7 +504,7 @@ format.PortableTranslator <- function(x, set_instructions = FALSE, ...) {
     return(c(instructions, NextMethod(x)))
 }
 
-#' @rdname portable
+#' @rdname class-portable
 #' @export
 format.PortableTranslations <- function(x,
     how              = c("yaml", "flat"),
@@ -555,14 +556,14 @@ format.PortableTranslations <- function(x,
     )
 }
 
-#' @rdname portable
+#' @rdname class-portable
 #' @export
 print.Portable <- function(x, ...) {
     cat(format(x, ...), sep = "\n")
     return(invisible(x))
 }
 
-#' @rdname portable
+#' @rdname class-portable
 #' @export
 as_translator.PortableTranslator <- function(
     x,
@@ -591,7 +592,7 @@ as_translator.PortableTranslator <- function(
     return(trans)
 }
 
-#' @rdname portable
+#' @rdname class-portable
 #' @export
 as_text.PortableText <- function(x, ...) {
     # `[[` must be used here to prevent partial matching
@@ -627,13 +628,13 @@ as_text.PortableText <- function(x, ...) {
     return(txt)
 }
 
-#' @rdname portable
+#' @rdname class-portable
 #' @export
 as_text.Text <- function(x, ...) {
     return(x)
 }
 
-#' @rdname portable
+#' @rdname class-portable
 #' @export
 as_location.PortableLocation <- function(x, ...) {
     # Extract digits from ranges, construct
@@ -660,7 +661,7 @@ as_location.PortableLocation <- function(x, ...) {
             vapply_1i(ints, `[[`, 4L)))
 }
 
-#' @rdname portable
+#' @rdname class-portable
 #' @export
 as_location.Location <- function(x, ...) {
     return(x)
