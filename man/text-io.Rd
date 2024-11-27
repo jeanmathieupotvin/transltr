@@ -7,7 +7,7 @@
 \usage{
 text_read(path = "", encoding = "UTF-8")
 
-text_write(x = character(), path = "")
+text_write(x = character(), path = "", encoding = "UTF-8")
 }
 \arguments{
 \item{path}{A character string. A path to a file to read text from,
@@ -18,7 +18,8 @@ underlying source character encoding. In almost all cases, this should
 be UTF-8. Other encodings are internally re-encoded to UTF-8 for
 portability.}
 
-\item{x}{A character vector. Lines of text to write.}
+\item{x}{A character vector. Lines of text to write. Its current encoding is
+given by \code{encoding}.}
 }
 \value{
 \code{\link[=text_read]{text_read()}} returns a character vector.
@@ -33,6 +34,6 @@ file paths, and re-encode inputs to \code{UTF-8} before reading and writing.
 \seealso{
 \code{\link[=readLines]{readLines()}},
 \code{\link[=writeLines]{writeLines()}},
-\code{\link[=enc2utf8]{enc2utf8()}}
+\code{\link[=iconv]{iconv()}}
 }
 \keyword{internal}

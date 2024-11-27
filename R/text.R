@@ -137,7 +137,8 @@ text_hash <- function(.lang = "", .text = "", .algo = hash_algorithms()) {
 #'
 #' @template param-encoding
 #'
-#' @param x A character vector. Lines of text to write.
+#' @param x A character vector. Lines of text to write. Its current encoding is
+#'   given by `encoding`.
 #'
 #' @returns
 #' [text_read()] returns a character vector.
@@ -147,7 +148,7 @@ text_hash <- function(.lang = "", .text = "", .algo = hash_algorithms()) {
 #' @seealso
 #' [readLines()],
 #' [writeLines()],
-#' [enc2utf8()]
+#' [iconv()]
 #'
 #' @rdname text-io
 #' @keywords internal
@@ -177,18 +178,31 @@ text_read <- function(path = "", encoding = "UTF-8") {
 
 #' @rdname text-io
 #' @keywords internal
-text_write <- function(x = character(), path = "") {
+text_write <- function(x = character(), path = "", encoding = "UTF-8") {
     assert_chr(x)
     assert_chr1(path)
+    assert_chr1(encoding)
 
     # Not super useful, but a little safer.
     path <- normalizePath(path, mustWork = FALSE)
-    con  <- file(path, "w", encoding = "UTF-8")
-    on.exit(close(con, "w"))
 
-    # Character elements are explicitly
-    # re-encoded to UTF-8 before writing.
-    # Therefore, we can pass the text by
-    # bytes directly (this is faster).
-    return(writeLines(enc2utf8(x), con, sep = "\n", useBytes = TRUE))
+    if (utils::file_test("-d", path) || (
+        utils::file_test("-f", path) && !utils::file_test("-w", path))) {
+        stops("'path' is a directory, or is not writable.")
+    }
+
+    con <- file(path, "wb", encoding = encoding)
+    on.exit(close(con, "wb"))
+
+    # Character elements are explicitly re-encoded to UTF-8
+    # before being written. The resulting text is written as
+    # bytes directly (this is faster). In almost all cases,
+    # it should already be in UTF-8. iconv() is used because
+    # enc2utf8() handles fewer encodings.
+    return(
+        writeLines(
+            iconv(x, encoding, "UTF-8"),
+            con      = con,
+            sep      = "\n",
+            useBytes = TRUE))
 }

@@ -73,3 +73,35 @@
       Error:
       ! 'encoding' must be a non-NA and non-empty character of length 1.
 
+# text_write() validates x
+
+    Code
+      text_write(1L)
+    Condition
+      Error:
+      ! 'x' must be a non-empty character vector of non-NA values.
+
+# text_write() validates path
+
+    Code
+      text_write("Hello, world!", 1L)
+    Condition
+      Error:
+      ! 'path' must be a non-NA and non-empty character of length 1.
+
+---
+
+    Code
+      text_write("Hello, world!", temp_dir)
+    Condition
+      Error:
+      ! 'path' is a directory, or is not writable.
+
+# text_write() validates encoding
+
+    Code
+      text_write("Hello, world!", temp_file, 1L)
+    Condition
+      Error:
+      ! 'encoding' must be a non-NA and non-empty character of length 1.
+
