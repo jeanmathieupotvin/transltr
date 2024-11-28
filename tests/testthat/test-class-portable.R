@@ -30,9 +30,9 @@ trans <- translator(
         en = "Farewell, world!",
         fr = "Au revoir, monde!"))
 
-portable_loc   <- portable_location(loc)
-portable_txt   <- portable_text(txt)
-portable_trans <- portable_translator(trans)
+portable_loc    <- portable_location(loc)
+portable_txt    <- portable_text(txt)
+portable_trans  <- portable_translator(trans)
 
 # This random Portable object is used with
 # Portable versions of loc, txt, and trans
@@ -96,31 +96,35 @@ test_that("is_portable() returns a logical", {
 
 
 test_that("portable_translator() returns an S3 object of class PortableTranslator", {
-    out     <- portable_translator(trans)
-    n_texts <- sum(vapply_1l(lapply(out, attr, which = "tag"), identical, y = "Text"))
+    # Count number of actual Text objects in the
+    # portable_trans (a PortableTranslator) object.
+    n_texts <- portable_trans |>
+        lapply(attr, which = "tag") |>
+        vapply_1l(identical, y = "Text") |>
+        sum()
 
-    expect_s3_class(out, "PortableTranslator")
-    expect_identical(attr(out, "tag"), "Translator")
+    expect_s3_class(portable_trans, "PortableTranslator")
+    expect_identical(attr(portable_trans, "tag"), "Translator")
 
     # Check informational fields.
-    expect_identical(out$version, 1L)
-    expect_identical(out$generated_by, constant("generated-by"))
-    expect_type(out$generated_on, "character")  # date/time always changes
-    expect_length(out$generated_on, 1L)
+    expect_identical(portable_trans$version, 1L)
+    expect_identical(portable_trans$generated_by, constant("generated-by"))
+    expect_type(portable_trans$generated_on, "character")  # date/time always changes
+    expect_length(portable_trans$generated_on, 1L)
 
     # Check field stemming from the input Translator object.
-    expect_identical(out$identifier,      trans$id)
-    expect_identical(out$hash_algorithm,  trans$hash_algorithm)
-    expect_identical(out$source_language, trans$source_langs)
-    expect_identical(out$languages,       as.list(trans$native_languages))
+    expect_identical(portable_trans$identifier,      trans$id)
+    expect_identical(portable_trans$hash_algorithm,  trans$hash_algorithm)
+    expect_identical(portable_trans$source_language, trans$source_langs)
+    expect_identical(portable_trans$languages,       as.list(trans$native_languages))
 
     # Fields specific to PortableTranslator objects.
-    expect_identical(out$translations_files, list("fr.txt"), ignore_attr = TRUE)
-    expect_named(out$translations_files, "fr")
+    expect_identical(portable_trans$translations_files, list("fr.txt"), ignore_attr = TRUE)
+    expect_named(portable_trans$translations_files, "fr")
 
     # Further PortableText objects.
-    expect_s3_class(out$`2ac373a`, "PortableText")
-    expect_s3_class(out$`256e0d7`, "PortableText")
+    expect_s3_class(portable_trans$`2ac373a`, "PortableText")
+    expect_s3_class(portable_trans$`256e0d7`, "PortableText")
     expect_identical(n_texts, 2L)
 })
 
@@ -142,7 +146,7 @@ test_that("portable_translator() throws an error if there are multiple source la
 
 test_that("portable_translator() adds tag TranslationsFiles to translations_files", {
     expect_identical(
-        attr(portable_translator(trans)$translations_files, "tag"),
+        attr(portable_trans$translations_files, "tag"),
         "TranslationsFiles")
 })
 
@@ -151,23 +155,21 @@ test_that("portable_translator() adds tag TranslationsFiles to translations_file
 
 
 test_that("portable_text() returns an S3 object of class PortableText", {
-    out <- portable_text(txt)
-
-    expect_s3_class(out, "PortableText")
-    expect_identical(attr(out, "tag"), "Text")
-    expect_identical(out$hash,            txt$hash)
-    expect_identical(out$hash_algorithm,  txt$hash_algorithm)
-    expect_identical(out$source_language, txt$source_lang)
-    expect_identical(out$source_text,     txt$source_text)
+    expect_s3_class(portable_txt, "PortableText")
+    expect_identical(attr(portable_txt, "tag"), "Text")
+    expect_identical(portable_txt$hash,            txt$hash)
+    expect_identical(portable_txt$hash_algorithm,  txt$hash_algorithm)
+    expect_identical(portable_txt$source_language, txt$source_lang)
+    expect_identical(portable_txt$source_text,     txt$source_text)
 
     # $locations should not have names.
-    expect_identical(out$locations, list(
+    expect_identical(portable_txt$locations, list(
         portable_location(location("test-file-1", 1L, 2L, 3L, 4L)),
         portable_location(location("test-file-2", 1L, 2L, 3L, 4L))))
 
     # $translations is defined but NULL by default.
-    expect_in("translations", names(out))
-    expect_null(out$translations)
+    expect_in("translations", names(portable_txt))
+    expect_null(portable_txt$translations)
 })
 
 test_that("portable_text() validates x", {
@@ -213,12 +215,10 @@ test_that("portable_text() updates hash, source_language, and source_text only i
 
 
 test_that("portable_location() returns an S3 object of class PortableLocation", {
-    out <- portable_location(loc)
-
-    expect_s3_class(out, "PortableLocation")
-    expect_identical(attr(out, "tag"), "Location")
-    expect_identical(out$path, loc$path)
-    expect_identical(out$ranges, "line 1, column 2 @ line 3, column 4")
+    expect_s3_class(portable_loc, "PortableLocation")
+    expect_identical(attr(portable_loc, "tag"), "Location")
+    expect_identical(portable_loc$path, loc$path)
+    expect_identical(portable_loc$ranges, "line 1, column 2 @ line 3, column 4")
 })
 
 test_that("portable_location() validates x", {
