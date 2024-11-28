@@ -1,6 +1,15 @@
 language_source_set("en")
 withr::defer(language_source_set(NULL))
 
+# Small helper function to scrub date and time from
+# field generated_on of PortableTranslator objects.
+scrub_date_time <- function(x = character()) {
+    placeholder <- "generated_on: January 01, 1900 @ 00:00:00 (UTC)"
+    return(gsub("^generated_on:.*", placeholder, x))
+}
+
+loc <- location("test-file", 1L, 2L, 3L, 4L)
+
 txt <- text(
     en = "Hello, world!",
     fr = "Bonjour, monde!",
@@ -9,7 +18,7 @@ txt <- text(
     hash_algorithm = "utf8")
 
 trans <- translator(
-    id = "test-translator",
+    id = nil_uuid <- "00000000-0000-0000-0000-000000000000",
     en = "English",
     fr = "Français",
     text(
@@ -20,6 +29,27 @@ trans <- translator(
         location("b", 1L, 2L, 3L, 4L),
         en = "Farewell, world!",
         fr = "Au revoir, monde!"))
+
+portable_loc   <- portable_location(loc)
+portable_txt   <- portable_text(txt)
+portable_trans <- portable_translator(trans)
+
+# This random Portable object is used with
+# Portable versions of loc, txt, and trans
+# (see above) to validate format() and
+# print() methods.
+portable_person <- portable(
+    super = "PortablePerson",
+    tag   = "Person",
+    x     = list(
+        FirstName = "John",
+        LastName  = "Doe",
+        Address   = list(
+            StreetAddress = "123 Main Street",
+            City          = "Montreal",
+            Province      = "Quebec",
+            PostalCode    = "H0H 0H0"),
+        Notes = c("Send mail to", "address above.")))
 
 
 # portable() -------------------------------------------------------------------
@@ -75,7 +105,7 @@ test_that("portable_translator() returns an S3 object of class PortableTranslato
     # Check informational fields.
     expect_identical(out$version, 1L)
     expect_identical(out$generated_by, constant("generated-by"))
-    expect_type(out$generated_on, "character")
+    expect_type(out$generated_on, "character")  # date/time always changes
     expect_length(out$generated_on, 1L)
 
     # Check field stemming from the input Translator object.
@@ -152,7 +182,6 @@ test_that("portable_text() validates set_translations", {
 
 test_that("portable_text() sets translations if set_translations is true", {
     out <- portable_text(txt, TRUE)
-
     expect_identical(out$translations, list(fr = "Bonjour, monde!"))
 })
 
@@ -184,7 +213,6 @@ test_that("portable_text() updates hash, source_language, and source_text only i
 
 
 test_that("portable_location() returns an S3 object of class PortableLocation", {
-    loc <- location("test-file", 1L, 2L, 3L, 4L)
     out <- portable_location(loc)
 
     expect_s3_class(out, "PortableLocation")
@@ -196,6 +224,93 @@ test_that("portable_location() returns an S3 object of class PortableLocation", 
 test_that("portable_location() validates x", {
     expect_error(portable_location(1L))
     expect_snapshot(portable_location(1L), error = TRUE)
+})
+
+
+# format() ---------------------------------------------------------------------
+
+
+test_that("format.Portable() returns a character string", {
+    fmt <- format(portable_person)
+
+    expect_type(fmt, "character")
+    expect_length(fmt, 1L)
+
+    # This checks if fmt is a valid YAML string.
+    # It is considered valid if the YAMl parser
+    # does not throw errors or warnings. See
+    # print() for an additional manual check.
+    expect_no_condition(yaml::yaml.load(fmt))
+})
+
+test_that("format.PortableTranslator() returns the output of format.Portable()", {
+    fmt <- format(portable_trans)
+    expect_identical(fmt, format.Portable(portable_trans))
+})
+
+test_that("format.PortableTranslator() returns a character vector if set_instructions is true", {
+    fmt <- format(portable_trans, TRUE)
+
+    expect_type(fmt, "character")
+    expect_length(fmt, 2L)
+
+    # The exact contents of instructions (fmt[[1L]])
+    # is checked manually below with print() tests.
+    expect_type(fmt[[1L]], "character")
+    expect_length(fmt[[1L]], 1L)
+
+    expect_identical(fmt[[2L]], format.Portable(portable_trans))
+})
+
+test_that("format.PortableTranslator() validates set_instructions", {
+    expect_error(format(portable_trans, 1L))
+    expect_snapshot(format(portable_trans, 1L), error = TRUE)
+})
+
+
+# print.Portable() -------------------------------------------------------------
+
+
+test_that("print() works", {
+    expect_output(print(portable_person))
+    expect_snapshot({
+        "Manually check if output below is a YAML serialization."
+        "Output should:"
+        "  1. begin with a !<Person> YAML tag,"
+        "  2. Use a key: value notation,"
+        "  3. Use unquoted strings (if possible), and"
+        "  4. Use indentation to indicate structure."
+        "If these 4 characteristics are observed, the"
+        "output is highly likely to be a YAML string."
+        print(portable_person)
+    })
+})
+
+test_that("print() returns x invisibly", {
+    withr::local_output_sink(tempfile())
+
+    expect_invisible(print(portable_person))
+    expect_identical(print(portable_person), portable_person)
+})
+
+test_that("print() works with PortableTranslator objects", {
+    expect_snapshot(
+        print(portable_translator(Translator$new(nil_uuid))),
+        transform = scrub_date_time)
+    expect_snapshot(
+        print(portable_trans, TRUE),
+        transform = scrub_date_time)
+})
+
+test_that("print() works with PortableText objects", {
+    expect_snapshot(print(portable_text(Text$new())))
+    expect_snapshot(print(portable_txt))
+})
+
+test_that("print() works with PortableLocation objects", {
+    # There is no standardized way to create "empty"
+    # Location objects. Such objects are not tested.
+    expect_snapshot(print(portable_loc))
 })
 
 
