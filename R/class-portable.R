@@ -459,15 +459,15 @@ portable_translations <- function(
             source_native_language = native_langs[[source_lang]],
             translations           = lapply(texts, \(txt) {
                 source <- txt$source_text
-                text   <- txt$get_translation(lang)
+                trans  <- txt$get_translation(lang)
 
                 # strwrap() returns character(0)
                 # if input is NULL, but we need
                 # to preserve NULLs.
                 return(
                     list(
-                        source_text = if (is.null(source)) placeholder else strwrap(source, 80L),
-                        translation = if (is.null(text))   placeholder else strwrap(text,   80L)))
+                        source_text = if (is.null(source)) placeholder else source,
+                        translation = if (is.null(trans))  placeholder else trans))
         }))
 
         return(portable(out, "PortableTranslations", "Translations"))

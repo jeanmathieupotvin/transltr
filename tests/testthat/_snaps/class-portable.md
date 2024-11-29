@@ -65,6 +65,38 @@
       Error:
       ! 'x' must be a 'Location' object.
 
+# portable_translations() validates x
+
+    Code
+      portable_translations(1L)
+    Condition
+      Error:
+      ! 'x' must be a 'Translator' object.
+
+# portable_translations() validates lang if it is not null
+
+    Code
+      portable_translations(trans, "error-lang")
+    Condition
+      Error:
+      ! 'lang' must be equal to 'es', or 'fr'.
+
+# portable_translations() validates placeholder
+
+    Code
+      portable_translations(placeholder = 1L)
+    Condition
+      Error:
+      ! 'placeholder' must be a non-NA and non-empty character of length 1.
+
+# portable_translations() throws an error if there are multiple source languages
+
+    Code
+      portable_translations(trans)
+    Condition
+      Error:
+      ! all 'Text' objects of 'x' must have the same 'source_lang'.
+
 # format.PortableTranslator() validates set_instructions
 
     Code
@@ -137,8 +169,10 @@
       source_language: en
       languages:
         en: English
+        es: Español
         fr: Français
       translations_files: !<TranslationsFiles>
+        es: es.txt
         fr: fr.txt
       256e0d7: !<Text>
         hash: 256e0d707386d0fcd9abf10ad994000bdaa25812

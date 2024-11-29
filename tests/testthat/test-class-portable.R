@@ -20,6 +20,7 @@ txt <- text(
 trans <- translator(
     id = nil_uuid <- "00000000-0000-0000-0000-000000000000",
     en = "English",
+    es = "Español",
     fr = "Français",
     text(
         location("a", 1L, 2L, 3L, 4L),
@@ -33,11 +34,18 @@ trans <- translator(
 portable_loc    <- portable_location(loc)
 portable_txt    <- portable_text(txt)
 portable_trans  <- portable_translator(trans)
+portable_transl <- portable_translations(trans)
 
-# This random Portable object is used with
-# Portable versions of loc, txt, and trans
-# (see above) to validate format() and
-# print() methods.
+# Count number of actual Text objects in the
+# portable_trans (a PortableTranslator) object.
+portable_trans_n_texts <- portable_trans |>
+    lapply(attr, which = "tag") |>
+    vapply_1l(identical, y = "Text") |>
+    sum()
+
+# This object is used along with portable_loc, portable_txt,
+# portable_trans, and portable_transl (see above) to validate
+# format() and print() methods.
 portable_person <- portable(
     super = "PortablePerson",
     tag   = "Person",
@@ -96,15 +104,9 @@ test_that("is_portable() returns a logical", {
 
 
 test_that("portable_translator() returns an S3 object of class PortableTranslator", {
-    # Count number of actual Text objects in the
-    # portable_trans (a PortableTranslator) object.
-    n_texts <- portable_trans |>
-        lapply(attr, which = "tag") |>
-        vapply_1l(identical, y = "Text") |>
-        sum()
-
     expect_s3_class(portable_trans, "PortableTranslator")
     expect_identical(attr(portable_trans, "tag"), "Translator")
+    expect_length(portable_trans, 8L + portable_trans_n_texts)
 
     # Check informational fields.
     expect_identical(portable_trans$version, 1L)
@@ -119,13 +121,16 @@ test_that("portable_translator() returns an S3 object of class PortableTranslato
     expect_identical(portable_trans$languages,       as.list(trans$native_languages))
 
     # Fields specific to PortableTranslator objects.
-    expect_identical(portable_trans$translations_files, list("fr.txt"), ignore_attr = TRUE)
-    expect_named(portable_trans$translations_files, "fr")
+    expect_identical(
+        portable_trans$translations_files,
+        list("es.txt", "fr.txt"),
+        ignore_attr = TRUE)
+    expect_named(portable_trans$translations_files, c("es", "fr"))
 
     # Further PortableText objects.
     expect_s3_class(portable_trans$`2ac373a`, "PortableText")
     expect_s3_class(portable_trans$`256e0d7`, "PortableText")
-    expect_identical(n_texts, 2L)
+    expect_identical(portable_trans_n_texts, 2L)
 })
 
 test_that("portable_translator() validates x", {
@@ -157,6 +162,7 @@ test_that("portable_translator() adds tag TranslationsFiles to translations_file
 test_that("portable_text() returns an S3 object of class PortableText", {
     expect_s3_class(portable_txt, "PortableText")
     expect_identical(attr(portable_txt, "tag"), "Text")
+    expect_length(portable_txt, 6L)
     expect_identical(portable_txt$hash,            txt$hash)
     expect_identical(portable_txt$hash_algorithm,  txt$hash_algorithm)
     expect_identical(portable_txt$source_language, txt$source_lang)
@@ -217,6 +223,7 @@ test_that("portable_text() updates hash, source_language, and source_text only i
 test_that("portable_location() returns an S3 object of class PortableLocation", {
     expect_s3_class(portable_loc, "PortableLocation")
     expect_identical(attr(portable_loc, "tag"), "Location")
+    expect_length(portable_loc, 2L)
     expect_identical(portable_loc$path, loc$path)
     expect_identical(portable_loc$ranges, "line 1, column 2 @ line 3, column 4")
 })
@@ -224,6 +231,99 @@ test_that("portable_location() returns an S3 object of class PortableLocation", 
 test_that("portable_location() validates x", {
     expect_error(portable_location(1L))
     expect_snapshot(portable_location(1L), error = TRUE)
+})
+
+
+# portable_translations() ------------------------------------------------------
+
+
+test_that("portable_translations() returns a named list", {
+    # The actual output's contents is tested
+    # below in a dedicated test block.
+    expect_type(portable_transl, "list")
+    expect_length(portable_transl, 2L)
+    expect_named(portable_transl, c("es", "fr"))
+})
+
+test_that("portable_translations() returns a named list of length 1 if lang is not null", {
+    # The actual output's contents is tested
+    # below in a dedicated test block.
+    out <- portable_translations(trans, "es")
+
+    expect_type(out, "list")
+    expect_length(out, 1L)
+    expect_named(out, "es")
+})
+
+test_that("each element returned by portable_translations() is an S3 object of class PortableTranslations", {
+    # All expect_*() calls are performed
+    # twice (one for each expected element).
+    src <- language_source_get()
+    es  <- portable_transl$es
+    fr  <- portable_transl$fr
+
+    # General structure.
+    expect_type(es, "list")
+    expect_type(fr, "list")
+    expect_length(es, 5L)
+    expect_length(fr, 5L)
+    expect_s3_class(es, "PortableTranslations")
+    expect_s3_class(fr, "PortableTranslations")
+    expect_identical(attr(es, "tag"), "Translations")
+    expect_identical(attr(fr, "tag"), "Translations")
+
+    # Header fields.
+    expect_identical(es$language, "es")
+    expect_identical(fr$language, "fr")
+    expect_identical(es$native_language, trans$native_languages[["es"]])
+    expect_identical(fr$native_language, trans$native_languages[["fr"]])
+    expect_identical(es$source_language, src)
+    expect_identical(fr$source_language, src)
+    expect_identical(es$source_native_language, trans$native_languages[[src]])
+    expect_identical(fr$source_native_language, trans$native_languages[[src]])
+
+    # Translations.
+    expect_type(es$translations, "list")
+    expect_type(fr$translations, "list")
+    expect_length(es$translations, portable_trans_n_texts)
+    expect_length(fr$translations, portable_trans_n_texts)
+    expect_named(es$translations)
+    expect_named(fr$translations)
+    expect_identical(es$translations$`256e0d7`$source_text, trans$get_translation("256e0d7", src))
+    expect_identical(es$translations$`256e0d7`$translation, constant("placeholder"))
+    expect_identical(es$translations$`2ac373a`$source_text, trans$get_translation("2ac373a", src))
+    expect_identical(es$translations$`2ac373a`$translation, constant("placeholder"))
+    expect_identical(fr$translations$`256e0d7`$source_text, trans$get_translation("256e0d7", src))
+    expect_identical(fr$translations$`256e0d7`$translation, trans$get_translation("256e0d7", "fr"))
+    expect_identical(fr$translations$`2ac373a`$source_text, trans$get_translation("2ac373a", src))
+    expect_identical(fr$translations$`2ac373a`$translation, trans$get_translation("2ac373a", "fr"))
+})
+
+test_that("portable_translations() validates x", {
+    expect_error(portable_translations(1L))
+    expect_snapshot(portable_translations(1L), error = TRUE)
+})
+
+test_that("portable_translations() validates lang if it is not null", {
+    expect_no_condition(portable_translations(trans))
+    expect_error(portable_translations(trans, "error-lang"))
+    expect_snapshot(portable_translations(trans, "error-lang"), error = TRUE)
+})
+
+test_that("portable_translations() validates placeholder", {
+    expect_error(portable_translations(placeholder = 1L))
+    expect_snapshot(portable_translations(placeholder = 1L), error = TRUE)
+})
+
+test_that("portable_translations() throws an error if there are multiple source languages", {
+    trans <- translator(
+        en = "English",
+        fr = "Français",
+        text(en = "Hello, world!",   source_lang = "en"),
+        text(fr = "Bonjour, monde!", source_lang = "fr"))
+
+    expect_error(portable_translations(trans))
+    expect_snapshot(portable_translations(trans), error = TRUE)
 })
 
 
@@ -318,11 +418,9 @@ test_that("print() works with PortableLocation objects", {
 
 
 test_that("as_location.Location() works", {
-    loc <- location()
     expect_identical(as_location(loc), loc)
 })
 
 test_that("as_text.Text() works", {
-    txt <- text(en = "Hello, world!")
     expect_identical(as_text(txt), txt)
 })
