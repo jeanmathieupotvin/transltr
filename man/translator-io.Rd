@@ -198,7 +198,7 @@ translations_read(file.path(dirname(temp_path), "es.txt"))
 #
 #   1. it has a corresponding entry in the underlying Translator object, and
 #   2. it has corresponding entries in the underlying Portable Translator
-#      File (fields languages and translations_files must be updated).
+#      File (fields languages and `Translations Files` must be updated).
 #
 # Users should always used translator_write() instead.
 x$set_native_languages(el = "Greek")

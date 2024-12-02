@@ -53,7 +53,6 @@ Collate:
     'translate.R'
     'translator.R'
     'transltr-package.R'
-    'utc.R'
     'utils.R'
     'uuid.R'
     'zzz.R'
