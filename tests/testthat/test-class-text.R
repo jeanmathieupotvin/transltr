@@ -300,9 +300,9 @@ test_that("is_text() works", {
 
 
 test_that("format() returns a character", {
-    # This test text is a little bit
+    # This test block is a little bit
     # fragile, but hardcoding expected
-    # values is much more simpler.
+    # values is simpler.
     fmt_txt2      <- format(txt2)
     fmt_txt_empty <- format(Text$new())
 

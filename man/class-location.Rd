@@ -8,7 +8,6 @@
 \alias{print.Location}
 \alias{c.Location}
 \alias{merge_locations}
-\alias{as_location}
 \title{Source Locations}
 \usage{
 location(path = tempfile(), line1 = 1L, col1 = 1L, line2 = 1L, col2 = 1L)
@@ -22,8 +21,6 @@ is_location(x)
 \method{c}{Location}(...)
 
 merge_locations(...)
-
-as_location(x, ...)
 }
 \arguments{
 \item{path}{A non-empty and non-\link[base:NA]{NA} character string. The origin
@@ -56,9 +53,9 @@ and S3 method \code{\link[=c]{c()}}.
 }}
 }
 \value{
-\code{\link[=location]{location()}}, \code{\link[=c]{c()}}, and \code{\link[=as_location]{as_location()}} return a named list of length
-5 and of class \code{\link{Location}}. It contains the values of \code{path},
-\code{line1}, \code{col1}, \code{line2}, and \code{col2}.
+\code{\link[=location]{location()}}, and \code{\link[=c]{c()}} return a named list of length 5 and of S3 class
+\code{\link{Location}} containing the values of \code{path}, \code{line1}, \code{col1},
+\code{line2}, and \code{col2}.
 
 \code{\link[=is_location]{is_location()}} returns a logical value.
 
@@ -93,14 +90,6 @@ non-duplicated range(s).
 \code{\link[=merge_locations]{merge_locations()}} is a generalized version of \code{\link[=c]{c()}} that handles any
 number of \code{\link{Location}} objects having possibly different paths.
 It can be viewed as a vectorized version of \code{\link[=c]{c()}}.
-}
-
-\subsection{Coercion}{
-
-\code{\link[=as_location]{as_location()}} is an S3 generic function that attempts to coerce its
-argument into a suitable \code{\link{Location}} object. It currently has no
-methods (aside from \link[=portable]{internal ones}), but users may extend it by
-defining their own methods.
 }
 }
 \examples{

@@ -101,3 +101,7 @@ str_trim <- function(x = character(), len = 80L) {
     x[to_trim] <- paste0(strtrim(x[to_trim], len - 3L), "...")
     return(x)
 }
+
+str_wrap <- function(x, ...) {
+    return(paste0(strwrap(x, ...), collapse = "\n"))
+}

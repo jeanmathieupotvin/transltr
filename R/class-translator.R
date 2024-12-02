@@ -26,13 +26,6 @@
 #'
 #' They can be imported back into an \R session with [translator_read()].
 #'
-#' ## Coercion
-#'
-#' [as_translator()] is an S3 generic function that attempts to coerce its
-#' argument into a suitable [`Translator`][Translator] object. It currently
-#' has no methods (aside from [internal ones][portable()]), but users may
-#' extend it by defining their own methods.
-#'
 #' @param ... Usage depends on the underlying function.
 #'   * Any number of [`Text`][Text] objects, and/or named character
 #'     strings for [translator()] (in no preferred order).
@@ -46,8 +39,8 @@
 #' @template param-hash-algorithm
 #'
 #' @returns
-#' [translator()], and [as_translator()] return an [`R6`][R6::R6] object of
-#' class [`Translator`][Translator].
+#' [translator()] returns an [`R6`][R6::R6] object of class
+#' [`Translator`][Translator].
 #'
 #' [is_translator()] returns a logical value.
 #'
@@ -120,7 +113,7 @@ is_translator <- function(x) {
 format.Translator <- function(x, ...) {
     if (!is.null(x$source_texts)) {
         texts <- lapply(x$hashes, x$get_text)
-        langs  <- lapply(texts, \(b) to_string(b$languages, last_sep = ", "))
+        langs <- lapply(texts, \(b) to_string(b$languages, last_sep = ", "))
 
         source_texts <- x$source_texts
         hashes <- names(source_texts)  ## These are already reduced.

@@ -61,7 +61,7 @@
 #'    (including in calls to [stop()], [warning()], etc.).
 #'
 #' 2. Features are extensively documented (even internal ones). For example,
-#'    see [portable()].
+#'    see [export()].
 #'
 #' 3. Like [gettext()], calls to [translate()] and the underlying source text
 #'    can always be located, extracted, and treated as a regular \R object. As

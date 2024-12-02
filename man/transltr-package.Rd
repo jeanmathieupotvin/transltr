@@ -61,7 +61,7 @@ language that differs from the server's internal locale.
 \item \code{\link[=translate]{translate()}} works everywhere, in any function and in any context
 (including in calls to \code{\link[=stop]{stop()}}, \code{\link[=warning]{warning()}}, etc.).
 \item Features are extensively documented (even internal ones). For example,
-see \code{\link[=portable]{portable()}}.
+see \code{\link[=export]{export()}}.
 \item Like \code{\link[=gettext]{gettext()}}, calls to \code{\link[=translate]{translate()}} and the underlying source text
 can always be located, extracted, and treated as a regular \R object. As
 such, it can be inspected, modified, imported, and exported.

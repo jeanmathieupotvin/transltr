@@ -24,13 +24,6 @@
 #' number of [`Location`][Location] objects having possibly different paths.
 #' It can be viewed as a vectorized version of [c()].
 #'
-#' ## Coercion
-#'
-#' [as_location()] is an S3 generic function that attempts to coerce its
-#' argument into a suitable [`Location`][Location] object. It currently has no
-#' methods (aside from [internal ones][portable()]), but users may extend it by
-#' defining their own methods.
-#'
 #' @param path A non-empty and non-[NA][base::NA] character string. The origin
 #'   of the range(s).
 #'
@@ -58,9 +51,9 @@
 #'     [print()].
 #'
 #' @returns
-#' [location()], [c()], and [as_location()] return a named list of length
-#' 5 and of class [`Location`][Location]. It contains the values of `path`,
-#' `line1`, `col1`, `line2`, and `col2`.
+#' [location()], and [c()] return a named list of length 5 and of S3 class
+#' [`Location`][Location] containing the values of `path`, `line1`, `col1`,
+#' `line2`, and `col2`.
 #'
 #' [is_location()] returns a logical value.
 #'
@@ -208,13 +201,6 @@ merge_locations <- function(...) {
 
     groups <- split_ul(locs, vapply_1c(locs, `[[`, i = "path"))
     return(lapply(groups, \(group) do.call(c, group)))
-}
-
-#' @rdname class-location
-#' @keywords internal
-#' @export
-as_location <- function(x, ...) {
-    UseMethod("as_location")
 }
 
 

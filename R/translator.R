@@ -222,29 +222,30 @@ translator_scope_name <- function(x) {
 # I/O --------------------------------------------------------------------------
 
 
+# FIXME: there is still some work left on these functions following introduction
+# of export(), and import(). Integration needs to be completed, and this may
+# slightly change current implementation of import().
+
+
 #' Read and Write Translations
 #'
 #' @description
-#' Read (import) *Portable Translator Files*, and convert them to
-#' [`Translator`][Translator] objects.
+#' Read (import) *Portable Translator/Translations Files*, and convert them
+#' to [`Translator`][Translator] objects.
 #'
 #' Write (export) [`Translator`][Translator] objects as
-#' *Portable Translators Files*.
+#' *Portable Translators/Translations Files*.
 #'
 #' @details
 #' [translator_write()] creates two types of file: a single
 #' *Portable Translator File*, and further *Portable Translations Files*. Both
 #' can be referred to as `PTF` files, and jointly represents all the information
 #' contained within a [`Translator`][Translator] object. As such, PTF files are
-#' closely tied by design.
+#' closely tied by design, work together, but target different audiences:
 #'
-#' Portable Translator Files are useful to developers.
-#'
-#' Portable Translations Files are useful to non-technical collaborators such
-#' as translators.
-#'
-#' Both types have well-defined internal representations referred to as
-#' [Portable Objects][portable()].
+#'   * Portable Translator Files are useful to developers, and
+#'   * Portable Translations Files are useful to non-technical collaborators
+#'     such as translators.
 #'
 #' ## Portable Translator File
 #'
@@ -258,13 +259,8 @@ translator_scope_name <- function(x) {
 #' Portable Translator Files are snapshots of [`Translator`][Translator]
 #' objects. To ease collaboration and maintenance, translations are grouped by
 #' language, and stored in separate Portable Translations Files). These files
-#' are listed and referenced by the `translations_files` field of a Portable
-#' Translator File. See class [PortableTranslator][portable()] for more
-#' information.
-#'
-#' It is worthwhile to note that [translator_write()] never creates a Portable
-#' Translations File for the source language itself. Attempting to translate
-#' text from the source language to itself makes no sense.
+#' are listed and referenced by the `Translations Files` field of a Portable
+#' Translator File.
 #'
 #' ## Portable Translations File
 #'
@@ -272,11 +268,15 @@ translator_scope_name <- function(x) {
 #' and textual representation (serialization) of the translations contained
 #' by a [`Translator`][Translator] object. It has two parts:
 #'
-#'   1. it starts with a YAML header stating basic information on source and
-#'      target language, and
-#'   2. a stream of unindented (flat) and named sections.
+#'   1. a YAML header containing basic information on source and target
+#'        languages, and
+#'   2. a sequence of unindented (flat) and named sections.
 #'
-#' See class [PortableTranslations][portable()] for more information.
+#' See [export()] for more information.
+#'
+#' Note that [translator_write()] never creates a Portable Translations File
+#' for the source language itself. Attempting to translate the source text to
+#' itself makes no sense.
 #'
 #' ## Working with PTF files
 #'
@@ -309,8 +309,8 @@ translator_scope_name <- function(x) {
 #'   they do not exist.
 #'
 #'   By default, [translator_read()], and [translator_write()] respectively
-#'   reads from, and writes to a default location given by global \R
-#'   [option][options] `transltr.default.path`. It points to a standard
+#'   reads from, and writes to a default location given by global \R option
+#'   `transltr.default.path`. It points to a standard
 #'   **Portable Translator File**. See Details below.
 #'
 #' @param x An object of class [`Translator`][Translator].
@@ -324,15 +324,16 @@ translator_scope_name <- function(x) {
 #' [`Translator`][Translator].
 #'
 #' [translator_write()] returns `NULL`, invisibly. It is used for its
-#' side-effect of creating Portable Translator Files and Portable Translations
-#' Files.
+#' side-effects:
 #'
-#'   * It writes a Portable Translator File to `path`.
-#'   * It writes further Portable Translations File in the same directory as
-#'     `path`. One file per non-source (native) language is created.
+#'   * it writes a Portable Translator File to `path`, and
+#'   * it writes further Portable Translations File(s) in the same directory
+#'     as `path`. One file per non-source native language defined in `x` is
+#'     created. Therefore, you may start supporting a new language by simply
+#'     adding a new entry to [`Translator$native_languages`][Translator].
 #'
 #' [translations_read()] returns an S3 object of class
-#' [`PortableTranslations`][portable()]. Consider using [translator_read()]
+#' [`ExportedTranslations`][export()]. Consider using [translator_read()]
 #' instead.
 #'
 #' [translations_write()] returns `NULL`, invisibly. It is used for its
@@ -340,8 +341,7 @@ translator_scope_name <- function(x) {
 #'
 #' @seealso
 #' [`Translator`][Translator],
-#' [`Portable`][portable()],
-#' [UTF-8](https://en.wikipedia.org/wiki/UTF-8)
+#' [export()]
 #'
 #' @examples
 #' # In what follows, ASCII characters are preferred because R has poor
@@ -397,7 +397,7 @@ translator_scope_name <- function(x) {
 #' #
 #' #   1. it has a corresponding entry in the underlying Translator object, and
 #' #   2. it has corresponding entries in the underlying Portable Translator
-#' #      File (fields languages and translations_files must be updated).
+#' #      File (fields languages and `Translations Files` must be updated).
 #' #
 #' # Users should always used translator_write() instead.
 #' x$set_native_languages(el = "Greek")
@@ -418,9 +418,9 @@ translator_read <- function(
             as.named.list = TRUE,
             merge.warning = TRUE,
             handlers      = list(
-                Translator = as_translator.PortableTranslator,
-                Text       = as_text.PortableText,
-                Location   = as_location.PortableLocation))
+                Translator = import.ExportedTranslator,
+                Text       = import.ExportedText,
+                Location   = import.ExportedLocation))
     },
     error = \(cond) {
         stopf(
@@ -433,7 +433,7 @@ translator_read <- function(
             gsub("[ \n\t.]+$", ".", tolower(cond$message)))
     })
 
-    files        <- file.path(dirname(path), attr(trans, "translations_files"))
+    files        <- file.path(dirname(path), attr(trans, "`Translations Files`"))
     translations <- lapply(files, translations_read, encoding = encoding)
 
     # Loop over each PortableTranslations, and
@@ -443,6 +443,7 @@ translator_read <- function(
         lang  <- tr$language
         texts <- lapply(tr$translations, `[[`, i = "translation")
         texts <- texts[!vapply_1l(texts, is.null)]
+
         map(\(hash, text) trans$get_text(hash)$set_translation(lang, text),
             hash = names(texts),
             text = texts)
@@ -458,6 +459,7 @@ translator_write <- function(
     path = getOption("transltr.default.path"))
 {
     assert_chr1(path)
+
     path       <- normalizePath(path, mustWork = FALSE)
     parent_dir <- dirname(path)
 
@@ -468,14 +470,14 @@ translator_write <- function(
             "Create it manually, or change 'path'.")
     }
 
-    trans <- portable_translator(x)
-    text_write(format(trans, set_instructions = TRUE), path)
+    # Write the Portable Translator File.
+    text_write(format(export(x)), path)
 
-    # Write PortableTranslations files (one
+    # Write Portable Translations files (one
     # per defined native language). They are
     # written in the same directory as path.
-    paths <- file.path(dirname(path), trans$translations_files)
-    langs <- names(trans$translations_files)
+    paths <- file.path(dirname(path), trans$`Translations Files`)
+    langs <- names(trans$`Translations Files`)
     map(translations_write, path = paths, lang = langs, moreArgs = list(x = x))
 
     return(invisible())
@@ -524,7 +526,7 @@ translations_read <- function(path = "", encoding = "UTF-8") {
     })
 
     out <- list(
-        language               = header$language,
+        language               = header$Language,
         native_language        = header$native_language,
         source_language        = header$source_language,
         source_native_language = header$source_native_language,
@@ -557,12 +559,9 @@ translations_write <- function(x = translator(), path = "", lang = "") {
     assert_chr1(path)
     assert_chr1(lang) # Ensure NULL is always disallowed.
 
+    # FIXME: validate lang is in choices?
     path    <- normalizePath(path, mustWork = FALSE)
-    strings <- format(
-        # portable_translations() always returns a list.
-        portable_translations(x, lang)[[1L]],
-        how = "flat",
-        set_instructions = TRUE)
+    strings <- format(export_translations(x)[[lang]])
 
     return(text_write(strings, path))
 }

@@ -39,8 +39,8 @@ source information for identification purposes.}
 \item{x}{Any \R object.}
 }
 \value{
-\code{\link[=translator]{translator()}}, and \code{\link[=as_translator]{as_translator()}} return an \code{\link[R6:R6Class]{R6}} object of
-class \code{\link{Translator}}.
+\code{\link[=translator]{translator()}} returns an \code{\link[R6:R6Class]{R6}} object of class
+\code{\link{Translator}}.
 
 \code{\link[=is_translator]{is_translator()}} returns a logical value.
 
@@ -75,14 +75,6 @@ called by the former.
 \code{\link[=translator_write]{translator_write()}}.
 
 They can be imported back into an \R session with \code{\link[=translator_read]{translator_read()}}.
-}
-
-\subsection{Coercion}{
-
-\code{\link[=as_translator]{as_translator()}} is an S3 generic function that attempts to coerce its
-argument into a suitable \code{\link{Translator}} object. It currently
-has no methods (aside from \link[=portable]{internal ones}), but users may
-extend it by defining their own methods.
 }
 }
 \examples{

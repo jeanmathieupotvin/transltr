@@ -429,7 +429,7 @@ test_that("is_translator() works", {
 test_that("format() returns a character", {
     # This test block is a little bit
     # fragile, but hardcoding expected
-    # values is much more simpler.
+    # values is simpler.
     fmt_trans1      <- format(trans1)
     fmt_trans_empty <- format(Translator$new(id = "test-translator"))
 
@@ -475,12 +475,4 @@ test_that("print() returns x invisibly", {
     withr::local_output_sink(tempfile())
     expect_invisible(print(trans1))
     expect_identical(print(trans1), trans1)
-})
-
-
-# as_translator() --------------------------------------------------------------
-
-
-test_that("as_translator() works", {
-    expect_s3_class(as_translator(portable_translator(trans1)), "Translator")
 })
