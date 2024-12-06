@@ -4,9 +4,13 @@
 #' identifiable sections.
 #'
 #' @details
-#' [flatten()] produces a [`Flat`][flatten()] object, which is a minimal
-#' textual data serialization format optimized for \R list-like objects.
-#' The resulting representation is called a *flat string*.
+#' The Flat format is a minimal textual data serialization format optimized
+#' for [recursive][is.recursive()] objects. Elements of such objects are
+#' converted to character strings and organized into unindented sections
+#' identified by a tag. The resulting representation is called a *flat string*.
+#'
+#' [flatten()] produces flat strings which are objects of S3 class
+#' [`Flat`][flatten()]. The class is relevant for printing purposes only.
 #'
 #' [unflatten()] is the inverse operation: it unserializes flat strings
 #' back into \R objects. The latter will have the exact same *shape* as

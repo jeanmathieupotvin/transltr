@@ -68,9 +68,13 @@ Serialize \R objects into textual sequences of unindented (\emph{flat}) and
 identifiable sections.
 }
 \details{
-\code{\link[=flatten]{flatten()}} produces a \code{\link[=flatten]{Flat}} object, which is a minimal
-textual data serialization format optimized for \R list-like objects.
-The resulting representation is called a \emph{flat string}.
+The Flat format is a minimal textual data serialization format optimized
+for \link[=is.recursive]{recursive} objects. Elements of such objects are
+converted to character strings and organized into unindented sections
+identified by a tag. The resulting representation is called a \emph{flat string}.
+
+\code{\link[=flatten]{flatten()}} produces flat strings which are objects of S3 class
+\code{\link[=flatten]{Flat}}. The class is relevant for printing purposes only.
 
 \code{\link[=unflatten]{unflatten()}} is the inverse operation: it unserializes flat strings
 back into \R objects. The latter will have the exact same \emph{shape} as
