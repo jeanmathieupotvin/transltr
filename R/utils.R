@@ -104,7 +104,7 @@ stopf <- function(fmt = "", ...) {
 #'
 #' [split_ul()] wraps [base::split()] and returns an **u**nnamed **l**ist.
 #'
-#' @param ... Potential arguments passed to [base::split()].
+#' @param ... Further arguments passed to [base::split()].
 #'
 #' @returns
 #' A list. See [base::split()] for further information.

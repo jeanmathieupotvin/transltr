@@ -7,7 +7,7 @@
 split_ul(...)
 }
 \arguments{
-\item{...}{Potential arguments passed to \code{\link[base:split]{base::split()}}.}
+\item{...}{Further arguments passed to \code{\link[base:split]{base::split()}}.}
 }
 \value{
 A list. See \code{\link[base:split]{base::split()}} for further information.

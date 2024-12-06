@@ -12,7 +12,7 @@ to_string(x, ...)
 \arguments{
 \item{x}{An object to be converted.}
 
-\item{...}{Further arguments passed to or from other methods.}
+\item{...}{Further arguments passed to, or from other methods.}
 
 \item{quote_values}{Should elements of \code{x} be quoted with single quotation
 marks?}

@@ -13,7 +13,7 @@
 #' @param last_sep A character string that separates the last element from
 #'   the penultimate one.
 #'
-#' @param ... Further arguments passed to or from other methods.
+#' @param ... Further arguments passed to, or from other methods.
 #'
 #' @returns A character string constructed from `x`. Elements are separated
 #'   by `", "`, except for the last one. Argument `last_sep` is used for it.
