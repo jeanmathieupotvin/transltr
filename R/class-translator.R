@@ -119,7 +119,7 @@ format.Translator <- function(x, ...) {
         hashes <- names(source_texts)  ## These are already reduced.
         names(source_texts) <- sprintf("%s [%s]", hashes, langs)
     } else {
-        source_texts <- constant("placeholder")
+        source_texts <- constant("unset")
     }
 
     xlist <- list(

@@ -9,7 +9,6 @@ test_that("constant() returns expected values", {
     expect_identical(constant("generated-by"), "R package transltr 0.0.1")
     expect_identical(constant("concat"),       " ")
     expect_identical(constant("empty"),        "<none>")
-    expect_identical(constant("placeholder"),  "<none>")
     expect_identical(constant("unset"),        "<unset>")
     expect_identical(constant("unknown"),      "<unknown>")
 })

@@ -9,7 +9,6 @@
 #'     "generated-by",
 #'     "concat",
 #'     "empty",
-#'     "placeholder",
 #'     "unset",
 #'     "unknown"
 #'   )
@@ -24,7 +23,6 @@
 #' constant("generated-by")  ## Outputs "R package transltr 0.0.1"
 #' constant("concat")        ## Outputs " "
 #' constant("empty")         ## Outputs "<none>"
-#' constant("placeholder")   ## Outputs "<none>"
 #' constant("unset")         ## Outputs "<unset>"
 #' constant("unknown")       ## Outputs "<unknown>"
 #'
@@ -39,7 +37,6 @@ constant <- function(
         "generated-by",
         "concat",
         "empty",
-        "placeholder",
         "unset",
         "unknown"))
 {
@@ -50,7 +47,6 @@ constant <- function(
             `generated-by` = "R package transltr 0.0.1",
             concat         = " ",
             empty          = "<none>",
-            placeholder    = "<none>",
             unset          = "<unset>",
             unknown        = "<unknown>",
             NULL))
