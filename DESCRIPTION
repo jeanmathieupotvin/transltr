@@ -44,6 +44,7 @@ Collate:
     'class-text.R'
     'class-translator.R'
     'find-source.R'
+    'flatten.R'
     'hash-algorithms.R'
     'language.R'
     'serialize.R'
