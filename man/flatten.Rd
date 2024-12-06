@@ -128,4 +128,8 @@ object (without requiring a \code{skeleton}), and
 \item return a readily exportable textual output.
 }
 }
+\note{
+The format's name can be interpreted as a recursive acronym: \strong{F}lat
+\strong{L}ist \strong{A}s \strong{T}ext (FLAT).
+}
 \keyword{internal}

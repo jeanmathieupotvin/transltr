@@ -105,6 +105,10 @@
 #' [flat_write()] returns `NULL`, invisibly. It enforces `UTF-8` at all times.
 #' Inputs are re-encoded if necessary.
 #'
+#' @note
+#' The format's name can be interpreted as a recursive acronym: **F**lat
+#' **L**ist **A**s **T**ext (FLAT).
+#'
 #' @rdname flatten
 #' @keywords internal
 flatten <- function(x, tag_sep = ": ", tag_empty = "") {
