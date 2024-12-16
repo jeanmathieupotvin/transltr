@@ -161,7 +161,9 @@ text_read <- function(path = "", encoding = "UTF-8") {
 
     if (!utils::file_test("-f", path) ||
         !utils::file_test("-r", path)) {
-        stops("'path' does not exist, is a directory, or is not readable.")
+        stopf(
+            "'path' '%s' does not exist, is a directory, or is not readable.",
+            path)
     }
 
     # This connection re-encodes input
@@ -188,7 +190,7 @@ text_write <- function(x = character(), path = "", encoding = "UTF-8") {
 
     if (utils::file_test("-d", path) || (
         utils::file_test("-f", path) && !utils::file_test("-w", path))) {
-        stops("'path' is a directory, or is not writable.")
+        stopf("'path' '%s' is a directory, or is not writable.", path)
     }
 
     con <- file(path, "wb", encoding = encoding)
