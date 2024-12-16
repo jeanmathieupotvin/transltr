@@ -17,6 +17,7 @@ A list. See \code{\link[base:split]{base::split()}} for further information.
 }
 \seealso{
 Other utility functions: 
+\code{\link{create_parent_dir}()},
 \code{\link{format_vector}()},
 \code{\link{stops}()},
 \code{\link{utc}()},

@@ -39,6 +39,7 @@ safety.
 }
 \seealso{
 Other utility functions: 
+\code{\link{create_parent_dir}()},
 \code{\link{format_vector}()},
 \code{\link{split_ul}()},
 \code{\link{stops}()},
