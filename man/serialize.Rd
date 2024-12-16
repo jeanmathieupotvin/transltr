@@ -2,32 +2,48 @@
 % Please edit documentation in R/serialize.R
 \name{serialize}
 \alias{serialize}
-\alias{export}
-\alias{Exported}
 \alias{ExportedTranslator}
 \alias{ExportedText}
 \alias{ExportedLocation}
 \alias{ExportedTranslations}
-\alias{import}
+\alias{serialize_translations}
+\alias{deserialize}
+\alias{deserialize_translations}
+\alias{export}
 \alias{export_translations}
+\alias{import}
+\alias{validate}
 \alias{export.Translator}
 \alias{export.Text}
 \alias{export.Location}
 \alias{import.ExportedTranslator}
 \alias{import.ExportedText}
 \alias{import.ExportedLocation}
+\alias{import.ExportedTranslations}
 \alias{import.default}
-\alias{format.Exported}
-\alias{format.ExportedTranslator}
-\alias{format.ExportedTranslations}
-\alias{print.Exported}
+\alias{validate.ExportedTranslator}
+\alias{validate.ExportedText}
+\alias{validate.ExportedLocation}
+\alias{validate.default}
+\alias{translations_files}
+\alias{get_uuid}
 \title{Serialize Objects}
 \usage{
+serialize(x, ...)
+
+serialize_translations(tr = translator(), lang = "")
+
+deserialize(string = "")
+
+deserialize_translations(string = "", tr)
+
 export(x, ...)
+
+export_translations(tr = translator(), lang = "")
 
 import(x, ...)
 
-export_translations(x = translator(), ...)
+validate(x, ...)
 
 \method{export}{Translator}(x, ...)
 
@@ -41,183 +57,227 @@ export_translations(x = translator(), ...)
 
 \method{import}{ExportedLocation}(x, ...)
 
+\method{import}{ExportedTranslations}(x, tr, ...)
+
 \method{import}{default}(x, ...)
 
-\method{format}{Exported}(x, ...)
+\method{validate}{ExportedTranslator}(x, ...)
 
-\method{format}{ExportedTranslator}(x, ...)
+\method{validate}{ExportedText}(x, ...)
 
-\method{format}{ExportedTranslations}(x, ...)
+\method{validate}{ExportedLocation}(x, ...)
 
-\method{print}{Exported}(x, ...)
+\method{validate}{default}(x, ...)
+
+translations_files(tr = translator())
+
+get_uuid(x)
 }
 \arguments{
-\item{x}{Any \R object. A \code{\link{Translator}} object, or an
-\code{\link[=export]{ExportedTranslator}} object for \code{\link[=export_translations]{export_translations()}}.}
+\item{x}{Any \R object.}
 
-\item{...}{Further arguments passed to or from other methods.}
+\item{...}{Further arguments passed to, or from other methods.}
+
+\item{tr}{A \code{\link{Translator}} object.
+
+An \strong{optional} \code{\link{Translator}} object may be passed to
+\code{\link[=deserialize_translations]{deserialize_translations()}}, and \code{\link[=import.ExportedTranslations]{import.ExportedTranslations()}} to
+register underlying translations. Since \code{\link{Translator}} objects
+are environments (using reference semantics), they are modified in place
+(and not returned).}
+
+\item{lang}{A non-empty and non-\link[base:NA]{NA} character string. The
+underlying language.
+
+A language is usually a code (of two or three letters) for a native
+language name. While users retain full control over codes, it is best
+to use language codes stemming from well-known schemes such as
+\href{https://en.wikipedia.org/wiki/IETF_language_tag}{IETF BCP 47}, or
+\href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
+Doing so maximizes portability and cross-compatibility between packages.}
+
+\item{string}{A non-\link[base:NA]{NA} character string. It can be empty.}
 
 \item{set_translations}{A non-\link[base:NA]{NA} logical value. Should
 translations be included in the resulting \code{\link[=export]{ExportedText}}
 object? If \code{FALSE}, field \code{Translations} is set equal to \code{NULL}.}
 }
 \value{
-\code{\link[=export]{export()}} return a named list of S3 class \code{\link[=export]{Exported}} and
-super-class
+\code{\link[=serialize]{serialize()}} and \code{\link[=serialize_translations]{serialize_translations()}} return a character string:
+a \href{https://yaml.org/spec/1.1/}{YAML} string, and a \link[=flat_serialize]{FLAT}
+string, respectively.
+
+\code{\link[=export]{export()}} returns a named list of S3 class
 \itemize{
-\item \code{\link[=export]{ExportedTranslator}} if \code{x} is a \code{\link{Translator}} object,
+\item \code{\link[=export]{ExportedTranslator}} if \code{x} is a \code{\link{Translator}}
+object,
 \item \code{\link[=export]{ExportedText}} if \code{x} is a \code{\link{Text}} object, or
 \item \code{\link[=export]{ExportedLocation}} if \code{x} is a \code{\link{Location}} object.
 }
 
-\code{\link[=import]{import()}} returns
-\itemize{
-\item a \code{\link{Translator}} object if \code{x} is an \code{\link[=export]{ExportedTranslator}} object,
-\item a \code{\link{Text}} object if \code{x} is an \code{\link[=export]{ExportedText}} object,
-\item a \code{\link{Location}} object if \code{x} an \code{\link[=export]{ExportedLocation}} object, or
-\item the value passed to \code{x} as is otherwise (the default method).
-}
+See Details above for more information.
 
-\code{\link[=export_translations]{export_translations()}} returns a named list containing further named lists
-of S3 class \code{\link[=export]{ExportedTranslations}} and of length 5. Each one
-contains the following elements.
+\code{\link[=export_translations]{export_translations()}} returns a named list of S3 class
+\code{\link[=export]{ExportedTranslations}} containing the following elements.
 
 \describe{
-\item{\code{Language}}{A non-empty and non-\link[base:NA]{NA} character string.
-The underlying translations' target language.}
-\item{\verb{Native Language}}{A non-empty and non-\link[base:NA]{NA} character
-string. The full native language name of the target language.}
-\item{\verb{Source Language}}{A non-empty and non-\link[base:NA]{NA} character
-string. The underlying source code's language.}
-\item{\verb{Source Native Language}}{A non-empty and non-\link[base:NA]{NA}
-character string. The full native language name of the source language.}
+\item{\verb{_Uuid}}{A non-empty and non-\link[base:NA]{NA} character
+string. A
+\href{https://en.wikipedia.org/wiki/Universally_unique_identifier}{universally unique identifier}
+used to throw suitable error messages. It should be ignored by users.}
+\item{\code{Identifier}}{The unique identifier of \code{x}. See
+\code{\link[=Translator]{Translator$id}} for more information.}
+\item{\verb{Language Code}}{The value of \code{lang}.}
+\item{\code{Language}}{The target (native) language. See
+\code{\link[=Translator]{Translator$native_languages}} for more information.}
+\item{\verb{Source Language}}{The source language. See
+\code{\link[=Translator]{Translator$source_langs}} for more information.}
 \item{\code{Translations}}{A named list containing further named lists. Each
 sublist contains two values:
 \describe{
 \item{\verb{Source Text}}{A non-empty and non-\link[base:NA]{NA} character
 string.}
-\item{\code{Translation}}{A non-empty and non-\link[base:NA]{NA} character string,
-or \code{NULL} if unavailable.}
+\item{\code{Translation}}{A non-empty and non-\link[base:NA]{NA} character
+string, or \code{NULL} if unavailable.}
 }
-Their names represent (reduced) hashes extracted from \code{x}.}
+See \code{\link[=Text]{Text$translations}} for more information. Their names are
+(reduced) hashes extracted from \code{x}.}
 }
 
-\code{\link[=format]{format()}} returns a named character vector. Its length and contents depend
-on the underlying method.
+\code{\link[=deserialize]{deserialize()}} and \code{\link[=import]{import()}} returns
 \itemize{
-\item \code{\link[=format.Exported]{format.Exported()}} returns a character string, a YAML serialization \code{x}.
-\item \code{\link[=format.ExportedTranslator]{format.ExportedTranslator()}} returns a character vector of length 2 and
-containing the following elements.
-
-\describe{
-\item{\code{instructions}}{A character string. A set of YAML comments.}
-\item{\code{translator}}{A character string. The YAML serialization of \code{x}.}
-}
-\item \code{\link[=format.ExportedTranslations]{format.ExportedTranslations()}} returns a character vector of length 3
-containing the following elements.
-
-\describe{
-\item{\code{instructions}}{A character string. A set of YAML comments.}
-\item{\code{languages}}{A character string. A YAML collection containing
-basic information on source and target languages.}
-\item{\code{translations}}{A character string. Pairs of source text and
-translations formatted as \emph{flat} sections. See above.}
-}
+\item a \code{\link{Translator}} object if \code{x} is an
+\code{\link[=export]{ExportedTranslator}} object,
+\item a \code{\link{Text}} object if \code{x} is an \code{\link[=export]{ExportedText}} object,
+\item a \code{\link{Location}} object if \code{x} an \code{\link[=export]{ExportedLocation}}
+object.
 }
 
-\code{\link[=print]{print()}} returns argument \code{x}, invisibly.
+\code{\link[=import.ExportedTranslator]{import.ExportedTranslator()}} further sets a \code{translations_files} attribute
+holding the cached value of \verb{x$Translations Files}.
+
+\code{\link[=deserialize_translations]{deserialize_translations()}} and \code{\link[=import.ExportedTranslations]{import.ExportedTranslations()}} return an
+\code{\link[=export]{ExportedTranslations}} object. Its contents is reformatted, if
+necessary. If a \code{\link{Translator}} object is passed to \code{tr},
+\code{\link[=deserialize_translations]{deserialize_translations()}}, and \code{\link[=import.ExportedTranslations]{import.ExportedTranslations()}} further
+registers translations by modifying \code{tr} \strong{in place}.
+
+\code{\link[=import.default]{import.default()}} is used for its side-effect of throwing an error for
+unsupported objects.
+
+\code{\link[=validate]{validate()}} returns \code{x} if it is valid and throws an error otherwise. It
+is designed to fail fast: error messages are \strong{not accumulated}. Classes
+(and underlying objects) that does not have a \code{\link[=validate]{validate()}} method are
+considered to be valid by default.
+
+\code{\link[=translations_files]{translations_files()}} returns a named list. If \code{tr} has a non-\code{NULL}
+\code{translations_files} attrribute, it is checked and returned. Otherwise,
+a named list of file names is constructed from registered native languages.
+See \code{\link[=Translator]{Translator$native_languages}} for more information. This
+attribute is used by \code{\link[=translator_write]{translator_write()}}.
+
+\code{\link[=get_uuid]{get_uuid()}} safely extracts field \verb{_Uuid} from \code{x}, and returns it if the
+underlying value is a non-empty and non-\link[base:NA]{NA} character string.
+Otherwise, a default value is returned.
 }
 \description{
 Convert \code{\link{Translator}} objects, \code{\link{Text}} objects, and
-\code{\link{Location}} objects to a \href{https://yaml.org/spec/1.1/}{YAML}
-string.
+\code{\link{Location}} objects to a \link[yaml:as.yaml]{YAML string}.
 
-Convert translations contained by a \code{\link{Translator}} object into
-a plain text and \emph{flat} format that is easy to use and understand.
+Convert translations contained by a \code{\link{Translator}} object to
+a custom textual representation (a \link[=flat_serialize]{flat string}).
 }
 \details{
-The data serialization process is broken down in 2 steps: \code{\link[=export]{export()}},
-and \code{\link[=format]{format()}}.
+The information contained within a \code{\link{Translator}} object is
+split by default. Unless \code{set_translations} is \code{TRUE}, translations are
+serialized independently from other fields. This is useful when creating
+\link[=translator_write]{Portable Translator Files}, and
+\link[=translations_read]{Portable Translations Files}.
 
-\code{\link[=export]{export()}} converts objects into \emph{transient} objects of class
-\code{\link[=export]{Exported}}. These are trivially convertable to an equivalent
-YAML data structure via \code{\link[=format]{format()}}. They are \emph{transient} because they are
-always formatted immediately after being created. As such, \code{\link[=export]{export()}} can
-be viewed as a preprocessor, and \code{\link[=format]{format()}} as the \emph{true} serializer.
+While \code{\link[=serialize]{serialize()}} and \code{\link[=serialize_translations]{serialize_translations()}} are distinct, they share
+a common \emph{design}, and perform the same \emph{thing}, at least conceptually. The
+same is true for \code{\link[=deserialize]{deserialize()}}, and \code{\link[=deserialize_translations]{deserialize_translations()}}.
+\subsection{Serialization}{
 
-\code{\link[=export]{Exported}} objects can be converted back to equivalent \R
+The data serialization process performed by \code{\link[=serialize]{serialize()}} and
+\code{\link[=serialize_translations]{serialize_translations()}} is internally broken down into 2 steps: objects
+are first \emph{exported} before being \emph{serialized}.
+
+\code{\link[=export]{export()}} and \code{\link[=export_translations]{export_translations()}} are \emph{preserializers} that convert
+objects into \emph{transient} objects of class \code{\link[=export]{Exported*}}. Their
+sole purpose is to ease the conversion of environments to textual
+representations (\code{\link{Translator}} objects and \code{\link{Text}}
+objects are stored as environments internally). They are never returned to
+the user: \code{\link[=serialize]{serialize()}} and \code{\link[=serialize_translations]{serialize_translations()}} immediately transform
+them into suitable character strings. The latter outputs a
+\link[=flat_serialize]{flat string}, and the former, a
+\link[yaml:as.yaml]{YAML string}.
+}
+
+\subsection{Deserialization}{
+
+The data deserialization process performed by \code{\link[=deserialize]{deserialize()}} and
+\code{\link[=deserialize_translations]{deserialize_translations()}} is internally broken down into 3 steps: objects
+are first \emph{deserialized}, then \emph{validated}, and finally, \emph{imported}.
+
+\code{\link[=deserialize]{deserialize()}}, and \code{\link[=deserialize_translations]{deserialize_translations()}} first deserializes \code{string}
+into an \R named list that is \strong{presumed} to be an object of class
+\code{\link[=export]{Exported*}}. The former relies on underlying
+\href{https://yaml.org/spec/1.1/#id858600}{YAML tags} to make such assumptions.
+The contents of the resulting \emph{transient} object is then thoroughly checked
+with \code{\link[=validate]{validate()}}, which dispatches on the object's \strong{presumed} class.
+Finally, a valid object is \emph{imported} back into an appropriate \R object
+via \code{\link[=import]{import()}}.
+}
+
+\subsection{\code{Exported} Classes}{
+
+\code{\link[=export]{Exported*}} may refer to classes
+\code{\link[=export]{ExportedTranslator}},
+\code{\link[=export]{ExportedText}},
+\code{\link[=export]{ExportedLocation}}, and
+\code{\link[=export]{ExportedTranslations}}.
+
+Generally speaking, an \code{\link[=export]{Exported*}} object is a named list of S3
+class \code{\link[=export]{Exported*}} always having a \code{tag} attribute whose value is
+equal to the super-class of argument \code{x}. The exact class depends on \code{x}.
+\code{\link[=export]{Exported*}} objects can be converted back to equivalent \R
 objects via \code{\link[=import]{import()}}.
-\subsection{The Exported Base Class}{
 
-Generally speaking, an \code{\link[=export]{Exported}} object is a named list of S3
-class \code{\link[=export]{Exported}} always having a \code{tag} attribute whose value is
-equal to the super-class of argument \code{x}.
-
-Classes \code{\link{Translator}}, \code{\link{Text}}, and
-\code{\link{Location}} each have a matching \code{\link[=export]{Exported}}
-super-class: \code{\link[=export]{ExportedTranslator}}, \code{\link[=export]{ExportedText}},
-and \code{\link[=export]{ExportedLocation}}. There are three main differences between
-both sets:
+There are three main differences between an object and its \emph{exported}
+counterpart.
 \enumerate{
 \item field names are written as whole (human-readable) words,
 \item source text is treated independently from translations, and
 \item unset fields are set equal to \code{NULL} (a \code{~} in YAML).
 }
 
-The information is otherwise identical, albeit structured slightly
-differently.
+The information is otherwise identical, albeit structured differently for
+presentational purposes.
 }
 
-\subsection{The ExportedTranslations Super-Class}{
+\subsection{The \code{ExportedTranslations} Super-class}{
 
-This class restructures translations by languages. Unlike other
-\code{\link[=export]{Exported}} super-classes, it has no corresponding
-\emph{non-exported} class. Objects of this class are created by applying
-\code{\link[=export_translations]{export_translations()}} on a \code{\link{Translator}} object.
+\code{\link[=export_translations]{export_translations()}} is different because it returns an object of S3 class
+\code{\link[=export]{ExportedTranslations}} which has no \emph{unexported} counterpart.
+Its purpose is to restructure translations extracted from a
+\code{\link{Translator}} object by language. It is used to create
+\link[=translations_read]{Portable Translations File}.
 
-Objects of this class are used to create
-\emph{\link[=translations_read]{Portable Translations File}}.
-\subsection{Format}{
+\code{\link[=export]{ExportedTranslations}} objects are created from a
+\code{\link{Translator}} object. The value passed to \code{lang} must have a
+corresponding registered native language name. See
+\code{\link[=Translator]{Translator$native_languages}} for more information.
 
-An \code{\link[=export]{ExportedTranslations}} has a dual format. Fields \code{Language},
-\verb{Native Language}, \verb{Source Language}, and \verb{Source Native Language} are
-serialized as a YAML string. However, field \code{Translations} is formatted
-separately as a \emph{flat} string: a sequence of plain text, and unindented
-sections. The example below highlights both formats.
-
-\if{html}{\out{<div class="sourceCode">}}\preformatted{\%YAML 1.1
----
-!<Translations>
-Language: fr
-Native Language: Français
-Source Language: en
-Source Native Language: English
-
-[[hash]]
-
-The source text is inserted here. Its hash is determined automatically.
-They both must be left as is.
-
-[[Translation]]
-
-The translation, or a placeholder equal to '<none>'. It must be removed
-before completing the section.
-
-Single line breaks are interpreted as single spaces, like other popular
-text formats. This avoids writing, and working with cumbersome long strings.
-}\if{html}{\out{</div>}}
+Unavailable translations are automatically replaced by a placeholder.
 }
-
-}
-}
-\note{
-The rationale behind \code{\link[=export.default]{export.default()}} is that any \R type, or class that
-does not have a dedicated \code{\link[=import]{import()}} method should be considered \emph{imported}
-already. This is useful when \link[=apply]{applying} \code{\link[=import]{import()}} on many objects
-having different classes.
 }
 \seealso{
 \href{https://yaml.org/spec/1.1/}{Official YAML 1.1 specification},
+\code{\link[yaml:as.yaml]{yaml::as.yaml()}},
+\code{\link[yaml:yaml.load]{yaml::yaml.load()}},
+\code{\link[=flat_serialize]{flat_serialize()}},
+\code{\link[=flat_deserialize]{flat_deserialize()}},
 \code{\link[=translator_read]{translator_read()}},
 \code{\link[=translator_write]{translator_write()}},
 \code{\link[=translations_read]{translations_read()}},
