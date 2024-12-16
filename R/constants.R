@@ -3,24 +3,12 @@
 #' Fetch shared constants used by [`transltr`][transltr]. Constants ensure
 #' consistency among all features of the package.
 #'
-#' @usage
-#' constant(
-#'   which = c(
-#'     "generated-by",
-#'     "concat",
-#'     "empty",
-#'     "unset",
-#'     "unknown"
-#'   )
-#' )
-#'
 #' @returns
 #' A character string, or `NULL` if value passed to `which` is unavailable.
 #'
 #' @seealso [hash_algorithms()]
 #'
 #' @examples
-#' constant("generated-by")  ## Outputs "R package transltr 0.0.1"
 #' constant("concat")        ## Outputs " "
 #' constant("empty")         ## Outputs "<none>"
 #' constant("unset")         ## Outputs "<unset>"
@@ -32,23 +20,15 @@
 #' @rdname constants
 #' @export
 #' @keywords internal
-constant <- function(
-    which = c(
-        "generated-by",
-        "concat",
-        "empty",
-        "unset",
-        "unknown"))
-{
+constant <- function(which = c("concat", "empty", "unset", "unknown")) {
     assert_chr1(which)
 
     return(
         switch(which,
-            `generated-by` = "R package transltr 0.0.1",
-            concat         = " ",
-            empty          = "<none>",
-            unset          = "<unset>",
-            unknown        = "<unknown>",
+            concat  = " ",
+            empty   = "<none>",
+            unset   = "<unset>",
+            unknown = "<unknown>",
             NULL))
 }
 

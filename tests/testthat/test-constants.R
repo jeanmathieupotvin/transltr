@@ -6,11 +6,10 @@ test_that("constant() returns null for unkown constant names", {
 })
 
 test_that("constant() returns expected values", {
-    expect_identical(constant("generated-by"), "R package transltr 0.0.1")
-    expect_identical(constant("concat"),       " ")
-    expect_identical(constant("empty"),        "<none>")
-    expect_identical(constant("unset"),        "<unset>")
-    expect_identical(constant("unknown"),      "<unknown>")
+    expect_identical(constant("concat"),  " ")
+    expect_identical(constant("empty"),   "<none>")
+    expect_identical(constant("unset"),   "<unset>")
+    expect_identical(constant("unknown"), "<unknown>")
 })
 
 test_that("constant() validate which", {

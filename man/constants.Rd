@@ -14,16 +14,7 @@ via usual methods. They are unit tests in place that ensures official
 releases are always shipped with this flag set to \code{FALSE}.
 }
 \usage{
-constant(
-  which = c(
-    "generated-by",
-    "concat",
-    "empty",
-    "placeholder",
-    "unset",
-    "unknown"
-  )
-)
+constant(which = c("concat", "empty", "unset", "unknown"))
 
 .__LGL_DEBUG_FLAG
 }
@@ -35,10 +26,8 @@ Fetch shared constants used by \code{\link{transltr}}. Constants ensure
 consistency among all features of the package.
 }
 \examples{
-constant("generated-by")  ## Outputs "R package transltr 0.0.1"
 constant("concat")        ## Outputs " "
 constant("empty")         ## Outputs "<none>"
-constant("placeholder")   ## Outputs "<none>"
 constant("unset")         ## Outputs "<unset>"
 constant("unknown")       ## Outputs "<unknown>"
 
