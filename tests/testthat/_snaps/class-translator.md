@@ -1,7 +1,7 @@
 # active binding id validates value
 
     Code
-      trans1$id <- 1L
+      tr1$id <- 1L
     Condition
       Error:
       ! 'id' must be a non-NA and non-empty character of length 1.
@@ -9,7 +9,7 @@
 # active binding hash_algorithm validates value
 
     Code
-      trans1$hash_algorithm <- 1L
+      tr1$hash_algorithm <- 1L
     Condition
       Error:
       ! 'hash_algorithm' must be a non-NA and non-empty character of length 1.
@@ -17,7 +17,7 @@
 ---
 
     Code
-      trans1$hash_algorithm <- "new-algo"
+      tr1$hash_algorithm <- "new-algo"
     Condition
       Error:
       ! 'hash_algorithm' must be equal to 'sha1', or 'utf8'.
@@ -25,7 +25,7 @@
 # active binding hashes validates value
 
     Code
-      trans1$hashes <- "error"
+      tr1$hashes <- "error"
     Condition
       Error:
       ! 'hashes' cannot be overwritten.
@@ -34,7 +34,7 @@
 # active binding source_texts validates value
 
     Code
-      trans1$source_texts <- 1L
+      tr1$source_texts <- 1L
     Condition
       Error:
       ! 'source_texts' cannot be overwritten.
@@ -43,7 +43,7 @@
 # active binding source_langs validates value
 
     Code
-      trans1$source_langs <- "new-source-lang"
+      tr1$source_langs <- "new-source-lang"
     Condition
       Error:
       ! 'source_langs' cannot be overwritten.
@@ -52,7 +52,7 @@
 # active binding languages validates value
 
     Code
-      trans1$languages <- "error"
+      tr1$languages <- "error"
     Condition
       Error:
       ! 'languages' cannot be overwritten.
@@ -61,7 +61,7 @@
 # active binding native_languages validates value
 
     Code
-      trans1$native_languages <- "error"
+      tr1$native_languages <- "error"
     Condition
       Error:
       ! use 'set_native_languages()' to update 'native_languages'.
@@ -85,7 +85,7 @@
 # $translate() validates source_lang
 
     Code
-      trans1$translate(lang = "en", source_lang = 1L)
+      tr1$translate(lang = "en", source_lang = 1L)
     Condition
       Error:
       ! 'source_lang' must be a non-NA and non-empty character of length 1.
@@ -93,7 +93,7 @@
 # $get_text() validates hash
 
     Code
-      trans1$get_text(hash = 1L)
+      tr1$get_text(hash = 1L)
     Condition
       Error:
       ! 'hash' must be a non-NA and non-empty character of length 1.
@@ -109,7 +109,7 @@
 # $set_native_languages() validates ...
 
     Code
-      trans1$set_native_languages(1L)
+      tr1$set_native_languages(1L)
     Condition
       Error:
       ! values passed to '...' must all be character strings or 'NULL'.
@@ -118,7 +118,7 @@
 ---
 
     Code
-      trans1$set_native_languages("English")
+      tr1$set_native_languages("English")
     Condition
       Error:
       ! '...' must have names.
@@ -134,7 +134,7 @@
 # $rm_text() validates hash
 
     Code
-      trans1$rm_text(1L)
+      tr1$rm_text(1L)
     Condition
       Error:
       ! 'hash' must be a non-NA and non-empty character of length 1.
@@ -142,7 +142,7 @@
 ---
 
     Code
-      trans1$rm_text("error")
+      tr1$rm_text("error")
     Condition
       Error:
       ! 'hash' must be equal to '256e0d7', or '2ac373a'.
@@ -165,7 +165,7 @@
 # print() works
 
     Code
-      print(trans1)
+      print(tr1)
     Output
       <Translator>
         Identifier: test-translator

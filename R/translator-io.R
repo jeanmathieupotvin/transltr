@@ -84,7 +84,7 @@
 #'   `transltr.default.path`. It points to a standard
 #'   **Portable Translator File**. See Details below.
 #'
-#' @param x An object of class [`Translator`][Translator].
+#' @param tr A [`Translator`][Translator] object.
 #'
 #' @template param-encoding
 #'
@@ -129,7 +129,7 @@
 #' # Create a Translator object.
 #' # This would normally be done automatically
 #' # by find_source(), or translator_read().
-#' x <- translator(
+#' tr <- translator(
 #'   id = "test-translator",
 #'   en = "English",
 #'   es = "Español",
@@ -148,7 +148,7 @@
 #' #   2. 2 Portable Translations Files (one for each non-source language).
 #' #      The file for language "es" contains placeholders for future
 #' #      translations.
-#' translator_write(x, temp_path)
+#' translator_write(tr, temp_path)
 #' translator_read(temp_path)
 #'
 #' # Inspect their (raw) contents.
@@ -171,8 +171,8 @@
 #' #      File (fields languages and `Translations Files` must be updated).
 #' #
 #' # Users should always used translator_write() instead.
-#' x$set_native_languages(el = "Greek")
-#' translations_write(x, file.path(dirname(temp_path), "el.txt"), "el")
+#' tr$set_native_languages(el = "Greek")
+#' translations_write(tr, file.path(dirname(temp_path), "el.txt"), "el")
 #' translations_read(file.path(dirname(temp_path), "el.txt"))
 #'
 #' @rdname translator-io
@@ -234,7 +234,7 @@ translator_write <- function(
 
 #' @rdname translator-io
 #' @export
-translations_read <- function(path = "", encoding = "UTF-8", tr = NULL) {
+translations_read <- function(path = "", encoding = "UTF-8", tr) {
     string <- paste0(text_read(path, encoding), collapse = "\n")
     return(deserialize_translations(string, tr))
 }

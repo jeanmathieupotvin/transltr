@@ -11,7 +11,7 @@ translator_read(path = getOption("transltr.default.path"), encoding = "UTF-8")
 
 translator_write(tr = translator(), path = getOption("transltr.default.path"))
 
-translations_read(path = "", encoding = "UTF-8", tr = NULL)
+translations_read(path = "", encoding = "UTF-8", tr)
 
 translations_write(tr = translator(), path = "", lang = "")
 }
@@ -30,6 +30,8 @@ underlying source character encoding. In almost all cases, this should
 be UTF-8. Other encodings are internally re-encoded to UTF-8 for
 portability.}
 
+\item{tr}{A \code{\link{Translator}} object.}
+
 \item{lang}{A non-empty and non-\link[base:NA]{NA} character string. The
 underlying language.
 
@@ -39,8 +41,6 @@ to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/IETF_language_tag}{IETF BCP 47}, or
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
 Doing so maximizes portability and cross-compatibility between packages.}
-
-\item{x}{An object of class \code{\link{Translator}}.}
 }
 \value{
 \code{\link[=translator_read]{translator_read()}} returns an \code{\link[R6:R6Class]{R6}} object of class
@@ -159,7 +159,7 @@ temp_path <- tempfile(pattern = "_translator_", fileext = ".yml")
 # Create a Translator object.
 # This would normally be done automatically
 # by find_source(), or translator_read().
-x <- translator(
+tr <- translator(
   id = "test-translator",
   en = "English",
   es = "Español",
@@ -178,7 +178,7 @@ x <- translator(
 #   2. 2 Portable Translations Files (one for each non-source language).
 #      The file for language "es" contains placeholders for future
 #      translations.
-translator_write(x, temp_path)
+translator_write(tr, temp_path)
 translator_read(temp_path)
 
 # Inspect their (raw) contents.
@@ -201,8 +201,8 @@ translations_read(file.path(dirname(temp_path), "es.txt"))
 #      File (fields languages and `Translations Files` must be updated).
 #
 # Users should always used translator_write() instead.
-x$set_native_languages(el = "Greek")
-translations_write(x, file.path(dirname(temp_path), "el.txt"), "el")
+tr$set_native_languages(el = "Greek")
+translations_write(tr, file.path(dirname(temp_path), "el.txt"), "el")
 translations_read(file.path(dirname(temp_path), "el.txt"))
 
 }
