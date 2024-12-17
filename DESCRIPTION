@@ -48,7 +48,6 @@ Collate:
     'hash.R'
     'language.R'
     'serialize.R'
-    'strings.R'
     'text-io.R'
     'text-normalize.R'
     'translate.R'
