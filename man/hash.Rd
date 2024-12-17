@@ -5,7 +5,7 @@
 \alias{hash_algorithms}
 \title{Hashing}
 \usage{
-hash(lang = "", text = "", algorithm = hash_algorithms(), validate = FALSE)
+hash(lang = "", text = "", algorithm = hash_algorithms())
 
 hash_algorithms()
 }
@@ -20,14 +20,13 @@ to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
 Doing so maximizes portability and cross-compatibility between packages.}
 
-\item{text}{A non-empty and non-\link[base:NA]{NA} character string.}
+\item{text}{A non-\link[base:NA]{NA} character string. It can be empty.}
 
-\item{algorithm}{A non-empty and non-\link[base:NA]{NA} character string equal
-to one of the values returned by \code{\link[=hash_algorithms]{hash_algorithms()}}. The algorithm to use
-when hashing \code{lang} and \code{text}. See Details.}
-
-\item{validate}{A non-\link[base:NA]{NA} logical value. Should the other
-arguments be validated?}
+\item{algorithm}{A non-empty and non-\link[base:NA]{NA} character string. The
+algorithm to use when hashing \code{lang} and \code{text}. See Details. While it
+should be equal to one of the values returned by \code{\link[=hash_algorithms]{hash_algorithms()}},
+the first element of \code{algorithm} is passed as is to \code{\link[=switch]{switch()}} without
+being validated for efficiency.}
 }
 \value{
 \code{\link[=hash]{hash()}} returns a character string, or \code{NULL} if \code{algorithm} is not

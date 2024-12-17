@@ -347,10 +347,10 @@ information.}
 \if{html}{\out{</div>}}
 }
 \subsection{Details}{
-Values passed to \code{...} are first normalized by \code{\link[=text_normalize]{text_normalize()}},
-and the resulting string is hashed by \code{\link[=text_hash]{text_hash()}}. Then, the
-corresponding translation tied to the \code{hash} and \code{lang} pair is
-fetched via method \code{\link[=Translator]{Translator$get_translation()}}.
+Values passed to \code{...} are first \link[=text_normalize]{normalized},
+then \link[=hash]{hashed}. The translation that corresponds to the
+resulting hash and \code{lang} pair is fetched via method
+\code{\link[=Translator]{Translator$get_translation()}}.
 }
 
 \subsection{Returns}{

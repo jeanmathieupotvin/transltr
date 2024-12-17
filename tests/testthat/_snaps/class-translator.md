@@ -82,22 +82,6 @@
       Error:
       ! 'hash_algorithm' must be equal to 'sha1', or 'utf8'.
 
-# $translate() validates lang
-
-    Code
-      trans1$translate(lang = 1L)
-    Condition
-      Error:
-      ! 'lang' must be a non-NA and non-empty character of length 1.
-
-# $translate() validates concat
-
-    Code
-      trans1$translate(lang = "en", concat = 1L)
-    Condition
-      Error:
-      ! 'concat' must be a non-NA character of length 1.
-
 # $translate() validates source_lang
 
     Code

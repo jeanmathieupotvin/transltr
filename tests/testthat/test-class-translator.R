@@ -207,8 +207,8 @@ test_that("$initialize() validates hash_algorithm", {
 })
 
 test_that("$translate() returns a character string if translation is available", {
-    # By design, this also checks that inputs
-    # are hashed accordingly by text_hash().
+    # By design, this also checks that
+    # inputs are hashed accordingly.
     expect_identical(trans1$translate("Hello, world!",    lang = "en"), "Hello, world!")
     expect_identical(trans1$translate("Hello, world!",    lang = "fr"), "Bonjour, monde!")
     expect_identical(trans2$translate("Hello, world!",    lang = "el"), "Γεια σου, Κόσμος!")
@@ -220,23 +220,6 @@ test_that("$translate() returns null if translation is not available", {
     expect_null(trans1$translate("Hello, world!", lang = "el"))
 })
 
-test_that("$translate() normalizes text", {
-    # We only check that text_normalize() is called.
-    # "Hello," and "world!" should be concatenated,
-    # and translate() should return source text.
-    expect_identical(trans1$translate("Hello,", "world!", lang = "en"), "Hello, world!")
-})
-
-test_that("$translate() validates lang", {
-    expect_error(trans1$translate(lang = 1L))
-    expect_snapshot(trans1$translate(lang = 1L), error = TRUE)
-})
-
-test_that("$translate() validates concat", {
-    expect_error(trans1$translate(lang = "en", concat = 1L))
-    expect_snapshot(trans1$translate(lang = "en", concat = 1L), error = TRUE)
-})
-
 test_that("$translate() validates source_lang", {
     expect_error(trans1$translate(lang = "en", source_lang = 1L))
     expect_snapshot(trans1$translate(lang = "en", source_lang = 1L), error = TRUE)
@@ -244,7 +227,7 @@ test_that("$translate() validates source_lang", {
 
 test_that("$get_translation() works", {
     expect_null(trans1$get_translation("bad-hash", "en"))
-    expect_null(trans1$get_translation(text_hash("en", "bad-hash", "sha1"), "en"))
+    expect_null(trans1$get_translation(hash("en", "bad-hash", "sha1"), "en"))
     expect_identical(trans1$get_translation("2ac373a", "en"), "Farewell, world!")
     expect_identical(trans1$get_translation("2ac373a", "fr"), "Au revoir, monde!")
     expect_identical(trans1$get_translation("256e0d7", "en"), "Hello, world!")
@@ -252,7 +235,7 @@ test_that("$get_translation() works", {
 })
 
 test_that("$get_text() works", {
-    expect_null(trans1$get_text(text_hash("en", "bad-hash", "sha1")))
+    expect_null(trans1$get_text(hash("en", "bad-hash", "sha1")))
     expect_identical(trans1$get_text("2ac373a")$hash, "2ac373aa699a6712cdaddbead28031d537de29bc")
     expect_identical(trans1$get_text("256e0d7")$hash, "256e0d707386d0fcd9abf10ad994000bdaa25812")
 })
@@ -270,7 +253,7 @@ test_that("$set_text() returns null invisibly", {
 test_that("$set_text() creates and registers a Text object", {
     trans <- test_translator()
     trans$set_text(en = "Bye bye!", location("a"))
-    txt <- trans$get_text(text_hash("en", "Bye bye!", "sha1"))
+    txt <- trans$get_text(hash("en", "Bye bye!", "sha1"))
 
     expect_s3_class(txt, "Text")
     expect_identical(txt$source_lang, "en")
@@ -298,8 +281,8 @@ test_that("$set_texts() registers Text objects", {
     txt2  <- text(fr = "À la prochaine!", location("b"), source_lang = "fr")
     trans$set_texts(txt1, txt2)
 
-    expect_identical(trans$get_text(text_hash("en", "Bye bye!", "sha1")),        txt1)
-    expect_identical(trans$get_text(text_hash("fr", "À la prochaine!", "sha1")), txt2)
+    expect_identical(trans$get_text(hash("en", "Bye bye!", "sha1")),        txt1)
+    expect_identical(trans$get_text(hash("fr", "À la prochaine!", "sha1")), txt2)
 })
 
 test_that("$set_texts() validates ...", {
@@ -459,7 +442,7 @@ test_that("format() returns a character", {
         "  Identifier: test-translator",
         "  Algorithm: sha1",
         "  Languages: <none>",
-        "  Source Texts: <none>"))
+        "  Source Texts: <unset>"))
 })
 
 

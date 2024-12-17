@@ -78,7 +78,7 @@
 #'
 #' @keywords internal
 text_normalize <- function(..., concat = constant("concat")) {
-    assert_chr1(concat)
+    assert_chr1(concat, TRUE)
 
     dots  <- c(...)
     empty <- which(!nzchar(dots)[-length(dots)])

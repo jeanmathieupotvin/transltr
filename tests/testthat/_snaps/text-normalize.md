@@ -1,4 +1,12 @@
-# text_normalize() works as expected
+# it validates concat
+
+    Code
+      text_normalize(concat = 1L)
+    Condition
+      Error:
+      ! 'concat' must be a non-NA character of length 1.
+
+# it works as expected
 
     Code
       cat(x1, "\n")
@@ -48,60 +56,4 @@
     Output
       Lorem Ipsum is simply dummy text of the printing and typesetting industry.
       Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. 
-
-# text_read() validates path
-
-    Code
-      text_read(1L)
-    Condition
-      Error:
-      ! 'path' must be a non-NA and non-empty character of length 1.
-
----
-
-    Code
-      text_read("a-non-existent-file.txt")
-    Condition
-      Error:
-      ! 'path' does not exist, is a directory, or is not readable.
-
-# text_read() validates encoding
-
-    Code
-      text_read(mock_file_utf8_path, "")
-    Condition
-      Error:
-      ! 'encoding' must be a non-NA and non-empty character of length 1.
-
-# text_write() validates x
-
-    Code
-      text_write(1L)
-    Condition
-      Error:
-      ! 'x' must be a non-empty character vector of non-NA values.
-
-# text_write() validates path
-
-    Code
-      text_write("Hello, world!", 1L)
-    Condition
-      Error:
-      ! 'path' must be a non-NA and non-empty character of length 1.
-
----
-
-    Code
-      text_write("Hello, world!", temp_dir)
-    Condition
-      Error:
-      ! 'path' is a directory, or is not writable.
-
-# text_write() validates encoding
-
-    Code
-      text_write("Hello, world!", temp_file, 1L)
-    Condition
-      Error:
-      ! 'encoding' must be a non-NA and non-empty character of length 1.
 

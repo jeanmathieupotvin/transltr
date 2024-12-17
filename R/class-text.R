@@ -275,7 +275,7 @@ as_text.call <- function(x,
 
     txt <- Text$new(hash_algorithm)
     txt$set_locations(location)
-    txt$set_translation(source_lang, text_normalize(dots, .concat = concat))
+    txt$set_translation(source_lang, text_normalize(dots, concat = concat))
     txt$source_lang <- source_lang
     return(txt)
 }
@@ -324,7 +324,7 @@ Text <- R6::R6Class("Text",
                 private$.hash_algo <- value
 
                 if (!is.null(source_text <- self$source_text)) {
-                    private$.hash <- text_hash(
+                    private$.hash <- hash(
                         self$source_lang,
                         source_text,
                         value)
@@ -343,7 +343,7 @@ Text <- R6::R6Class("Text",
                     x_name       = "source_lang")
 
                 private$.source_lang <- value
-                private$.hash <- text_hash(
+                private$.hash <- hash(
                     value,
                     self$get_translation(value),
                     self$hash_algorithm)

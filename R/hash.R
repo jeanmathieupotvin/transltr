@@ -35,15 +35,15 @@
 #' should be viewed as an identification algorithm that is highly likely to
 #' produce different values for different inputs.
 #'
-#' @param text A non-empty and non-[NA][base::NA] character string.
+#' @param text A non-[NA][base::NA] character string. It can be empty.
 #'
-#' @param algorithm A non-empty and non-[NA][base::NA] character string equal
-#'   to one of the values returned by [hash_algorithms()]. The algorithm to use
-#'   when hashing `lang` and `text`. See Details.
+#' @param algorithm A non-empty and non-[NA][base::NA] character string. The
+#'   algorithm to use when hashing `lang` and `text`. See Details. While it
+#'   should be equal to one of the values returned by [hash_algorithms()],
+#'   the first element of `algorithm` is passed as is to [switch()] without
+#'   being validated for efficiency.
 #'
 #' @template param-lang
-#'
-#' @template param-validate
 #'
 #' @returns
 #' [hash()] returns a character string, or `NULL` if `algorithm` is not
@@ -71,25 +71,15 @@
 #'
 #' @keywords internal
 #' @export
-hash <- function(
-    lang      = "",
-    text      = "",
-    algorithm = hash_algorithms(),
-    validate  = FALSE)
-{
-    assert_lgl1(validate)
-
-    if (validate) {
-        assert_chr1(lang)
-        assert_chr1(text)
-        assert_arg(algorithm)
-    }
+hash <- function(lang = "", text = "", algorithm = hash_algorithms()) {
+    assert_chr1(lang)
+    assert_chr1(text, TRUE)
 
     x <- sprintf("%s:%s", lang, text)
 
     return(
         switch(algorithm[[1L]],
-            sha1 = digest::digest(charToRaw(x), algo = "sha1", serialize = FALSE),
+            sha1 = digest::digest(charToRaw(x), "sha1", serialize = FALSE),
             utf8 = as.character(sum(cumsum(utf8ToInt(x)))),
             NULL))
 }

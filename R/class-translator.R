@@ -362,10 +362,10 @@ Translator <- R6::R6Class("Translator",
         #'   of this method.
         #'
         #' @details
-        #' Values passed to `...` are first normalized by [text_normalize()],
-        #' and the resulting string is hashed by [text_hash()]. Then, the
-        #' corresponding translation tied to the `hash` and `lang` pair is
-        #' fetched via method [`Translator$get_translation()`][Translator].
+        #' Values passed to `...` are first [normalized][text_normalize()],
+        #' then [hashed][hash()]. The translation that corresponds to the
+        #' resulting hash and `lang` pair is fetched via method
+        #' [`Translator$get_translation()`][Translator].
         #'
         #  NOTE: Package roxygen2 reuses templates whenever within an R6 class.
         #
@@ -393,12 +393,11 @@ Translator <- R6::R6Class("Translator",
             concat      = constant("concat"),
             source_lang = language_source_get())
         {
-            assert_chr1(lang)
-            assert_chr1(concat, TRUE)
+            # hash() validates source_lang, but it is also
+            # validated here to throw a coherent error message.
             assert_chr1(source_lang)
-
-            text <- text_normalize(..., .concat = concat)
-            hash <- text_hash(source_lang, text, private$.hash_algo)
+            text <- text_normalize(..., concat = concat)
+            hash <- hash(source_lang, text, private$.hash_algo)
             return(self$get_translation(hash, lang))
         },
 

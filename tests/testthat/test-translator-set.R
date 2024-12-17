@@ -1,4 +1,4 @@
-#' Testing translator_*() functions
+#' Testing translator_set() and other related functions
 #'
 #' It is hard to completely decouple unit tests of [translator_set()] and
 #' [translator_get()]. Since these two functions are very tightly coupled,
@@ -182,22 +182,6 @@ test_that("translator_scope_name() returns a character string", {
     expect_identical(translator_scope_name(new.env()), "global")    # unnamed env
     expect_identical(translator_scope_name(named_env), "my-env")    # named env
     expect_identical(translator_scope_name(globalenv()), "global")  # global env
-})
-
-
-# translator_read() ------------------------------------------------------------
-
-
-test_that("translator_read() returns a not yet implemented error", {
-    skip("to be completed")
-})
-
-
-# translator_write() -----------------------------------------------------------
-
-
-test_that("translator_write() returns a not yet implemented error", {
-    skip("to be completed")
 })
 
 

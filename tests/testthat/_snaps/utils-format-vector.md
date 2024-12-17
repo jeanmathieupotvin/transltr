@@ -1,21 +1,4 @@
-# stops() does not return the call as part of the error message
-
-    Code
-      wrap_stops <- (function() stops("this is an error message."))
-      wrap_stops()
-    Condition
-      Error:
-      ! this is an error message.
-
-# stopf() works
-
-    Code
-      stopf("this '%s' becomes part of the error message.", "placeholder")
-    Condition
-      Error:
-      ! this 'placeholder' becomes part of the error message.
-
-# format_vector() indents values
+# it indents values
 
     Code
       cat(out, sep = "\n")
@@ -27,7 +10,7 @@
             e: 3
             f: 4
 
-# format_vector() formats embedded structures accordingly
+# it formats embedded structures accordingly
 
     Code
       cat(format_vector(struct, "<JohnDoe>"), sep = "\n")
