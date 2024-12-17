@@ -49,8 +49,6 @@
 #' [print()] returns argument `x` invisibly.
 #'
 #' @seealso [translate()],
-#'   [translator_set()],
-#'   [translator_get()],
 #'   [translator_read()],
 #'   [translator_write()]
 #'

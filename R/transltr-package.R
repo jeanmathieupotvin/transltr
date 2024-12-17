@@ -87,8 +87,7 @@
 #'
 #' 4. Import translations back into an \R session with [translator_read()].
 #'
-#' 5. Set default language and [`Translator`][Translator] object with
-#'    [language_set()], and [translator_set()].
+#' 5. Set the default language with [language_set()].
 #'
 #' You may specify a default (global) source language with
 #' [language_source_get()].

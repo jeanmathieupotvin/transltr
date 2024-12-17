@@ -84,8 +84,7 @@ function returns a \code{\link{Translator}} object.
 \item Export it with \code{\link[=translator_write]{translator_write()}}. Complete the underlying
 \link[=translator_read]{Portable Translations Files} with translations.
 \item Import translations back into an \R session with \code{\link[=translator_read]{translator_read()}}.
-\item Set default language and \code{\link{Translator}} object with
-\code{\link[=language_set]{language_set()}}, and \code{\link[=translator_set]{translator_set()}}.
+\item Set the default language with \code{\link[=language_set]{language_set()}}.
 }
 
 You may specify a default (global) source language with

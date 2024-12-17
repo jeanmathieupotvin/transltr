@@ -7,15 +7,15 @@
 translate(
   ...,
   lang = language_get(),
-  scope = NULL,
+  tr = translator(),
   concat = constant("concat"),
   source_lang = language_source_get()
 )
 }
 \arguments{
 \item{...}{Any number of literal character vectors. The source text to
-translate. Values can be empty and/or \link[base:NA]{NA}, but can lead to
-unexpected results.}
+translate. Values can be empty and/or \link[base:NA]{NA}, but this may lead
+to unexpected results.}
 
 \item{lang}{A non-empty and non-\link[base:NA]{NA} character string. The
 underlying language.
@@ -27,8 +27,7 @@ to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
 Doing so maximizes portability and cross-compatibility between packages.}
 
-\item{scope}{A \code{NULL}, or an optional non-empty and non-\link[base:NA]{NA}
-character string.}
+\item{tr}{A \code{\link{Translator}} object.}
 
 \item{concat}{A non-empty and non-\link[base:NA]{NA} character string used to
 concatenate values passed to \code{...}.}
@@ -37,16 +36,17 @@ concatenate values passed to \code{...}.}
 language of the (untranslated) source text. See argument \code{lang} for more
 information.}
 }
+\value{
+A character string, or \code{NULL} if the underlying translation is unavailable.
+}
 \description{
-Translate source text. This is an high-level interface to
-\code{\link[=Translator]{Translator$translate()}}.
+Translate source text.
 }
 \details{
-See \code{\link[=translator_set]{translator_set()}} for more information on scopes.
-
 It is strongly recommended to always include the namespace when using
 \code{\link[=translate]{translate()}}, i.e. \code{transltr::translate()}. Doing so ensures that there
-will be no ambiguity at runtime.
+will be no ambiguity at runtime. See argument \code{strict} of \code{\link[=find_source]{find_source()}}
+for additional information.
 }
 \examples{
 # Set source language.
@@ -55,7 +55,7 @@ language_source_set("en")
 # Create a Translator object.
 # This would normally be done automatically
 # by find_source(), or translator_read().
-x <- translator(
+tr <- translator(
   id = "test-translator",
   en = "English",
   fr = "Français",
@@ -66,20 +66,16 @@ x <- translator(
     en = "Farewell, world!",
     fr = "Au revoir, monde!"))
 
-# Register it (implicitly, under 'global' scope).
-translator_set(x)
-
 # Set current language.
 language_set("fr")
 
 # Request translations.
-translate("Hello, world!")                  ## Outputs "Bonjour, monde!"
-translate("Farewell, world!", lang = "fr")  ## Outputs "Au revoir, monde!"
-translate("Hello, world!",    lang = "en")  ## Outputs "Hello, world!"
+translate("Hello, world!")                           ## Outputs "Bonjour, monde!"
+translate("Farewell, world!", lang = "fr", tr = tr)  ## Outputs "Au revoir, monde!"
+translate("Hello, world!",    lang = "en", tr = tr)  ## Outputs "Hello, world!"
 
 }
 \seealso{
 \code{\link{Translator}},
-\code{\link[=translator_set]{translator_set()}},
 \code{\link[=language_set]{language_set()}}
 }

@@ -1,16 +1,8 @@
-# translate() validates translator object it fetches for given scope
+# translate() validates tr
 
     Code
-      translate("Hello, world!", scope = "error")
+      translate("Hello, world!", tr = 1L)
     Condition
       Error:
-      ! no 'Translator' object set for scope 'error'. Call 'translator_set()' first.
-
-# translate() throws an error if implicit scope has no set translator object
-
-    Code
-      evalq(envir = globalenv(), function() translate("Hello, world!", lang = "fr"))()
-    Condition
-      Error:
-      ! no 'Translator' object set for scope 'global'. Call 'translator_set()' first.
+      ! 'tr' must be a 'Translator' object.
 

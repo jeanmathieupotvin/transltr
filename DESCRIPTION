@@ -52,7 +52,6 @@ Collate:
     'text-normalize.R'
     'translate.R'
     'translator-io.R'
-    'translator-set.R'
     'transltr-package.R'
     'utils-create-parent-dir.R'
     'utils-format-vector.R'
