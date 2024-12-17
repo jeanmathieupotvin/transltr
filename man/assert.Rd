@@ -20,7 +20,7 @@
 \alias{assert_named}
 \alias{assert_match}
 \alias{assert_arg}
-\title{Test Objects}
+\title{Assertions}
 \usage{
 is_int(x, allow_empty = FALSE)
 
@@ -38,7 +38,7 @@ is_between(x, min = -Inf, max = Inf)
 
 is_named(x, allow_empty_names = FALSE, allow_na_names = FALSE)
 
-is_match(x, choices, allow_partial = FALSE)
+is_match(x, choices = vector(), allow_partial = FALSE)
 
 assert_int(
   x,
@@ -100,35 +100,39 @@ assert_match(
 assert_arg(x, quote_values = FALSE, throw_error = TRUE)
 }
 \arguments{
-\item{x}{An object to be tested.}
+\item{x}{Any \R object.}
 
-\item{allow_empty}{Should empty vectors of length 0 be considered as
-valid values?}
+\item{allow_empty}{A non-\link[base:NA]{NA} logical value. Should vectors of
+length 0 be considered as valid values?}
 
-\item{allow_empty_string}{Should empty character strings be considered as
-valid values?}
+\item{allow_empty_string}{A non-\link[base:NA]{NA} logical value. Should empty
+character strings be considered as valid values?}
 
-\item{min}{A numeric lower bound. It can be infinite.}
+\item{min}{A non-\link[base:NA]{NA} numeric lower bound. It can be infinite.}
 
-\item{max}{A numeric upper bound. It can be infinite.}
+\item{max}{A non-\link[base:NA]{NA} numeric upper bound. It can be infinite.}
 
-\item{allow_empty_names}{Should empty character strings be considered as
-valid names? Note that this is different from having no names at all.}
+\item{allow_empty_names}{A non-\link[base:NA]{NA} logical value. Should empty
+character strings be considered as valid names? This is different from
+having no names at all.}
 
-\item{allow_na_names}{Should NA values be considered as valid names?}
+\item{allow_na_names}{A non-\link[base:NA]{NA} logical value. Should
+\link[base:NA]{NA} values be considered as valid names?}
 
-\item{choices}{A \link[base:vector]{vector} of valid candidates for \code{x}.}
+\item{choices}{A non-empty \link[base:vector]{vector} of valid candidates.}
 
-\item{allow_partial}{Should \code{x} be partially matched? If so,
-\code{\link[base:pmatch]{base::pmatch()}} is used. Note that \code{\link[base:match]{base::match()}} is used by default.
-The former is used to mimic the behavior of \code{\link[base:match.arg]{base::match.arg()}}.}
+\item{allow_partial}{A non-\link[base:NA]{NA} logical value. Should \code{x} be
+partially matched? If so, \code{\link[base:pmatch]{base::pmatch()}} is used.}
 
-\item{throw_error}{Should an error be thrown? If so, they are returned
-by \code{\link[=stops]{stops()}}.}
+\item{throw_error}{A non-\link[base:NA]{NA} logical value. Should an error be
+thrown? If so, \code{\link[=stops]{stops()}} is called. The error message is returned as a
+character string (possibly empty) otherwise.}
 
-\item{x_name}{The underlying name of \code{x}.}
+\item{x_name}{A non-empty and non-\link[base:NA]{NA} character string. The
+underlying name of \code{x}.}
 
-\item{quote_values}{Should \code{choices} be quoted with single quotation marks?}
+\item{quote_values}{A non-\link[base:NA]{NA} logical value. Should \code{choices}
+be quoted? This argument is passed to \code{\link[=to_string]{to_string()}}.}
 }
 \value{
 \code{\link[=is_int]{is_int()}},
@@ -139,7 +143,7 @@ by \code{\link[=stops]{stops()}}.}
 \code{\link[=is_list]{is_list()}},
 \code{\link[=is_between]{is_between()}},
 \code{\link[=is_named]{is_named()}}, and
-\code{\link[=is_match]{is_match()}} all return a logical value.
+\code{\link[=is_match]{is_match()}} return a logical value.
 
 \code{\link[=assert_int]{assert_int()}},
 \code{\link[=assert_chr]{assert_chr()}},
@@ -150,34 +154,33 @@ by \code{\link[=stops]{stops()}}.}
 \code{\link[=assert_between]{assert_between()}},
 \code{\link[=assert_named]{assert_named()}},
 \code{\link[=assert_match]{assert_match()}},
-\code{\link[=assert_arg]{assert_arg()}} all return an empty character string if \code{x} meets the
-underlying condition(s) specified by the function. Otherwise, they
-throw an error unless \code{throw_error} is \code{FALSE}. In that case, the
+\code{\link[=assert_arg]{assert_arg()}} return an empty character string if \code{x} meets the underlying
+criteria and throw an error otherwise. If \code{throw_error} is \code{FALSE}, the
 error message is returned as a character string.
 }
 \description{
-Functions below internally streamline usage of defensive programming
-through \emph{functional guard clauses} (guard clauses as functions).
+These functions are a functional implementation of defensive programming.
 
-\verb{is_*()} functions check whether their argument meets condition(s) and
-always returns a logical. Each \verb{is_*()} function has a corresponding
-\verb{assert_*()} function that further throws an error message when these
-condition(s) are not met.
+\verb{is_*()} functions check whether their argument meets certain criteria.
+
+\verb{assert_*()} functions further throw an error message when at least one
+criterion is not met.
+
+\strong{Arguments listed below are not (explicitly) validated for efficiency.}
 }
 \details{
-Guard clauses are quite useful when writing more robust code. However, they
-tend to be verbose and recycled within a project. Manually copying them
-multiple times makes it harder to keep error messages consistent over
-time. The \verb{assert_*()} family solves these challenges by encapsulating
-guard clause into simple semantic functions. See Examples below.
+Guard clauses tend to be verbose and recycled many times within a project.
+This makes it hard to keep error messages consistent over time. \verb{assert_*()}
+functions encapsulate usual guard clause into simple semantic functions.
+This reduces code repetition, and number of required unit tests. See
+Examples below.
 
-By convention, \link[base:NA]{NA} values are \strong{always} disallowed. This is
-because \code{\link{transltr}} rarely uses them.
-}
-\note{
-\code{\link[=assert_arg]{assert_arg()}} is a refactoring of \code{\link[base:match.arg]{base::match.arg()}} and relies on
-\code{\link[=assert_match]{assert_match()}} internally and does not have a direct \code{is_arg()}
-equivalent. It is designed to be called within another function.
+By convention, \link[base:NA]{NA} values are \strong{always} disallowed. Package
+\code{\link{transltr}} never uses them for consistency.
+
+\code{\link[=assert_arg]{assert_arg()}} is a partial refactoring of \code{\link[base:match.arg]{base::match.arg()}}. It relies
+on \code{\link[=assert_match]{assert_match()}} internally and does not have an equivalent \code{is_arg()}
+function. It must be called within another function.
 }
 \examples{
 x <- "my string"
@@ -198,9 +201,4 @@ if (!transltr:::is_chr1(x, allow_empty_string = FALSE)) {
 transltr:::assert_chr1(x)
 
 }
-\seealso{
-\code{\link[=stops]{stops()}}
-}
-\concept{assert}
-\concept{is}
 \keyword{internal}

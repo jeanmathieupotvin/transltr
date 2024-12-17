@@ -3,14 +3,11 @@
 \name{str_strip_empty}
 \alias{str_strip_empty}
 \alias{str_left_pad}
-\alias{str_trim}
 \title{Manipulate Strings}
 \usage{
 str_strip_empty(x = character(), which = c("both", "leading", "trailing"))
 
 str_left_pad(x = character(), len = NULL, pad = " ")
-
-str_trim(x = character(), len = 80L)
 }
 \arguments{
 \item{x}{A character vector. It can be empty or contain empty elements.}
@@ -55,10 +52,6 @@ transltr:::str_strip_empty(x)             # c("a", "b", "", "c")
 transltr:::str_strip_empty(x, "leading")  # c("a", "b", "", "c", "")
 transltr:::str_strip_empty(x, "trailing") # c("", "", "a", "b", "", "c")
 
-}
-\seealso{
-Other string functions: 
-\code{\link{to_string}()}
 }
 \concept{string functions}
 \keyword{internal}

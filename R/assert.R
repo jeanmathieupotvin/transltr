@@ -1,53 +1,62 @@
-#' Test Objects
+#' Assertions
 #'
 #' @description
-#' Functions below internally streamline usage of defensive programming
-#' through *functional guard clauses* (guard clauses as functions).
+#' These functions are a functional implementation of defensive programming.
 #'
-#' `is_*()` functions check whether their argument meets condition(s) and
-#' always returns a logical. Each `is_*()` function has a corresponding
-#' `assert_*()` function that further throws an error message when these
-#' condition(s) are not met.
+#' `is_*()` functions check whether their argument meets certain criteria.
+#'
+#' `assert_*()` functions further throw an error message when at least one
+#' criterion is not met.
+#'
+#' **Arguments listed below are not (explicitly) validated for efficiency.**
 #'
 #' @details
-#' Guard clauses are quite useful when writing more robust code. However, they
-#' tend to be verbose and recycled within a project. Manually copying them
-#' multiple times makes it harder to keep error messages consistent over
-#' time. The `assert_*()` family solves these challenges by encapsulating
-#' guard clause into simple semantic functions. See Examples below.
+#' Guard clauses tend to be verbose and recycled many times within a project.
+#' This makes it hard to keep error messages consistent over time. `assert_*()`
+#' functions encapsulate usual guard clause into simple semantic functions.
+#' This reduces code repetition, and number of required unit tests. See
+#' Examples below.
 #'
-#' By convention, [NA][base::NA] values are **always** disallowed. This is
-#' because [`transltr`][transltr] rarely uses them.
+#' By convention, [NA][base::NA] values are **always** disallowed. Package
+#' [`transltr`][transltr] never uses them for consistency.
 #'
-#' @param x An object to be tested.
+#' [assert_arg()] is a partial refactoring of [base::match.arg()]. It relies
+#' on [assert_match()] internally and does not have an equivalent `is_arg()`
+#' function. It must be called within another function.
 #'
-#' @param x_name The underlying name of `x`.
+#' @param x Any \R object.
 #'
-#' @param min A numeric lower bound. It can be infinite.
+#' @param x_name A non-empty and non-[NA][base::NA] character string. The
+#'   underlying name of `x`.
 #'
-#' @param max A numeric upper bound. It can be infinite.
+#' @param min A non-[NA][base::NA] numeric lower bound. It can be infinite.
 #'
-#' @param choices A [vector][base::vector] of valid candidates for `x`.
+#' @param max A non-[NA][base::NA] numeric upper bound. It can be infinite.
 #'
-#' @param quote_values Should `choices` be quoted with single quotation marks?
+#' @param choices A non-empty [vector][base::vector] of valid candidates.
 #'
-#' @param allow_empty Should empty vectors of length 0 be considered as
-#'   valid values?
+#' @param allow_empty A non-[NA][base::NA] logical value. Should vectors of
+#'   length 0 be considered as valid values?
 #'
-#' @param allow_empty_string Should empty character strings be considered as
-#'   valid values?
+#' @param allow_empty_string A non-[NA][base::NA] logical value. Should empty
+#'   character strings be considered as valid values?
 #'
-#' @param allow_empty_names Should empty character strings be considered as
-#'   valid names? Note that this is different from having no names at all.
+#' @param allow_empty_names A non-[NA][base::NA] logical value. Should empty
+#'   character strings be considered as valid names? This is different from
+#'   having no names at all.
 #'
-#' @param allow_na_names Should NA values be considered as valid names?
+#' @param allow_na_names A non-[NA][base::NA] logical value. Should
+#'   [NA][base::NA] values be considered as valid names?
 #'
-#' @param allow_partial Should `x` be partially matched? If so,
-#'   [base::pmatch()] is used. Note that [base::match()] is used by default.
-#'   The former is used to mimic the behavior of [base::match.arg()].
+#' @param allow_partial A non-[NA][base::NA] logical value. Should `x` be
+#'   partially matched? If so, [base::pmatch()] is used.
 #'
-#' @param throw_error Should an error be thrown? If so, they are returned
-#'   by [stops()].
+#' @param throw_error A non-[NA][base::NA] logical value. Should an error be
+#'   thrown? If so, [stops()] is called. The error message is returned as a
+#'   character string (possibly empty) otherwise.
+#'
+#' @param quote_values A non-[NA][base::NA] logical value. Should `choices`
+#'   be quoted? This argument is passed to [to_string()].
 #'
 #' @returns
 #' [is_int()],
@@ -58,7 +67,7 @@
 #' [is_list()],
 #' [is_between()],
 #' [is_named()], and
-#' [is_match()] all return a logical value.
+#' [is_match()] return a logical value.
 #'
 #' [assert_int()],
 #' [assert_chr()],
@@ -69,17 +78,9 @@
 #' [assert_between()],
 #' [assert_named()],
 #' [assert_match()],
-#' [assert_arg()] all return an empty character string if `x` meets the
-#' underlying condition(s) specified by the function. Otherwise, they
-#' throw an error unless `throw_error` is `FALSE`. In that case, the
+#' [assert_arg()] return an empty character string if `x` meets the underlying
+#' criteria and throw an error otherwise. If `throw_error` is `FALSE`, the
 #' error message is returned as a character string.
-#'
-#' @note
-#' [assert_arg()] is a refactoring of [base::match.arg()] and relies on
-#' [assert_match()] internally and does not have a direct `is_arg()`
-#' equivalent. It is designed to be called within another function.
-#'
-#' @seealso [stops()]
 #'
 #' @examples
 #' x <- "my string"
@@ -100,35 +101,30 @@
 #' transltr:::assert_chr1(x)
 #'
 #' @rdname assert
-#' @family is
 #' @keywords internal
 is_int <- function(x, allow_empty = FALSE) {
     return(is.integer(x) && (length(x) || allow_empty) && !anyNA(x))
 }
 
 #' @rdname assert
-#' @family is
 #' @keywords internal
 is_chr <- function(x, allow_empty = FALSE) {
     return(is.character(x) && (length(x) || allow_empty) && !anyNA(x))
 }
 
 #' @rdname assert
-#' @family is
 #' @keywords internal
 is_lgl1 <- function(x) {
     return(is.logical(x) && length(x) == 1L && !is.na(x))
 }
 
 #' @rdname assert
-#' @family is
 #' @keywords internal
 is_int1 <- function(x) {
     return(is.integer(x) && length(x) == 1L && !is.na(x))
 }
 
 #' @rdname assert
-#' @family is
 #' @keywords internal
 is_chr1 <- function(x, allow_empty_string = FALSE) {
     return(
@@ -139,21 +135,18 @@ is_chr1 <- function(x, allow_empty_string = FALSE) {
 }
 
 #' @rdname assert
-#' @family is
 #' @keywords internal
 is_list <- function(x, allow_empty = FALSE) {
     return(is.list(x) && (length(x) || allow_empty))
 }
 
 #' @rdname assert
-#' @family is
 #' @keywords internal
 is_between <- function(x, min = -Inf, max = Inf) {
     return(is.numeric(x) && length(x) == 1L && !is.na(x) && x >= min && x <= max)
 }
 
 #' @rdname assert
-#' @family is
 #' @keywords internal
 is_named <- function(x, allow_empty_names = FALSE, allow_na_names = FALSE) {
     if (length(x)) {
@@ -170,9 +163,8 @@ is_named <- function(x, allow_empty_names = FALSE, allow_na_names = FALSE) {
 }
 
 #' @rdname assert
-#' @family is
 #' @keywords internal
-is_match <- function(x, choices, allow_partial = FALSE) {
+is_match <- function(x, choices = vector(), allow_partial = FALSE) {
     if (length(x)) {
         .match <- if (allow_partial) base::pmatch else base::match
         return(.match(x[[1L]], choices, 0L) > 0L)
@@ -184,7 +176,6 @@ is_match <- function(x, choices, allow_partial = FALSE) {
 }
 
 #' @rdname assert
-#' @family assert
 #' @keywords internal
 assert_int <- function(
     x,
@@ -207,7 +198,6 @@ assert_int <- function(
 }
 
 #' @rdname assert
-#' @family assert
 #' @keywords internal
 assert_chr <- function(
     x,
@@ -230,7 +220,6 @@ assert_chr <- function(
 }
 
 #' @rdname assert
-#' @family assert
 #' @keywords internal
 assert_lgl1 <- function(
     x,
@@ -251,7 +240,6 @@ assert_lgl1 <- function(
 }
 
 #' @rdname assert
-#' @family assert
 #' @keywords internal
 assert_int1 <- function(
     x,
@@ -272,7 +260,6 @@ assert_int1 <- function(
 }
 
 #' @rdname assert
-#' @family assert
 #' @keywords internal
 assert_chr1 <- function(
     x,
@@ -295,7 +282,6 @@ assert_chr1 <- function(
 }
 
 #' @rdname assert
-#' @family assert
 #' @keywords internal
 assert_list <- function(
     x,
@@ -318,7 +304,6 @@ assert_list <- function(
 }
 
 #' @rdname assert
-#' @family assert
 #' @keywords internal
 assert_between <- function(
     x,
@@ -356,7 +341,6 @@ assert_between <- function(
 }
 
 #' @rdname assert
-#' @family assert
 #' @keywords internal
 assert_named <- function(
     x,
@@ -381,7 +365,6 @@ assert_named <- function(
 }
 
 #' @rdname assert
-#' @family assert
 #' @keywords internal
 assert_match <- function(
     x,
@@ -406,7 +389,6 @@ assert_match <- function(
 }
 
 #' @rdname assert
-#' @family assert
 #' @keywords internal
 assert_arg <- function(
     x,

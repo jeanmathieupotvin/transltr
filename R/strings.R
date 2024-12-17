@@ -85,19 +85,3 @@ str_left_pad <- function(x = character(), len = NULL, pad = " ") {
     assert_between(len, 0L)
     return(paste0(strrep(pad, pmax(len - nchars, 0L)), x))
 }
-
-#' @rdname strings
-#' @keywords internal
-str_trim <- function(x = character(), len = 80L) {
-    assert_chr(x, TRUE)
-    assert_int1(len)
-    assert_between(len, 3L)
-
-    if (!length(x)) {
-        return(character())
-    }
-
-    to_trim    <- nchar(x) > len
-    x[to_trim] <- paste0(strtrim(x[to_trim], len - 3L), "...")
-    return(x)
-}
