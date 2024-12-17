@@ -48,9 +48,10 @@
 #'
 #' [print()] returns argument `x` invisibly.
 #'
-#' @seealso [translate()],
-#'   [translator_read()],
-#'   [translator_write()]
+#' @seealso
+#' [translate()],
+#' [translator_read()],
+#' [translator_write()]
 #'
 #' @examples
 #' # Set source language.
@@ -134,12 +135,6 @@ format.Translator <- function(x, ...) {
 print.Translator <- function(x, ...) {
     cat(format(x, ...), sep = "\n")
     return(invisible(x))
-}
-
-#' @rdname class-translator
-#' @export
-as_translator <- function(x, ...) {
-    UseMethod("as_translator")
 }
 
 #' @rdname class-translator

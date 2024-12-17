@@ -67,11 +67,11 @@
 #' contain duplicated elements, depending on the extracted contents.
 #'
 #' @seealso
-#'   [`Translator`][Translator],
-#'   [`Text`][Text],
-#'   [translate()],
-#'   [translator_read()],
-#'   [translator_write()]
+#' [`Translator`][Translator],
+#' [`Text`][Text],
+#' [translate()],
+#' [translator_read()],
+#' [translator_write()]
 #'
 #' @examples
 #' # Create a directory containing dummy R
@@ -206,9 +206,9 @@ find_source_in_files <- function(
 #' However, only `expr` tokens are returned.
 #'
 #' @seealso
-#'   [`Text`][Text],
-#'   [translate()],
-#'   [find_source()]
+#' [`Text`][Text],
+#' [translate()],
+#' [find_source()]
 #'
 #' @rdname find-source-in-file
 #' @keywords internal

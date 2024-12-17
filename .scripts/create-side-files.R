@@ -15,7 +15,8 @@
 #'
 #' @author Jean-Mathieu Potvin (<jeanmathieupotvin@@ununoctium.dev>)
 #'
-#' @seealso [The usethis package](https://usethis.r-lib.org/)
+#' @seealso
+#' [The usethis package](https://usethis.r-lib.org/)
 
 
 # Activate Codecov and create .codecov.yml.

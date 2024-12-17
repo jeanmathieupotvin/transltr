@@ -6,7 +6,8 @@
 #' Since package testthat uses non-interactive sessions, using interactive()
 #' below allows test runs to run in clean environments.
 #'
-#' @seealso [Startup process](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Startup.html)
+#' @seealso
+#' [Startup process](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Startup.html)
 
 
 # Global options ---------------------------------------------------------------

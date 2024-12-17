@@ -35,7 +35,4 @@ constant("unknown")       ## Outputs "<unknown>"
 constant("__undefined__")
 
 }
-\seealso{
-\code{\link[=hash_algorithms]{hash_algorithms()}}
-}
 \keyword{internal}

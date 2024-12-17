@@ -6,8 +6,6 @@
 #' @returns
 #' A character string, or `NULL` if value passed to `which` is unavailable.
 #'
-#' @seealso [hash_algorithms()]
-#'
 #' @examples
 #' constant("concat")        ## Outputs " "
 #' constant("empty")         ## Outputs "<none>"
