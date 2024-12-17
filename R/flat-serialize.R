@@ -45,17 +45,6 @@
 #' @param string A non-[NA][base::NA] character string. A *flat* string to
 #'   deserialize.
 #'
-#' @param path Passed as is to argument `path` of [text_read()], or
-#'   [text_write()].
-#'
-#' @param encoding Passed as is to argument `encoding` of [text_read()], or
-#'   [text_write()].
-#'
-#' @param keep_flat A non-[NA][base::NA] logical value. Should the flat string
-#'   be kept and returned as an attribute?
-#'
-#' @param ... Further elements passed to, or from other methods.
-#'
 #' @returns
 #' [flat_serialize()] returns a character string.
 #'

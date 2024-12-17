@@ -322,8 +322,8 @@ of this method.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{...}}{Any number of literal character vectors. The source text to
-translate. Values can be empty and/or \link[base:NA]{NA}, but can lead to
-unexpected results.}
+translate. Values can be empty and/or \link[base:NA]{NA}, but this may lead
+to unexpected results.}
 
 \item{\code{lang}}{A non-empty and non-\link[base:NA]{NA} character string. The
 underlying language.
@@ -345,15 +345,20 @@ information.}
 \if{html}{\out{</div>}}
 }
 \subsection{Details}{
+Since it can be detected by \code{\link[=find_source]{find_source()}}, \code{\link[=translate]{translate()}} is the
+preferred interface to this method.
+
 Values passed to \code{...} are first \link[=text_normalize]{normalized},
-then \link[=hash]{hashed}. The translation that corresponds to the
-resulting hash and \code{lang} pair is fetched via method
-\code{\link[=Translator]{Translator$get_translation()}}.
+and then \link[=hash]{hashed}. The translation that corresponds to
+the resulting hash and \code{lang} pair is fetched via method
+\code{\link[=Translator]{Translator$get_translation()}}. Argument \code{lang} will
+not be validated if the resulting hash has no corresponding
+\code{\link{Text}} object.
 }
 
 \subsection{Returns}{
-A character string, or \code{NULL}. The corresponding translation
-in the requested language, or \code{NULL} if none is available.
+A character string, or \code{NULL} if the underlying translation
+is unavailable.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

@@ -79,7 +79,7 @@ hash <- function(lang = "", text = "", algorithm = hash_algorithms()) {
 
     return(
         switch(algorithm[[1L]],
-            sha1 = digest::digest(charToRaw(x), "sha1", serialize = FALSE),
+            sha1 = digest::digest(charToRaw(x), algo = "sha1", serialize = FALSE),
             utf8 = as.character(sum(cumsum(utf8ToInt(x)))),
             NULL))
 }

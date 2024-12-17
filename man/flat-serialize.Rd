@@ -31,17 +31,6 @@ appended to it to ensure tags are always unique.}
 
 \item{string}{A non-\link[base:NA]{NA} character string. A \emph{flat} string to
 deserialize.}
-
-\item{path}{Passed as is to argument \code{path} of \code{\link[=text_read]{text_read()}}, or
-\code{\link[=text_write]{text_write()}}.}
-
-\item{encoding}{Passed as is to argument \code{encoding} of \code{\link[=text_read]{text_read()}}, or
-\code{\link[=text_write]{text_write()}}.}
-
-\item{keep_flat}{A non-\link[base:NA]{NA} logical value. Should the flat string
-be kept and returned as an attribute?}
-
-\item{...}{Further elements passed to, or from other methods.}
 }
 \value{
 \code{\link[=flat_serialize]{flat_serialize()}} returns a character string.

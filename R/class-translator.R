@@ -360,10 +360,15 @@ Translator <- R6::R6Class("Translator",
         #'   of this method.
         #'
         #' @details
+        #' Since it can be detected by [find_source()], [translate()] is the
+        #' preferred interface to this method.
+        #'
         #' Values passed to `...` are first [normalized][text_normalize()],
-        #' then [hashed][hash()]. The translation that corresponds to the
-        #' resulting hash and `lang` pair is fetched via method
-        #' [`Translator$get_translation()`][Translator].
+        #' and then [hashed][hash()]. The translation that corresponds to
+        #' the resulting hash and `lang` pair is fetched via method
+        #' [`Translator$get_translation()`][Translator]. Argument `lang` will
+        #' not be validated if the resulting hash has no corresponding
+        #' [`Text`][Text] object.
         #'
         #  NOTE: Package roxygen2 reuses templates whenever within an R6 class.
         #
@@ -375,8 +380,8 @@ Translator <- R6::R6Class("Translator",
         #'
         #' @template param-source-lang-no-example
         #'
-        #' @return A character string, or `NULL`. The corresponding translation
-        #'   in the requested language, or `NULL` if none is available.
+        #' @return A character string, or `NULL` if the underlying translation
+        #'   is unavailable.
         #'
         #' @examples
         #' tr <- Translator$new()
