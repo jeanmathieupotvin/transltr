@@ -5,7 +5,6 @@
 \alias{is_translator}
 \alias{format.Translator}
 \alias{print.Translator}
-\alias{as_translator}
 \alias{Translator}
 \title{Source Texts and Translations}
 \usage{
@@ -16,8 +15,6 @@ is_translator(x)
 \method{format}{Translator}(x, ...)
 
 \method{print}{Translator}(x, ...)
-
-as_translator(x, ...)
 }
 \arguments{
 \item{...}{Usage depends on the underlying function.
