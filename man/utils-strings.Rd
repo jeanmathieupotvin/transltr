@@ -47,9 +47,7 @@ one. See argument \code{last_sep}.
 Other utility functions: 
 \code{\link{create_parent_dir}()},
 \code{\link{format_vector}()},
-\code{\link{split_ul}()},
 \code{\link{stops}()},
-\code{\link{utc}()},
 \code{\link{vapply_1l}()}
 }
 \concept{utility functions}

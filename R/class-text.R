@@ -232,7 +232,7 @@ merge_texts <- function(..., hash_algorithm = hash_algorithms()) {
     # merged and must be ignored.
     hashes <- vapply_1c(texts, `[[`, i = "hash")
     is_set <- hashes != constant("unset")
-    groups <- split_ul(texts[is_set], hashes[is_set])
+    groups <- unname(split(texts[is_set], hashes[is_set]))
 
     return(lapply(groups, \(group) do.call(c, group)))
 }

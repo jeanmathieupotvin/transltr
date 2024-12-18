@@ -21,10 +21,8 @@ it does not, attempt to create it.
 \seealso{
 Other utility functions: 
 \code{\link{format_vector}()},
-\code{\link{split_ul}()},
 \code{\link{stops}()},
 \code{\link{to_string}()},
-\code{\link{utc}()},
 \code{\link{vapply_1l}()}
 }
 \concept{utility functions}

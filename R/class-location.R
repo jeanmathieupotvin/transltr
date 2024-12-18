@@ -199,7 +199,7 @@ merge_locations <- function(...) {
         stops("values passed to '...' must all be 'Location' objects.")
     }
 
-    groups <- split_ul(locs, vapply_1c(locs, `[[`, i = "path"))
+    groups <- unname(split(locs, vapply_1c(locs, `[[`, i = "path")))
     return(lapply(groups, \(group) do.call(c, group)))
 }
 
