@@ -5,7 +5,7 @@
 \alias{vapply_1i}
 \alias{vapply_1c}
 \alias{map}
-\title{Safe Apply Wrappers}
+\title{Apply Wrappers}
 \usage{
 vapply_1l(x, fun, ...)
 
@@ -13,16 +13,17 @@ vapply_1i(x, fun, ...)
 
 vapply_1c(x, fun, ...)
 
-map(fun, ..., moreArgs = list())
+map(fun, ..., more = list())
 }
 \arguments{
-\item{x}{Passed as is to argument \code{X} of \code{\link[base:lapply]{*apply()}}.}
+\item{x}{See argument \code{X} of \code{\link[base:lapply]{vapply()}}.}
 
-\item{fun}{Passed as is to argument \code{FUN} of \code{\link[base:lapply]{*apply()}}
-or \code{\link[=.mapply]{.mapply()}}.}
+\item{fun}{See argument \code{FUN} of \code{\link[base:lapply]{vapply()}}, and
+\code{\link[=.mapply]{.mapply()}}.}
 
-\item{...}{Further arguments passed as is to \code{\link[base:lapply]{*apply()}}
-or \code{\link[=.mapply]{.mapply()}}. It later passes them to \code{fun}.}
+\item{...}{Further optional arguments passed to \code{fun}.}
+
+\item{more}{See argument \code{MoreArgs} of \code{\link[=.mapply]{.mapply()}}.}
 }
 \value{
 \code{\link[=vapply_1l]{vapply_1l()}},
@@ -30,21 +31,20 @@ or \code{\link[=.mapply]{.mapply()}}. It later passes them to \code{fun}.}
 \code{\link[=vapply_1c]{vapply_1c()}} respectively return a logical, an integer, and a character
 vector having the same length as \code{x}. Names are always discarded.
 
-\code{\link[=map]{map()}} returns a list having the same length as \code{x}.
+\code{\link[=map]{map()}} returns a list having the same length as the longest element passed
+to  \code{...}.
 }
 \description{
-These functions wrap a function of the \code{\link[base:lapply]{*apply()}}
-family and enforce various values for convenience and additional
-safety.
+These functions wrap a function of the \code{\link[base:lapply]{apply()}}
+family, and enforce various values for convenience. Arguments are
+passed \emph{as is} to an \code{\link[base:lapply]{apply()}} function.
 }
 \seealso{
 Other utility functions: 
 \code{\link{create_parent_dir}()},
 \code{\link{format_vector}()},
-\code{\link{split_ul}()},
 \code{\link{stops}()},
-\code{\link{to_string}()},
-\code{\link{utc}()}
+\code{\link{to_string}()}
 }
 \concept{utility functions}
 \keyword{internal}

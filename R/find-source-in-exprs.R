@@ -76,7 +76,7 @@ find_source_in_exprs <- function(
     # overhead, but it is the only viable solution.
     code      <- lapply(tokens$text, \(x) tryCatch(str2lang(x), error = \(c) NULL))
     is_call   <- vapply_1l(code, is_translate_call, strict = strict)
-    locations <- map(location, moreArgs = list(path = path),
+    locations <- map(location, more = list(path = path),
         line1 = tokens[is_call, "line1"],
         col1  = tokens[is_call, "col1"],
         line2 = tokens[is_call, "line2"],
@@ -86,7 +86,7 @@ find_source_in_exprs <- function(
         map(as_text,
             x        = code[is_call],
             location = locations,
-            moreArgs = list(
+            more     = list(
                 strict         = strict,
                 hash_algorithm = hash_algorithm,
                 validate       = FALSE)))

@@ -225,9 +225,9 @@ translator_write <- function(
     # per defined native language). They are
     # written in the same directory as path.
     map(translations_write,
-        path     = file.path(path_dir, files),
-        lang     = names(files),
-        moreArgs = list(tr = tr))
+        path = file.path(path_dir, files),
+        lang = names(files),
+        more = list(tr = tr))
 
     return(invisible())
 }
