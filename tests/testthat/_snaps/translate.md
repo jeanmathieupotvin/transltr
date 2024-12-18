@@ -1,4 +1,4 @@
-# translate() validates tr
+# it validates tr
 
     Code
       translate("Hello, world!", tr = 1L)

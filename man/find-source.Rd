@@ -12,7 +12,7 @@ find_source(
   id = uuid(),
   hash_algorithm = hash_algorithms(),
   native_languages = character(),
-  verbose = FALSE
+  verbose = TRUE
 )
 
 find_source_in_files(
@@ -20,7 +20,7 @@ find_source_in_files(
   encoding = "UTF-8",
   strict = TRUE,
   hash_algorithm = hash_algorithms(),
-  verbose = FALSE
+  verbose = TRUE
 )
 }
 \arguments{
