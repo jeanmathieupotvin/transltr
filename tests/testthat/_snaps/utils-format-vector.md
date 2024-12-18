@@ -30,7 +30,7 @@
 ---
 
     Code
-      cat(format_vector(struct, "<JohnDoe>", .show_nokey = FALSE), sep = "\n")
+      cat(format_vector(struct, "<JohnDoe>", show_nokey = FALSE), sep = "\n")
     Output
       <JohnDoe>
         FirstName: John

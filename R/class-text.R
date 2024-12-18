@@ -170,7 +170,7 @@ format.Text <- function(x, ...) {
         Translations  = trans,
         Locations     = locs)
 
-    return(format_vector(xlist, "<Text>", .show_nokey = FALSE))
+    return(format_vector(xlist, "<Text>", show_nokey = FALSE))
 }
 
 #' @rdname class-text

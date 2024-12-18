@@ -23,8 +23,8 @@ test_that("it shows <nokey> if names are null or empty", {
     expect_match(out, "<nokey>: ")
 })
 
-test_that("it does not show <nokey> if .show_nokey is false", {
-    out <- format_vector(v, .show_nokey = FALSE)
+test_that("it does not show <nokey> if show_nokey is false", {
+    out <- format_vector(v, show_nokey = FALSE)
     expect_no_match(out, "<nokey>: ")
 })
 
@@ -64,6 +64,6 @@ test_that("it formats embedded structures accordingly", {
 
     expect_snapshot(cat(format_vector(struct, "<JohnDoe>"), sep = "\n"))
     expect_snapshot({
-        cat(format_vector(struct, "<JohnDoe>", .show_nokey = FALSE), sep = "\n")
+        cat(format_vector(struct, "<JohnDoe>", show_nokey = FALSE), sep = "\n")
     })
 })

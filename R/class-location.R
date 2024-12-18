@@ -156,7 +156,7 @@ is_location <- function(x) {
 #' @export
 format.Location <- function(x, how = c("long", "short", "shorter"), ...) {
     xlist <- list(Path = x$path, Ranges = .location_format_range(x, how))
-    return(format_vector(xlist, "<Location>", .show_nokey = FALSE))
+    return(format_vector(xlist, "<Location>", show_nokey = FALSE))
 }
 
 #' @rdname class-location

@@ -6,30 +6,30 @@
 \usage{
 format_vector(
   x = vector(),
-  .top_label = NULL,
-  .indent = 2L,
-  .show_nokey = TRUE,
-  .level = 1L
+  top_label = NULL,
+  indent = 2L,
+  show_nokey = TRUE,
+  level = 1L
 )
 }
 \arguments{
 \item{x}{A \link[=vector]{vector}. It cannot be empty.}
 
-\item{.top_label}{A \code{NULL} or a non-empty and non-\link[base:NA]{NA} character
+\item{top_label}{A \code{NULL} or a non-empty and non-\link[base:NA]{NA} character
 string used as some kind of descriptive message. Its exact meaning depends
 on the underlying context. In recursive calls to \code{\link[=format_vector]{format_vector()}}, this
 is set equal to the name of the current element of \code{x}. \strong{It is not
 validated for efficiency.}}
 
-\item{.indent}{A non-\link[base:NA]{NA} integer value. Number of space characters
-to use by \code{.levels} for indentation purposes. \strong{It is not validated for
+\item{indent}{A non-\link[base:NA]{NA} integer value. Number of space characters
+to use by \code{levels} for indentation purposes. \strong{It is not validated for
 efficiency.}}
 
-\item{.show_nokey}{A non-\link[base:NA]{NA} logical value. Should \code{NULL} and/or
+\item{show_nokey}{A non-\link[base:NA]{NA} logical value. Should \code{NULL} and/or
 empty names be replaced by \code{"<nokey>"}? \strong{It is not validated for
 efficiency.}}
 
-\item{.level}{A non-\link[base:NA]{NA} integer value. The current nesting level
+\item{level}{A non-\link[base:NA]{NA} integer value. The current nesting level
 in recursive calls to \code{\link[=format_vector]{format_vector()}}. \strong{It is not validated for
 efficiency.}}
 }
@@ -46,7 +46,7 @@ set of name/value pairs (given as character strings), where indentation
 provides information on embedded structures. The following template shows
 how it attempts to format \code{x}.
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{<.top_label>:
+\if{html}{\out{<div class="sourceCode">}}\preformatted{<top_label>:
   <names(x[1])>: <x[1]>
   <names(x[2])>: <x[2]>
   <names(x[3])>:
@@ -62,7 +62,7 @@ how it attempts to format \code{x}.
 Names are used to construct labels. If \code{x[i]} has a name (\code{names(x[i])}
 is not \code{NULL}), it is used to construct a label for \code{x[i]}. The format is
 equivalent to \code{names(x[i]): as.character(x[i])}. If \code{x[i]} does not have
-a name (or if it is empty), \verb{<nokey>} is printed, unless \code{.show_nokey} is
+a name (or if it is empty), \verb{<nokey>} is printed, unless \code{show_nokey} is
 \code{FALSE}. See Examples below.
 }
 \note{
@@ -83,7 +83,7 @@ x <- list(
     "address above."))
 
 cat(transltr:::format_vector(x, "<JohnDoe>"), sep = "\n")
-cat(transltr:::format_vector(x, "<JohnDoe>", .show_nokey = FALSE), sep = "\n")
+cat(transltr:::format_vector(x, "<JohnDoe>", show_nokey = FALSE), sep = "\n")
 
 }
 \seealso{

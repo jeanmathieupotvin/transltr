@@ -127,7 +127,7 @@ format.Translator <- function(x, ...) {
         Languages      = x$native_languages %??% constant("empty"),
         `Source Texts` = source_texts)
 
-    return(format_vector(xlist, "<Translator>", .show_nokey = FALSE))
+    return(format_vector(xlist, "<Translator>", show_nokey = FALSE))
 }
 
 #' @rdname class-translator
