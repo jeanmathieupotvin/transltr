@@ -100,6 +100,11 @@
 #'
 #' @param string A non-[NA][base::NA] character string. It can be empty.
 #'
+#' @param set_uuid A non-[NA][base::NA] logical value. Should a `_Uuid` field
+#'   uniquely identifying outputs of [export()] be included? If `TRUE`, it is
+#'   set equal to [uuid()]. This field is required by [validate()] to throw
+#'   meaningful error messages­.
+#'
 #' @param set_translations A non-[NA][base::NA] logical value. Should
 #'   translations be included in the resulting [`ExportedText`][export()]
 #'   object? If `FALSE`, field `Translations` is set equal to `NULL`.
@@ -127,7 +132,7 @@
 #'
 #' \describe{
 #'   \item{`_Uuid`}{A non-empty and non-[NA][base::NA] character
-#'     string. A
+#'     string if `set_uuid` is `TRUE`. A
 #'     [universally unique identifier](https://en.wikipedia.org/wiki/Universally_unique_identifier)
 #'     used to throw suitable error messages. It should be ignored by users.}
 #'   \item{`Identifier`}{The unique identifier of `x`. See
@@ -215,8 +220,8 @@ serialize <- function(x, ...) {
 
 #' @rdname serialize
 #' @keywords internal
-serialize_translations <- function(tr = translator(), lang = "") {
-    return(flat_serialize(export_translations(tr, lang)))
+serialize_translations <- function(tr = translator(), lang = "", set_uuid = TRUE) {
+    return(flat_serialize(export_translations(tr, lang, set_uuid)))
 }
 
 #' @rdname serialize
@@ -265,8 +270,9 @@ export <- function(x, ...) {
 
 #' @rdname serialize
 #' @keywords internal
-export_translations <- function(tr = translator(), lang = "") {
+export_translations <- function(tr = translator(), lang = "", set_uuid = TRUE) {
     assert_chr1(lang)
+    assert_lgl1(set_uuid)
 
     if (!is_translator(tr)) {
         stops("'tr' must be a 'Translator' object.")
@@ -287,13 +293,14 @@ export_translations <- function(tr = translator(), lang = "") {
     })
 
     out <- list(
-        `_Uuid`           = uuid(),
+        `_Uuid`           = NULL,
         Identifier        = tr$id,
         `Language Code`   = lang,
         Language          = native_languages[[lang]],
         `Source Language` = native_languages[[source_lang]],
         Translations      = translations)
 
+    out$`_Uuid` <- if (set_uuid) uuid() else NULL
     return(structure(out, class = "ExportedTranslations", tag = "Translations"))
 }
 
@@ -312,30 +319,38 @@ validate <- function(x, ...) {
 #' @rdname serialize
 #' @keywords internal
 #' @export
-export.Translator <- function(x, ...) {
+export.Translator <- function(x, set_uuid = TRUE, ...) {
+    assert_lgl1(set_uuid)
+
     # translations_files() validates x.
-    files  <- translations_files(x)
-    out    <- list(
-        `_Uuid`              = uuid(),
+    files <- translations_files(x)
+
+    out <- list(
+        `_Uuid`              = NULL,
         Identifier           = x$id,
         `Hashing Algorithm`  = x$hash_algorithm,
         `Source Language`    = x$source_langs,
         Languages            = as.list(x$native_languages),
         `Translations Files` = files,
-        `Texts`              = lapply(x$hashes, \(h) export(x$get_text(h), ...)))
+        `Texts`              = lapply(x$hashes, \(hash) {
+            export(x$get_text(hash), set_uuid, ...)
+        }))
 
+    out$`_Uuid` <- if (set_uuid) uuid() else NULL
     return(structure(out, class = "ExportedTranslator", tag = "Translator"))
 }
 
 #' @rdname serialize
 #' @keywords internal
 #' @export
-export.Text <- function(x, set_translations = FALSE, ...) {
+export.Text <- function(x, set_uuid = TRUE, set_translations = FALSE, ...) {
+    assert_lgl1(set_uuid)
     assert_lgl1(set_translations)
 
     is_set <- x$source_lang != constant("unset")
+
     out <- list(
-        `_Uuid`             = uuid(),
+        `_Uuid`             = NULL,
         `Hashing Algorithm` = x$hash_algorithm,
         Hash                = if (is_set) x$hash,
         `Source Language`   = if (is_set) x$source_lang,
@@ -346,20 +361,24 @@ export.Text <- function(x, set_translations = FALSE, ...) {
                 strwrap,
                 width = 80L)
         },
-        Locations = unname(lapply(x$locations, export, ...)))
+        Locations = unname(lapply(x$locations, export, set_uuid, ...)))
 
+    out$`_Uuid` <- if (set_uuid) uuid() else NULL
     return(structure(out, class = "ExportedText", tag = "Text"))
 }
 
 #' @rdname serialize
 #' @keywords internal
 #' @export
-export.Location <- function(x, ...) {
+export.Location <- function(x, set_uuid = TRUE, ...) {
+    assert_lgl1(set_uuid)
+
     out <- list(
-        `_Uuid` = uuid(),
+        `_Uuid` = NULL,
         Path    = x$path,
         Ranges  = .location_format_range(x, ...))
 
+    out$`_Uuid` <- if (set_uuid) uuid() else NULL
     return(structure(out, class = "ExportedLocation", tag = "Location"))
 }
 

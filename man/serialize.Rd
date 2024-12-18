@@ -31,7 +31,7 @@
 \usage{
 serialize(x, ...)
 
-serialize_translations(tr = translator(), lang = "")
+serialize_translations(tr = translator(), lang = "", set_uuid = TRUE)
 
 deserialize(string = "")
 
@@ -39,17 +39,17 @@ deserialize_translations(string = "", tr)
 
 export(x, ...)
 
-export_translations(tr = translator(), lang = "")
+export_translations(tr = translator(), lang = "", set_uuid = TRUE)
 
 import(x, ...)
 
 validate(x, ...)
 
-\method{export}{Translator}(x, ...)
+\method{export}{Translator}(x, set_uuid = TRUE, ...)
 
-\method{export}{Text}(x, set_translations = FALSE, ...)
+\method{export}{Text}(x, set_uuid = TRUE, set_translations = FALSE, ...)
 
-\method{export}{Location}(x, ...)
+\method{export}{Location}(x, set_uuid = TRUE, ...)
 
 \method{import}{ExportedTranslator}(x, ...)
 
@@ -96,6 +96,11 @@ to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
 Doing so maximizes portability and cross-compatibility between packages.}
 
+\item{set_uuid}{A non-\link[base:NA]{NA} logical value. Should a \verb{_Uuid} field
+uniquely identifying outputs of \code{\link[=export]{export()}} be included? If \code{TRUE}, it is
+set equal to \code{\link[=uuid]{uuid()}}. This field is required by \code{\link[=validate]{validate()}} to throw
+meaningful error messages­.}
+
 \item{string}{A non-\link[base:NA]{NA} character string. It can be empty.}
 
 \item{set_translations}{A non-\link[base:NA]{NA} logical value. Should
@@ -122,7 +127,7 @@ See Details above for more information.
 
 \describe{
 \item{\verb{_Uuid}}{A non-empty and non-\link[base:NA]{NA} character
-string. A
+string if \code{set_uuid} is \code{TRUE}. A
 \href{https://en.wikipedia.org/wiki/Universally_unique_identifier}{universally unique identifier}
 used to throw suitable error messages. It should be ignored by users.}
 \item{\code{Identifier}}{The unique identifier of \code{x}. See
