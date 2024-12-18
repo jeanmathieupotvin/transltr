@@ -17,8 +17,8 @@ values.}
 A character string.
 }
 \description{
-\code{\link[=text_normalize]{text_normalize()}} ensures consistency of input text, allowing it to be
-written in a variety of ways.
+Ensure consistency of input text, allowing it to be written in a variety
+of ways.
 }
 \details{
 In what follows, a space character is defined as being an ASCII regular

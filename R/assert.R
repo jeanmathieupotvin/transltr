@@ -8,7 +8,7 @@
 #' `assert_*()` functions further throw an error message when at least one
 #' criterion is not met.
 #'
-#' **Arguments listed below are not (explicitly) validated for efficiency.**
+#' **Arguments listed below are not explicitly validated for efficiency.**
 #'
 #' @details
 #' Guard clauses tend to be verbose and recycled many times within a project.

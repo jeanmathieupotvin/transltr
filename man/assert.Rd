@@ -166,7 +166,7 @@ These functions are a functional implementation of defensive programming.
 \verb{assert_*()} functions further throw an error message when at least one
 criterion is not met.
 
-\strong{Arguments listed below are not (explicitly) validated for efficiency.}
+\strong{Arguments listed below are not explicitly validated for efficiency.}
 }
 \details{
 Guard clauses tend to be verbose and recycled many times within a project.
