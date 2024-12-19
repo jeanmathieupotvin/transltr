@@ -9,21 +9,26 @@
 \usage{
 translator_read(path = getOption("transltr.default.path"), encoding = "UTF-8")
 
-translator_write(tr = translator(), path = getOption("transltr.default.path"))
+translator_write(
+  tr = translator(),
+  path = getOption("transltr.default.path"),
+  overwrite = FALSE
+)
 
 translations_read(path = "", encoding = "UTF-8", tr)
 
 translations_write(tr = translator(), path = "", lang = "")
 }
 \arguments{
-\item{path}{A character string. A path to a file to read from, or write to.
-Its parent directories are automatically created using \code{\link[=dir.create]{dir.create()}} if
-they do not exist.
+\item{path}{A non-empty and non-\link[base:NA]{NA} character string. A path to
+a file to read from, or write to.
+\itemize{
+\item This file must be a Portable Translator file for \code{\link[=translator_read]{translator_read()}}.
+\item This file must be a Portable Translations file for \code{\link[=translations_read]{translations_read()}}.
+}
 
-By default, \code{\link[=translator_read]{translator_read()}}, and \code{\link[=translator_write]{translator_write()}} respectively
-reads from, and writes to a default location given by global \R option
-\code{transltr.default.path}. It points to a standard
-\strong{Portable Translator File}. See Details below.}
+See Details for more information. \code{\link[=translator_write]{translator_write()}} automatically
+creates the parent directory of \code{path} (recursively) if it does not exist.}
 
 \item{encoding}{A non-empty and non-\link[base:NA]{NA} character string. The
 underlying source character encoding. In almost all cases, this should
@@ -31,6 +36,9 @@ be UTF-8. Other encodings are internally re-encoded to UTF-8 for
 portability.}
 
 \item{tr}{A \code{\link{Translator}} object.}
+
+\item{overwrite}{A non-\link[base:NA]{NA} logical value. Should existing
+\emph{Portable Translator} files (pointed to by \code{path}) be overwritten?}
 
 \item{lang}{A non-empty and non-\link[base:NA]{NA} character string. The
 underlying language.
@@ -47,114 +55,81 @@ to maximize portability and cross-compatibility.}
 \code{\link{Translator}}.
 
 \code{\link[=translator_write]{translator_write()}} returns \code{NULL}, invisibly. It is used for its
-side-effects:
+side-effects of simultaneously
 \itemize{
-\item it writes a Portable Translator File to \code{path}, and
-\item it writes further Portable Translations File(s) in the same directory
-as \code{path}. One file per non-source native language defined in \code{x} is
-created. Therefore, you may start supporting a new language by simply
-adding a new entry to \code{\link[=Translator]{Translator$native_languages}}.
+\item creating a Portable Translator file to the location given by \code{path}, and
+\item creating further Portable Translations file(s) in the same directory as
+the Portable Translator file (by default).
 }
+
+Note that underlying entries of \verb{Translations Files} (a standard field of
+Portable Translator objects) may be modified afterwards. The file paths it
+contains are cached by \code{\link[=translations_read]{translations_read()}}, and reused automatically.
 
 \code{\link[=translations_read]{translations_read()}} returns an S3 object of class
-\code{\link[=export]{ExportedTranslations}}. Consider using \code{\link[=translator_read]{translator_read()}}
-instead.
+\code{\link[=export]{ExportedTranslations}}.
 
 \code{\link[=translations_write]{translations_write()}} returns \code{NULL}, invisibly. It is used for its
-side-effect of creating a single Portable Translations File.
+side-effect of creating a single Portable Translations file to the location
+given by \code{path}.
 }
 \description{
-Read (import) \emph{Portable Translator/Translations Files}, and convert them
-to \code{\link{Translator}} objects.
-
-Write (export) \code{\link{Translator}} objects as
-\emph{Portable Translators/Translations Files}.
+Export \code{\link{Translator}} objects to text files, and import such
+files back into \R as \code{\link{Translator}} objects.
 }
 \details{
-\code{\link[=translator_write]{translator_write()}} creates two types of file: a single
-\emph{Portable Translator File}, and further \emph{Portable Translations Files}. Both
-can be referred to as \code{PTF} files, and jointly represents all the information
-contained within a \code{\link{Translator}} object. As such, PTF files are
-closely tied by design, work together, but target different audiences:
+To ease collaboration and maintenance, the information contained within
+a \code{\link{Translator}} object is split. Translations are exported
+independently from other fields. Two types of objects are created from
+a \code{\link{Translator}} object: a single \emph{Portable Translator}, and
+zero, or more \emph{Portable Translations}. These objects are portable because
+they are textual representations that can be inspected, and modified using
+a wide variety of tools and systems.
+
+Portable objects are stored in plain text files. The inner workings of the
+serialization process are thoroughly described in \code{\link[=serialize]{serialize()}}.
+
+\code{\link[=translator_write]{translator_write()}} creates two types of file: one file containing a
+Portable Translator, and further file(s) containing Portable Translations.
+They target different audiences:
 \itemize{
-\item Portable Translator Files are useful to developers, and
-\item Portable Translations Files are useful to non-technical collaborators
+\item Portable Translator files are useful to \strong{developers}, and
+\item Portable Translations files are useful to \strong{non-technical collaborators}
 such as translators.
 }
-\subsection{Portable Translator File}{
+\subsection{Portable Translator}{
 
-A Portable Translator File (PTF) is a human-friendly, cross language,
-and textual representation (serialization) of a \code{\link{Translator}}
-object. The format heavily relies on \href{https://yaml.org/spec/1.1/}{YAML 1.1},
-a popular data serialization format. However, users do not actually have to
-know anything about YAML to read, or write \code{\link{Translator}}
-objects.
-
-Portable Translator Files are snapshots of \code{\link{Translator}}
-objects. To ease collaboration and maintenance, translations are grouped by
-language, and stored in separate Portable Translations Files). These files
-are listed and referenced by the \verb{Translations Files} field of a Portable
-Translator File.
+A Portable Translator is a \href{https://yaml.org/spec/1.1/}{YAML 1.1}
+representation of a \code{\link{Translator}} object stripped of all
+its translations except those that are registered as source text. It
+references related Portable Translations files via a \verb{Translations Files}
+field.
 }
 
-\subsection{Portable Translations File}{
+\subsection{Portable Translations}{
 
-A Portable Translations File (PTF) is a human-friendly, cross language,
-and textual representation (serialization) of the translations contained
-by a \code{\link{Translator}} object. It has two parts:
-\enumerate{
-\item a YAML header containing basic information on source and target
-languages, and
-\item a sequence of unindented (flat) and named sections.
-}
+Translations registered in a \code{\link{Translator}} object are extracted,
+grouped by language, and stored in distinct file(s). One
+Portable Translations is created for each non-source native language
+registered in \code{x}. Fore more information, see
+\code{\link[=Translator]{Translator$native_languages}}.
 
-See \code{\link[=export]{export()}} for more information.
-
-Note that \code{\link[=translator_write]{translator_write()}} never creates a Portable Translations File
-for the source language itself. Attempting to translate the source text to
-itself makes no sense.
-}
-
-\subsection{Working with PTF files}{
-
-The easiest way to import translations is to use \code{\link[=translator_read]{translator_read()}}. This
-function is designed to read all related PTFs, extract their contents, and
-construct a suitable \code{\link{Translator}} object from it. This is the
-preferred interface. The same is true for \code{\link[=translator_write]{translator_write()}}.
-
-Users may read, or write individual Portable Translations Files with
-\code{\link[=translations_read]{translations_read()}}, and \code{\link[=translations_write]{translations_write()}}, respectively. This
-can be useful for debugging purposes. See Examples below.
-}
-
-\subsection{Encodings}{
-
-\strong{The preferred encoding is (and should always be) UTF-8.} If another
-encoding must be used for some obscure reason, the \code{encoding} argument
-has to be updated. Encodings should be known, never inferred.
-
-\code{\link[=translator_write]{translator_write()}}, and \code{\link[=translations_write]{translations_write()}} enforces UTF-8. This
-cannot be changed.
-}
-
-\subsection{Requirements}{
-
-To export a \code{\link{Translator}}, the underlying registered
-\code{\link{Text}} objects must have the same source language (the same
-\code{\link[=Text]{Text$source_lang}} value). An error is thrown otherwise.
+A Portable Translations is a \link[=flat_serialize]{FLAT 1.0} representation.
+This format is custom, and attempts to be as simple as possible for
+non-technical collaborators.
 }
 }
 \examples{
 # In what follows, ASCII characters are preferred because R has poor
-# support for non-ASCII characters used in man pages, and they must
-# be used cautiously. In practice, any alphabet (any UTF-8 character)
-# may be used to represent native languages and translations.
+# support for non-ASCII characters used in documentation (help pages),
+# and they must be used cautiously. In practice, any alphabet (any UTF-8
+# character) may be used to represent native languages and translations.
 
 # Set source language.
 language_source_set("en")
 
-# Define a location where Portable Translator Files are written.
-temp_path <- tempfile(pattern = "_translator_", fileext = ".yml")
+# Create a path to a (future) Portable Translator file.
+temp_path <- tempfile(pattern = "translator_", fileext = ".yml")
 
 # Create a Translator object.
 # This would normally be done automatically
@@ -174,10 +149,10 @@ tr <- translator(
 # Export it.
 # This creates 3 files:
 #
-#   1. 1 Portable Translator File for the Translator object, and
-#   2. 2 Portable Translations Files (one for each non-source language).
-#      The file for language "es" contains placeholders for future
-#      translations.
+#   1. 1 Portable Translator file, and
+#   2. 2 Portable Translations files (one for language "es", and another
+#      one for language "fr"). The file for language "es" contains
+#      placeholders for future translations.
 translator_write(tr, temp_path)
 translator_read(temp_path)
 
@@ -187,8 +162,6 @@ cat(readLines(file.path(dirname(temp_path), "fr.txt")), sep = "\n")
 cat(readLines(file.path(dirname(temp_path), "es.txt")), sep = "\n")
 
 # Translations can be read individually.
-# They are serialized as a YAML string
-# (on-the-fly) before being displayed.
 translations_read(file.path(dirname(temp_path), "fr.txt"))
 translations_read(file.path(dirname(temp_path), "es.txt"))
 
@@ -198,9 +171,9 @@ translations_read(file.path(dirname(temp_path), "es.txt"))
 #
 #   1. it has a corresponding entry in the underlying Translator object, and
 #   2. it has corresponding entries in the underlying Portable Translator
-#      File (fields languages and `Translations Files` must be updated).
+#      (fields 'Languages' and 'Translations Files' must be updated).
 #
-# Users should always used translator_write() instead.
+# Consider using translator_write() instead.
 tr$set_native_languages(el = "Greek")
 translations_write(tr, file.path(dirname(temp_path), "el.txt"), "el")
 translations_read(file.path(dirname(temp_path), "el.txt"))
@@ -208,5 +181,5 @@ translations_read(file.path(dirname(temp_path), "el.txt"))
 }
 \seealso{
 \code{\link{Translator}},
-\code{\link[=export]{export()}}
+\code{\link[=serialize]{serialize()}}
 }
