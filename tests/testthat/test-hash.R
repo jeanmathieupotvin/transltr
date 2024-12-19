@@ -14,16 +14,6 @@ test_that("hash() returns null for unknown hashing algorithms", {
     expect_null(hash("en", "Hello, world!", "error"))
 })
 
-test_that("hash() validates lang", {
-    expect_error(hash(1L))
-    expect_snapshot(hash(1L), error = TRUE)
-})
-
-test_that("hash() validates text", {
-    expect_error(hash("a", 1L))
-    expect_snapshot(hash("a", 1L), error = TRUE)
-})
-
 test_that("hash() returns a sha-1 hash wheen algorithm is sha1", {
     # Expected SHA-1 hashes were generated externally
     # by https://codebeautify.org/sha1-hash-generator and

@@ -183,22 +183,70 @@ on \code{\link[=assert_match]{assert_match()}} internally and does not have an e
 function. It must be called within another function.
 }
 \examples{
+transltr:::is_int(c(1L, 2L))        ## TRUE
+transltr:::is_int(c(1.0, 2.0))      ## FALSE
+transltr:::is_chr(c("a", "b"))      ## TRUE
+transltr:::is_chr(1i)               ## FALSE
+transltr:::is_lgl1(FALSE)           ## TRUE
+transltr:::is_lgl1(1L)              ## FALSE
+transltr:::is_int1(1L)              ## TRUE
+transltr:::is_int1(1.0)             ## FALSE
+transltr:::is_chr1("a")             ## TRUE
+transltr:::is_chr1(1L)              ## FALSE
+transltr:::is_list(list(1L))        ## TRUE
+transltr:::is_list(1L)              ## FALSE
+transltr:::is_between(1, 0, 2)      ## TRUE
+transltr:::is_between(3, 0, 2)      ## FALSE
+transltr:::is_named(c(a = 1L))      ## TRUE
+transltr:::is_named(1L)             ## FALSE
+transltr:::is_match(1L, c(1L, 2L))  ## TRUE
+transltr:::is_match(3L, c(1L, 2L))  ## FALSE
+
 x <- "my string"
 
-## Here is a guard clause that checks whether an input is a character
-## string. While this works fine, having to deal with many similar
-## structures across the whole project is cumbersome.
+# Here is a guard clause that checks whether
+# x is a non-empty and non-NA character string.
 if (!is.character(x) || length(x) != 1L || !nzchar(x) || is.na(x)) {
   stop("'x' must be a must be a non-NA and non-empty character of length 1.")
 }
 
-## The call to if () can be simplified with is_chr1().
-if (!transltr:::is_chr1(x, allow_empty_string = FALSE)) {
-  stop("'x' must be a must be a non-NA and non-empty character of length 1.")
+# Code above can be replaced by a much more terse call to assert_chr1().
+transltr:::assert_chr1(x)
+
+# assert_*() functions outputs "" unless the input is invalid.
+# In that case, an error is thrown.
+transltr:::assert_int(c(1L, 2L))
+transltr:::assert_chr(c("a", "b"))
+transltr:::assert_lgl1(FALSE)
+transltr:::assert_int1(1L)
+transltr:::assert_chr1("a")
+transltr:::assert_list(list(1L))
+transltr:::assert_between(1, 0, 2)
+transltr:::assert_named(c(a = 1L))
+transltr:::assert_match(1L, c(1L, 2L))
+
+# These calls throw error because inputd are invalid.
+# They do not meet the underlying criteria.
+\dontrun{
+transltr:::assert_int(c(1.0, 2.0))
+transltr:::assert_chr(1i)
+transltr:::assert_lgl1(1L)
+transltr:::assert_int1(1.0)
+transltr:::assert_chr1(1L)
+transltr:::assert_list(1L)
+transltr:::assert_between(3, 0, 2)
+transltr:::assert_named(1L)
+transltr:::assert_match(3L, c(1L, 2L))}
+
+# assert_arg() is special. It can only be called within
+# another function, just like base::match.arg().
+foo <- function(value = c("a", "b", "c")) {
+  transltr:::assert_arg(value)
+  return(value)
 }
 
-## The whole structure can be replaced by a single call to assert_chr1().
-transltr:::assert_chr1(x)
+foo("a")
+\dontrun{foo("d")  ## Since "d" is not a valid value, an error is thrown.}
 
 }
 \keyword{internal}

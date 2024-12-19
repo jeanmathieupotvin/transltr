@@ -1,7 +1,10 @@
 #' Hashing
 #'
+#' @description
 #' Map an arbitrary character string to globally unique, and reproducible
 #' output.
+#'
+#' **Arguments listed below are not validated for efficiency.**
 #'
 #' @details
 #' Hashes uniquely identify the `lang` and `text` pair. Therefore, values
@@ -38,22 +41,19 @@
 #' @param text A non-[NA][base::NA] character string. It can be empty.
 #'
 #' @param algorithm A non-empty and non-[NA][base::NA] character string. The
-#'   algorithm to use when hashing `lang` and `text`. See Details. While it
-#'   should be equal to one of the values returned by [hash_algorithms()],
-#'   the first element of `algorithm` is passed as is to [switch()] without
-#'   being validated for efficiency.
+#'   algorithm to use when hashing `lang` and `text`. See Details.
 #'
 #' @template param-lang
 #'
 #' @returns
 #' [hash()] returns a character string, or `NULL` if `algorithm` is not
-#' supported (and `validate` is `FALSE`).
+#' supported.
 #'
 #' [hash_algorithms()] returns a character vector of length 2.
 #'
 #' @note
-#' Further methods such as [`xxhash`](https://github.com/Cyan4973/xxHash) will
-#' be available in a near future.
+#' Further algorithms such as [`xxhash`](https://github.com/Cyan4973/xxHash)
+#' will be available in a near future.
 #'
 #' @seealso
 #' [`Translator`][Translator],
@@ -61,20 +61,15 @@
 #' [text_normalize()]
 #'
 #' @examples
-#' identical(
-#'   hash("en", "Hello, world!", "sha1"),
-#'   "256e0d707386d0fcd9abf10ad994000bdaa25812")
-#'
-#' identical(hash("en", "Hello, world!", "utf8"), "12351")
+#' hash("en", "Hello, world!", "sha1")     ## Outputs "256e0d707386d0fcd9abf10ad994000bdaa25812"
+#' hash("en", "Hello, world!", "utf8")     ## Outputs "12351"
+#' hash("en", "Hello, world!", "_error_")  ## Outputs NULL
 #'
 #' hash_algorithms()
 #'
 #' @keywords internal
 #' @export
 hash <- function(lang = "", text = "", algorithm = hash_algorithms()) {
-    assert_chr1(lang)
-    assert_chr1(text, TRUE)
-
     x <- sprintf("%s:%s", lang, text)
 
     return(

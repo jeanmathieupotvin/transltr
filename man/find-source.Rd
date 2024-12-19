@@ -42,9 +42,9 @@ namespace, i.e. \code{translate()}.}
 unique identifier for the \code{\link{Translator}} object. Beware of
 plausible collisions when using user-defined values.}
 
-\item{hash_algorithm}{A character string equal to one of the values
-returned by \code{\link[=hash_algorithms]{hash_algorithms()}}. The algorithm to use when hashing
-source information for identification purposes.}
+\item{hash_algorithm}{A non-empty and non-\link[base:NA]{NA} character string
+equal to one of the values returned by \code{\link[=hash_algorithms]{hash_algorithms()}}. The algorithm
+to use when hashing source information for identification purposes.}
 
 \item{native_languages}{A named character vector of non-empty and
 non-\link[base:NA]{NA} values. It can be empty. It is used to to construct

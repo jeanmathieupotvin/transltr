@@ -37,9 +37,9 @@ portability.}
 calls to \emph{any} such function are extracted regardless of the underlying
 namespace, i.e. \code{translate()}.}
 
-\item{hash_algorithm}{A character string equal to one of the values
-returned by \code{\link[=hash_algorithms]{hash_algorithms()}}. The algorithm to use when hashing
-source information for identification purposes.}
+\item{hash_algorithm}{A non-empty and non-\link[base:NA]{NA} character string
+equal to one of the values returned by \code{\link[=hash_algorithms]{hash_algorithms()}}. The algorithm
+to use when hashing source information for identification purposes.}
 
 \item{verbose}{A non-\link[base:NA]{NA} logical value. Should basic information
 on extracted source texts be outputted?}
@@ -65,6 +65,29 @@ or from a set of tokenized \R expressions stemming from \code{\link[=parse]{pars
 \details{
 \code{\link[=find_source_in_exprs]{find_source_in_exprs()}} silently skips parsing errors. See \code{\link[=find_source]{find_source()}}
 for more information.
+}
+\examples{
+# Create a dummy R script for illustration purposes.
+temp_file <- tempfile()
+
+cat(
+  "translate('Not strict: Hello, world!')",
+  "transltr::translate('Strict: Farewell, world!')",
+  sep  = "\n",
+  file = temp_file)
+
+# Extract calls to transltr::translate() from dummy script.
+find_source_in_file(temp_file, strict = TRUE,  verbose = TRUE)
+find_source_in_file(temp_file, strict = FALSE, verbose = TRUE)
+
+# You may also read the dummy script, parse it, extract calls
+# to translate() from it, and coerce them as Text objects.
+# find_source_exprs() is (mostly) just a semantic wrapper for
+# utils::getParseData(parse(temp_file)).
+exprs <- find_source_exprs(temp_file)
+find_source_in_exprs(exprs, path = temp_file, strict = TRUE)
+find_source_in_exprs(exprs, path = temp_file, strict = FALSE)
+
 }
 \seealso{
 \code{\link{Text}},

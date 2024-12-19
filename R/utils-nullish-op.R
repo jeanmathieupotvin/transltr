@@ -14,6 +14,10 @@
 #' @returns
 #' Argument `y` if `x` is `NULL`, and argument `x` otherwise.
 #'
+#' @examples
+#' NULL %??% 1L  ## Outputs 1L
+#' 1L   %??% 0L  ## Outputs 1L
+#'
 #' @noRd
 `%??%` <- function(x, y) {
     return(if (is.null(x)) y else x)

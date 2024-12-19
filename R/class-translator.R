@@ -81,6 +81,7 @@
 #' print(tr)
 #'
 #' @include constants.R
+#'
 #' @rdname class-translator
 #' @export
 translator <- function(..., id = uuid(), hash_algorithm = hash_algorithms()) {

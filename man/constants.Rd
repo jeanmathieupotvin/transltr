@@ -6,15 +6,15 @@
 \alias{.__LGL_DEBUG_FLAG}
 \title{Internal Constants}
 \format{
-\code{.__LGL_DEBUG_FLAG} is a logical value always equal to \code{FALSE}.
-It is only ever (temporarily) set equal to \code{TRUE} in unit tests via
-\code{\link[testthat:local_mocked_bindings]{testthat::with_mocked_bindings()}} for development, and testing purposes.
-It is used to force errors that are otherwise hard, or impossible to test
-via usual methods. They are unit tests in place that ensures official
-releases are always shipped with this flag set to \code{FALSE}.
+\code{.__LGL_DEBUG_FLAG} is an internal logical value always equal to \code{FALSE}
+used to force errors that are otherwise hard, or (almost) impossible to
+test otherwise. It is only ever (temporarily) set equal to \code{TRUE} via
+\code{\link[testthat:local_mocked_bindings]{testthat::with_mocked_bindings()}} in \code{\link[testthat:test_that]{testthat::test_that()}} blocks. They
+are additional unit tests in place to ensure it is always \code{FALSE} outside
+of unit tests.
 }
 \usage{
-constant(which = c("concat", "empty", "unset", "unknown"))
+constant(which = c("concat", "empty", "unset", "unknown", "untranslated"))
 
 .__LGL_DEBUG_FLAG
 }
@@ -30,6 +30,7 @@ constant("concat")        ## Outputs " "
 constant("empty")         ## Outputs "<none>"
 constant("unset")         ## Outputs "<unset>"
 constant("unknown")       ## Outputs "<unknown>"
+constant("untranslated")  ## Outputs "# Erase this comment and provide a translation."
 
 # NULL is returned if which has no corresponding entry.
 constant("__undefined__")

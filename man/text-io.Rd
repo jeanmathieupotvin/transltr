@@ -3,7 +3,7 @@
 \name{text_read}
 \alias{text_read}
 \alias{text_write}
-\title{Low-level Text Input and Output}
+\title{Read and Write Text}
 \usage{
 text_read(path = "", encoding = "UTF-8")
 
@@ -30,6 +30,18 @@ given by \code{encoding}.}
 \code{\link[=text_read]{text_read()}} and \code{\link[=text_write]{text_write()}} respectively wrap \code{\link[base:readLines]{base::readLines()}} and
 \code{\link[base:writeLines]{base::writeLines()}}. They further validate their arguments, normalize
 file paths, and re-encode inputs to \code{UTF-8} before reading and writing.
+}
+\examples{
+lines <- c(
+  "Hello, world!",
+  "These are lines to be written, and read afterwards.",
+  "Bye!")
+
+temp_file <- tempfile()
+
+text_write(lines, temp_file)
+text_read(temp_file)
+
 }
 \seealso{
 \code{\link[=readLines]{readLines()}},

@@ -1,13 +1,13 @@
 #' Get or Set Language
 #'
 #' @description
-#' Get or set the current language and source language (globally).
+#' Get or set (globally) the current language, and source language.
 #'
 #' They are registered as environment variables named
 #' `TRANSLTR_LANGUAGE`, and `TRANSLTR_SOURCE_LANGUAGE`.
 #'
 #' @details
-#' The language and the source language can be changed locally. See
+#' The language and the source language can always be temporarily changed. See
 #' [translate()] for more information.
 #'
 #' The underlying locale is left as is. To change an \R session's locale,
@@ -62,8 +62,8 @@
 #' language_source_set("en")
 #' language_set("fr")
 #'
-#' language_source_get()  ## Outputs "en".
-#' language_get()         ## Outputs "fr".
+#' language_source_get()  ## Outputs "en"
+#' language_get()         ## Outputs "fr"
 #'
 #' # Change both the language parameter and the locale.
 #' # Note that while users control how languages are named
@@ -76,9 +76,9 @@
 #' language_set(NULL)
 #'
 #' # Source language has a default value.
-#' language_source_get()  ## Outputs "en".
+#' language_source_get()  ## Outputs "en"
 #'
-#' @rdname language-accessors
+#' @rdname language
 #' @export
 language_set <- function(lang = "en") {
     if (is.null(lang)) {
@@ -98,7 +98,7 @@ language_set <- function(lang = "en") {
     return(invisible())
 }
 
-#' @rdname language-accessors
+#' @rdname language
 #' @export
 language_get <- function() {
     # It does not matter whether the environment variable
@@ -108,7 +108,7 @@ language_get <- function() {
     return(Sys.getenv("TRANSLTR_LANGUAGE", unset = "", names = FALSE))
 }
 
-#' @rdname language-accessors
+#' @rdname language
 #' @export
 language_source_set <- function(lang = "en") {
     if (is.null(lang)) {
@@ -130,7 +130,7 @@ language_source_set <- function(lang = "en") {
     return(invisible())
 }
 
-#' @rdname language-accessors
+#' @rdname language
 #' @export
 language_source_get <- function() {
     x <- Sys.getenv("TRANSLTR_SOURCE_LANGUAGE", unset = "", names = FALSE)

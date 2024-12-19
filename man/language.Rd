@@ -40,13 +40,13 @@ of environment variable \code{TRANSLTR_SOURCE_LANGUAGE}. It returns \code{"en"} 
 latter is unset.
 }
 \description{
-Get or set the current language and source language (globally).
+Get or set (globally) the current language, and source language.
 
 They are registered as environment variables named
 \code{TRANSLTR_LANGUAGE}, and \code{TRANSLTR_SOURCE_LANGUAGE}.
 }
 \details{
-The language and the source language can be changed locally. See
+The language and the source language can always be temporarily changed. See
 \code{\link[=translate]{translate()}} for more information.
 
 The underlying locale is left as is. To change an \R session's locale,
@@ -88,8 +88,8 @@ the \code{language} parameter of the package. See Examples.
 language_source_set("en")
 language_set("fr")
 
-language_source_get()  ## Outputs "en".
-language_get()         ## Outputs "fr".
+language_source_get()  ## Outputs "en"
+language_get()         ## Outputs "fr"
 
 # Change both the language parameter and the locale.
 # Note that while users control how languages are named
@@ -102,6 +102,6 @@ language_source_set(NULL)
 language_set(NULL)
 
 # Source language has a default value.
-language_source_get()  ## Outputs "en".
+language_source_get()  ## Outputs "en"
 
 }

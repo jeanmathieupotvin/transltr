@@ -124,6 +124,7 @@
 #' as_text(translate_call, location = translate_loc)
 #'
 #' @include constants.R
+#'
 #' @rdname class-text
 #' @keywords internal
 #' @export

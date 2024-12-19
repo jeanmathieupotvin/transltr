@@ -2,11 +2,11 @@
 #'
 #' @description
 #' Convert [`Translator`][Translator] objects, [`Text`][Text] objects, and
-#' [`Location`][Location] objects to a [YAML string][yaml::as.yaml()], or
+#' [`Location`][Location] objects to a [YAML][yaml::as.yaml()] object, or
 #' vice-versa.
 #'
 #' Convert translations contained by a [`Translator`][Translator] object to
-#' a custom textual representation (a [flat string][flat_serialize()]), or
+#' a custom textual representation (a [FLAT][flat_serialize()] object), or
 #' vive-versa.
 #'
 #' @details
@@ -33,8 +33,8 @@
 #' objects are stored as environments internally). They are never returned to
 #' the user: [serialize()] and [serialize_translations()] immediately transform
 #' them into suitable character strings. The latter outputs a
-#' [flat string][flat_serialize()], and the former, a
-#' [YAML string][yaml::as.yaml()].
+#' [FLAT object][flat_serialize()], and the former, a
+#' [YAML object][yaml::as.yaml()].
 #'
 #' ## Deserialization
 #'
@@ -94,11 +94,10 @@
 #'
 #' @param tr A [`Translator`][Translator] object.
 #'
-#'   An **optional** [`Translator`][Translator] object may be passed to
-#'   [deserialize_translations()], and [import.ExportedTranslations()] to
-#'   register underlying translations. Since [`Translator`][Translator] objects
-#'   are environments (using reference semantics), they are modified in place
-#'   (and not returned).
+#'   This argument is **optional** for [deserialize_translations()], and
+#'   [import.ExportedTranslations()]. It allows a [`Translator`][Translator]
+#'   object to register imported translations as long as they correspond to
+#'   an existing source text (a registered [`Text`][Text] object).
 #'
 #' @param string A non-empty and non-[NA][base::NA] character string. Contents
 #'   to deserialize.
@@ -176,9 +175,15 @@
 #'
 #' [deserialize_translations()] and [import.ExportedTranslations()] return an
 #' [`ExportedTranslations`][export()] object. Its contents is reformatted, if
-#' necessary. If a [`Translator`][Translator] object is passed to `tr`,
-#' [deserialize_translations()], and [import.ExportedTranslations()] further
-#' registers translations by modifying `tr` **in place**.
+#' necessary.
+#'
+#'   * [import.ExportedTranslations()] further registers imported translations
+#'     if a [`Translator`][Translator] object is passed to itself, or to
+#'     [deserialize_translations()]. Translations must correspond to an existing
+#'     source text (a registered [`Text`][Text] object). Otherwise, they are
+#'     skipped silently. The [`Translator`][Translator] object is updated
+#'     **by reference** and is not returned ([`Translator`][Translator] objects
+#'     are [environments]).
 #'
 #' [import.default()] is used for its side-effect of throwing an error for
 #' unsupported objects.
@@ -187,6 +192,8 @@
 #' is designed to fail fast: error messages are **not accumulated**. Classes
 #' (and underlying objects) that does not have a [validate()] method are
 #' considered to be valid by default.
+#'
+#' Therefore, [validate.default()] simply returns `x` like [identity()] would.
 #'
 #' [translations_files()] returns a named list.
 #'
@@ -217,6 +224,115 @@
 #' ExportedText
 #' ExportedLocation
 #' ExportedTranslations
+#'
+#' @examples
+#' # Set source language.
+#' language_source_set("en")
+#'
+#' # Create Location, Text, and Translator objects.
+#' loc <- location("file-a", 1L, 2L, 3L, 4L)
+#'
+#' txt <- text(
+#'   location("a", 1L, 2L, 3L, 4L),
+#'   en = "Hello, world!",
+#'   fr = "Bonjour, monde!",
+#'   es = "¡Hola, mundo!")
+#'
+#' tr <- translator(
+#'   id = "test-translator",
+#'   en = "English",
+#'   es = "Español",
+#'   fr = "Français",
+#'   text(
+#'     location("a", 1L, 2L, 3L, 4L),
+#'     en = "Hello, world!",
+#'     fr = "Bonjour, monde!"),
+#'   text(
+#'     location("b", 1L, 2L, 3L, 4L),
+#'     en = "Farewell, world!",
+#'     fr = "Au revoir, monde!"))
+#'
+#' # Serialize objects. This is what translator_write(),
+#' # and translations_write() call internally.
+#' serialize(loc)
+#' serialize(txt)
+#' serialize(tr)
+#' serialize_translations(tr, "fr")
+#' serialize_translations(tr, "es")
+#'
+#' # serialize(), and serialize_translations() both call export() internally.
+#' # Field `_Uuid` can be omitted by setting set_uuid equal to `FALSE`.
+#' export(loc, set_uuid = FALSE)
+#' export(txt)
+#' export(tr)
+#' export_translations(tr, "fr")
+#' export_translations(tr, "es", set_uuid = FALSE)
+#'
+#' # Translations can be exported along with original objects.
+#' # This is not the default behavior of the package.
+#' export(txt, set_translations = TRUE)
+#' export(tr,  set_translations = TRUE)
+#'
+#' # Deserialize objects. This is what translator_read(), and
+#' # translations_read() call internally.
+#' deserialize(serialize(loc))
+#' deserialize(serialize(txt))
+#' deserialize(serialize(tr))
+#' deserialize_translations(serialize_translations(tr, "fr"))
+#' deserialize_translations(serialize_translations(tr, "es"))
+#'
+#' # deserialize(), and deserialize_translations() both call validate()
+#' # internally. validate() checks that the underlying input can safely be
+#' # passed to import(). What deserialization functions internally passes to
+#' # validate() are candidate 'Exported' objects that may, or may not be valid.
+#' validate(export(loc))
+#' validate(export(txt))
+#' validate(export(tr))
+#' validate(export_translations(tr, "fr"))
+#'
+#' # Introduce an error in an ExportedLocation object for illustration purposes.
+#' # validate() uses field `_Uuid` to throw meaningful error messages.
+#' loc_err <- export(loc)
+#' loc_err$Path <- 1L
+#'
+#' \dontrun{validate(loc_err)}
+#'
+#' # deserialize(), and deserialize_translations() both call import() on valid
+#' # Exported* objects. Any `_Uuid` field is discarded by import().
+#' import(export(loc))
+#' import(export(txt))
+#' import(export(tr))
+#' import(export_translations(tr, "fr"))
+#' import(export_translations(tr, "es"))
+#'
+#' # import() is the conceptual inverse of export(). However, this is not
+#' # quite true for import.ExportedTranslations(), because it replaces any
+#' # previous placeholders stemming from export_translations() with another
+#' # placeholder (for internal consistency).
+#' cat(serialize_translations(tr, "es"), "\n")
+#' deserialize_translations(serialize_translations(tr, "es"))
+#'
+#' # A Translator object may be passed to deserialize_translations(), and
+#' # import.ExportedTranslations(). It accumulates translations, and is
+#' # modified in place (it is not returned). Note that translations are
+#' # registered only if they correspond to an existing source text, and
+#' # are skipped otherwise.
+#' tr_new <- Translator$new(id = "test-translator")
+#' tr_new$set_text(en = "Hello, world!")
+#' tr_new$set_text(en = "Farewell, world!")
+#' deserialize_translations(serialize_translations(tr, "fr")) , tr_new)
+#'
+#' # translations_files() is used to create the 'Translations Files' field
+#' # of an ExportedTranslator object.
+#' translations_files(tr)
+#' translations_files(tr, getwd())
+#'
+#' # It is also used to fetch internal attribute `translations_files` set by
+#' # import.ExportedTranslator().
+#' translations_files(import(export(tr)))
+#'
+#' get_uuid(export(loc))  ## Outputs the current uuid
+#' get_uuid(1L)           ## Outputs "<unkwnown>"
 #'
 #' @rdname serialize
 #' @keywords internal
@@ -296,7 +412,7 @@ export_translations <- function(tr = translator(), lang = "", set_uuid = TRUE) {
         stops("'lang' must have a corresponding native language registered in 'tr'.")
     }
 
-    placeholder  <- "# Erase this comment and provide a translation."
+    placeholder  <- constant("untranslated")
     translations <- lapply(lapply(tr$hashes, tr$get_text), \(txt) {
         return(
             list(
@@ -480,19 +596,27 @@ import.ExportedTranslations <- function(x, tr, ...) {
     x[["Translations"]] <- lapply(x[["Translations"]], \(subsection) {
         placeholder <- constant("empty")
 
-        # Try extracting child elements. If
-        # either is NULL, set them equal to
-        # a placeholder. This happens if a
-        # section is totally missing.
+        # Try extracting child elements. If either is NULL,
+        # set them equal to a placeholder. This happens if
+        # a section is totally missing.
         source_text <- subsection[["Source Text"]] %??% placeholder
         translation <- subsection[["Translation"]] %??% placeholder
 
-        # If either is an empty string,
-        # replace them by a placeholder.
-        # This happens when a section is
-        # lacking a translation.
+        # If either is an empty string, replace them
+        # by the empty constant. A field may be empty
+        # when a section is lacking contents.
         source_text <- if (nzchar(source_text)) source_text else placeholder
         translation <- if (nzchar(translation)) translation else placeholder
+
+        # If the underlying translation field is equal
+        # to the default untranslated constant, replace
+        # it by the empty constant. The untranslated
+        # constant is added by export_translations().
+        translation <- if (identical(translation, constant("untranslated"))) {
+            placeholder
+        } else {
+            translation
+        }
 
         return(
             list(

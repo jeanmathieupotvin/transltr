@@ -43,6 +43,19 @@ each trimmed element.
 \code{\link[=to_string]{to_string()}} concatenates all elements with \code{", "}, except for the last
 one. See argument \code{last_sep}.
 }
+\examples{
+to_string(c(1L, 2L, 3L))            ## Outputs "1, 2, or 3"
+to_string(letters, TRUE)            ## Outputs "'a', 'b', 'c', ..., or 'z'"
+to_string(letters, TRUE, ", and ")  ## Outputs "'a', 'b', 'c', ..., and 'z'"
+
+x <- strrep("a", 200L)
+
+# x is reduced to a width of 80 characters (by default). This includes 3
+# characters for the '...' suffix added and therefore, x is reduced to 77
+# chars. The same logic is applied  for any width strictly greater than 2.
+str_trim(x)
+
+}
 \seealso{
 Other utility functions: 
 \code{\link{format_vector}()},

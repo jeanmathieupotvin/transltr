@@ -1,7 +1,7 @@
 #' Serialize Objects to Flat Strings
 #'
 #' Serialize \R objects into textual sequences of unindented (*flat*) and
-#' identifiable sections.
+#' identifiable sections. These are called FLAT (1.0) objects.
 #'
 #' @details
 #' The Flat format (**F**lat **L**ist **A**s **T**ext, or FLAT) is a minimal
@@ -9,11 +9,12 @@
 #' Elements are converted to character strings, and organized into unindented
 #' sections identified by a tag. Call [flat_example()] for a valid example.
 #'
-#' [flat_serialize()] serializes `x` into a *flat string*.
+#' [flat_serialize()] serializes `x` into a FLAT object.
 #'
-#' [flat_deserialize()] is the inverse operation: it converts a flat string
-#' back into a list. The latter has the same *shape* as the original one,
-#' but elements are left as character strings.
+#' [flat_deserialize()] is the inverse operation: it converts a FLAT object
+#' back into a list. The latter has (almost) the same shape as the original
+#' one, but [atomic vectors] are not reconstituted (they are deserialized
+#' as elements of length 1). Elements are further left as character strings.
 #'
 #' ## Internal mechanisms
 #'
@@ -60,7 +61,43 @@
 #' invisibly. It is used for its side-effect of printing an illustration of
 #' the format (with useful information).
 #'
-#' @rdname flat-serialize
+#' @examples
+#' # Print an example of a FLAT object.
+#' flat_example()
+#'
+#' x <- list(
+#'   FirstName = "John",
+#'   LastName  = "Doe",
+#'   Address   = list(
+#'     StreetAddress = "123 Main Street",
+#'     City          = "Montreal",
+#'     Province      = "Quebec",
+#'     PostalCode    = "H0H 0H0"),
+#'   Notes = c(
+#'     "Send mail to",
+#'     "address above."))
+#'
+#' # Serialize x into a FLAT object.
+#' string <- flat_serialize(x)
+#' cat(flat_serialize(x), "\n")
+#'
+#' # Atomic vectors are not reconstituted. Use lists to ensure
+#' # flat_deserialize() returns an object having the same shape.
+#' xdeserialized <- flat_deserialize(string)
+#' identical(x, xdeserialized)            ## FALSE
+#' identical(x[-4L], xdeserialized[-4L])  ## TRUE
+#'
+#' # flat_tag() extracts names from lists (recursively).
+#' # Unlike unlist(), users control how these names are created.
+#' flat_tag(x)
+#'
+#' # flat_format() is a helper function to ease the
+#' # serialization process. See Details for more information.
+#' expected <- list(a = "NULL", b = list("<empty list>"), c = "1\n2")
+#' current  <- flat_format(list(a = NULL, b = list(), c = c(1L, 2L)))
+#' identical(current, expected)
+#'
+#' @rdname flat
 #' @keywords internal
 flat_serialize <- function(x = list(), tag_sep = ": ", tag_empty = "") {
     # NOTE: flat_deserialize() indirectly relies on sep.
@@ -72,7 +109,7 @@ flat_serialize <- function(x = list(), tag_sep = ": ", tag_empty = "") {
     return(paste0(sprintf(":: %s%s%s", tags, sep, values), collapse = sep))
 }
 
-#' @rdname flat-serialize
+#' @rdname flat
 #' @keywords internal
 flat_deserialize <- function(string = "", tag_sep = ": ") {
     assert_chr1(string)
@@ -141,7 +178,7 @@ flat_deserialize <- function(string = "", tag_sep = ": ") {
         for (li in lvls_ind) {
             # If a lower level is expected and the previous
             # one is not a list (a terminal node), then the
-            # underlying flat string is invalid.
+            # underlying FLAT object is invalid.
             if (li > 1L && !is.list(acc[[lvl[-li]]])) {
                 stopf("'string' has an invalid structure. Check '%s' tag(s).",
                     paste0(lvl[-li], collapse = tag_sep))
@@ -165,7 +202,7 @@ flat_deserialize <- function(string = "", tag_sep = ": ") {
     return(acc)
 }
 
-#' @rdname flat-serialize
+#' @rdname flat
 #' @keywords internal
 flat_tag <- function(x = list(), tag_sep = ": ", tag_empty = "") {
     assert_list(x, TRUE)
@@ -210,7 +247,7 @@ flat_tag <- function(x = list(), tag_sep = ": ", tag_empty = "") {
     return(unlist(acc, TRUE, FALSE))
 }
 
-#' @rdname flat-serialize
+#' @rdname flat
 #' @keywords internal
 flat_format <- function(x = list()) {
     assert_list(x, TRUE)
@@ -226,7 +263,7 @@ flat_format <- function(x = list()) {
     )
 }
 
-#' @rdname flat-serialize
+#' @rdname flat
 #' @keywords internal
 flat_example <- function() {
     comments <- c(

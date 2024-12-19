@@ -23,20 +23,19 @@ to maximize portability and cross-compatibility.}
 \item{text}{A non-\link[base:NA]{NA} character string. It can be empty.}
 
 \item{algorithm}{A non-empty and non-\link[base:NA]{NA} character string. The
-algorithm to use when hashing \code{lang} and \code{text}. See Details. While it
-should be equal to one of the values returned by \code{\link[=hash_algorithms]{hash_algorithms()}},
-the first element of \code{algorithm} is passed as is to \code{\link[=switch]{switch()}} without
-being validated for efficiency.}
+algorithm to use when hashing \code{lang} and \code{text}. See Details.}
 }
 \value{
 \code{\link[=hash]{hash()}} returns a character string, or \code{NULL} if \code{algorithm} is not
-supported (and \code{validate} is \code{FALSE}).
+supported.
 
 \code{\link[=hash_algorithms]{hash_algorithms()}} returns a character vector of length 2.
 }
 \description{
 Map an arbitrary character string to globally unique, and reproducible
 output.
+
+\strong{Arguments listed below are not validated for efficiency.}
 }
 \details{
 Hashes uniquely identify the \code{lang} and \code{text} pair. Therefore, values
@@ -72,15 +71,13 @@ produce different values for different inputs.
 }
 }
 \note{
-Further methods such as \href{https://github.com/Cyan4973/xxHash}{\code{xxhash}} will
-be available in a near future.
+Further algorithms such as \href{https://github.com/Cyan4973/xxHash}{\code{xxhash}}
+will be available in a near future.
 }
 \examples{
-identical(
-  hash("en", "Hello, world!", "sha1"),
-  "256e0d707386d0fcd9abf10ad994000bdaa25812")
-
-identical(hash("en", "Hello, world!", "utf8"), "12351")
+hash("en", "Hello, world!", "sha1")     ## Outputs "256e0d707386d0fcd9abf10ad994000bdaa25812"
+hash("en", "Hello, world!", "utf8")     ## Outputs "12351"
+hash("en", "Hello, world!", "_error_")  ## Outputs NULL
 
 hash_algorithms()
 
@@ -88,6 +85,6 @@ hash_algorithms()
 \seealso{
 \code{\link{Translator}},
 \code{\link{Text}},
-\code{\link[=text_normalize]{text_normalize()}}
+\code{\link[=normalize]{normalize()}}
 }
 \keyword{internal}

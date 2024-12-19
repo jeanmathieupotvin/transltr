@@ -60,9 +60,9 @@ to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
 Doing so maximizes portability and cross-compatibility between packages.}
 
-\item{hash_algorithm}{A character string equal to one of the values
-returned by \code{\link[=hash_algorithms]{hash_algorithms()}}. The algorithm to use when hashing
-source information for identification purposes.}
+\item{hash_algorithm}{A non-empty and non-\link[base:NA]{NA} character string
+equal to one of the values returned by \code{\link[=hash_algorithms]{hash_algorithms()}}. The algorithm
+to use when hashing source information for identification purposes.}
 
 \item{x}{Any \R object.}
 
@@ -320,9 +320,9 @@ Create a \code{\link{Text}} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{hash_algorithm}}{A character string equal to one of the values
-returned by \code{\link[=hash_algorithms]{hash_algorithms()}}. The algorithm to use when hashing
-source information for identification purposes.}
+\item{\code{hash_algorithm}}{A non-empty and non-\link[base:NA]{NA} character string
+equal to one of the values returned by \code{\link[=hash_algorithms]{hash_algorithms()}}. The algorithm
+to use when hashing source information for identification purposes.}
 }
 \if{html}{\out{</div>}}
 }

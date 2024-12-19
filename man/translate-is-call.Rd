@@ -35,12 +35,12 @@ cases. See Examples below. By design, it \strong{does not} detect calls to metho
 \code{\link[=Translator]{Translator$translate()}}. Using the latter is discouraged.
 }
 \examples{
-## Typical ways to write source calls.
+# Typical ways to write source calls.
 transltr:::is_translate_call(str2lang('translate()'), strict = FALSE)  ## TRUE
 transltr:::is_translate_call(str2lang('transltr::translate()'))  ## TRUE
 transltr:::is_translate_call(str2lang('translate()'))  ## FALSE
 
-## Quotes and backticks are also valid.
+# Quotes and backticks are also valid.
 transltr:::is_translate_call(str2lang('"translate"()'), strict = FALSE)  ## TRUE
 transltr:::is_translate_call(str2lang('"translate"()'))  ## FALSE
 

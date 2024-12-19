@@ -29,9 +29,9 @@ and \code{\link[=print]{print()}}.
 unique identifier for the \code{\link{Translator}} object. Beware of
 plausible collisions when using user-defined values.}
 
-\item{hash_algorithm}{A character string equal to one of the values
-returned by \code{\link[=hash_algorithms]{hash_algorithms()}}. The algorithm to use when hashing
-source information for identification purposes.}
+\item{hash_algorithm}{A non-empty and non-\link[base:NA]{NA} character string
+equal to one of the values returned by \code{\link[=hash_algorithms]{hash_algorithms()}}. The algorithm
+to use when hashing source information for identification purposes.}
 
 \item{x}{Any \R object.}
 }
@@ -281,9 +281,9 @@ Create a \code{\link{Translator}} object.
 unique identifier for the \code{\link{Translator}} object. Beware of
 plausible collisions when using user-defined values.}
 
-\item{\code{hash_algorithm}}{A character string equal to one of the values
-returned by \code{\link[=hash_algorithms]{hash_algorithms()}}. The algorithm to use when hashing
-source information for identification purposes.}
+\item{\code{hash_algorithm}}{A non-empty and non-\link[base:NA]{NA} character string
+equal to one of the values returned by \code{\link[=hash_algorithms]{hash_algorithms()}}. The algorithm
+to use when hashing source information for identification purposes.}
 }
 \if{html}{\out{</div>}}
 }
@@ -345,7 +345,7 @@ information.}
 Since it can be detected by \code{\link[=find_source]{find_source()}}, \code{\link[=translate]{translate()}} is the
 preferred interface to this method.
 
-Values passed to \code{...} are first \link[=text_normalize]{normalized},
+Values passed to \code{...} are first \link[=normalize]{normalized},
 and then \link[=hash]{hashed}. The translation that corresponds to
 the resulting hash and \code{lang} pair is fetched via method
 \code{\link[=Translator]{Translator$get_translation()}}. Argument \code{lang} will

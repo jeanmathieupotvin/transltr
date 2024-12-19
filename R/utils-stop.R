@@ -17,6 +17,12 @@
 #' @returns Nothing. These functions are used for their side-effect of raising
 #'   an error.
 #'
+#' @examples
+#' \dontrun{
+#' stops("'stops()' never includes the underlying call in error messages.")
+#' stopf("'%s' calls '%s' by design.", "stopf()", "stops()")
+#' }
+#'
 #' @rdname utils-stop
 #' @family utility functions
 #' @keywords internal

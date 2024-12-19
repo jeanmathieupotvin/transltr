@@ -1,4 +1,4 @@
-#' Low-level Text Input and Output
+#' Read and Write Text
 #'
 #' [text_read()] and [text_write()] respectively wrap [base::readLines()] and
 #' [base::writeLines()]. They further validate their arguments, normalize
@@ -20,6 +20,17 @@
 #' [readLines()],
 #' [writeLines()],
 #' [iconv()]
+#'
+#' @examples
+#' lines <- c(
+#'   "Hello, world!",
+#'   "These are lines to be written, and read afterwards.",
+#'   "Bye!")
+#'
+#' temp_file <- tempfile()
+#'
+#' text_write(lines, temp_file)
+#' text_read(temp_file)
 #'
 #' @rdname text-io
 #' @keywords internal

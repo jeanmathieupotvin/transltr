@@ -28,6 +28,13 @@ more often than they help them.
 \code{\link[base:sprintf]{base::sprintf()}} and \code{\link[=stops]{stops()}} and is used to construct flexible
 error messages.
 }
+\examples{
+\dontrun{
+stops("'stops()' never includes the underlying call in error messages.")
+stopf("'\%s' calls '\%s' by design.", "stopf()", "stops()")
+}
+
+}
 \seealso{
 Other utility functions: 
 \code{\link{format_vector}()},

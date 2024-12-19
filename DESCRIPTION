@@ -45,7 +45,7 @@ Collate:
     'class-translator.R'
     'find-source-in-exprs.R'
     'find-source.R'
-    'flat-serialize.R'
+    'flat.R'
     'hash.R'
     'language.R'
     'serialize.R'
