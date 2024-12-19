@@ -2,10 +2,12 @@
 #'
 #' @description
 #' Convert [`Translator`][Translator] objects, [`Text`][Text] objects, and
-#' [`Location`][Location] objects to a [YAML string][yaml::as.yaml()].
+#' [`Location`][Location] objects to a [YAML string][yaml::as.yaml()], or
+#' vice-versa.
 #'
 #' Convert translations contained by a [`Translator`][Translator] object to
-#' a custom textual representation (a [flat string][flat_serialize()]).
+#' a custom textual representation (a [flat string][flat_serialize()]), or
+#' vive-versa.
 #'
 #' @details
 #' The information contained within a [`Translator`][Translator] object is
@@ -98,7 +100,14 @@
 #'   are environments (using reference semantics), they are modified in place
 #'   (and not returned).
 #'
-#' @param string A non-[NA][base::NA] character string. It can be empty.
+#' @param string A non-empty and non-[NA][base::NA] character string. Contents
+#'   to deserialize.
+#'
+#' @param parent_dir An **optional** non-[NA][base::NA] character string. It
+#'   can be empty. The parent directory to use when creating entries of field
+#'   `Translations Files` of an [`ExportedTranslator`][export()] object. See
+#'   [translator_write()] for more information. Empty values are converted to
+#'   the root location (`/`) by [file.path()].
 #'
 #' @param set_uuid A non-[NA][base::NA] logical value. Should a `_Uuid` field
 #'   uniquely identifying outputs of [export()] be included? If `TRUE`, it is
@@ -179,11 +188,14 @@
 #' (and underlying objects) that does not have a [validate()] method are
 #' considered to be valid by default.
 #'
-#' [translations_files()] returns a named list. If `tr` has a non-`NULL`
-#' `translations_files` attrribute, it is checked and returned. Otherwise,
-#' a named list of file names is constructed from registered native languages.
-#' See [`Translator$native_languages`][Translator] for more information. This
-#' attribute is used by [translator_write()].
+#' [translations_files()] returns a named list.
+#'
+#'   * If `tr` has a valid `translations_files` attribute (a non-empty named
+#'     list), it is returned. See [import.ExportedTranslator()] for more
+#'     information.
+#'   * Otherwise, a named list of file paths is constructed from
+#'     `tr$native_languages` (the source language is ignored).
+#'     See [`Translator$native_languages`][Translator] for more information.
 #'
 #' [get_uuid()] safely extracts field `_Uuid` from `x`, and returns it if the
 #' underlying value is a non-empty and non-[NA][base::NA] character string.
@@ -227,7 +239,7 @@ serialize_translations <- function(tr = translator(), lang = "", set_uuid = TRUE
 #' @rdname serialize
 #' @keywords internal
 deserialize <- function(string = "") {
-    assert_chr(string, TRUE)
+    assert_chr1(string)
 
     obj <- tryCatch({
         yaml::yaml.load(string,
@@ -319,11 +331,11 @@ validate <- function(x, ...) {
 #' @rdname serialize
 #' @keywords internal
 #' @export
-export.Translator <- function(x, set_uuid = TRUE, ...) {
+export.Translator <- function(x, set_uuid = TRUE, parent_dir, ...) {
     assert_lgl1(set_uuid)
 
-    # translations_files() validates x.
-    files <- translations_files(x)
+    # It validates x, and parent_dir.
+    files <- translations_files(x, parent_dir)
 
     out <- list(
         `_Uuid`              = NULL,
@@ -677,22 +689,31 @@ validate.default <- function(x, ...) {
 
 #' @rdname serialize
 #' @keywords internal
-translations_files <- function(tr = translator()) {
+translations_files <- function(tr = translator(), parent_dir) {
     if (!is_translator(tr)) {
         stops("'tr' must be a 'Translator' object.")
     }
     if (length(source_lang <- tr$source_langs) > 1L) {
         stops("all 'Text' objects of 'tr' must have the same 'source_lang'.")
     }
+    if (!missing(parent_dir)) {
+        assert_chr1(parent_dir, TRUE)
+    }
 
     # Remove source_lang from expected languages
     # requiring a dedicated Translations File.
-    langs <- names(tr$native_languages)[names(tr$native_languages) != source_lang]
+    langs <- names(tr$native_languages)
+    langs <- langs[langs != source_lang]
 
+    # Check attribute 'translations_files', and return
+    # it if it exists. It contains cached paths stemming
+    # from a previous call to import().
     if (!is.null(files <- attr(tr, "translations_files"))) {
         assert_list(files,  x_name = "Translations Files")
         assert_named(files, x_name = "Translations Files")
 
+        # Check if the set of keys of Translations Files is
+        # the same set, or a subset of the Languages keys.
         missing <- names(files)[!match(names(files), langs, 0L)]
 
         if (length(missing)) {
@@ -704,7 +725,9 @@ translations_files <- function(tr = translator()) {
         return(files)
     }
 
-    return(structure(as.list(sprintf("%s.txt", langs)), names = langs))
+    files <- sprintf("%s.txt", langs)
+    paths <- if (missing(parent_dir)) files else file.path(parent_dir, files)
+    return(structure(as.list(paths), names = langs))
 }
 
 #' @rdname serialize

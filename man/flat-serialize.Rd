@@ -10,7 +10,7 @@
 \usage{
 flat_serialize(x = list(), tag_sep = ": ", tag_empty = "")
 
-flat_deserialize(string, tag_sep = ": ")
+flat_deserialize(string = "", tag_sep = ": ")
 
 flat_tag(x = list(), tag_sep = ": ", tag_empty = "")
 
@@ -29,8 +29,8 @@ from \code{x}.}
 as a substitute for empty names. Positional indices are automatically
 appended to it to ensure tags are always unique.}
 
-\item{string}{A non-\link[base:NA]{NA} character string. A \emph{flat} string to
-deserialize.}
+\item{string}{A non-empty and non-\link[base:NA]{NA} character string. Contents
+to deserialize.}
 }
 \value{
 \code{\link[=flat_serialize]{flat_serialize()}} returns a character string.

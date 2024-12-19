@@ -42,8 +42,8 @@
 #'   as a substitute for empty names. Positional indices are automatically
 #'   appended to it to ensure tags are always unique.
 #'
-#' @param string A non-[NA][base::NA] character string. A *flat* string to
-#'   deserialize.
+#' @param string A non-empty and non-[NA][base::NA] character string. Contents
+#'   to deserialize.
 #'
 #' @returns
 #' [flat_serialize()] returns a character string.
@@ -74,13 +74,9 @@ flat_serialize <- function(x = list(), tag_sep = ": ", tag_empty = "") {
 
 #' @rdname flat-serialize
 #' @keywords internal
-flat_deserialize <- function(string, tag_sep = ": ") {
-    assert_chr1(string, TRUE)
+flat_deserialize <- function(string = "", tag_sep = ": ") {
+    assert_chr1(string)
     assert_chr1(tag_sep)
-
-    if (!nzchar(string)) {
-        return(list())
-    }
 
     # Remove comments.
     # This regex matches anything that follows a single

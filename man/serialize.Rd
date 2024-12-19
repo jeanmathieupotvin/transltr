@@ -45,7 +45,7 @@ import(x, ...)
 
 validate(x, ...)
 
-\method{export}{Translator}(x, set_uuid = TRUE, ...)
+\method{export}{Translator}(x, set_uuid = TRUE, parent_dir, ...)
 
 \method{export}{Text}(x, set_uuid = TRUE, set_translations = FALSE, ...)
 
@@ -69,7 +69,7 @@ validate(x, ...)
 
 \method{validate}{default}(x, ...)
 
-translations_files(tr = translator())
+translations_files(tr = translator(), parent_dir)
 
 get_uuid(x)
 }
@@ -93,15 +93,22 @@ A language is usually a code (of two or three letters) for a native
 language name. While users retain full control over codes, it is best
 to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/IETF_language_tag}{IETF BCP 47}, or
-\href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
-Doing so maximizes portability and cross-compatibility between packages.}
+\href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}
+to maximize portability and cross-compatibility.}
 
 \item{set_uuid}{A non-\link[base:NA]{NA} logical value. Should a \verb{_Uuid} field
 uniquely identifying outputs of \code{\link[=export]{export()}} be included? If \code{TRUE}, it is
 set equal to \code{\link[=uuid]{uuid()}}. This field is required by \code{\link[=validate]{validate()}} to throw
 meaningful error messages­.}
 
-\item{string}{A non-\link[base:NA]{NA} character string. It can be empty.}
+\item{string}{A non-empty and non-\link[base:NA]{NA} character string. Contents
+to deserialize.}
+
+\item{parent_dir}{An \strong{optional} non-\link[base:NA]{NA} character string. It
+can be empty. The parent directory to use when creating entries of field
+\verb{Translations Files} of an \code{\link[=export]{ExportedTranslator}} object. See
+\code{\link[=translator_write]{translator_write()}} for more information. Empty values are converted to
+the root location (\code{/}) by \code{\link[=file.path]{file.path()}}.}
 
 \item{set_translations}{A non-\link[base:NA]{NA} logical value. Should
 translations be included in the resulting \code{\link[=export]{ExportedText}}
@@ -175,11 +182,15 @@ is designed to fail fast: error messages are \strong{not accumulated}. Classes
 (and underlying objects) that does not have a \code{\link[=validate]{validate()}} method are
 considered to be valid by default.
 
-\code{\link[=translations_files]{translations_files()}} returns a named list. If \code{tr} has a non-\code{NULL}
-\code{translations_files} attrribute, it is checked and returned. Otherwise,
-a named list of file names is constructed from registered native languages.
-See \code{\link[=Translator]{Translator$native_languages}} for more information. This
-attribute is used by \code{\link[=translator_write]{translator_write()}}.
+\code{\link[=translations_files]{translations_files()}} returns a named list.
+\itemize{
+\item If \code{tr} has a valid \code{translations_files} attribute (a non-empty named
+list), it is returned. See \code{\link[=import.ExportedTranslator]{import.ExportedTranslator()}} for more
+information.
+\item Otherwise, a named list of file paths is constructed from
+\code{tr$native_languages} (the source language is ignored).
+See \code{\link[=Translator]{Translator$native_languages}} for more information.
+}
 
 \code{\link[=get_uuid]{get_uuid()}} safely extracts field \verb{_Uuid} from \code{x}, and returns it if the
 underlying value is a non-empty and non-\link[base:NA]{NA} character string.
@@ -187,10 +198,12 @@ Otherwise, a default value is returned.
 }
 \description{
 Convert \code{\link{Translator}} objects, \code{\link{Text}} objects, and
-\code{\link{Location}} objects to a \link[yaml:as.yaml]{YAML string}.
+\code{\link{Location}} objects to a \link[yaml:as.yaml]{YAML string}, or
+vice-versa.
 
 Convert translations contained by a \code{\link{Translator}} object to
-a custom textual representation (a \link[=flat_serialize]{flat string}).
+a custom textual representation (a \link[=flat_serialize]{flat string}), or
+vive-versa.
 }
 \details{
 The information contained within a \code{\link{Translator}} object is
