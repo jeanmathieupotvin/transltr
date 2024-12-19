@@ -88,7 +88,6 @@ cat(transltr:::format_vector(x, "<JohnDoe>", show_nokey = FALSE), sep = "\n")
 }
 \seealso{
 Other utility functions: 
-\code{\link{create_parent_dir}()},
 \code{\link{stops}()},
 \code{\link{to_string}()},
 \code{\link{vapply_1l}()}

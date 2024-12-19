@@ -30,7 +30,6 @@ error messages.
 }
 \seealso{
 Other utility functions: 
-\code{\link{create_parent_dir}()},
 \code{\link{format_vector}()},
 \code{\link{to_string}()},
 \code{\link{vapply_1l}()}

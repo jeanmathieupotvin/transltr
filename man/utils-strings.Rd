@@ -45,7 +45,6 @@ one. See argument \code{last_sep}.
 }
 \seealso{
 Other utility functions: 
-\code{\link{create_parent_dir}()},
 \code{\link{format_vector}()},
 \code{\link{stops}()},
 \code{\link{vapply_1l}()}

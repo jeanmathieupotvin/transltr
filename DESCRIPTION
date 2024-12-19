@@ -55,7 +55,6 @@ Collate:
     'translate.R'
     'translator-io.R'
     'transltr-package.R'
-    'utils-create-parent-dir.R'
     'utils-format-vector.R'
     'utils-map.R'
     'utils-nullish-op.R'

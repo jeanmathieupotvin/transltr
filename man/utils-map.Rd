@@ -41,7 +41,6 @@ passed \emph{as is} to an \code{\link[base:lapply]{apply()}} function.
 }
 \seealso{
 Other utility functions: 
-\code{\link{create_parent_dir}()},
 \code{\link{format_vector}()},
 \code{\link{stops}()},
 \code{\link{to_string}()}
