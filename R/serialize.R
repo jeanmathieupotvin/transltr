@@ -13,8 +13,8 @@
 #' The information contained within a [`Translator`][Translator] object is
 #' split by default. Unless `set_translations` is `TRUE`, translations are
 #' serialized independently from other fields. This is useful when creating
-#' [Portable Translator Files][translator_write()], and
-#' [Portable Translations Files][translations_read()].
+#' [Exported Translator files][translator_write()], and
+#' [Exported Translations files][translations_read()].
 #'
 #' While [serialize()] and [serialize_translations()] are distinct, they share
 #' a common *design*, and perform the same *thing*, at least conceptually. The
@@ -81,7 +81,7 @@
 #' [`ExportedTranslations`][export()] which has no *unexported* counterpart.
 #' Its purpose is to restructure translations extracted from a
 #' [`Translator`][Translator] object by language. It is used to create
-#' [Portable Translations File][translations_read()].
+#' [Exported Translations file][translations_read()].
 #'
 #' [`ExportedTranslations`][export()] objects are created from a
 #' [`Translator`][Translator] object. The value passed to `lang` must have a
@@ -593,8 +593,8 @@ validate.ExportedTranslator <- function(x, ...) {
             get_uuid(x))
     }
 
-    # Remove source_lang from expected languages
-    # requiring a dedicated Translations File.
+    # Remove source_lang from languages that
+    # require an Exported Translations file.
     langs <- names(langs)[names(langs) != x[["Source Language"]]]
 
     if (!setequal(names(files), langs)) {
@@ -700,8 +700,8 @@ translations_files <- function(tr = translator(), parent_dir) {
         assert_chr1(parent_dir, TRUE)
     }
 
-    # Remove source_lang from expected languages
-    # requiring a dedicated Translations File.
+    # Remove source_lang from languages that
+    # require an Exported Translations file.
     langs <- names(tr$native_languages)
     langs <- langs[langs != source_lang]
 

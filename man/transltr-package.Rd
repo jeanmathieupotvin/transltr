@@ -82,7 +82,7 @@ it inside a call to \code{\link[=translate]{translate()}}.
 \item Once you are ready to work on translations, call \code{\link[=find_source]{find_source()}}. This
 function returns a \code{\link{Translator}} object.
 \item Export it with \code{\link[=translator_write]{translator_write()}}. Complete the underlying
-\link[=translator_read]{Portable Translations Files} with translations.
+\link[=translator_read]{Exported Translations files} with translations.
 \item Import translations back into an \R session with \code{\link[=translator_read]{translator_read()}}.
 \item Set the default language with \code{\link[=language_set]{language_set()}}.
 }

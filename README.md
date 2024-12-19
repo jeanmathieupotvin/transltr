@@ -89,7 +89,7 @@ Follow these steps.
    function returns a `Translator` object.
 
 3. Export it with `translator_write()`. Complete the underlying
-   *Portable Translations Files* with translations.
+   *Exported Translations files* with translations.
 
 4. Import translations back into an R session with `translator_read()`.
 

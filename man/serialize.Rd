@@ -209,8 +209,8 @@ vive-versa.
 The information contained within a \code{\link{Translator}} object is
 split by default. Unless \code{set_translations} is \code{TRUE}, translations are
 serialized independently from other fields. This is useful when creating
-\link[=translator_write]{Portable Translator Files}, and
-\link[=translations_read]{Portable Translations Files}.
+\link[=translator_write]{Exported Translator files}, and
+\link[=translations_read]{Exported Translations files}.
 
 While \code{\link[=serialize]{serialize()}} and \code{\link[=serialize_translations]{serialize_translations()}} are distinct, they share
 a common \emph{design}, and perform the same \emph{thing}, at least conceptually. The
@@ -280,7 +280,7 @@ presentational purposes.
 \code{\link[=export]{ExportedTranslations}} which has no \emph{unexported} counterpart.
 Its purpose is to restructure translations extracted from a
 \code{\link{Translator}} object by language. It is used to create
-\link[=translations_read]{Portable Translations File}.
+\link[=translations_read]{Exported Translations file}.
 
 \code{\link[=export]{ExportedTranslations}} objects are created from a
 \code{\link{Translator}} object. The value passed to \code{lang} must have a

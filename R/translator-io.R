@@ -7,55 +7,55 @@
 #' To ease collaboration and maintenance, the information contained within
 #' a [`Translator`][Translator] object is split. Translations are exported
 #' independently from other fields. Two types of objects are created from
-#' a [`Translator`][Translator] object: a single *Portable Translator*, and
-#' zero, or more *Portable Translations*. These objects are portable because
+#' a [`Translator`][Translator] object: a single *Exported Translator*, and
+#' zero, or more *Exported Translations*. These objects are portable because
 #' they are textual representations that can be inspected, and modified using
 #' a wide variety of tools and systems.
 #'
-#' Portable objects are stored in plain text files. The inner workings of the
+#' Exported objects are stored in plain text files. The inner workings of the
 #' serialization process are thoroughly described in [serialize()].
 #'
-#' [translator_write()] creates two types of file: one file containing a
-#' Portable Translator, and further file(s) containing Portable Translations.
+#' [translator_write()] creates two types of file: one file containing an
+#' Exported Translator, and further file(s) containing Exported Translations.
 #' They target different audiences:
 #'
-#'   * Portable Translator files are useful to **developers**, and
-#'   * Portable Translations files are useful to **non-technical collaborators**
+#'   * Exported Translator files are useful to **developers**, and
+#'   * Exported Translations files are useful to **non-technical collaborators**
 #'     such as translators.
 #'
-#' ## Portable Translator
+#' ## Exported Translator
 #'
-#' A Portable Translator is a [YAML 1.1](https://yaml.org/spec/1.1/)
+#' An Exported Translator is a [YAML 1.1](https://yaml.org/spec/1.1/)
 #' representation of a [`Translator`][Translator] object stripped of all
 #' its translations except those that are registered as source text. It
-#' references related Portable Translations files via a `Translations Files`
+#' references related Exported Translations files via a `Translations Files`
 #' field.
 #'
-#' ## Portable Translations
+#' ## Exported Translations
 #'
 #' Translations registered in a [`Translator`][Translator] object are extracted,
-#' grouped by language, and stored in distinct file(s). One
-#' Portable Translations is created for each non-source native language
-#' registered in `x`. Fore more information, see
-#' [`Translator$native_languages`][Translator].
+#' grouped by language, and stored in distinct file(s). One Exported
+#' Translations is created for each non-source native language registered in
+#' `x`. Fore more information, see [`Translator$native_languages`][Translator].
 #'
-#' A Portable Translations is a [FLAT 1.0][flat_serialize()] representation.
+#' An Exported Translations is a [FLAT 1.0][flat_serialize()] representation.
 #' This format is custom, and attempts to be as simple as possible for
 #' non-technical collaborators.
 #'
 #' @param path A non-empty and non-[NA][base::NA] character string. A path to
 #'   a file to read from, or write to.
 #'
-#'   * This file must be a Portable Translator file for [translator_read()].
-#'   * This file must be a Portable Translations file for [translations_read()].
+#'   * This file must be an Exported Translator file for [translator_read()].
+#'   * This file must be an Exported Translations file for [translations_read()].
 #'
 #'   See Details for more information. [translator_write()] automatically
 #'   creates the parent directory of `path` (recursively) if it does not exist.
 #'
 #' @param tr A [`Translator`][Translator] object.
 #'
-#' @param overwrite A non-[NA][base::NA] logical value. Should existing
-#'   *Portable Translator* files (pointed to by `path`) be overwritten?
+#' @param overwrite A non-[NA][base::NA] logical value. Should an existing
+#'   *Exported Translator* file (pointed to by `path`) be overwritten? An
+#'   error is thrown otherwise.
 #'
 #' @template param-encoding
 #'
@@ -68,19 +68,19 @@
 #' [translator_write()] returns `NULL`, invisibly. It is used for its
 #' side-effects of simultaneously
 #'
-#'   * creating a Portable Translator file to the location given by `path`, and
-#'   * creating further Portable Translations file(s) in the same directory as
-#'     the Portable Translator file (by default).
+#'   * creating an Exported Translator file to the location given by `path`, and
+#'   * creating further Exported Translations file(s) in the same directory as
+#'     the Exported Translator file (by default).
 #'
 #' Note that underlying entries of `Translations Files` (a standard field of
-#' Portable Translator objects) may be modified afterwards. The file paths it
+#' Exported Translator objects) may be modified afterwards. The file paths it
 #' contains are cached by [translations_read()], and reused automatically.
 #'
 #' [translations_read()] returns an S3 object of class
 #' [`ExportedTranslations`][export()].
 #'
 #' [translations_write()] returns `NULL`, invisibly. It is used for its
-#' side-effect of creating a single Portable Translations file to the location
+#' side-effect of creating a single Exported Translations file to the location
 #' given by `path`.
 #'
 #' @seealso
@@ -96,7 +96,7 @@
 #' # Set source language.
 #' language_source_set("en")
 #'
-#' # Create a path to a (future) Portable Translator file.
+#' # Create a path to a (future) Exported Translator file.
 #' temp_path <- tempfile(pattern = "translator_", fileext = ".yml")
 #'
 #' # Create a Translator object.
@@ -117,8 +117,8 @@
 #' # Export it.
 #' # This creates 3 files:
 #' #
-#' #   1. 1 Portable Translator file, and
-#' #   2. 2 Portable Translations files (one for language "es", and another
+#' #   1. 1 Exported Translator file, and
+#' #   2. 2 Exported Translations files (one for language "es", and another
 #' #      one for language "fr"). The file for language "es" contains
 #' #      placeholders for future translations.
 #' translator_write(tr, temp_path)
@@ -138,7 +138,7 @@
 #' # language, as long as
 #' #
 #' #   1. it has a corresponding entry in the underlying Translator object, and
-#' #   2. it has corresponding entries in the underlying Portable Translator
+#' #   2. it has corresponding entries in the underlying Exported Translator
 #' #      (fields 'Languages' and 'Translations Files' must be updated).
 #' #
 #' # Consider using translator_write() instead.
@@ -155,7 +155,7 @@ translator_read <- function(
     string <- paste0(text_read(path, encoding), collapse = "\n")
     tr     <- deserialize(string)
 
-    # Read all (Portable) Translations Files,
+    # Read all Exported Translations files,
     # import them, and register translations.
     files <- translations_files(tr)
     path  <- normalizePath(path, mustWork = FALSE)
@@ -202,21 +202,21 @@ translator_write <- function(
 
     transl_paths <- translations_files(tr, path_dir)
     comments     <- c(
-        "# Portable Translator",
+        "# Exported Translator",
         "#",
         "# Instructions:",
         "#  - You may edit Identifier, Languages, and Translations Files.",
         "#  - Do not edit other fields by hand; edit source scripts instead.",
         "#  - Field _Uuid uniquely identifies underlying objects.",
-        "#  - Translations are stored in distinct Portable Translations Files.",
+        "#  - Translations are stored in distinct Exported Translations files.",
         "%YAML 1.1",
         "---")
 
-    # Write the Portable Translator File.
+    # Write the Exported Translator.
     text_write(c(comments, serialize(tr, parent_dir = path_dir)), path)
 
-    # Write Portable Translations files (one
-    # per defined native language). They are
+    # Write Exported Translations (one per
+    # non-source native language). They are
     # written in the same directory as path.
     map(translations_write,
         path = transl_paths,
@@ -237,7 +237,7 @@ translations_read <- function(path = "", encoding = "UTF-8", tr) {
 #' @export
 translations_write <- function(tr = translator(), path = "", lang = "") {
     comments <- c(
-        "# Portable Translations",
+        "# Exported Translations",
         "#",
         "# Instructions:",
         "#  - Edit each 'Translation' section below.",

@@ -83,7 +83,7 @@
 #'    function returns a [`Translator`][Translator] object.
 #'
 #' 3. Export it with [translator_write()]. Complete the underlying
-#'    [Portable Translations Files][translator_read()] with translations.
+#'    [Exported Translations files][translator_read()] with translations.
 #'
 #' 4. Import translations back into an \R session with [translator_read()].
 #'

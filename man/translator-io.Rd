@@ -23,8 +23,8 @@ translations_write(tr = translator(), path = "", lang = "")
 \item{path}{A non-empty and non-\link[base:NA]{NA} character string. A path to
 a file to read from, or write to.
 \itemize{
-\item This file must be a Portable Translator file for \code{\link[=translator_read]{translator_read()}}.
-\item This file must be a Portable Translations file for \code{\link[=translations_read]{translations_read()}}.
+\item This file must be an Exported Translator file for \code{\link[=translator_read]{translator_read()}}.
+\item This file must be an Exported Translations file for \code{\link[=translations_read]{translations_read()}}.
 }
 
 See Details for more information. \code{\link[=translator_write]{translator_write()}} automatically
@@ -37,8 +37,9 @@ portability.}
 
 \item{tr}{A \code{\link{Translator}} object.}
 
-\item{overwrite}{A non-\link[base:NA]{NA} logical value. Should existing
-\emph{Portable Translator} files (pointed to by \code{path}) be overwritten?}
+\item{overwrite}{A non-\link[base:NA]{NA} logical value. Should an existing
+\emph{Exported Translator} file (pointed to by \code{path}) be overwritten? An
+error is thrown otherwise.}
 
 \item{lang}{A non-empty and non-\link[base:NA]{NA} character string. The
 underlying language.
@@ -57,20 +58,20 @@ to maximize portability and cross-compatibility.}
 \code{\link[=translator_write]{translator_write()}} returns \code{NULL}, invisibly. It is used for its
 side-effects of simultaneously
 \itemize{
-\item creating a Portable Translator file to the location given by \code{path}, and
-\item creating further Portable Translations file(s) in the same directory as
-the Portable Translator file (by default).
+\item creating an Exported Translator file to the location given by \code{path}, and
+\item creating further Exported Translations file(s) in the same directory as
+the Exported Translator file (by default).
 }
 
 Note that underlying entries of \verb{Translations Files} (a standard field of
-Portable Translator objects) may be modified afterwards. The file paths it
+Exported Translator objects) may be modified afterwards. The file paths it
 contains are cached by \code{\link[=translations_read]{translations_read()}}, and reused automatically.
 
 \code{\link[=translations_read]{translations_read()}} returns an S3 object of class
 \code{\link[=export]{ExportedTranslations}}.
 
 \code{\link[=translations_write]{translations_write()}} returns \code{NULL}, invisibly. It is used for its
-side-effect of creating a single Portable Translations file to the location
+side-effect of creating a single Exported Translations file to the location
 given by \code{path}.
 }
 \description{
@@ -81,40 +82,39 @@ files back into \R as \code{\link{Translator}} objects.
 To ease collaboration and maintenance, the information contained within
 a \code{\link{Translator}} object is split. Translations are exported
 independently from other fields. Two types of objects are created from
-a \code{\link{Translator}} object: a single \emph{Portable Translator}, and
-zero, or more \emph{Portable Translations}. These objects are portable because
+a \code{\link{Translator}} object: a single \emph{Exported Translator}, and
+zero, or more \emph{Exported Translations}. These objects are portable because
 they are textual representations that can be inspected, and modified using
 a wide variety of tools and systems.
 
-Portable objects are stored in plain text files. The inner workings of the
+Exported objects are stored in plain text files. The inner workings of the
 serialization process are thoroughly described in \code{\link[=serialize]{serialize()}}.
 
-\code{\link[=translator_write]{translator_write()}} creates two types of file: one file containing a
-Portable Translator, and further file(s) containing Portable Translations.
+\code{\link[=translator_write]{translator_write()}} creates two types of file: one file containing an
+Exported Translator, and further file(s) containing Exported Translations.
 They target different audiences:
 \itemize{
-\item Portable Translator files are useful to \strong{developers}, and
-\item Portable Translations files are useful to \strong{non-technical collaborators}
+\item Exported Translator files are useful to \strong{developers}, and
+\item Exported Translations files are useful to \strong{non-technical collaborators}
 such as translators.
 }
-\subsection{Portable Translator}{
+\subsection{Exported Translator}{
 
-A Portable Translator is a \href{https://yaml.org/spec/1.1/}{YAML 1.1}
+An Exported Translator is a \href{https://yaml.org/spec/1.1/}{YAML 1.1}
 representation of a \code{\link{Translator}} object stripped of all
 its translations except those that are registered as source text. It
-references related Portable Translations files via a \verb{Translations Files}
+references related Exported Translations files via a \verb{Translations Files}
 field.
 }
 
-\subsection{Portable Translations}{
+\subsection{Exported Translations}{
 
 Translations registered in a \code{\link{Translator}} object are extracted,
-grouped by language, and stored in distinct file(s). One
-Portable Translations is created for each non-source native language
-registered in \code{x}. Fore more information, see
-\code{\link[=Translator]{Translator$native_languages}}.
+grouped by language, and stored in distinct file(s). One Exported
+Translations is created for each non-source native language registered in
+\code{x}. Fore more information, see \code{\link[=Translator]{Translator$native_languages}}.
 
-A Portable Translations is a \link[=flat_serialize]{FLAT 1.0} representation.
+An Exported Translations is a \link[=flat_serialize]{FLAT 1.0} representation.
 This format is custom, and attempts to be as simple as possible for
 non-technical collaborators.
 }
@@ -128,7 +128,7 @@ non-technical collaborators.
 # Set source language.
 language_source_set("en")
 
-# Create a path to a (future) Portable Translator file.
+# Create a path to a (future) Exported Translator file.
 temp_path <- tempfile(pattern = "translator_", fileext = ".yml")
 
 # Create a Translator object.
@@ -149,8 +149,8 @@ tr <- translator(
 # Export it.
 # This creates 3 files:
 #
-#   1. 1 Portable Translator file, and
-#   2. 2 Portable Translations files (one for language "es", and another
+#   1. 1 Exported Translator file, and
+#   2. 2 Exported Translations files (one for language "es", and another
 #      one for language "fr"). The file for language "es" contains
 #      placeholders for future translations.
 translator_write(tr, temp_path)
@@ -170,7 +170,7 @@ translations_read(file.path(dirname(temp_path), "es.txt"))
 # language, as long as
 #
 #   1. it has a corresponding entry in the underlying Translator object, and
-#   2. it has corresponding entries in the underlying Portable Translator
+#   2. it has corresponding entries in the underlying Exported Translator
 #      (fields 'Languages' and 'Translations Files' must be updated).
 #
 # Consider using translator_write() instead.
