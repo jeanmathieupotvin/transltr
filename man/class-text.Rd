@@ -358,8 +358,8 @@ A language is usually a code (of two or three letters) for a native
 language name. While users retain full control over codes, it is best
 to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/IETF_language_tag}{IETF BCP 47}, or
-\href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
-Doing so maximizes portability and cross-compatibility between packages.}
+\href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}
+to maximize portability and cross-compatibility.}
 }
 \if{html}{\out{</div>}}
 }
@@ -399,8 +399,8 @@ A language is usually a code (of two or three letters) for a native
 language name. While users retain full control over codes, it is best
 to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/IETF_language_tag}{IETF BCP 47}, or
-\href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
-Doing so maximizes portability and cross-compatibility between packages.}
+\href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}
+to maximize portability and cross-compatibility.}
 
 \item{\code{text}}{A non-empty and non-\link[base:NA]{NA} character string. A
 translation, or a source text.}
