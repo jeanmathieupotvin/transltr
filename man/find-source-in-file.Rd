@@ -77,16 +77,16 @@ cat(
   file = temp_file)
 
 # Extract calls to transltr::translate() from dummy script.
-find_source_in_file(temp_file, strict = TRUE,  verbose = TRUE)
-find_source_in_file(temp_file, strict = FALSE, verbose = TRUE)
+transltr:::find_source_in_file(temp_file, strict = TRUE,  verbose = TRUE)
+transltr:::find_source_in_file(temp_file, strict = FALSE, verbose = TRUE)
 
 # You may also read the dummy script, parse it, extract calls
 # to translate() from it, and coerce them as Text objects.
 # find_source_exprs() is (mostly) just a semantic wrapper for
 # utils::getParseData(parse(temp_file)).
-exprs <- find_source_exprs(temp_file)
-find_source_in_exprs(exprs, path = temp_file, strict = TRUE)
-find_source_in_exprs(exprs, path = temp_file, strict = FALSE)
+exprs <- transltr:::find_source_exprs(temp_file)
+transltr:::find_source_in_exprs(exprs, path = temp_file, strict = TRUE)
+transltr:::find_source_in_exprs(exprs, path = temp_file, strict = FALSE)
 
 }
 \seealso{

@@ -3,7 +3,7 @@
 \name{format_vector}
 \alias{format_vector}
 \alias{format_vector2}
-\alias{format_atomic2}
+\alias{format_atomic}
 \title{Format Vectors}
 \usage{
 format_vector(
@@ -16,7 +16,7 @@ format_vector(
 
 format_vector2(x = vector(), indent = 1L, level = 0L, ...)
 
-format_atomic2(x = vector(), indent = 2L, level = 0L, ...)
+format_atomic(x = vector(), indent = 2L, level = 0L, ...)
 }
 \arguments{
 \item{x}{A \link[=vector]{vector}. It cannot be empty.}

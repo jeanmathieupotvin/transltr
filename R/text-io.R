@@ -29,8 +29,8 @@
 #'
 #' temp_file <- tempfile()
 #'
-#' text_write(lines, temp_file)
-#' text_read(temp_file)
+#' transltr:::text_write(lines, temp_file)
+#' transltr:::text_read(temp_file)
 #'
 #' @rdname text-io
 #' @keywords internal

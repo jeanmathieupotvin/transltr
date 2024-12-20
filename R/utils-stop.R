@@ -19,8 +19,8 @@
 #'
 #' @examples
 #' \dontrun{
-#' stops("'stops()' never includes the underlying call in error messages.")
-#' stopf("'%s' calls '%s' by design.", "stopf()", "stops()")
+#' transltr:::stops("'stops()' never includes the underlying call in error messages.")
+#' transltr:::stopf("'%s' calls '%s' by design.", "stopf()", "stops()")
 #' }
 #'
 #' @rdname utils-stop

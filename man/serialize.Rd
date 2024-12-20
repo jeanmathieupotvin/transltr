@@ -180,7 +180,7 @@ if a \code{\link{Translator}} object is passed to itself, or to
 source text (a registered \code{\link{Text}} object). Otherwise, they are
 skipped silently. The \code{\link{Translator}} object is updated
 \strong{by reference} and is not returned (\code{\link{Translator}} objects
-are \link{environments}).
+are \link[=environment]{environments}).
 }
 
 \code{\link[=import.default]{import.default()}} is used for its side-effect of throwing an error for
@@ -338,63 +338,63 @@ tr <- translator(
 
 # Serialize objects. This is what translator_write(),
 # and translations_write() call internally.
-serialize(loc)
-serialize(txt)
-serialize(tr)
-serialize_translations(tr, "fr")
-serialize_translations(tr, "es")
+transltr:::serialize(loc)
+transltr:::serialize(txt)
+transltr:::serialize(tr)
+transltr:::serialize_translations(tr, "fr")
+transltr:::serialize_translations(tr, "es")
 
 # serialize(), and serialize_translations() both call export() internally.
 # Field `_Uuid` can be omitted by setting set_uuid equal to `FALSE`.
-export(loc, set_uuid = FALSE)
-export(txt)
-export(tr)
-export_translations(tr, "fr")
-export_translations(tr, "es", set_uuid = FALSE)
+transltr:::export(loc, set_uuid = FALSE)
+transltr:::export(txt)
+transltr:::export(tr)
+transltr:::export_translations(tr, "fr")
+transltr:::export_translations(tr, "es", set_uuid = FALSE)
 
 # Translations can be exported along with original objects.
 # This is not the default behavior of the package.
-export(txt, set_translations = TRUE)
-export(tr,  set_translations = TRUE)
+transltr:::export(txt, set_translations = TRUE)
+transltr:::export(tr,  set_translations = TRUE)
 
 # Deserialize objects. This is what translator_read(), and
 # translations_read() call internally.
-deserialize(serialize(loc))
-deserialize(serialize(txt))
-deserialize(serialize(tr))
-deserialize_translations(serialize_translations(tr, "fr"))
-deserialize_translations(serialize_translations(tr, "es"))
+transltr:::deserialize(transltr:::serialize(loc))
+transltr:::deserialize(transltr:::serialize(txt))
+transltr:::deserialize(transltr:::serialize(tr))
+transltr:::deserialize_translations(transltr:::serialize_translations(tr, "fr"))
+transltr:::deserialize_translations(transltr:::serialize_translations(tr, "es"))
 
 # deserialize(), and deserialize_translations() both call validate()
 # internally. validate() checks that the underlying input can safely be
 # passed to import(). What deserialization functions internally passes to
 # validate() are candidate 'Exported' objects that may, or may not be valid.
-validate(export(loc))
-validate(export(txt))
-validate(export(tr))
-validate(export_translations(tr, "fr"))
+transltr:::validate(transltr:::export(loc))
+transltr:::validate(transltr:::export(txt))
+transltr:::validate(transltr:::export(tr))
+transltr:::validate(transltr:::export_translations(tr, "fr"))
 
 # Introduce an error in an ExportedLocation object for illustration purposes.
 # validate() uses field `_Uuid` to throw meaningful error messages.
-loc_err <- export(loc)
+loc_err <- transltr:::export(loc)
 loc_err$Path <- 1L
 
-\dontrun{validate(loc_err)}
+\dontrun{transltr:::validate(loc_err)}
 
 # deserialize(), and deserialize_translations() both call import() on valid
 # Exported* objects. Any `_Uuid` field is discarded by import().
-import(export(loc))
-import(export(txt))
-import(export(tr))
-import(export_translations(tr, "fr"))
-import(export_translations(tr, "es"))
+transltr:::import(transltr:::export(loc))
+transltr:::import(transltr:::export(txt))
+transltr:::import(transltr:::export(tr))
+transltr:::import(transltr:::export_translations(tr, "fr"))
+transltr:::import(transltr:::export_translations(tr, "es"))
 
 # import() is the conceptual inverse of export(). However, this is not
 # quite true for import.ExportedTranslations(), because it replaces any
 # previous placeholders stemming from export_translations() with another
 # placeholder (for internal consistency).
-cat(serialize_translations(tr, "es"), "\n")
-deserialize_translations(serialize_translations(tr, "es"))
+cat(transltr:::serialize_translations(tr, "es"), "\n")
+transltr:::deserialize_translations(transltr:::serialize_translations(tr, "es"))
 
 # A Translator object may be passed to deserialize_translations(), and
 # import.ExportedTranslations(). It accumulates translations, and is
@@ -404,19 +404,19 @@ deserialize_translations(serialize_translations(tr, "es"))
 tr_new <- Translator$new(id = "test-translator")
 tr_new$set_text(en = "Hello, world!")
 tr_new$set_text(en = "Farewell, world!")
-deserialize_translations(serialize_translations(tr, "fr")) , tr_new)
+transltr:::deserialize_translations(transltr:::serialize_translations(tr, "fr"), tr_new)
 
 # translations_files() is used to create the 'Translations Files' field
 # of an ExportedTranslator object.
-translations_files(tr)
-translations_files(tr, getwd())
+transltr:::translations_files(tr)
+transltr:::translations_files(tr, getwd())
 
 # It is also used to fetch internal attribute `translations_files` set by
 # import.ExportedTranslator().
-translations_files(import(export(tr)))
+transltr:::translations_files(transltr:::import(transltr:::export(tr)))
 
-get_uuid(export(loc))  ## Outputs the current uuid
-get_uuid(1L)           ## Outputs "<unkwnown>"
+transltr:::get_uuid(transltr:::export(loc))  ## Outputs the current uuid
+transltr:::get_uuid(1L)  ## Outputs "<unkwnown>"
 
 }
 \seealso{

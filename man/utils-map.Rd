@@ -42,11 +42,11 @@ passed \emph{as is} to an \code{\link[base:lapply]{apply()}} function.
 \examples{
 # is.integer(), as.integer(), and as.character() are already
 # vectorized by default. This is only for illustration purposes.
-vapply_1l(list(1L, 2L, 3L), is.integer)
-vapply_1i(list(1.1, 2.2, 3.3), as.integer)
-vapply_1c(list(1L, 2L, 3L), as.character)
+transltr:::vapply_1l(list(1L, 2L, 3L), is.integer)
+transltr:::vapply_1i(list(1.1, 2.2, 3.3), as.integer)
+transltr:::vapply_1c(list(1L, 2L, 3L), as.character)
 
-x <- map(rep, c(1L, 2L, 3L), c(3L, 2L, 1L))
+x <- transltr:::map(rep, c(1L, 2L, 3L), c(3L, 2L, 1L))
 identical(x, list(c(1L, 1L, 1L), c(2L, 2L), 3L))
 
 }

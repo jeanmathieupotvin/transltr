@@ -13,7 +13,7 @@
 #'
 #' [flat_deserialize()] is the inverse operation: it converts a FLAT object
 #' back into a list. The latter has (almost) the same shape as the original
-#' one, but [atomic vectors] are not reconstituted (they are deserialized
+#' one, but [atomic] vectors are not reconstituted (they are deserialized
 #' as elements of length 1). Elements are further left as character strings.
 #'
 #' ## Internal mechanisms
@@ -63,7 +63,7 @@
 #'
 #' @examples
 #' # Print an example of a FLAT object.
-#' flat_example()
+#' transltr:::flat_example()
 #'
 #' x <- list(
 #'   FirstName = "John",
@@ -78,23 +78,23 @@
 #'     "address above."))
 #'
 #' # Serialize x into a FLAT object.
-#' string <- flat_serialize(x)
-#' cat(flat_serialize(x), "\n")
+#' string <- transltr:::flat_serialize(x)
+#' cat(transltr:::flat_serialize(x), "\n")
 #'
 #' # Atomic vectors are not reconstituted. Use lists to ensure
 #' # flat_deserialize() returns an object having the same shape.
-#' xdeserialized <- flat_deserialize(string)
+#' xdeserialized <- transltr:::flat_deserialize(string)
 #' identical(x, xdeserialized)            ## FALSE
 #' identical(x[-4L], xdeserialized[-4L])  ## TRUE
 #'
 #' # flat_tag() extracts names from lists (recursively).
 #' # Unlike unlist(), users control how these names are created.
-#' flat_tag(x)
+#' transltr:::flat_tag(x)
 #'
 #' # flat_format() is a helper function to ease the
 #' # serialization process. See Details for more information.
 #' expected <- list(a = "NULL", b = list("<empty list>"), c = "1\n2")
-#' current  <- flat_format(list(a = NULL, b = list(), c = c(1L, 2L)))
+#' current  <- transltr:::flat_format(list(a = NULL, b = list(), c = c(1L, 2L)))
 #' identical(current, expected)
 #'
 #' @rdname flat
