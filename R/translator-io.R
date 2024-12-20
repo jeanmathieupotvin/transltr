@@ -157,9 +157,7 @@ translator_read <- function(
 
     # Read all Exported Translations files,
     # import them, and register translations.
-    files <- translations_files(tr)
-    path  <- normalizePath(path, mustWork = FALSE)
-    lapply(file.path(dirname(path), files), translations_read, encoding, tr)
+    lapply(translations_files(tr), translations_read, encoding, tr)
 
     return(tr)
 }
