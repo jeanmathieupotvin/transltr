@@ -9,7 +9,7 @@
 #' space or an horizontal tab (`\t`). A new line is defined an ASCII line
 #' feed (`\n`).
 #'
-#' [text_normalize()] constructs a normalized string from all single-line and
+#' [normalize()] constructs a normalized string from all single-line and
 #' multi-line strings passed to `...`. All underlying values are (implicitly)
 #' coerced to character values in the process. It does so by going through
 #' these 5 steps.
@@ -29,12 +29,12 @@
 #'   values.
 #'
 #' @returns
-#' A character string.
+#' A character string, possibly empty.
 #'
 #' @note
 #' The author is not satisfied with the current implementation. It is *ugly*,
 #' and not fast enough. Calling [gsub()] five times yields a huge performance
-#' penalty. Advices are welcome. [text_normalize()] will be revisited in a
+#' penalty. Advices are welcome. [normalize()] will be revisited in a
 #' near future.
 #'
 #' @examples
@@ -54,8 +54,8 @@
 #'   "specimen book.",
 #'   "")
 #'
-#' str1 <- transltr:::text_normalize(x1)
-#' str2 <- transltr:::text_normalize(x2)
+#' str1 <- transltr:::normalize(x1)
+#' str2 <- transltr:::normalize(x2)
 #' identical(str1, str2) ## TRUE
 #'
 #' cat(str1, "\n")
@@ -74,10 +74,10 @@
 #'  and more recently with desktop publishing software like Aldus PageMaker
 #' including versions of Lorem Ipsum."
 #'
-#' cat(transltr:::text_normalize(x), "\n")
+#' cat(transltr:::normalize(x), "\n")
 #'
 #' @keywords internal
-text_normalize <- function(..., concat = constant("concat")) {
+normalize <- function(..., concat = constant("concat")) {
     assert_chr1(concat, TRUE)
 
     dots  <- c(...)

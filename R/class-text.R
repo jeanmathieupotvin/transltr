@@ -276,7 +276,7 @@ as_text.call <- function(x,
 
     txt <- Text$new(hash_algorithm)
     txt$set_locations(location)
-    txt$set_translation(source_lang, text_normalize(dots, concat = concat))
+    txt$set_translation(source_lang, normalize(dots, concat = concat))
     txt$source_lang <- source_lang
     return(txt)
 }

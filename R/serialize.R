@@ -536,7 +536,7 @@ import.ExportedText  <- function(x, ...) {
     do.call(txt$set_translations, x[["Translations"]] %??% list())
 
     if (!is.null(source_lang) && !is.null(source_text)) {
-        txt$set_translation(source_lang, text_normalize(source_text))
+        txt$set_translation(source_lang, normalize(source_text))
         txt$source_lang <- source_lang
     }
 
@@ -620,8 +620,8 @@ import.ExportedTranslations <- function(x, tr, ...) {
 
         return(
             list(
-                `Source Text` = text_normalize(source_text),
-                Translation   = text_normalize(translation)))
+                `Source Text` = normalize(source_text),
+                Translation   = normalize(translation)))
     })
 
     # Translator and Text objects are environments. They

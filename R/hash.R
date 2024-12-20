@@ -58,7 +58,7 @@
 #' @seealso
 #' [`Translator`][Translator],
 #' [`Text`][Text],
-#' [text_normalize()]
+#' [normalize()]
 #'
 #' @examples
 #' hash("en", "Hello, world!", "sha1")     ## Outputs "256e0d707386d0fcd9abf10ad994000bdaa25812"

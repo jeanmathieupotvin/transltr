@@ -359,7 +359,7 @@ Translator <- R6::R6Class("Translator",
         #' Since it can be detected by [find_source()], [translate()] is the
         #' preferred interface to this method.
         #'
-        #' Values passed to `...` are first [normalized][text_normalize()],
+        #' Values passed to `...` are first [normalized][normalize()],
         #' and then [hashed][hash()]. The translation that corresponds to
         #' the resulting hash and `lang` pair is fetched via method
         #' [`Translator$get_translation()`][Translator]. Argument `lang` will
@@ -395,7 +395,7 @@ Translator <- R6::R6Class("Translator",
             # hash() validates source_lang, but it is also
             # validated here to throw a coherent error message.
             assert_chr1(source_lang)
-            text <- text_normalize(..., concat = concat)
+            text <- normalize(..., concat = concat)
             hash <- hash(source_lang, text, private$.hash_algo)
             return(self$get_translation(hash, lang))
         },

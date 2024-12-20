@@ -19,7 +19,7 @@ test_that("hash() returns a sha-1 hash wheen algorithm is sha1", {
     # by https://codebeautify.org/sha1-hash-generator and
     # double-checked by https://10015.io/tools/sha1-encrypt-decrypt.
 
-    long_string <- text_normalize("
+    long_string <- normalize("
         Lorem Ipsum is simply dummy text of the printing and typesetting industry.
         Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
         when an unknown printer took a galley of type and scrambled it to make a type
