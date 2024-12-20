@@ -24,6 +24,7 @@
 \alias{validate.ExportedTranslator}
 \alias{validate.ExportedText}
 \alias{validate.ExportedLocation}
+\alias{validate.ExportedTranslations}
 \alias{validate.default}
 \alias{translations_files}
 \alias{get_uuid}
@@ -66,6 +67,8 @@ validate(x, ...)
 \method{validate}{ExportedText}(x, ...)
 
 \method{validate}{ExportedLocation}(x, ...)
+
+\method{validate}{ExportedTranslations}(x, ...)
 
 \method{validate}{default}(x, ...)
 

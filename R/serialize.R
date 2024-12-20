@@ -846,6 +846,45 @@ validate.ExportedLocation <- function(x, ...) {
     return(x)
 }
 
+#' @rdname serialize
+#' @keywords internal
+#' @export
+validate.ExportedTranslations <- function(x, ...) {
+    # FIXME: check if this is right with unit tests.
+    # This prevents any subscript out
+    # of bounds error stemming from `[[`.
+    if (!is.list(x)) {
+        stopf(
+            "in 'ExportedTranslations' '%s': invalid object's structure. It is not an 'ExportedTranslations' object.",
+            constant("unknown"))
+    }
+    if (!is_chr1(x[["Identifier"]])) {
+        stopf(
+            "in 'ExportedTranslations' '%s': 'Identifier' must be parsed as a non-empty R character string.",
+            get_uuid(x))
+    }
+    if (!is_chr1(x[["Language Code"]])) {
+        stopf(
+            "in 'ExportedTranslations' '%s': 'Language Code' must be parsed as a non-empty R character string.",
+            get_uuid(x))
+    }
+    if (!is_chr1(x[["Language"]])) {
+        stopf(
+            "in 'ExportedTranslations' '%s': 'Language' must be parsed as a non-empty R character string.",
+            get_uuid(x))
+    }
+    if (!is_chr1(x[["Source Language"]])) {
+        stopf(
+            "in 'ExportedTranslations' '%s': 'Source Language' must be parsed as a non-empty R character string.",
+            get_uuid(x))
+    }
+
+    translations <- x[["Translations"]]
+
+    if (!is.null(translations) &&
+        !is_list(translations, TRUE) || !is_named(translations)) {
+        stopf(
+            "in 'ExportedTranslations' '%s': 'Translations' must be parsed as a non-empty R list.",
             get_uuid(x))
     }
 
