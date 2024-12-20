@@ -188,7 +188,7 @@ is designed to fail fast: error messages are \strong{not accumulated}. Classes
 (and underlying objects) that does not have a \code{\link[=validate]{validate()}} method are
 considered to be valid by default.
 
-Therefore, \code{\link[=validate.default]{validate.default()}} simply returns \code{x} like \code{\link[=identity]{identity()}} would.
+\code{\link[=validate.default]{validate.default()}} simply returns \code{x} like \code{\link[=identity]{identity()}} would.
 
 \code{\link[=translations_files]{translations_files()}} returns a named list.
 \itemize{
@@ -254,6 +254,9 @@ The contents of the resulting \emph{transient} object is then thoroughly checked
 with \code{\link[=validate]{validate()}}, which dispatches on the object's \strong{presumed} class.
 Finally, a valid object is \emph{imported} back into an appropriate \R object
 via \code{\link[=import]{import()}}.
+
+Note that custom fields, and comments added by users to serialized objects
+are ignored by \code{\link[=validate]{validate()}}, and discarded entirely by \code{\link[=import]{import()}}.
 }
 
 \subsection{\code{Exported} Classes}{
@@ -261,7 +264,7 @@ via \code{\link[=import]{import()}}.
 \code{\link[=export]{Exported*}} may refer to classes
 \code{\link[=export]{ExportedTranslator}},
 \code{\link[=export]{ExportedText}},
-\code{\link[=export]{ExportedLocation}}, and
+\code{\link[=export]{ExportedLocation}}, or
 \code{\link[=export]{ExportedTranslations}}.
 
 Generally speaking, an \code{\link[=export]{Exported*}} object is a named list of S3
@@ -295,7 +298,12 @@ Its purpose is to restructure translations extracted from a
 corresponding registered native language name. See
 \code{\link[=Translator]{Translator$native_languages}} for more information.
 
-Unavailable translations are automatically replaced by a placeholder.
+Unavailable translations are automatically replaced by a placeholder that
+depends on the \emph{context}:
+\itemize{
+\item \code{\link[=constant]{constant("untranslated")}} for \code{\link[=export]{export()}}, and
+\item \code{\link[=constant]{constant("empty")}} for \code{\link[=import]{import()}}.
+}
 }
 }
 \examples{

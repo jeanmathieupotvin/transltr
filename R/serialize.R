@@ -51,12 +51,15 @@
 #' Finally, a valid object is *imported* back into an appropriate \R object
 #' via [import()].
 #'
+#' Note that custom fields, and comments added by users to serialized objects
+#' are ignored by [validate()], and discarded entirely by [import()].
+#'
 #' ## `Exported` Classes
 #'
 #' [`Exported*`][export()] may refer to classes
 #' [`ExportedTranslator`][export()],
 #' [`ExportedText`][export()],
-#' [`ExportedLocation`][export()], and
+#' [`ExportedLocation`][export()], or
 #' [`ExportedTranslations`][export()].
 #'
 #' Generally speaking, an [`Exported*`][export()] object is a named list of S3
@@ -88,7 +91,11 @@
 #' corresponding registered native language name. See
 #' [`Translator$native_languages`][Translator] for more information.
 #'
-#' Unavailable translations are automatically replaced by a placeholder.
+#' Unavailable translations are automatically replaced by a placeholder that
+#' depends on the *context*:
+#'
+#'   * [`constant("untranslated")`][constant()] for [export()], and
+#'   * [`constant("empty")`][constant()] for [import()].
 #'
 #' @param x Any \R object.
 #'
@@ -193,7 +200,7 @@
 #' (and underlying objects) that does not have a [validate()] method are
 #' considered to be valid by default.
 #'
-#' Therefore, [validate.default()] simply returns `x` like [identity()] would.
+#' [validate.default()] simply returns `x` like [identity()] would.
 #'
 #' [translations_files()] returns a named list.
 #'
@@ -366,9 +373,9 @@ deserialize <- function(string = "") {
             # The YAML engine identifies classes from
             # tags. import() does the rest, see below.
             handlers = list(
-                Translator = \(x) structure(x, class = "ExportedTranslator"),
-                Text       = \(x) structure(x, class = "ExportedText"),
-                Location   = \(x) structure(x, class = "ExportedLocation")))
+                ExportedTranslator = \(x) { structure(x, class = "ExportedTranslator") },
+                ExportedText       = \(x) { structure(x, class = "ExportedText") },
+                ExportedLocation   = \(x) { structure(x, class = "ExportedLocation") }))
     },
     condition = \(cond) {
         stopf(
@@ -429,7 +436,10 @@ export_translations <- function(tr = translator(), lang = "", set_uuid = TRUE) {
         Translations      = translations)
 
     out$`_Uuid` <- if (set_uuid) uuid() else NULL
-    return(structure(out, class = "ExportedTranslations", tag = "Translations"))
+    return(
+        structure(out,
+            class = "ExportedTranslations",
+            tag   = "ExportedTranslations"))
 }
 
 #' @rdname serialize
@@ -465,7 +475,10 @@ export.Translator <- function(x, set_uuid = TRUE, parent_dir, ...) {
         }))
 
     out$`_Uuid` <- if (set_uuid) uuid() else NULL
-    return(structure(out, class = "ExportedTranslator", tag = "Translator"))
+    return(
+        structure(out,
+            class = "ExportedTranslator",
+            tag   = "ExportedTranslator"))
 }
 
 #' @rdname serialize
@@ -492,7 +505,10 @@ export.Text <- function(x, set_uuid = TRUE, set_translations = FALSE, ...) {
         Locations = unname(lapply(x$locations, export, set_uuid, ...)))
 
     out$`_Uuid` <- if (set_uuid) uuid() else NULL
-    return(structure(out, class = "ExportedText", tag = "Text"))
+    return(
+        structure(out,
+            class = "ExportedText",
+            tag   = "ExportedText"))
 }
 
 #' @rdname serialize
@@ -507,7 +523,10 @@ export.Location <- function(x, set_uuid = TRUE, ...) {
         Ranges  = .location_format_range(x, ...))
 
     out$`_Uuid` <- if (set_uuid) uuid() else NULL
-    return(structure(out, class = "ExportedLocation", tag = "Location"))
+    return(
+        structure(out,
+            class = "ExportedLocation",
+            tag   = "ExportedLocation"))
 }
 
 #' @rdname serialize
@@ -666,54 +685,62 @@ import.default <- function(x, ...) {
 #' @keywords internal
 #' @export
 validate.ExportedTranslator <- function(x, ...) {
+    # This prevents any subscript out
+    # of bounds error stemming from `[[`.
+    if (!is.list(x)) {
+        stopf(
+            "in 'ExportedTranslator' '%s': invalid object's structure. It is not a 'ExportedTranslator' object, even if a YAML tag states it is.",
+            constant("unknown"))
+    }
+
     langs <- x[["Languages"]]
     files <- x[["Translations Files"]]
     texts <- x[["Texts"]]
 
     if (!is_chr1(x[["Identifier"]])) {
         stopf(
-            "in 'Translator' '%s': 'Identifier' must be a YAML scalar parsed as a non-empty R character string.",
+            "in 'ExportedTranslator' '%s': 'Identifier' must be a YAML scalar parsed as a non-empty R character string.",
             get_uuid(x))
     }
     if (!is_match(x[["Hashing Algorithm"]], hash_algorithms())) {
         stopf(
-            "in 'Translator' '%s': 'Hashing Algorithm' must be a YAML scalar equal to %s.",
+            "in 'ExportedTranslator' '%s': 'Hashing Algorithm' must be a YAML scalar equal to %s.",
             get_uuid(x),
             to_string(hash_algorithms(), TRUE))
     }
     if (!is_chr1(x[["Source Language"]])) {
         stopf(
-            "in 'Translator' '%s': 'Source Language' must be a YAML scalar parsed as a non-empty R character string.",
+            "in 'ExportedTranslator' '%s': 'Source Language' must be a YAML scalar parsed as a non-empty R character string.",
             get_uuid(x))
     }
     if (!is_list(langs, TRUE) || !is_named(langs)) {
         stopf(
-            "in 'Translator' '%s': 'Languages' must a YAML mapping.",
+            "in 'ExportedTranslator' '%s': 'Languages' must a YAML mapping.",
             get_uuid(x))
     }
     if (!all(vapply_1l(langs, is_chr1))) {
         stopf(
-            "in 'Translator' '%s': entries of 'Languages' must all be YAML scalars parsed as a non-empty R character strings.",
+            "in 'ExportedTranslator' '%s': entries of 'Languages' must all be YAML scalars parsed as a non-empty R character strings.",
             get_uuid(x))
     }
     if (!is_list(files, TRUE) || !is_named(files)) {
         stopf(
-            "in 'Translator' '%s': 'Translations Files' must a YAML mapping.",
+            "in 'ExportedTranslator' '%s': 'Translations Files' must a YAML mapping.",
             get_uuid(x))
     }
     if (!all(vapply_1l(files, is_chr1))) {
         stopf(
-            "in 'Translator' '%s': entries of 'Translations Files' must all be YAML scalars parsed as non-empty R character strings.",
+            "in 'ExportedTranslator' '%s': entries of 'Translations Files' must all be YAML scalars parsed as non-empty R character strings.",
             get_uuid(x))
     }
     if (!is_list(texts, TRUE) || !is_named(texts)) {
         stopf(
-            "in 'Translator' '%s': 'Texts' must a YAML mapping.",
+            "in 'ExportedTranslator' '%s': 'Texts' must a YAML mapping.",
             get_uuid(x))
     }
     if (!all(vapply_1l(texts, inherits, what = "ExportedText"))) {
         stopf(
-            "in 'Translator' '%s': entries of 'Texts' must all be 'Text' objects.",
+            "in 'ExportedTranslator' '%s': entries of 'Texts' must all be 'Text' objects.",
             get_uuid(x))
     }
 
@@ -723,7 +750,7 @@ validate.ExportedTranslator <- function(x, ...) {
 
     if (!setequal(names(files), langs)) {
         stopf(
-            "in 'Translator' '%s': at least one entry in 'Translations Files' is missing a corresponding entry in 'Languages', or vice-versa.",
+            "in 'ExportedTranslator' '%s': at least one entry in 'Translations Files' is missing a corresponding entry in 'Languages', or vice-versa.",
             get_uuid(x))
     }
 
@@ -734,6 +761,14 @@ validate.ExportedTranslator <- function(x, ...) {
 #' @keywords internal
 #' @export
 validate.ExportedText <- function(x, ...) {
+    # This prevents any subscript out
+    # of bounds error stemming from `[[`.
+    if (!is.list(x)) {
+        stopf(
+            "in 'ExportedText' '%s': invalid object's structure. It is not a 'ExportedText' object, even if a YAML tag states it is.",
+            constant("unknown"))
+    }
+
     hash         <- x[["Hash"]]
     source_lang  <- x[["Source Language"]]
     source_text  <- x[["Source Text"]]
@@ -741,40 +776,40 @@ validate.ExportedText <- function(x, ...) {
 
     if (!is.null(hash) && !is_chr1(hash)) {
         stopf(
-            "in 'Text' '%s': 'Hash' must be a YAML null (~), or a YAML scalar parsed as a non-empty R character string.",
+            "in 'ExportedText' '%s': 'Hash' must be a YAML null (~), or a YAML scalar parsed as a non-empty R character string.",
             get_uuid(x))
     }
     if (!is_match(x[["Hashing Algorithm"]], hash_algorithms())) {
         stopf(
-            "in 'Text' '%s': 'Hashing Algorithm' must be a YAML scalar equal to %s.",
+            "in 'ExportedText' '%s': 'Hashing Algorithm' must be a YAML scalar equal to %s.",
             get_uuid(x),
             to_string(hash_algorithms(), TRUE))
     }
     if (!is.null(source_lang) && !is_chr1(source_lang)) {
         stopf(
-            "in 'Text' '%s': 'Source Language' must be a YAML null (~), or a YAML parsed as a non-empty R character string.",
+            "in 'ExportedText' '%s': 'Source Language' must be a YAML null (~), or a YAML parsed as a non-empty R character string.",
             get_uuid(x))
     }
     if (!is.null(source_text) && !is_chr1(source_text)) {
         stopf(
-            "in 'Text' '%s': 'Source Text' must be a YAML null (~), or a YAML parsed as a non-empty R character string.",
+            "in 'ExportedText' '%s': 'Source Text' must be a YAML null (~), or a YAML parsed as a non-empty R character string.",
             get_uuid(x))
     }
     if (!is.null(source_lang) && is.null(source_text) ||
         !is.null(source_text) && is.null(source_lang)) {
         stopf(
-            "in 'Text' '%s': 'Source Language' is defined but not 'Source Text', or vice-versa.",
+            "in 'ExportedText' '%s': 'Source Language' is defined but not 'Source Text', or vice-versa.",
             get_uuid(x))
     }
     if (!is.null(translations) &&
         !is_list(translations, TRUE) || !is_named(translations)) {
         stopf(
-            "in 'Text' '%s': 'Translations' must be a YAML null (~), or a YAML mapping.",
+            "in 'ExportedText' '%s': 'Translations' must be a YAML null (~), or a YAML mapping.",
             get_uuid(x))
     }
     if (!all(vapply_1l(translations, is_chr1))) {
         stopf(
-            "in 'Text' '%s': entries of 'Translations' must all be YAML scalars parsed as non-empty R character strings.",
+            "in 'ExportedText' '%s': entries of 'Translations' must all be YAML scalars parsed as non-empty R character strings.",
             get_uuid(x))
     }
 
@@ -785,19 +820,32 @@ validate.ExportedText <- function(x, ...) {
 #' @keywords internal
 #' @export
 validate.ExportedLocation <- function(x, ...) {
+    # This prevents any subscript out
+    # of bounds error stemming from `[[`.
+    if (!is.list(x)) {
+        stopf(
+            "in 'ExportedLocation' '%s': invalid object's structure. It is not a 'ExportedLocation' object, even if a YAML tag states it is.",
+            constant("unknown"))
+    }
     if (!is_chr1(x[["Path"]])) {
         stopf(
-            "in 'Location' '%s': 'Path' must be a YAML scalar parsed as a non-empty R character string.",
+            "in 'ExportedLocation' '%s': 'Path' must be a YAML scalar parsed as a non-empty R character string.",
             get_uuid(x))
     }
     if (!is_chr1(x[["Ranges"]])) {
         stopf(
-            "in 'Location' '%s': 'Ranges' must be a YAML sequence of scalars.",
+            "in 'ExportedLocation' '%s': 'Ranges' must be a YAML sequence of scalars.",
             get_uuid(x))
     }
     if (!all(vapply_1l(x[["Ranges"]], is_chr1))) {
         stopf(
-            "in 'Location' '%s': entries of the 'Ranges' sequence must all be YAML scalars parsed as non-empty R character strings.",
+            "in 'ExportedLocation' '%s': entries of the 'Ranges' sequence must all be YAML scalars parsed as non-empty R character strings.",
+            get_uuid(x))
+    }
+
+    return(x)
+}
+
             get_uuid(x))
     }
 
