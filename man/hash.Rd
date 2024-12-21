@@ -75,11 +75,11 @@ Further algorithms such as \href{https://github.com/Cyan4973/xxHash}{\code{xxhas
 will be available in a near future.
 }
 \examples{
-hash("en", "Hello, world!", "sha1")     ## Outputs "256e0d707386d0fcd9abf10ad994000bdaa25812"
-hash("en", "Hello, world!", "utf8")     ## Outputs "12351"
-hash("en", "Hello, world!", "_error_")  ## Outputs NULL
+transltr:::hash("en", "Hello, world!", "sha1")
+transltr:::hash("en", "Hello, world!", "utf8")
+transltr:::hash("en", "Hello, world!", "_error_")  ## Outputs NULL
 
-hash_algorithms()
+transltr:::hash_algorithms()
 
 }
 \seealso{

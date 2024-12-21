@@ -68,7 +68,6 @@
 #' transltr:::hash_algorithms()
 #'
 #' @keywords internal
-#' @export
 hash <- function(lang = "", text = "", algorithm = hash_algorithms()) {
     x <- sprintf("%s:%s", lang, text)
 
@@ -81,7 +80,6 @@ hash <- function(lang = "", text = "", algorithm = hash_algorithms()) {
 
 #' @rdname hash
 #' @keywords internal
-#' @export
 hash_algorithms <- function() {
     return(c("sha1", "utf8"))
 }
