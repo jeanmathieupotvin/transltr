@@ -10,68 +10,58 @@ format_vector(
   level = 0L,
   indent = 1L,
   add_names = FALSE,
+  null = "<null>",
+  empty_list = "<empty list>",
   validate = TRUE
 )
 }
 \arguments{
-\item{x}{A \link[=vector]{vector}. It cannot be empty.}
+\item{x}{A \link[=vector]{vector} of any \link[=vector]{atomic} mode, a
+\link[=list]{list}, or a \link[=pairlist]{pairlist}. It can be empty,
+and it can contain \link[base:NA]{NA} values.}
 
-\item{level}{A non-\link[base:NA]{NA} integer value. The current nesting level
-in recursive calls to \code{\link[=format_vector]{format_vector()}}. \strong{It is not validated for
-efficiency.}}
+\item{label}{A \code{NULL}, or a non-empty and non-\link[base:NA]{NA} character
+string. A (top) descriptive label for \code{x}. It is used to preserve,
+and output all names in recursive calls.}
 
-\item{indent}{A non-\link[base:NA]{NA} integer value. Number of space characters
-to use by \code{levels} for indentation purposes. \strong{It is not validated for
-efficiency.}}
+\item{level}{A non-\link[base:NA]{NA} integer value. The current depth, or
+current \emph{nesting level} to use for indentation purposes.}
 
-\item{top_label}{A \code{NULL} or a non-empty and non-\link[base:NA]{NA} character
-string used as some kind of descriptive message. Its exact meaning depends
-on the underlying context. In recursive calls to \code{\link[=format_vector]{format_vector()}}, this
-is set equal to the name of the current element of \code{x}. \strong{It is not
-validated for efficiency.}}
+\item{indent}{A non-\link[base:NA]{NA} integer value. The number of single
+space(s) to use for each \code{level} when indenting name/value pairs.}
 
-\item{show_nokey}{A non-\link[base:NA]{NA} logical value. Should \code{NULL} and/or
-empty names be replaced by \code{"<nokey>"}? \strong{It is not validated for
-efficiency.}}
+\item{add_names}{A non-\link[base:NA]{NA} logical value. Should \code{NULL}, and
+empty names be replaced by names created from the elements' underlying
+positions?}
+
+\item{null}{A non-empty and non-\link[base:NA]{NA} character string. The value
+to use to represent \code{NULL} values.}
+
+\item{empty_list}{A non-empty and non-\link[base:NA]{NA} character string. The
+value to use to represent empty lists, or empty pairlists.}
+
+\item{validate}{A non-\link[base:NA]{NA} logical value. Should the arguments be
+validated before being used? This argument should be left as is.}
 }
 \value{
-A character vector.
+A character vector, possibly trimmed by \code{\link[=str_trim]{str_trim()}}.
 }
 \description{
-Format atomic \link[=vector]{vectors} and/or \emph{recursive} structures such as
-\link[=list]{lists}.
+Format \link[=vector]{atomic} vectors, \link[=list]{lists}, and
+\link[=pairlist]{pairlists}.
 }
 \details{
-The intent of \code{\link[=format_vector]{format_vector()}} is to format any \link[=vector]{vector} into a
-set of name/value pairs (given as character strings), where indentation
-provides information on embedded structures. The following template shows
-how it attempts to format \code{x}.
+\code{\link[=format_vector]{format_vector()}} is an alternative to \code{\link[utils:str]{utils::str()}} that exposes a much
+simpler generic formatting interface, and yields terser outputs of name/value
+pairs. Indentation is used for nested values.
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{<top_label>:
-  <names(x[1])>: <x[1]>
-  <names(x[2])>: <x[2]>
-  <names(x[3])>:
-    <names(x[[3]][1])>: <x[[3]][[1]]>
-    ...
-  <nokey>: <x[i]>
-  <nokey>: <x[j]>
-  <nokey>:
-    <nokey>: <x[[k]][[1]]>
-    ...
-}\if{html}{\out{</div>}}
-
-Names are used to construct labels. If \code{x[i]} has a name (\code{names(x[i])}
-is not \code{NULL}), it is used to construct a label for \code{x[i]}. The format is
-equivalent to \code{names(x[i]): as.character(x[i])}. If \code{x[i]} does not have
-a name (or if it is empty), \verb{<nokey>} is printed, unless \code{show_nokey} is
-\code{FALSE}. See Examples below.
-}
-\note{
-\code{\link[=format_vector]{format_vector()}} is the \emph{workhorse} function of all S3 \code{\link[=format]{format()}} methods:
+\code{\link[=format_vector]{format_vector()}} does not attempt to cover all \R objects like
+\code{\link[utils:str]{utils::str()}}. Instead, it (merely) focuses on efficiently handling the
+types used by \code{\link{transltr}}. It is the low-level \emph{workhorse} function of
 \code{\link[=format.Translator]{format.Translator()}}, \code{\link[=format.Text]{format.Text()}}, and \code{\link[=format.Location]{format.Location()}}.
 }
 \examples{
-x <- list(
+john_doe <- list(
   FirstName = "John",
   LastName  = "Doe",
   Address   = list(
@@ -83,11 +73,48 @@ x <- list(
     "Send mail to",
     "address above."))
 
-cat(transltr:::format_vector(x, "<JohnDoe>"), sep = "\n")
-cat(transltr:::format_vector(x, "<JohnDoe>", show_nokey = FALSE), sep = "\n")
+cat(transltr:::format_vector(john_doe), sep = "\n")
+cat(transltr:::format_vector(john_doe, "Person", level = 1L), sep = "\n")
+
+# An abstract object with many levels (embedded values).
+object <- list(
+  level1 = 1L,
+  level2 = list(
+    a = 2L,
+    b = 3L,
+    4L,
+    level3 = list(
+      e = 6L,
+      f = 7L,
+      s = list()
+    )
+  ),
+  level1 = c(
+    c = 4L,
+    d = 5L
+  ),
+  level1 = list(
+    NULL,
+    vv = 12L,
+    8L
+  )
+)
+
+cat(transltr:::format_vector(object), sep = "\n")
+
+# Using custom representations, and adding names derived
+# from positions (for elements that do not have a name).
+cat(sep = "\n", transltr:::format_vector(object,
+  label      = "<Object>",
+  level      = 1L,
+  add_names  = TRUE,
+  null       = "<my-null>",
+  empty_list = "<my-list>"))
 
 }
 \seealso{
+\code{\link[=str_trim]{str_trim()}}
+
 Other utility functions: 
 \code{\link{stops}()},
 \code{\link{to_string}()},

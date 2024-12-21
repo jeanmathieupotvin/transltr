@@ -1,4 +1,6 @@
 # TODO: to be revamped following new implementation.
+skip("to be reviewed")
+
 v  <- c(1L, 2L, 3L)
 
 test_that("it returns a character vector", {

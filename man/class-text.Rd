@@ -73,8 +73,8 @@ namespace, i.e. \code{translate()}.}
 
 \item{location}{A \code{\link{Location}} object.}
 
-\item{validate}{A non-\link[base:NA]{NA} logical value. Should the other
-arguments be validated?}
+\item{validate}{A non-\link[base:NA]{NA} logical value. Should the arguments be
+validated before being used? This argument should be left as is.}
 }
 \value{
 \code{\link[=text]{text()}}, \code{\link[=c]{c()}}, and \code{\link[=as_text]{as_text()}} return an \code{\link[R6:R6Class]{R6}} object of
