@@ -157,10 +157,12 @@
       some languages are missing an equivalent native language name: 'fr'.
     Output
       <Translator>
-        Identifier: test-translator
-        Algorithm: sha1
-        Languages: English
-        Source Texts: Hello, world!
+       Identifier: test-translator
+       Algorithm: sha1
+       Languages:
+        en: English
+       Source Texts:
+        256e0d7 [en, fr]: Hello, world!
 
 # print() works
 
@@ -168,12 +170,12 @@
       print(tr1)
     Output
       <Translator>
-        Identifier: test-translator
-        Algorithm: sha1
-        Languages: 
-          en: English
-          fr: Français
-        Source Texts: 
-          256e0d7 [en, fr]: Hello, world!
-          2ac373a [en, fr]: Farewell, world!
+       Identifier: test-translator
+       Algorithm: sha1
+       Languages:
+        en: English
+        fr: Français
+       Source Texts:
+        256e0d7 [en, fr]: Hello, world!
+        2ac373a [en, fr]: Farewell, world!
 

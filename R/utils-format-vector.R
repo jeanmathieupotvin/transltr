@@ -1,3 +1,6 @@
+# TODO: rewrite documentation, examples, and unit tests following new
+# implementation.
+
 #' Format Vectors
 #'
 #' Format atomic [vectors][vector()] and/or *recursive* structures such as
@@ -74,45 +77,65 @@
 #' @family utility functions
 #' @keywords internal
 format_vector <- function(
-    x          = vector(),
-    top_label  = NULL,
-    indent     = 2L,
-    show_nokey = TRUE,
-    level      = 1L)
+    x         = vector(),
+    label     = NULL,
+    level     = 0L,
+    indent    = 1L,
+    add_names = FALSE,
+    validate  = TRUE)
 {
-    prefix  <- strrep(" ", indent * level)
-    lines   <- vector("list", length(x) + 1L)
-    indices <- seq_along(x)
+    assert_lgl1(validate)
 
-    lines[[1L]] <- top_label
-
-    for (i in indices) {
-        xi       <- x[i]
-        xi_names <- names(xi) %??% ""
-
-        if (show_nokey && !nzchar(xi_names)) {
-            xi_names <- "<nokey>"
+    if (validate) {
+        if (!is.null(label) && !is_chr1(label)) {
+            stops("'label' must be a non-NA and non-empty character of length 1, or 'NULL'.")
         }
 
-        labels <- if (is.null(xi_names) || !nzchar(xi_names)) {
-            prefix
-        } else {
-            sprintf("%s%s: ", prefix, xi_names)
-        }
-
-        # Vectors and recursive structures.
-        if (length(xi[[1L]]) > 1L) {
-            lines[[i + 1L]] <- format_vector(xi[[1L]],
-                labels,
-                indent,
-                show_nokey,
-                level + 1L)
-            next
-        }
-
-        # Single values (of length 1).
-        lines[[i + 1L]] <- sprintf("%s%s", labels, xi)
+        assert_int1(level)
+        assert_between(level, 0L)
+        assert_int1(indent)
+        assert_between(indent, 0L)
+        assert_lgl1(add_names)
     }
 
-    return(str_trim(unlist(lines, TRUE, FALSE)))
+    acc       <- vector("list", length(x) + 1L)
+    acc[[1L]] <- sprintf("%s%s:",
+            strrep(" ", max(0L, (level - 1L)) * indent),
+            label)
+
+    xnames <- names(x) %??% rep.int("", length(x))
+
+    if (add_names && !all(is_nz <- nzchar(xnames))) {
+        xnames[!is_nz] <- sprintf("[%i]", which(!is_nz))
+    }
+
+    for (i in seq_along(x)) {
+        xi <- x[[i]]
+
+        # NULL and empty lists are treated as
+        # litteral character values to ensure
+        # they are printed as expected.
+        xi <- if (is.null(xi)) {
+            "null"
+        } else if (is.list(xi) && !length(xi)) {
+            "list()"
+        } else {
+            xi
+        }
+
+        xi_name <- xnames[[i]]
+
+        acc[[i + 1L]] <- if (is.list(xi) || length(xi) > 1L || is_named(xi)) {
+            # Multiple values, or a single named value.
+            # The latter is treated as a list to preserve the names
+            # of both x[i], and x[[i]] (these are not the same thing).
+            Recall(xi, xi_name, level + 1L, indent, add_names, FALSE)
+        } else {
+            # Single atomic values.
+            sep <- if (nzchar(xi_name)) ": " else ""
+            paste0(strrep(" ", level * indent), xi_name, sep, xi)
+        }
+    }
+
+    return(str_trim(unlist(acc, TRUE, FALSE)))
 }

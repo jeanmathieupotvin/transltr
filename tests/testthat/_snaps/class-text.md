@@ -187,21 +187,21 @@
       print(txt1)
     Output
       <Text>
-        Hash: 256e0d707386d0fcd9abf10ad994000bdaa25812
-        Source Lang: en
-        Algorithm: sha1
-        Translations: 
-          en: Hello, world!
-          es: ¡Hola Mundo!
-          fr: Bonjour, monde!
-          ja: こんにちは世界！
-        Locations: 
-          <Location>
-            Path: a
-            Ranges: line 1, column 2 @ line 3, column 4
-          <Location>
-            Path: b
-            Ranges: line 5, column 6 @ line 7, column 8
+       Hash: 256e0d707386d0fcd9abf10ad994000bdaa25812
+       Source Lang: en
+       Algorithm: sha1
+       Translations:
+        en: Hello, world!
+        es: ¡Hola Mundo!
+        fr: Bonjour, monde!
+        ja: こんにちは世界！
+       Locations:
+        <Location>
+         Path: a
+         Ranges: line 1, column 2 @ line 3, column 4
+        <Location>
+         Path: b
+         Ranges: line 5, column 6 @ line 7, column 8
 
 # c.Text() validates ...
 

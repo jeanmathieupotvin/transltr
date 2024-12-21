@@ -310,19 +310,19 @@ test_that("format() returns a character", {
     expect_length(fmt_txt2, 14L)
     expect_identical(fmt_txt2, c(
         "<Text>",
-        "  Hash: 256e0d707386d0fcd9abf10ad994000bdaa25812",
-        "  Source Lang: en",
-        "  Algorithm: sha1",
-        "  Translations: ",
-        "    el: Γεια σου, Κόσμος!",
-        "    en: Hello, world!",
-        "  Locations: ",
-        "    <Location>",
-        "      Path: c",
-        "      Ranges: line 1, column 2 @ line 3, column 4",
-        "    <Location>",
-        "      Path: d",
-        "      Ranges: line 5, column 6 @ line 7, column 8"))
+        " Hash: 256e0d707386d0fcd9abf10ad994000bdaa25812",
+        " Source Lang: en",
+        " Algorithm: sha1",
+        " Translations:",
+        "  el: Γεια σου, Κόσμος!",
+        "  en: Hello, world!",
+        " Locations:",
+        "  <Location>",
+        "   Path: c",
+        "   Ranges: line 1, column 2 @ line 3, column 4",
+        "  <Location>",
+        "   Path: d",
+        "   Ranges: line 5, column 6 @ line 7, column 8"))
 
     expect_type(fmt_txt_empty, "character")
     expect_length(fmt_txt_empty, 6L)
@@ -332,11 +332,11 @@ test_that("format() returns a character", {
     # when underlying fields are empty.
     expect_identical(fmt_txt_empty, c(
         "<Text>",
-        "  Hash: <unset>",
-        "  Source Lang: <unset>",
-        "  Algorithm: sha1",
-        "  Translations: <none>",
-        "  Locations: <none>"))
+        " Hash: <unset>",
+        " Source Lang: <unset>",
+        " Algorithm: sha1",
+        " Translations: <none>",
+        " Locations: <none>"))
 })
 
 

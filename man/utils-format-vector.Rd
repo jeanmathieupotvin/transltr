@@ -2,24 +2,27 @@
 % Please edit documentation in R/utils-format-vector.R
 \name{format_vector}
 \alias{format_vector}
-\alias{format_vector2}
-\alias{format_atomic}
 \title{Format Vectors}
 \usage{
 format_vector(
   x = vector(),
-  top_label = NULL,
-  indent = 2L,
-  show_nokey = TRUE,
-  level = 1L
+  label = NULL,
+  level = 0L,
+  indent = 1L,
+  add_names = FALSE,
+  validate = TRUE
 )
-
-format_vector2(x = vector(), indent = 1L, level = 0L, ...)
-
-format_atomic(x = vector(), indent = 2L, level = 0L, ...)
 }
 \arguments{
 \item{x}{A \link[=vector]{vector}. It cannot be empty.}
+
+\item{level}{A non-\link[base:NA]{NA} integer value. The current nesting level
+in recursive calls to \code{\link[=format_vector]{format_vector()}}. \strong{It is not validated for
+efficiency.}}
+
+\item{indent}{A non-\link[base:NA]{NA} integer value. Number of space characters
+to use by \code{levels} for indentation purposes. \strong{It is not validated for
+efficiency.}}
 
 \item{top_label}{A \code{NULL} or a non-empty and non-\link[base:NA]{NA} character
 string used as some kind of descriptive message. Its exact meaning depends
@@ -27,16 +30,8 @@ on the underlying context. In recursive calls to \code{\link[=format_vector]{for
 is set equal to the name of the current element of \code{x}. \strong{It is not
 validated for efficiency.}}
 
-\item{indent}{A non-\link[base:NA]{NA} integer value. Number of space characters
-to use by \code{levels} for indentation purposes. \strong{It is not validated for
-efficiency.}}
-
 \item{show_nokey}{A non-\link[base:NA]{NA} logical value. Should \code{NULL} and/or
 empty names be replaced by \code{"<nokey>"}? \strong{It is not validated for
-efficiency.}}
-
-\item{level}{A non-\link[base:NA]{NA} integer value. The current nesting level
-in recursive calls to \code{\link[=format_vector]{format_vector()}}. \strong{It is not validated for
 efficiency.}}
 }
 \value{

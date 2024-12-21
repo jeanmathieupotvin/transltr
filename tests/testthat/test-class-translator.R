@@ -420,14 +420,14 @@ test_that("format() returns a character", {
     expect_length(fmt_tr1, 9L)
     expect_identical(fmt_tr1, c(
         "<Translator>",
-        "  Identifier: test-translator",
-        "  Algorithm: sha1",
-        "  Languages: ",
-        "    en: English",
-        "    fr: Français",
-        "  Source Texts: ",
-        "    256e0d7 [en, fr]: Hello, world!",
-        "    2ac373a [en, fr]: Farewell, world!"))
+        " Identifier: test-translator",
+        " Algorithm: sha1",
+        " Languages:",
+        "  en: English",
+        "  fr: Français",
+        " Source Texts:",
+        "  256e0d7 [en, fr]: Hello, world!",
+        "  2ac373a [en, fr]: Farewell, world!"))
 
     expect_type(fmt_tr_empty, "character")
     expect_length(fmt_tr_empty, 5L)
@@ -439,10 +439,10 @@ test_that("format() returns a character", {
     # how $initialize() is written.
     expect_identical(fmt_tr_empty, c(
         "<Translator>",
-        "  Identifier: test-translator",
-        "  Algorithm: sha1",
-        "  Languages: <none>",
-        "  Source Texts: <unset>"))
+        " Identifier: test-translator",
+        " Algorithm: sha1",
+        " Languages: <none>",
+        " Source Texts: <none>"))
 })
 
 

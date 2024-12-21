@@ -92,8 +92,8 @@
       print(loc1, "short")
     Output
       <Location>
-        Path: tests/testthat/my-test-file
-        Ranges: ln 1, col 2 @ ln 3, col 4
+       Path: tests/testthat/my-test-file
+       Ranges: ln 1, col 2 @ ln 3, col 4
 
 ---
 
@@ -101,10 +101,10 @@
       print(loc2, "long")
     Output
       <Location>
-        Path: tests/testthat/my-test-file
-        Ranges: 
-          line  1, column  22 @ line   10, column 1
-          line 11, column 222 @ line 3333, column 4
+       Path: tests/testthat/my-test-file
+       Ranges:
+        line  1, column  22 @ line   10, column 1
+        line 11, column 222 @ line 3333, column 4
 
 # c.Location() validates ...
 
