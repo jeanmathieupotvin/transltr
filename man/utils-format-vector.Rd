@@ -9,9 +9,9 @@ format_vector(
   label = NULL,
   level = 0L,
   indent = 1L,
-  add_names = FALSE,
+  fill_names = FALSE,
   null = "<null>",
-  empty_list = "<empty list>",
+  empty = "<empty>",
   validate = TRUE
 )
 }
@@ -22,7 +22,8 @@ and it can contain \link[base:NA]{NA} values.}
 
 \item{label}{A \code{NULL}, or a non-empty and non-\link[base:NA]{NA} character
 string. A (top) descriptive label for \code{x}. It is used to preserve,
-and output all names in recursive calls.}
+and output all names in recursive calls. The value passed to \code{label}
+is considered to be at \code{level} 0, and is not indented.}
 
 \item{level}{A non-\link[base:NA]{NA} integer value. The current depth, or
 current \emph{nesting level} to use for indentation purposes.}
@@ -30,15 +31,18 @@ current \emph{nesting level} to use for indentation purposes.}
 \item{indent}{A non-\link[base:NA]{NA} integer value. The number of single
 space(s) to use for each \code{level} when indenting name/value pairs.}
 
-\item{add_names}{A non-\link[base:NA]{NA} logical value. Should \code{NULL}, and
+\item{fill_names}{A non-\link[base:NA]{NA} logical value. Should \code{NULL}, and
 empty names be replaced by names created from the elements' underlying
-positions?}
+positions? Positions are relative to each \code{level}.}
 
 \item{null}{A non-empty and non-\link[base:NA]{NA} character string. The value
-to use to represent \code{NULL} values.}
+to use to represent \code{NULL} and empty parlists (they are conceptually the
+same thing).}
 
-\item{empty_list}{A non-empty and non-\link[base:NA]{NA} character string. The
-value to use to represent empty lists, or empty pairlists.}
+\item{empty}{A non-empty and non-\link[base:NA]{NA} character string. The
+value to use to represent empty vectors, excluding \code{NULL}. See \code{null}
+above for the latter. The \link[=typeof]{type} of the underlying empty
+object is added to \code{empty} for convenience. See Examples below.}
 
 \item{validate}{A non-\link[base:NA]{NA} logical value. Should the arguments be
 validated before being used? This argument should be left as is.}
@@ -104,12 +108,37 @@ cat(transltr:::format_vector(object), sep = "\n")
 
 # Using custom representations, and adding names derived
 # from positions (for elements that do not have a name).
-cat(sep = "\n", transltr:::format_vector(object,
+cat(sep = "\n", transltr:::format_vector(
+  object,
   label      = "<Object>",
   level      = 1L,
-  add_names  = TRUE,
-  null       = "<my-null>",
-  empty_list = "<my-list>"))
+  fill_names = TRUE,
+  null       = "<my-null-value>",
+  empty      = "<my-empty-object>"))
+
+# Unnamed lower levels are represented by ":"
+# if fill_names is FALSE (the default).
+cat(sep = "\n", transltr:::format_vector(
+  list(
+    a = 1L,
+    b = 2L,
+    list(
+      c = 3L,
+      d = 4L))))
+
+# Empty objects are replaced by empty. Their underlying
+# types are appended to it for convenience. Beware! Empty
+# parlists are conceptually the same thing as NULL.
+cat(sep = "\n", transltr:::format_vector(
+  list(
+    a = logical(0L),
+    b = integer(0L),
+    c = double(0L),
+    d = complex(0L),
+    e = character(0L),
+    f = raw(0L),
+    g = list(),
+    h = pairlist())))
 
 }
 \seealso{

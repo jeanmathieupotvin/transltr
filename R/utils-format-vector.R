@@ -20,7 +20,8 @@
 #'
 #' @param label A `NULL`, or a non-empty and non-[NA][base::NA] character
 #'   string. A (top) descriptive label for `x`. It is used to preserve,
-#'   and output all names in recursive calls.
+#'   and output all names in recursive calls. The value passed to `label`
+#'   is considered to be at `level` 0, and is not indented.
 #'
 #' @param level A non-[NA][base::NA] integer value. The current depth, or
 #'   current *nesting level* to use for indentation purposes.
@@ -28,15 +29,18 @@
 #' @param indent A non-[NA][base::NA] integer value. The number of single
 #'   space(s) to use for each `level` when indenting name/value pairs.
 #'
-#' @param add_names A non-[NA][base::NA] logical value. Should `NULL`, and
+#' @param fill_names A non-[NA][base::NA] logical value. Should `NULL`, and
 #'   empty names be replaced by names created from the elements' underlying
-#'   positions?
+#'   positions? Positions are relative to each `level`.
 #'
 #' @param null A non-empty and non-[NA][base::NA] character string. The value
-#'   to use to represent `NULL` values.
+#'   to use to represent `NULL` and empty parlists (they are conceptually the
+#'   same thing).
 #'
-#' @param empty_list A non-empty and non-[NA][base::NA] character string. The
-#'   value to use to represent empty lists, or empty pairlists.
+#' @param empty A non-empty and non-[NA][base::NA] character string. The
+#'   value to use to represent empty vectors, excluding `NULL`. See `null`
+#'   above for the latter. The [type][typeof()] of the underlying empty
+#'   object is added to `empty` for convenience. See Examples below.
 #'
 #' @template param-validate
 #'
@@ -90,24 +94,49 @@
 #'
 #' # Using custom representations, and adding names derived
 #' # from positions (for elements that do not have a name).
-#' cat(sep = "\n", transltr:::format_vector(object,
+#' cat(sep = "\n", transltr:::format_vector(
+#'   object,
 #'   label      = "<Object>",
 #'   level      = 1L,
-#'   add_names  = TRUE,
-#'   null       = "<my-null>",
-#'   empty_list = "<my-list>"))
+#'   fill_names = TRUE,
+#'   null       = "<my-null-value>",
+#'   empty      = "<my-empty-object>"))
+#'
+#' # Unnamed lower levels are represented by ":"
+#' # if fill_names is FALSE (the default).
+#' cat(sep = "\n", transltr:::format_vector(
+#'   list(
+#'     a = 1L,
+#'     b = 2L,
+#'     list(
+#'       c = 3L,
+#'       d = 4L))))
+#'
+#' # Empty objects are replaced by empty. Their underlying
+#' # types are appended to it for convenience. Beware! Empty
+#' # parlists are conceptually the same thing as NULL.
+#' cat(sep = "\n", transltr:::format_vector(
+#'   list(
+#'     a = logical(0L),
+#'     b = integer(0L),
+#'     c = double(0L),
+#'     d = complex(0L),
+#'     e = character(0L),
+#'     f = raw(0L),
+#'     g = list(),
+#'     h = pairlist())))
 #'
 #' @rdname utils-format-vector
 #' @family utility functions
 #' @keywords internal
 format_vector <- function(
-    x         = vector(),
-    label     = NULL,
-    level     = 0L,
-    indent    = 1L,
-    add_names = FALSE,
+    x          = vector(),
+    label      = NULL,
+    level      = 0L,
+    indent     = 1L,
+    fill_names = FALSE,
     null       = "<null>",
-    empty_list = "<empty list>",
+    empty      = "<empty>",
     validate   = TRUE)
 {
     assert_lgl1(validate)
@@ -121,9 +150,9 @@ format_vector <- function(
         assert_between(level, 0L)
         assert_int1(indent)
         assert_between(indent, 0L)
-        assert_lgl1(add_names)
+        assert_lgl1(fill_names)
         assert_chr1(null)
-        assert_chr1(empty_list)
+        assert_chr1(empty)
     }
 
     # Define an accumulator of formatted values.
@@ -135,13 +164,13 @@ format_vector <- function(
     # NULL, or character(0) are discarded by
     # unlist() below.
     label_indent <- strrep(" ", max(0L, (level - 1L)) * indent)
-    acc[[1L]] <- sprintf("%s%s:", label_indent, label)
+    acc[[1L]]    <- sprintf("%s%s:", label_indent, label)
 
     xnames <- names(x) %??% rep.int("", length(x))
 
     # Missing names are replaced by names created
     # from the elements' underlying indices.
-    if (add_names && !all(is_nz <- nzchar(xnames))) {
+    if (fill_names && !all(is_nz <- nzchar(xnames))) {
         xnames[!is_nz] <- sprintf("[%i]", which(!is_nz))
     }
 
@@ -151,27 +180,30 @@ format_vector <- function(
         i_name <- xnames[[i]]
         i_x    <- x[[i]]
 
-        # NULL and empty lists are treated as
-        # litteral character values to ensure
-        # they are printed as expected.
+        # NULL and empty objects are treated as litteral
+        # character values to ensure they are printed as
+        # expected. Beware! An empty pairlist is the same
+        # as NULL.
         i_x <- if (is.null(i_x)) {
             null
-        } else if ((is.list(i_x) || is.pairlist(i_x)) && !length(i_x)) {
-            empty_list
+        } else if (!length(i_x)) {
+            # Type is added to empty
+            # to signal what is empty.
+            sprintf("%s [%s]", empty, typeof(i_x))
         } else {
             i_x
         }
 
-        acc[[i + 1L]] <- if (is.list(i_x) || length(i_x) > 1L || is_named(i_x)) {
+        acc[[i + 1L]] <- if (is.recursive(i_x) || length(i_x) > 1L || is_named(i_x)) {
             # Multiple values, or any named value embedded in a lower level.
             Recall(
                 i_x,
                 label      = i_name,
                 level      = level + 1L,
                 indent     = indent,
-                add_names  = add_names,
+                fill_names = fill_names,
                 null       = null,
-                empty_list = empty_list,
+                empty      = empty,
                 validate   = FALSE)
         } else {
             if (nzchar(i_name)) {
