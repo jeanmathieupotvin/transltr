@@ -307,7 +307,7 @@ test_that("format() returns a character", {
     fmt_txt_empty <- format(Text$new())
 
     expect_type(fmt_txt2, "character")
-    expect_length(fmt_txt2, 14L)
+    expect_length(fmt_txt2, 16L)
     expect_identical(fmt_txt2, c(
         "<Text>",
         " Hash: 256e0d707386d0fcd9abf10ad994000bdaa25812",
@@ -317,26 +317,51 @@ test_that("format() returns a character", {
         "  el: Γεια σου, Κόσμος!",
         "  en: Hello, world!",
         " Locations:",
-        "  <Location>",
-        "   Path: c",
-        "   Ranges: line 1, column 2 @ line 3, column 4",
-        "  <Location>",
-        "   Path: d",
-        "   Ranges: line 5, column 6 @ line 7, column 8"))
+        "  c:",
+        "   <Location>",
+        "    Path: c",
+        "    Ranges: line 1, column 2 @ line 3, column 4",
+        "  d:",
+        "   <Location>",
+        "    Path: d",
+        "    Ranges: line 5, column 6 @ line 7, column 8"))
 
     expect_type(fmt_txt_empty, "character")
     expect_length(fmt_txt_empty, 6L)
-
-    # Check that "<unset>" and "<none>"
-    # special strings are used accordingly
-    # when underlying fields are empty.
     expect_identical(fmt_txt_empty, c(
         "<Text>",
         " Hash: <unset>",
         " Source Lang: <unset>",
         " Algorithm: sha1",
-        " Translations: <none>",
-        " Locations: <none>"))
+        " Translations: <null>",
+        " Locations: <empty> [list]"))
+})
+
+test_that("format() sets names of locations equal to base names", {
+    txt <- text(
+        location("/absolute/path/to/source/script/c", 1L, 2L, 3L, 4L),
+        location("/absolute/path/to/source/script/d", 5L, 6L, 7L, 8L),
+        en = "Hello, world!",
+        el = "Γεια σου, Κόσμος!")
+
+    expect_identical(format(txt), c(
+        "<Text>",
+        " Hash: 256e0d707386d0fcd9abf10ad994000bdaa25812",
+        " Source Lang: en",
+        " Algorithm: sha1",
+        " Translations:",
+        "  el: Γεια σου, Κόσμος!",
+        "  en: Hello, world!",
+        " Locations:",
+        "  c:",
+        "   <Location>",
+        "    Path: /absolute/path/to/source/script/c",
+        "    Ranges: line 1, column 2 @ line 3, column 4",
+        "  d:",
+        "   <Location>",
+        "    Path: /absolute/path/to/source/script/d",
+        "    Ranges: line 5, column 6 @ line 7, column 8"))
+    expect_snapshot(print(txt))
 })
 
 

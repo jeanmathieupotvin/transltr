@@ -111,6 +111,9 @@ is_translator <- function(x) {
 #' @rdname class-translator
 #' @export
 format.Translator <- function(x, ...) {
+    # Each source text is printed on a single line:
+    # <reduced-hash> [<lang>, ...]: <source-text>.
+    # Long lines are truncated by format_vector().
     if (!is.null(source_texts <- x$source_texts)) {
         langs <- lapply(x$hashes, \(h) {
             to_string(x$get_text(h)$languages, last_sep = ", ")
@@ -123,8 +126,8 @@ format.Translator <- function(x, ...) {
     xlist <- list(
         Identifier     = x$id,
         Algorithm      = x$hash_algorithm,
-        Languages      = x$native_languages %??% constant("empty"),
-        `Source Texts` = source_texts %??% constant("empty"))
+        Languages      = x$native_languages,
+        `Source Texts` = source_texts)
 
     return(c("<Translator>", format_vector(xlist, level = 1L)))
 }

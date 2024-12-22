@@ -431,18 +431,12 @@ test_that("format() returns a character", {
 
     expect_type(fmt_tr_empty, "character")
     expect_length(fmt_tr_empty, 5L)
-
-    # Check that "<none>" special string is used
-    # accordingly when underlying fields are empty.
-    # String "<unset>" is theoretically used, but
-    # won't ever be shown to the user because of
-    # how $initialize() is written.
     expect_identical(fmt_tr_empty, c(
         "<Translator>",
         " Identifier: test-translator",
         " Algorithm: sha1",
-        " Languages: <none>",
-        " Source Texts: <none>"))
+        " Languages: <null>",
+        " Source Texts: <null>"))
 })
 
 

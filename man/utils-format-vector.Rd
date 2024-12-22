@@ -10,8 +10,8 @@ format_vector(
   level = 0L,
   indent = 1L,
   fill_names = FALSE,
-  null = "<null>",
-  empty = "<empty>",
+  null = constant("null"),
+  empty = constant("empty"),
   validate = TRUE
 )
 }

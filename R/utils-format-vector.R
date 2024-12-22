@@ -135,8 +135,8 @@ format_vector <- function(
     level      = 0L,
     indent     = 1L,
     fill_names = FALSE,
-    null       = "<null>",
-    empty      = "<empty>",
+    null       = constant("null"),
+    empty      = constant("empty"),
     validate   = TRUE)
 {
     assert_lgl1(validate)
@@ -205,14 +205,12 @@ format_vector <- function(
                 null       = null,
                 empty      = empty,
                 validate   = FALSE)
+        } else if (nzchar(i_name)) {
+            # Single named atomic value.
+            paste0(strrep(" ", level * indent), i_name, ": ", i_x)
         } else {
-            if (nzchar(i_name)) {
-                # Single named atomic value.
-                paste0(strrep(" ", level * indent), i_name, ": ", i_x)
-            } else {
-                # Single unnamed atomic value.
-                paste0(strrep(" ", level * indent), i_x)
-            }
+            # Single unnamed atomic value.
+            paste0(strrep(" ", level * indent), i_x)
         }
     }
 

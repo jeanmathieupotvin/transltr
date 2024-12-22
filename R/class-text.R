@@ -162,18 +162,16 @@ is_text <- function(x) {
 #' @rdname class-text
 #' @export
 format.Text <- function(x, ...) {
+    if (length(locations <- lapply(x$locations, format))) {
+        names(locations) <- basename(names(locations))
+    }
+
     xlist <- list(
         Hash          = x$hash,
         `Source Lang` = x$source_lang,
         Algorithm     = x$hash_algorithm,
-        Translations  = x$translations %??% constant("empty"),
-        Locations     = if (!length(x$locations)) {
-            constant("empty")
-        } else {
-            # Since they correspond to Locations' paths, names
-            # are not required. Paths are already returned.
-            unlist(lapply(x$locations, format), use.names = FALSE)
-        })
+        Translations  = x$translations,
+        Locations     = locations)
 
     return(c("<Text>", format_vector(xlist, level = 1L)))
 }

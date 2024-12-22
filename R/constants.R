@@ -4,11 +4,13 @@
 #' consistency among all features of the package.
 #'
 #' @returns
-#' A character string, or `NULL` if value passed to `which` is unavailable.
+#' [constant()] returns a character string, or `NULL` if value passed to
+#' `which` is unavailable.
 #'
 #' @examples
 #' transltr:::constant("concat")        ## Outputs " "
-#' transltr:::constant("empty")         ## Outputs "<none>"
+#' transltr:::constant("empty")         ## Outputs "<empty>"
+#' transltr:::constant("null")          ## Outputs "<null>"
 #' transltr:::constant("unset")         ## Outputs "<unset>"
 #' transltr:::constant("unknown")       ## Outputs "<unknown>"
 #' transltr:::constant("untranslated")  ## Outputs "# Erase this comment and provide a translation."
@@ -18,18 +20,13 @@
 #'
 #' @rdname constants
 #' @keywords internal
-constant <- function(which = c(
-    "concat",
-    "empty",
-    "unset",
-    "unknown",
-    "untranslated"))
-{
+constant <- function(which = "") {
     assert_chr1(which)
     return(
         switch(which,
             concat       = " ",
-            empty        = "<none>",
+            empty        = "<empty>",
+            null         = "<null>",
             unset        = "<unset>",
             unknown      = "<unknown>",
             untranslated = "# Erase this comment and provide a translation.",

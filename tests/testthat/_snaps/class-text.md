@@ -181,6 +181,28 @@
       ! a translation corresponding to 'source_lang' must be passed to '...'.
       It is treated as the source text.
 
+# format() sets names of locations equal to base names
+
+    Code
+      print(txt)
+    Output
+      <Text>
+       Hash: 256e0d707386d0fcd9abf10ad994000bdaa25812
+       Source Lang: en
+       Algorithm: sha1
+       Translations:
+        el: Γεια σου, Κόσμος!
+        en: Hello, world!
+       Locations:
+        c:
+         <Location>
+          Path: /absolute/path/to/source/script/c
+          Ranges: line 1, column 2 @ line 3, column 4
+        d:
+         <Location>
+          Path: /absolute/path/to/source/script/d
+          Ranges: line 5, column 6 @ line 7, column 8
+
 # print() works
 
     Code
@@ -196,12 +218,14 @@
         fr: Bonjour, monde!
         ja: こんにちは世界！
        Locations:
-        <Location>
-         Path: a
-         Ranges: line 1, column 2 @ line 3, column 4
-        <Location>
-         Path: b
-         Ranges: line 5, column 6 @ line 7, column 8
+        a:
+         <Location>
+          Path: a
+          Ranges: line 1, column 2 @ line 3, column 4
+        b:
+         <Location>
+          Path: b
+          Ranges: line 5, column 6 @ line 7, column 8
 
 # c.Text() validates ...
 

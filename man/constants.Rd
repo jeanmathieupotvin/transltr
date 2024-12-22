@@ -14,12 +14,13 @@ are additional unit tests in place to ensure it is always \code{FALSE} outside
 of unit tests.
 }
 \usage{
-constant(which = c("concat", "empty", "unset", "unknown", "untranslated"))
+constant(which = "")
 
 .__LGL_DEBUG_FLAG
 }
 \value{
-A character string, or \code{NULL} if value passed to \code{which} is unavailable.
+\code{\link[=constant]{constant()}} returns a character string, or \code{NULL} if value passed to
+\code{which} is unavailable.
 }
 \description{
 Fetch shared constants used by \code{\link{transltr}}. Constants ensure
@@ -27,7 +28,8 @@ consistency among all features of the package.
 }
 \examples{
 transltr:::constant("concat")        ## Outputs " "
-transltr:::constant("empty")         ## Outputs "<none>"
+transltr:::constant("empty")         ## Outputs "<empty>"
+transltr:::constant("null")          ## Outputs "<null>"
 transltr:::constant("unset")         ## Outputs "<unset>"
 transltr:::constant("unknown")       ## Outputs "<unknown>"
 transltr:::constant("untranslated")  ## Outputs "# Erase this comment and provide a translation."
