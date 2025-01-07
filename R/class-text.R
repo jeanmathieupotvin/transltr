@@ -131,7 +131,7 @@
 text <- function(
     ...,
     source_lang    = language_source_get(),
-    hash_algorithm = hash_algorithms())
+    hash_algorithm = constant("algorithms"))
 {
     assert_chr1(source_lang)
 
@@ -222,7 +222,7 @@ c.Text <- function(...) {
 #' @rdname class-text
 #' @keywords internal
 #' @export
-merge_texts <- function(..., hash_algorithm = hash_algorithms()) {
+merge_texts <- function(..., hash_algorithm = constant("algorithms")) {
     if (!all(vapply_1l(texts <- list(...), is_text))) {
         stops("values passed to '...' must all be 'Text' objects.")
     }
@@ -252,7 +252,7 @@ as_text <- function(x, ...) {
 as_text.call <- function(x,
     strict         = FALSE,
     location       = transltr::location(),
-    hash_algorithm = hash_algorithms(),
+    hash_algorithm = constant("algorithms"),
     validate       = TRUE,
     ...)
 {
@@ -320,7 +320,7 @@ Text <- R6::R6Class("Text",
         hash_algorithm = \(value) {
             if (!missing(value)) {
                 assert_chr1(value, x_name = "hash_algorithm")
-                assert_match(value, hash_algorithms(),
+                assert_match(value, constant("algorithms"),
                     quote_values = TRUE,
                     x_name       = "hash_algorithm")
 
@@ -418,7 +418,7 @@ Text <- R6::R6Class("Text",
         #' @examples
         #' # Consider using text() instead.
         #' txt <- Text$new()
-        initialize = \(hash_algorithm = hash_algorithms()) {
+        initialize = \(hash_algorithm = constant("algorithms")) {
             assert_arg(hash_algorithm, TRUE)
 
             # self$hash_algorithm is not used here

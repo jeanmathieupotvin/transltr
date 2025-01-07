@@ -1,7 +1,4 @@
-# hash() -----------------------------------------------------------------------
-
-
-test_that("hash() returns a character string", {
+test_that("it returns a character string", {
     out_sha1 <- hash("en", "Hello, world!", "sha1")
     out_utf8 <- hash("en", "Hello, world!", "utf8")
     expect_type(out_sha1, "character")
@@ -10,11 +7,11 @@ test_that("hash() returns a character string", {
     expect_length(out_utf8, 1L)
 })
 
-test_that("hash() returns null for unknown hashing algorithms", {
+test_that("it returns null for unknown hashing algorithms", {
     expect_null(hash("en", "Hello, world!", "error"))
 })
 
-test_that("hash() returns a sha-1 hash wheen algorithm is sha1", {
+test_that("it returns a sha-1 hash wheen algorithm is sha1", {
     # Expected SHA-1 hashes were generated externally
     # by https://codebeautify.org/sha1-hash-generator and
     # double-checked by https://10015.io/tools/sha1-encrypt-decrypt.
@@ -36,14 +33,6 @@ test_that("hash() returns a sha-1 hash wheen algorithm is sha1", {
     expect_identical(hash("ja", "こんにちは世界！", "sha1"), "83daa9cda6da5189dc5c81c78323361fab6b652b")
 })
 
-test_that("hash() returns an integer hash wheen algorithm is utf8", {
+test_that("it returns an integer hash wheen algorithm is utf8", {
     expect_identical(hash("en", "Hello, world!", "utf8"), "12351")
-})
-
-
-# hash_algorithms() ------------------------------------------------------------
-
-
-test_that("hash_algorithms() returns expected values", {
-    expect_identical(hash_algorithms(), c("sha1", "utf8"))
 })

@@ -1,4 +1,4 @@
-# constant() validate which
+# it validate which
 
     Code
       constant(1L)

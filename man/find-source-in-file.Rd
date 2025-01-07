@@ -10,7 +10,7 @@ find_source_in_file(
   path = "",
   encoding = "UTF-8",
   strict = TRUE,
-  hash_algorithm = hash_algorithms(),
+  hash_algorithm = constant("algorithms"),
   verbose = FALSE
 )
 
@@ -18,7 +18,7 @@ find_source_in_exprs(
   tokens = utils::getParseData(),
   path = "",
   strict = TRUE,
-  hash_algorithm = hash_algorithms()
+  hash_algorithm = constant("algorithms")
 )
 
 find_source_exprs(path = "", encoding = "UTF-8")
@@ -38,8 +38,8 @@ calls to \emph{any} such function are extracted regardless of the underlying
 namespace, i.e. \code{translate()}.}
 
 \item{hash_algorithm}{A non-empty and non-\link[base:NA]{NA} character string
-equal to one of the values returned by \code{\link[=hash_algorithms]{hash_algorithms()}}. The algorithm
-to use when hashing source information for identification purposes.}
+equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing source
+information for identification purposes.}
 
 \item{verbose}{A non-\link[base:NA]{NA} logical value. Should basic information
 on extracted source texts be outputted?}

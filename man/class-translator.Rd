@@ -8,7 +8,7 @@
 \alias{Translator}
 \title{Source Texts and Translations}
 \usage{
-translator(..., id = uuid(), hash_algorithm = hash_algorithms())
+translator(..., id = uuid(), hash_algorithm = constant("algorithms"))
 
 is_translator(x)
 
@@ -30,8 +30,8 @@ unique identifier for the \code{\link{Translator}} object. Beware of
 plausible collisions when using user-defined values.}
 
 \item{hash_algorithm}{A non-empty and non-\link[base:NA]{NA} character string
-equal to one of the values returned by \code{\link[=hash_algorithms]{hash_algorithms()}}. The algorithm
-to use when hashing source information for identification purposes.}
+equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing source
+information for identification purposes.}
 
 \item{x}{Any \R object.}
 }
@@ -201,9 +201,9 @@ tr$rm_text("256e0d7")
 unique identifier for the underlying object. Beware of plausible
 collisions when using user-defined values.}
 
-\item{\code{hash_algorithm}}{A character string equal to one of the values
-returned by \code{\link[=hash_algorithms]{hash_algorithms()}}. The algorithm to use when hashing
-source information for identification purposes.}
+\item{\code{hash_algorithm}}{A non-empty and non-\link[base:NA]{NA} character string
+equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing source
+information for identification purposes.}
 
 \item{\code{hashes}}{A character vector of non-empty and non-\link[base:NA]{NA}
 values, or \code{NULL}. The set of all \code{hash} exposed by registered
@@ -271,7 +271,7 @@ more information.}
 \subsection{Method \code{new()}}{
 Create a \code{\link{Translator}} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Translator$new(id = uuid(), hash_algorithm = hash_algorithms())}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Translator$new(id = uuid(), hash_algorithm = constant("algorithms"))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -282,8 +282,8 @@ unique identifier for the \code{\link{Translator}} object. Beware of
 plausible collisions when using user-defined values.}
 
 \item{\code{hash_algorithm}}{A non-empty and non-\link[base:NA]{NA} character string
-equal to one of the values returned by \code{\link[=hash_algorithms]{hash_algorithms()}}. The algorithm
-to use when hashing source information for identification purposes.}
+equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing source
+information for identification purposes.}
 }
 \if{html}{\out{</div>}}
 }

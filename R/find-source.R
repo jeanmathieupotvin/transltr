@@ -107,7 +107,7 @@ find_source <- function(
     encoding         = "UTF-8",
     strict           = TRUE,
     id               = uuid(),
-    hash_algorithm   = hash_algorithms(),
+    hash_algorithm   = constant("algorithms"),
     native_languages = character(),
     verbose          = TRUE)
 {
@@ -144,7 +144,7 @@ find_source_in_files <- function(
     paths          = character(),
     encoding       = "UTF-8",
     strict         = TRUE,
-    hash_algorithm = hash_algorithms(),
+    hash_algorithm = constant("algorithms"),
     verbose        = TRUE)
 {
     # encoding is validated by text_read() below.

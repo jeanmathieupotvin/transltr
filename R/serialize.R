@@ -702,11 +702,11 @@ validate.ExportedTranslator <- function(x, ...) {
             "in 'ExportedTranslator' '%s': 'Identifier' must be a YAML scalar parsed as a non-empty R character string.",
             get_uuid(x))
     }
-    if (!is_match(x[["Hashing Algorithm"]], hash_algorithms())) {
+    if (!is_match(x[["Hashing Algorithm"]], constant("algorithms"))) {
         stopf(
             "in 'ExportedTranslator' '%s': 'Hashing Algorithm' must be a YAML scalar equal to %s.",
             get_uuid(x),
-            to_string(hash_algorithms(), TRUE))
+            to_string(constant("algorithms"), TRUE))
     }
     if (!is_chr1(x[["Source Language"]])) {
         stopf(
@@ -779,11 +779,11 @@ validate.ExportedText <- function(x, ...) {
             "in 'ExportedText' '%s': 'Hash' must be a YAML null (~), or a YAML scalar parsed as a non-empty R character string.",
             get_uuid(x))
     }
-    if (!is_match(x[["Hashing Algorithm"]], hash_algorithms())) {
+    if (!is_match(x[["Hashing Algorithm"]], constant("algorithms"))) {
         stopf(
             "in 'ExportedText' '%s': 'Hashing Algorithm' must be a YAML scalar equal to %s.",
             get_uuid(x),
-            to_string(hash_algorithms(), TRUE))
+            to_string(constant("algorithms"), TRUE))
     }
     if (!is.null(source_lang) && !is_chr1(source_lang)) {
         stopf(

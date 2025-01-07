@@ -15,7 +15,7 @@
 text(
   ...,
   source_lang = language_source_get(),
-  hash_algorithm = hash_algorithms()
+  hash_algorithm = constant("algorithms")
 )
 
 is_text(x)
@@ -26,7 +26,7 @@ is_text(x)
 
 \method{c}{Text}(...)
 
-merge_texts(..., hash_algorithm = hash_algorithms())
+merge_texts(..., hash_algorithm = constant("algorithms"))
 
 as_text(x, ...)
 
@@ -34,7 +34,7 @@ as_text(x, ...)
   x,
   strict = FALSE,
   location = transltr::location(),
-  hash_algorithm = hash_algorithms(),
+  hash_algorithm = constant("algorithms"),
   validate = TRUE,
   ...
 )
@@ -61,8 +61,8 @@ to use language codes stemming from well-known schemes such as
 Doing so maximizes portability and cross-compatibility between packages.}
 
 \item{hash_algorithm}{A non-empty and non-\link[base:NA]{NA} character string
-equal to one of the values returned by \code{\link[=hash_algorithms]{hash_algorithms()}}. The algorithm
-to use when hashing source information for identification purposes.}
+equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing source
+information for identification purposes.}
 
 \item{x}{Any \R object.}
 
@@ -263,9 +263,9 @@ object.
 This is a \strong{read-only} field. It is automatically updated
 whenever fields \code{source_lang} and/or \code{hash_algorithm} are updated.}
 
-\item{\code{hash_algorithm}}{A character string equal to one of the values
-returned by \code{\link[=hash_algorithms]{hash_algorithms()}}. The algorithm to use when hashing
-source information for identification purposes.}
+\item{\code{hash_algorithm}}{A non-empty and non-\link[base:NA]{NA} character string
+equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing source
+information for identification purposes.}
 
 \item{\code{source_lang}}{A non-empty and non-\link[base:NA]{NA} character string. The
 language of the (untranslated) source text.
@@ -314,15 +314,15 @@ to update it.}
 \subsection{Method \code{new()}}{
 Create a \code{\link{Text}} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Text$new(hash_algorithm = hash_algorithms())}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Text$new(hash_algorithm = constant("algorithms"))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{hash_algorithm}}{A non-empty and non-\link[base:NA]{NA} character string
-equal to one of the values returned by \code{\link[=hash_algorithms]{hash_algorithms()}}. The algorithm
-to use when hashing source information for identification purposes.}
+equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing source
+information for identification purposes.}
 }
 \if{html}{\out{</div>}}
 }

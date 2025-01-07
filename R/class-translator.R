@@ -84,7 +84,7 @@
 #'
 #' @rdname class-translator
 #' @export
-translator <- function(..., id = uuid(), hash_algorithm = hash_algorithms()) {
+translator <- function(..., id = uuid(), hash_algorithm = constant("algorithms")) {
     trans <- Translator$new(id, hash_algorithm)
     dots  <- list(...)
 
@@ -200,7 +200,7 @@ Translator <- R6::R6Class("Translator",
         hash_algorithm = \(value) {
             if (!missing(value)) {
                 assert_chr1(value, x_name = "hash_algorithm")
-                assert_match(value, hash_algorithms(),
+                assert_match(value, constant("algorithms"),
                     quote_values = TRUE,
                     x_name       = "hash_algorithm")
 
@@ -342,7 +342,7 @@ Translator <- R6::R6Class("Translator",
         #' @examples
         #' # Consider using translator() instead.
         #' tr <- Translator$new()
-        initialize = \(id = uuid(), hash_algorithm = hash_algorithms()) {
+        initialize = \(id = uuid(), hash_algorithm = constant("algorithms")) {
             assert_chr1(id)
             assert_arg(hash_algorithm, TRUE)
 
