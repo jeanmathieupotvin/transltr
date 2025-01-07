@@ -13,7 +13,7 @@ usethis::use_description(
     check_name = TRUE,
     fields     = list(
         Package     = "transltr",
-        Title       = "A Light Internationalization Framework for R",
+        Title       = "Support Many Languages in R Programs",
         Version     = "0.0.1",
         Language    = "en",
         Encoding    = "UTF-8",
@@ -33,12 +33,9 @@ usethis::use_description(
                 role    = c("ctb", "fnd", "rev"),
                 comment = c(ORCID = "0000-0003-4950-5475")))',
         Description = "
-            An alternative to gettext(), xgettext(), and other related R
-            features. Incorporate translations and support many languages
-            in any R application while keeping the locale unchanged. Find,
-            extract, structure, and manipulate source text. Export it to a
-            textual format that fosters collaboration. Complement it with
-            translations and import everything back into R sessions."))
+            An object model for source text and translations. Find and extract
+            translatable strings. Provide translations and seamlessly retrieve
+            them at runtime."))
 
 usethis::use_mit_license("Jean-Mathieu Potvin")
 

@@ -1,105 +1,62 @@
-#' @title
-#' A Light Internationalization Framework for R
+#' Support Many Languages in R Programs
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
-#' An alternative to [base::gettext()], [tools::xgettext()], and other related
-#' \R features. Incorporate translations and support many languages in any \R
-#' application while keeping the locale unchanged. Find, extract, structure,
-#' and manipulate source text. Export it to a textual format that fosters
-#' collaboration. Complement it with translations and import everything back
-#' into \R sessions.
-#'
-#' Package [`transltr`][transltr] is a light, in-memory internationalization
-#' (`i18n`) \R framework. It aims to provide a flexible alternative to \R's
-#' Native Language Support (NLS) for simpler use cases.
+#' An object model for source text and translations. Find and extract
+#' translatable strings. Provide translations and seamlessly retrieve
+#' them at runtime.
 #'
 #' @section Introduction:
-#' By default, \R fully supports `i18n`, native languages, and locales via GNU
-#' [`gettext`](https://www.gnu.org/software/gettext/).
+#' \R relies on GNU [`gettext`](https://www.gnu.org/software/gettext/) to
+#' produce multi-lingual messages (if *Native Language Support* is enabled).
+#' This is well-designed software offering an extensive set of functionalities.
+#' It is ubiquitous and has withstood the test of time. It is not the objective
+#' of [`transltr`][transltr] to (fully) replace it.
 #'
-#' **It cannot be replaced.** This is well-designed software that exposes an
-#' extensive set of functionalities. It is ubiquitous and has withstood the
-#' test of time. Its relevance within the \R programming language is
-#' unquestionable, and it is not the objective of [`transltr`][transltr] to
-#' fully replace it.
+#' Package [`transltr`][transltr] provides an alternative in-memory object
+#' model (and further functions) to easily inspect and manipulate source text
+#' and translations.
 #'
-#' ## Why `transltr`?
+#' * It does not change any aspect of the underlying locale.
 #'
-#' A simplified and modern approach can be beneficial.
+#' * It has its own data serialization formats for I/O purposes. Source text
+#'   and translations can be exported to text formats that are sharable and
+#'   easily modifiable, even by non-technical collaborators.
 #'
-#' 1. Trying to extend [gettext()] to functions other than [stop()],
-#'    [warning()], and [message()] may lead to fragile, incomplete, untested,
-#'    undocumented, or ad-hoc implementations.
+#' * Its features are extensively documented (even internal ones).
 #'
-#' 2. \R's Native Language Support functionalities are not always intuitive,
-#'    and their documentation is scattered across many manuals and help pages.
-#'    It has not aged well and needs to be more exhaustive.
+#' * It can always locate and extract translatable strings (litteral character
+#'   vectors passed to [translate()]). They are treated as regular \R objects
+#'   (as [`Text`][Text] objects).
 #'
-#' 3. There is no *easy* way to inspect and manipulate information stored in
-#'    [Portable Object files](https://www.gnu.org/software/gettext/manual/html_node/PO-Files.html)
-#'    (`.po` and `.pot`).
-#'
-#' 4. Portable Objects could be more intuitive for non-technical collaborators.
-#'    They were not designed for them, and their format is *crude*, at best.
-#'
-#' 5. Changing aspects of an \R session's locale may not be a good idea when
-#'    the intent is to display source text in another language. Doing so may
-#'    lead to undefined behaviour.
-#'
-#' 6. \R offers no way to decouple languages used for *backend* (internal) and
-#'    *frontend* (exported) purposes. For example, the user interface of a
-#'    [Shiny application](https://shiny.posit.co/) could be displayed in a
-#'    language that differs from the server's internal locale.
-#'
-#' ## A Fresh Approach
-#'
-#' [`transltr`][transltr] attempts to solve these *incompletenesses*.
-#'
-#' 1. [translate()] works everywhere, in any function and in any context
-#'    (including in calls to [stop()], [warning()], etc.).
-#'
-#' 2. Features are extensively documented (even internal ones). For example,
-#'    see [export()].
-#'
-#' 3. Like [gettext()], calls to [translate()] and the underlying source text
-#'    can always be located, extracted, and treated as a regular \R object. As
-#'    such, it can be inspected, modified, imported, and exported.
-#'
-#' 4. Source text and translations are exported to a new format that is (more)
-#'    easily sharable and modifiable, even by non-technical collaborators.
-#'
-#' 5. The locale is left as is. It may still be changed if required.
+#' [translate()] works everywhere, including in calls to [stop()], [warning()],
+#' and [message()].
 #'
 #' @section Getting Started:
-#' Follow these steps.
+#' Write code as you normally would. Whenever a piece of text (a literal 
+#' character vector) must be available in multiple languages, wrap it with
+#' [translate()].
 #'
-#' 1. Develop and write code as you normally would. Whenever a piece of text
-#'    (a **literal** character vector) must support multiple languages, wrap
-#'    it inside a call to [translate()].
+#' 1. Once you are ready to translate your project, call [find_source()].
+#'    This returns a [`Translator`][Translator] object.
 #'
-#' 2. Once you are ready to work on translations, call [find_source()]. This
-#'    function returns a [`Translator`][Translator] object.
+#' 2. Export the [`Translator`][Translator] object with [translator_write()].
+#'    Fill in the underlying translation files.
 #'
-#' 3. Export it with [translator_write()]. Complete the underlying
-#'    [Exported Translations files][translator_read()] with translations.
+#' 3. Import translations back into an \R session with [translator_read()].
 #'
-#' 4. Import translations back into an \R session with [translator_read()].
-#'
-#' 5. Set the default language with [language_set()].
-#'
-#' You may specify a default (global) source language with
-#' [language_source_get()].
+#' Current language and source language are respectively set with
+#' [language_set()] and [language_source_get()]. By default, the latter is set
+#' equal to `"en"` (English).
 #'
 #' @section Bugs and Feedback:
 #' You may submit bugs, request features, and provide feedback by creating an
 #' [issue on GitHub](https://github.com/jeanmathieupotvin/transltr/issues/new).
 #'
 #' @section Acknowledgements:
-#' Warm thanks to Jérôme Lavoué, who supported and sponsored the `0.0.1`
-#' release (the first release) of this project and believes in free and
-#' open-source software.
+#' Warm thanks to Jérôme Lavoué, who supported and sponsored the first release
+#' of this project.
 #'
 #' @seealso
 #' The scattered and incomplete documentation of \R's Native Language Support:
@@ -108,10 +65,10 @@
 #' * [tools::xgettext()],
 #' * [tools::xgettext2pot()], [tools::update_pkg_po()], [tools::checkPoFiles()],
 #' * [Section 3 (Internationalization)](https://cran.r-project.org/doc/manuals/r-release/R-ints.html#R-code-1)
-#'    of R Internals,
+#'    of \R Internals,
 #' * [Section 7 (Internationalization and Localization)](https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Internationalization-and-Localization)
-#'   of R Installation and Administration, and
-#' * [Section 1.8 (Internationalization)](https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Internationalization) of Writing R Extensions.
+#'   of \R Installation and Administration, and
+#' * [Section 1.8 (Internationalization)](https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Internationalization) of Writing \R Extensions.
 #'
 #' The comprehensive technical documentation of
 #' [GNU `gettext`](https://www.gnu.org/software/gettext/manual/gettext.html).
@@ -123,8 +80,5 @@
 # Suppress R CMD check notes ---------------------------------------------------
 
 
-#' @importFrom digest sha1
 #' @importFrom R6 R6Class
-#' @importFrom yaml yaml.load
-#' @importFrom yaml as.yaml
 NULL

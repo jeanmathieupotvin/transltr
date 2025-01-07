@@ -1,5 +1,5 @@
 Package: transltr
-Title: A Light Internationalization Framework for R
+Title: Support Many Languages in R Programs
 Version: 0.0.1
 Authors@R: c(
     person("Jean-Mathieu", "Potvin",
@@ -10,12 +10,9 @@ Authors@R: c(
         email   = "jerome.lavoue@umontreal.ca",
         comment = c(ORCID = "0000-0003-4950-5475"))
   )
-Description: An alternative to gettext(), xgettext(), and other related R
-    features. Incorporate translations and support many languages in any R
-    application while keeping the locale unchanged. Find, extract,
-    structure, and manipulate source text. Export it to a textual format
-    that fosters collaboration. Complement it with translations and import
-    everything back into R sessions.
+Description: An object model for source text and translations. Find and extract
+    translatable strings. Provide translations and seamlessly retrieve them at
+    runtime.
 License: MIT + file LICENSE
 URL: https://github.com/jeanmathieupotvin/transltr
 BugReports: https://github.com/jeanmathieupotvin/transltr/issues

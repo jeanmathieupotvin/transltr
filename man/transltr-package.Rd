@@ -4,91 +4,56 @@
 \name{transltr-package}
 \alias{transltr}
 \alias{transltr-package}
-\title{A Light Internationalization Framework for R}
+\title{Support Many Languages in R Programs}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
-An alternative to \code{\link[base:gettext]{base::gettext()}}, \code{\link[tools:xgettext]{tools::xgettext()}}, and other related
-\R features. Incorporate translations and support many languages in any \R
-application while keeping the locale unchanged. Find, extract, structure,
-and manipulate source text. Export it to a textual format that fosters
-collaboration. Complement it with translations and import everything back
-into \R sessions.
-
-Package \code{\link{transltr}} is a light, in-memory internationalization
-(\code{i18n}) \R framework. It aims to provide a flexible alternative to \R's
-Native Language Support (NLS) for simpler use cases.
+An object model for source text and translations. Find and extract
+translatable strings. Provide translations and seamlessly retrieve
+them at runtime.
 }
 \section{Introduction}{
 
-By default, \R fully supports \code{i18n}, native languages, and locales via GNU
-\href{https://www.gnu.org/software/gettext/}{\code{gettext}}.
+\R relies on GNU \href{https://www.gnu.org/software/gettext/}{\code{gettext}} to
+produce multi-lingual messages (if \emph{Native Language Support} is enabled).
+This is well-designed software offering an extensive set of functionalities.
+It is ubiquitous and has withstood the test of time. It is not the objective
+of \code{\link{transltr}} to (fully) replace it.
 
-\strong{It cannot be replaced.} This is well-designed software that exposes an
-extensive set of functionalities. It is ubiquitous and has withstood the
-test of time. Its relevance within the \R programming language is
-unquestionable, and it is not the objective of \code{\link{transltr}} to
-fully replace it.
-\subsection{Why \code{transltr}?}{
-
-A simplified and modern approach can be beneficial.
-\enumerate{
-\item Trying to extend \code{\link[=gettext]{gettext()}} to functions other than \code{\link[=stop]{stop()}},
-\code{\link[=warning]{warning()}}, and \code{\link[=message]{message()}} may lead to fragile, incomplete, untested,
-undocumented, or ad-hoc implementations.
-\item \R's Native Language Support functionalities are not always intuitive,
-and their documentation is scattered across many manuals and help pages.
-It has not aged well and needs to be more exhaustive.
-\item There is no \emph{easy} way to inspect and manipulate information stored in
-\href{https://www.gnu.org/software/gettext/manual/html_node/PO-Files.html}{Portable Object files}
-(\code{.po} and \code{.pot}).
-\item Portable Objects could be more intuitive for non-technical collaborators.
-They were not designed for them, and their format is \emph{crude}, at best.
-\item Changing aspects of an \R session's locale may not be a good idea when
-the intent is to display source text in another language. Doing so may
-lead to undefined behaviour.
-\item \R offers no way to decouple languages used for \emph{backend} (internal) and
-\emph{frontend} (exported) purposes. For example, the user interface of a
-\href{https://shiny.posit.co/}{Shiny application} could be displayed in a
-language that differs from the server's internal locale.
-}
+Package \code{\link{transltr}} provides an alternative in-memory object
+model (and further functions) to easily inspect and manipulate source text
+and translations.
+\itemize{
+\item It does not change any aspect of the underlying locale.
+\item It has its own data serialization formats for I/O purposes. Source text
+and translations can be exported to text formats that are sharable and
+easily modifiable, even by non-technical collaborators.
+\item Its features are extensively documented (even internal ones).
+\item It can always locate and extract translatable strings (litteral character
+vectors passed to \code{\link[=translate]{translate()}}). They are treated as regular \R objects
+(as \code{\link{Text}} objects).
 }
 
-\subsection{A Fresh Approach}{
-
-\code{\link{transltr}} attempts to solve these \emph{incompletenesses}.
-\enumerate{
-\item \code{\link[=translate]{translate()}} works everywhere, in any function and in any context
-(including in calls to \code{\link[=stop]{stop()}}, \code{\link[=warning]{warning()}}, etc.).
-\item Features are extensively documented (even internal ones). For example,
-see \code{\link[=export]{export()}}.
-\item Like \code{\link[=gettext]{gettext()}}, calls to \code{\link[=translate]{translate()}} and the underlying source text
-can always be located, extracted, and treated as a regular \R object. As
-such, it can be inspected, modified, imported, and exported.
-\item Source text and translations are exported to a new format that is (more)
-easily sharable and modifiable, even by non-technical collaborators.
-\item The locale is left as is. It may still be changed if required.
-}
-}
+\code{\link[=translate]{translate()}} works everywhere, including in calls to \code{\link[=stop]{stop()}}, \code{\link[=warning]{warning()}},
+and \code{\link[=message]{message()}}.
 }
 
 \section{Getting Started}{
 
-Follow these steps.
+Write code as you normally would. Whenever a piece of text (a literal 
+character vector) must be available in multiple languages, wrap it with
+\code{\link[=translate]{translate()}}.
 \enumerate{
-\item Develop and write code as you normally would. Whenever a piece of text
-(a \strong{literal} character vector) must support multiple languages, wrap
-it inside a call to \code{\link[=translate]{translate()}}.
-\item Once you are ready to work on translations, call \code{\link[=find_source]{find_source()}}. This
-function returns a \code{\link{Translator}} object.
-\item Export it with \code{\link[=translator_write]{translator_write()}}. Complete the underlying
-\link[=translator_read]{Exported Translations files} with translations.
-\item Import translations back into an \R session with \code{\link[=translator_read]{translator_read()}}.
-\item Set the default language with \code{\link[=language_set]{language_set()}}.
+\item Once you are ready to translate your project, call \code{\link[=find_source]{find_source()}}.
+This returns a \code{\link{Translator}} object.
+\item Export the \code{\link{Translator}} object with \code{\link[=translator_write]{translator_write()}}.
+Fill in the underlying translation files.
+\item Import translations back into an \R session with \code{\link[=translator_read]{translator_read()}}.
 }
 
-You may specify a default (global) source language with
-\code{\link[=language_source_get]{language_source_get()}}.
+Current language and source language are respectively set with
+\code{\link[=language_set]{language_set()}} and \code{\link[=language_source_get]{language_source_get()}}. By default, the latter is set
+equal to \code{"en"} (English).
 }
 
 \section{Bugs and Feedback}{
@@ -99,9 +64,8 @@ You may submit bugs, request features, and provide feedback by creating an
 
 \section{Acknowledgements}{
 
-Warm thanks to Jérôme Lavoué, who supported and sponsored the \verb{0.0.1}
-release (the first release) of this project and believes in free and
-open-source software.
+Warm thanks to Jérôme Lavoué, who supported and sponsored the first release
+of this project.
 }
 
 \seealso{
@@ -112,10 +76,10 @@ The scattered and incomplete documentation of \R's Native Language Support:
 \item \code{\link[tools:xgettext]{tools::xgettext()}},
 \item \code{\link[tools:xgettext]{tools::xgettext2pot()}}, \code{\link[tools:update_pkg_po]{tools::update_pkg_po()}}, \code{\link[tools:checkPoFiles]{tools::checkPoFiles()}},
 \item \href{https://cran.r-project.org/doc/manuals/r-release/R-ints.html#R-code-1}{Section 3 (Internationalization)}
-of R Internals,
+of \R Internals,
 \item \href{https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Internationalization-and-Localization}{Section 7 (Internationalization and Localization)}
-of R Installation and Administration, and
-\item \href{https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Internationalization}{Section 1.8 (Internationalization)} of Writing R Extensions.
+of \R Installation and Administration, and
+\item \href{https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Internationalization}{Section 1.8 (Internationalization)} of Writing \R Extensions.
 }
 
 The comprehensive technical documentation of
