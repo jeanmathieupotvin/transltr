@@ -134,7 +134,7 @@ test_that("it includes label when it is not null", {
     expect_identical(format_vector(x1, "<Person>")[[1L]], "<Person>:")
 
     # If format_vector() starts at level 2, then it should be indented
-    # once (level - 1), and so on.
+    # once (level - 1) and so on.
     expect_identical(format_vector(x1, "<Person>", level = 2L)[[1L]], " <Person>:")
     expect_identical(format_vector(x1, "<Person>", level = 3L)[[1L]], "  <Person>:")
     expect_identical(format_vector(x1, "<Person>", level = 4L)[[1L]], "   <Person>:")

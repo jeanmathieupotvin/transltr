@@ -13,12 +13,12 @@
 #' The information contained within a [`Translator`][Translator] object is
 #' split by default. Unless `set_translations` is `TRUE`, translations are
 #' serialized independently from other fields. This is useful when creating
-#' [Exported Translator files][translator_write()], and
+#' [Exported Translator files][translator_write()] and
 #' [Exported Translations files][translations_read()].
 #'
 #' While [serialize()] and [serialize_translations()] are distinct, they share
-#' a common *design*, and perform the same *thing*, at least conceptually. The
-#' same is true for [deserialize()], and [deserialize_translations()].
+#' a common *design* and perform the same *thing*, at least conceptually. The
+#' same is true for [deserialize()] and [deserialize_translations()].
 #'
 #' ## Serialization
 #'
@@ -33,16 +33,16 @@
 #' objects are stored as environments internally). They are never returned to
 #' the user: [serialize()] and [serialize_translations()] immediately transform
 #' them into suitable character strings. The latter outputs a
-#' [FLAT object][flat_serialize()], and the former, a
+#' [FLAT object][flat_serialize()] and the former, a
 #' [YAML object][yaml::as.yaml()].
 #'
 #' ## Deserialization
 #'
 #' The data deserialization process performed by [deserialize()] and
 #' [deserialize_translations()] is internally broken down into 3 steps: objects
-#' are first *deserialized*, then *validated*, and finally, *imported*.
+#' are first *deserialized*, then *validated* and finally, *imported*.
 #'
-#' [deserialize()], and [deserialize_translations()] first deserializes `string`
+#' [deserialize()] and [deserialize_translations()] first deserializes `string`
 #' into an \R named list that is **presumed** to be an object of class
 #' [`Exported*`][export()]. The former relies on underlying
 #' [YAML tags](https://yaml.org/spec/1.1/#id858600) to make such assumptions.
@@ -51,8 +51,8 @@
 #' Finally, a valid object is *imported* back into an appropriate \R object
 #' via [import()].
 #'
-#' Note that custom fields, and comments added by users to serialized objects
-#' are ignored by [validate()], and discarded entirely by [import()].
+#' Note that custom fields and comments added by users to serialized objects
+#' are ignored by [validate()] and discarded entirely by [import()].
 #'
 #' ## `Exported` Classes
 #'
@@ -101,7 +101,7 @@
 #'
 #' @param tr A [`Translator`][Translator] object.
 #'
-#'   This argument is **optional** for [deserialize_translations()], and
+#'   This argument is **optional** for [deserialize_translations()] and
 #'   [import.ExportedTranslations()]. It allows a [`Translator`][Translator]
 #'   object to register imported translations as long as they correspond to
 #'   an existing source text (a registered [`Text`][Text] object).
@@ -130,7 +130,7 @@
 #'
 #' @returns
 #' [serialize()] and [serialize_translations()] return a character string:
-#' a [YAML](https://yaml.org/spec/1.1/) string, and a [FLAT][flat_serialize()]
+#' a [YAML](https://yaml.org/spec/1.1/) string and a [FLAT][flat_serialize()]
 #' string, respectively.
 #'
 #' [export()] returns a named list of S3 class
@@ -211,7 +211,7 @@
 #'     `tr$native_languages` (the source language is ignored).
 #'     See [`Translator$native_languages`][Translator] for more information.
 #'
-#' [get_uuid()] safely extracts field `_Uuid` from `x`, and returns it if the
+#' [get_uuid()] safely extracts field `_Uuid` from `x` and returns it if the
 #' underlying value is a non-empty and non-[NA][base::NA] character string.
 #' Otherwise, a default value is returned.
 #'
@@ -267,7 +267,7 @@
 #' transltr:::serialize_translations(tr, "fr")
 #' transltr:::serialize_translations(tr, "es")
 #'
-#' # serialize(), and serialize_translations() both call export() internally.
+#' # serialize() and serialize_translations() both call export() internally.
 #' # Field `_Uuid` can be omitted by setting set_uuid equal to `FALSE`.
 #' transltr:::export(loc, set_uuid = FALSE)
 #' transltr:::export(txt)
@@ -280,7 +280,7 @@
 #' transltr:::export(txt, set_translations = TRUE)
 #' transltr:::export(tr,  set_translations = TRUE)
 #'
-#' # Deserialize objects. This is what translator_read(), and
+#' # Deserialize objects. This is what translator_read() and
 #' # translations_read() call internally.
 #' transltr:::deserialize(transltr:::serialize(loc))
 #' transltr:::deserialize(transltr:::serialize(txt))
@@ -288,7 +288,7 @@
 #' transltr:::deserialize_translations(transltr:::serialize_translations(tr, "fr"))
 #' transltr:::deserialize_translations(transltr:::serialize_translations(tr, "es"))
 #'
-#' # deserialize(), and deserialize_translations() both call validate()
+#' # deserialize() and deserialize_translations() both call validate()
 #' # internally. validate() checks that the underlying input can safely be
 #' # passed to import(). What deserialization functions internally passes to
 #' # validate() are candidate 'Exported' objects that may, or may not be valid.
@@ -304,7 +304,7 @@
 #'
 #' \dontrun{transltr:::validate(loc_err)}
 #'
-#' # deserialize(), and deserialize_translations() both call import() on valid
+#' # deserialize() and deserialize_translations() both call import() on valid
 #' # Exported* objects. Any `_Uuid` field is discarded by import().
 #' transltr:::import(transltr:::export(loc))
 #' transltr:::import(transltr:::export(txt))
@@ -319,10 +319,10 @@
 #' cat(transltr:::serialize_translations(tr, "es"), "\n")
 #' transltr:::deserialize_translations(transltr:::serialize_translations(tr, "es"))
 #'
-#' # A Translator object may be passed to deserialize_translations(), and
-#' # import.ExportedTranslations(). It accumulates translations, and is
+#' # A Translator object may be passed to deserialize_translations() and
+#' # import.ExportedTranslations(). It accumulates translations and is
 #' # modified in place (it is not returned). Note that translations are
-#' # registered only if they correspond to an existing source text, and
+#' # registered only if they correspond to an existing source text and
 #' # are skipped otherwise.
 #' tr_new <- Translator$new(id = "test-translator")
 #' tr_new$set_text(en = "Hello, world!")
@@ -460,7 +460,7 @@ validate <- function(x, ...) {
 export.Translator <- function(x, set_uuid = TRUE, parent_dir, ...) {
     assert_lgl1(set_uuid)
 
-    # It validates x, and parent_dir.
+    # It validates x and parent_dir.
     files <- translations_files(x, parent_dir)
 
     out <- list(
@@ -580,7 +580,7 @@ import.ExportedText  <- function(x, ...) {
 #' @export
 import.ExportedLocation <- function(x, ...) {
     # Extract digits from ranges, construct
-    # character vectors of numbers, and try
+    # character vectors of numbers and try
     # converting them to integers. This works
     # with all supported formats.
     ranges <- x[["Ranges"]]
@@ -916,7 +916,7 @@ translations_files <- function(tr = translator(), parent_dir) {
     langs <- names(tr$native_languages)
     langs <- langs[langs != source_lang]
 
-    # Check attribute 'translations_files', and return
+    # Check attribute 'translations_files' and return
     # it if it exists. It contains cached paths stemming
     # from a previous call to import().
     if (!is.null(files <- attr(tr, "translations_files"))) {

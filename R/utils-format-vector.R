@@ -6,7 +6,7 @@
 #'
 #' @details
 #' [format_vector()] is an alternative to [utils::str()] that exposes a much
-#' simpler generic formatting interface, and yields terser outputs of name/value
+#' simpler generic formatting interface and yields terser outputs of name/value
 #' pairs. Indentation is used for nested values.
 #'
 #' [format_vector()] does not attempt to cover all \R objects like
@@ -15,7 +15,7 @@
 #' [format.Translator()], [format.Text()], and [format.Location()].
 #'
 #' @param x A [vector][vector()] of any [atomic][vector()] mode, a
-#'   [list][list()], or a [pairlist][pairlist()]. It can be empty,
+#'   [list][list()], or a [pairlist][pairlist()]. It can be empty
 #'   and it can contain [NA][base::NA] values.
 #'
 #' @param label A `NULL`, or a non-empty and non-[NA][base::NA] character
@@ -29,7 +29,7 @@
 #' @param indent A non-[NA][base::NA] integer value. The number of single
 #'   space(s) to use for each `level` when indenting name/value pairs.
 #'
-#' @param fill_names A non-[NA][base::NA] logical value. Should `NULL`, and
+#' @param fill_names A non-[NA][base::NA] logical value. Should `NULL` and
 #'   empty names be replaced by names created from the elements' underlying
 #'   positions? Positions are relative to each `level`.
 #'
@@ -92,7 +92,7 @@
 #'
 #' cat(transltr:::format_vector(object), sep = "\n")
 #'
-#' # Using custom representations, and adding names derived
+#' # Using custom representations and adding names derived
 #' # from positions (for elements that do not have a name).
 #' cat(sep = "\n", transltr:::format_vector(
 #'   object,
@@ -174,7 +174,7 @@ format_vector <- function(
         xnames[!is_nz] <- sprintf("[%i]", which(!is_nz))
     }
 
-    # Loop over each element of x, and
+    # Loop over each element of x and
     # accumulate formatted values in acc.
     for (i in seq_along(x)) {
         i_name <- xnames[[i]]

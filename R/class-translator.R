@@ -1,15 +1,15 @@
 #' Source Texts and Translations
 #'
-#' Store, structure, and manipulate source text**s**, and their translations.
+#' Structure and manipulate the source text of a project and its translations.
 #'
 #' A [`Translator`][Translator] object encapsulates the source text of a
-#' project (or any other *context*), and all related translations. It exposes
+#' project (or any other *context*) and all related translations. It exposes
 #' a set of methods that can be used to manipulate this information, but it
 #' is designed in such a way that its methods can be ignored most of the time.
 #'
 #' Under the hood, [`Translator`][Translator] objects are collections of
 #' [`Text`][Text] objects. These do most of the work. They are treated as
-#' lower-level component, and in typical situations, users rarely interact
+#' lower-level component and in typical situations, users rarely interact
 #' with them.
 #'
 #' ## Translating Text
@@ -21,13 +21,13 @@
 #'
 #' ## Exporting and Importing Translators
 #'
-#' [`Translator`][Translator] objects can be saved, and exported with
+#' [`Translator`][Translator] objects can be saved and exported with
 #' [translator_write()].
 #'
 #' They can be imported back into an \R session with [translator_read()].
 #'
 #' @param ... Usage depends on the underlying function.
-#'   * Any number of [`Text`][Text] objects, and/or named character
+#'   * Any number of [`Text`][Text] objects and/or named character
 #'     strings for [translator()] (in no preferred order).
 #'   * Further arguments passed to or from other methods for [format()],
 #'     and [print()].
@@ -228,7 +228,7 @@ Translator <- R6::R6Class("Translator",
             if (!missing(value)) {
                 stops(
                     "'hashes' cannot be overwritten.\n",
-                    "Update them by setting 'hash_algorithm', and by setting, or removing 'Text' objects.")
+                    "Update them by setting 'hash_algorithm' and by setting, or removing 'Text' objects.")
             }
 
             hashes <- eapply(private$.texts, `[[`, i = "hash")
@@ -505,7 +505,7 @@ Translator <- R6::R6Class("Translator",
         #' @description Map a language code to a native language name.
         #'
         #' @param ... Any number of named, non-empty, and non-[NA][base::NA]
-        #'   character strings. Names are codes, and values are native
+        #'   character strings. Names are codes and values are native
         #'   languages. See field `native_languages` for more information.
         #'
         #' @return A `NULL`, invisibly.

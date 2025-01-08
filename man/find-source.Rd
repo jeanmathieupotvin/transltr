@@ -65,14 +65,14 @@ A set of paths to \R source scripts that must be searched.}
 contain duplicated elements, depending on the extracted contents.
 }
 \description{
-Find, and extract source text that requires translation.
+Find and extract source text that requires translation.
 }
 \details{
 \code{\link[=find_source]{find_source()}} and \code{\link[=find_source_in_files]{find_source_in_files()}} look for calls to \code{\link[=translate]{translate()}}
-in \R scripts, and convert them to \code{\link{Text}} objects via \code{\link[=as_text]{as_text()}}.
+in \R scripts and convert them to \code{\link{Text}} objects via \code{\link[=as_text]{as_text()}}.
 
 \code{\link[=find_source]{find_source()}} further constructs a \code{\link{Translator}} object from
-the set of \code{\link{Text}} objects. It can later be exported, and imported
+the set of \code{\link{Text}} objects. It can later be exported and imported
 via \code{\link[=translator_write]{translator_write()}} and \code{\link[=translator_read]{translator_read()}} respectively.
 \subsection{Methodology}{
 
@@ -81,10 +81,10 @@ operations. \code{\link[=find_source]{find_source()}} and \code{\link[=find_sour
 steps to extract source text from a single \R script.
 \enumerate{
 \item It is read with \code{\link[=text_read]{text_read()}}.
-\item It is parsed with \code{\link[=parse]{parse()}}, and underlying tokens are extracted from
+\item It is parsed with \code{\link[=parse]{parse()}} and underlying tokens are extracted from
 parsed expressions with \code{\link[utils:getParseData]{utils::getParseData()}}.
 \item Each expression token (\code{expr}) is converted to language objects with
-\code{\link[=str2lang]{str2lang()}}. Parsing errors, and invalid expressions are silently
+\code{\link[=str2lang]{str2lang()}}. Parsing errors and invalid expressions are silently
 skipped.
 \item Valid \code{\link[=call]{call}} objects stemming from step 3 are filtered with
 \code{\link[=is_translate_call]{is_translate_call()}}.

@@ -54,7 +54,7 @@ identifiable sections. These are called FLAT (1.0) objects.
 \details{
 The Flat format (\strong{F}lat \strong{L}ist \strong{A}s \strong{T}ext, or FLAT) is a minimal
 textual data serialization format optimized for \R \code{\link{list}} objects.
-Elements are converted to character strings, and organized into unindented
+Elements are converted to character strings and organized into unindented
 sections identified by a tag. Call \code{\link[=flat_example]{flat_example()}} for a valid example.
 
 \code{\link[=flat_serialize]{flat_serialize()}} serializes \code{x} into a FLAT object.
@@ -71,14 +71,14 @@ The convention is to serialize an empty list to an empty character string.
 Aside from debugging purposes, they should not be called outside of the
 former.
 
-\code{\link[=flat_tag]{flat_tag()}} creates tags from names extracted from \code{x}, and formats them.
+\code{\link[=flat_tag]{flat_tag()}} creates tags from names extracted from \code{x} and formats them.
 Tags may not be unique, depending on \code{x}'s structure and names.
 
 \code{\link[=flat_format]{flat_format()}} recursively formats the elements of \code{x} as part of the
 serialization process. It
 \itemize{
 \item converts \code{NULL} to the \code{"NULL"} character string,
-\item converts other elements to character strings using \code{\link[=format]{format()}}, and
+\item converts other elements to character strings using \code{\link[=format]{format()}} and
 \item replaces empty lists by a \code{"<empty-list>"} constant treated as a placeholder.
 }
 }

@@ -23,14 +23,14 @@ Check whether an object is a \code{\link{call}} to \code{\link[=translate]{trans
 }
 \details{
 An \emph{implicit} call does not specify the namespace, i.e. \code{translate()}. It
-may refer to \emph{any} such function, and may not correspond to \code{\link[=translate]{translate()}}.
-This depends on the user's intents at compile time, and on the
+may refer to \emph{any} such function and may not correspond to \code{\link[=translate]{translate()}}.
+This depends on the user's intents at compile time and on the
 \link[=search]{search} path at runtime.
 
 An \emph{explicit} call includes the namespace, i.e. \code{transltr::translate()}.
 There is no ambiguity.
 
-\R is sometimes an odd language, and this function covers some unusual use
+\R is sometimes an odd language and this function covers some unusual use
 cases. See Examples below. By design, it \strong{does not} detect calls to method
 \code{\link[=Translator]{Translator$translate()}}. Using the latter is discouraged.
 }

@@ -83,7 +83,7 @@ get_uuid(x)
 
 \item{tr}{A \code{\link{Translator}} object.
 
-This argument is \strong{optional} for \code{\link[=deserialize_translations]{deserialize_translations()}}, and
+This argument is \strong{optional} for \code{\link[=deserialize_translations]{deserialize_translations()}} and
 \code{\link[=import.ExportedTranslations]{import.ExportedTranslations()}}. It allows a \code{\link{Translator}}
 object to register imported translations as long as they correspond to
 an existing source text (a registered \code{\link{Text}} object).}
@@ -118,7 +118,7 @@ object? If \code{FALSE}, field \code{Translations} is set equal to \code{NULL}.}
 }
 \value{
 \code{\link[=serialize]{serialize()}} and \code{\link[=serialize_translations]{serialize_translations()}} return a character string:
-a \href{https://yaml.org/spec/1.1/}{YAML} string, and a \link[=flat_serialize]{FLAT}
+a \href{https://yaml.org/spec/1.1/}{YAML} string and a \link[=flat_serialize]{FLAT}
 string, respectively.
 
 \code{\link[=export]{export()}} returns a named list of S3 class
@@ -203,7 +203,7 @@ information.
 See \code{\link[=Translator]{Translator$native_languages}} for more information.
 }
 
-\code{\link[=get_uuid]{get_uuid()}} safely extracts field \verb{_Uuid} from \code{x}, and returns it if the
+\code{\link[=get_uuid]{get_uuid()}} safely extracts field \verb{_Uuid} from \code{x} and returns it if the
 underlying value is a non-empty and non-\link[base:NA]{NA} character string.
 Otherwise, a default value is returned.
 }
@@ -220,12 +220,12 @@ vive-versa.
 The information contained within a \code{\link{Translator}} object is
 split by default. Unless \code{set_translations} is \code{TRUE}, translations are
 serialized independently from other fields. This is useful when creating
-\link[=translator_write]{Exported Translator files}, and
+\link[=translator_write]{Exported Translator files} and
 \link[=translations_read]{Exported Translations files}.
 
 While \code{\link[=serialize]{serialize()}} and \code{\link[=serialize_translations]{serialize_translations()}} are distinct, they share
-a common \emph{design}, and perform the same \emph{thing}, at least conceptually. The
-same is true for \code{\link[=deserialize]{deserialize()}}, and \code{\link[=deserialize_translations]{deserialize_translations()}}.
+a common \emph{design} and perform the same \emph{thing}, at least conceptually. The
+same is true for \code{\link[=deserialize]{deserialize()}} and \code{\link[=deserialize_translations]{deserialize_translations()}}.
 \subsection{Serialization}{
 
 The data serialization process performed by \code{\link[=serialize]{serialize()}} and
@@ -239,7 +239,7 @@ representations (\code{\link{Translator}} objects and \code{\link{Text}}
 objects are stored as environments internally). They are never returned to
 the user: \code{\link[=serialize]{serialize()}} and \code{\link[=serialize_translations]{serialize_translations()}} immediately transform
 them into suitable character strings. The latter outputs a
-\link[=flat_serialize]{FLAT object}, and the former, a
+\link[=flat_serialize]{FLAT object} and the former, a
 \link[yaml:as.yaml]{YAML object}.
 }
 
@@ -247,9 +247,9 @@ them into suitable character strings. The latter outputs a
 
 The data deserialization process performed by \code{\link[=deserialize]{deserialize()}} and
 \code{\link[=deserialize_translations]{deserialize_translations()}} is internally broken down into 3 steps: objects
-are first \emph{deserialized}, then \emph{validated}, and finally, \emph{imported}.
+are first \emph{deserialized}, then \emph{validated} and finally, \emph{imported}.
 
-\code{\link[=deserialize]{deserialize()}}, and \code{\link[=deserialize_translations]{deserialize_translations()}} first deserializes \code{string}
+\code{\link[=deserialize]{deserialize()}} and \code{\link[=deserialize_translations]{deserialize_translations()}} first deserializes \code{string}
 into an \R named list that is \strong{presumed} to be an object of class
 \code{\link[=export]{Exported*}}. The former relies on underlying
 \href{https://yaml.org/spec/1.1/#id858600}{YAML tags} to make such assumptions.
@@ -258,8 +258,8 @@ with \code{\link[=validate]{validate()}}, which dispatches on the object's \stro
 Finally, a valid object is \emph{imported} back into an appropriate \R object
 via \code{\link[=import]{import()}}.
 
-Note that custom fields, and comments added by users to serialized objects
-are ignored by \code{\link[=validate]{validate()}}, and discarded entirely by \code{\link[=import]{import()}}.
+Note that custom fields and comments added by users to serialized objects
+are ignored by \code{\link[=validate]{validate()}} and discarded entirely by \code{\link[=import]{import()}}.
 }
 
 \subsection{\code{Exported} Classes}{
@@ -344,7 +344,7 @@ transltr:::serialize(tr)
 transltr:::serialize_translations(tr, "fr")
 transltr:::serialize_translations(tr, "es")
 
-# serialize(), and serialize_translations() both call export() internally.
+# serialize() and serialize_translations() both call export() internally.
 # Field `_Uuid` can be omitted by setting set_uuid equal to `FALSE`.
 transltr:::export(loc, set_uuid = FALSE)
 transltr:::export(txt)
@@ -357,7 +357,7 @@ transltr:::export_translations(tr, "es", set_uuid = FALSE)
 transltr:::export(txt, set_translations = TRUE)
 transltr:::export(tr,  set_translations = TRUE)
 
-# Deserialize objects. This is what translator_read(), and
+# Deserialize objects. This is what translator_read() and
 # translations_read() call internally.
 transltr:::deserialize(transltr:::serialize(loc))
 transltr:::deserialize(transltr:::serialize(txt))
@@ -365,7 +365,7 @@ transltr:::deserialize(transltr:::serialize(tr))
 transltr:::deserialize_translations(transltr:::serialize_translations(tr, "fr"))
 transltr:::deserialize_translations(transltr:::serialize_translations(tr, "es"))
 
-# deserialize(), and deserialize_translations() both call validate()
+# deserialize() and deserialize_translations() both call validate()
 # internally. validate() checks that the underlying input can safely be
 # passed to import(). What deserialization functions internally passes to
 # validate() are candidate 'Exported' objects that may, or may not be valid.
@@ -381,7 +381,7 @@ loc_err$Path <- 1L
 
 \dontrun{transltr:::validate(loc_err)}
 
-# deserialize(), and deserialize_translations() both call import() on valid
+# deserialize() and deserialize_translations() both call import() on valid
 # Exported* objects. Any `_Uuid` field is discarded by import().
 transltr:::import(transltr:::export(loc))
 transltr:::import(transltr:::export(txt))
@@ -396,10 +396,10 @@ transltr:::import(transltr:::export_translations(tr, "es"))
 cat(transltr:::serialize_translations(tr, "es"), "\n")
 transltr:::deserialize_translations(transltr:::serialize_translations(tr, "es"))
 
-# A Translator object may be passed to deserialize_translations(), and
-# import.ExportedTranslations(). It accumulates translations, and is
+# A Translator object may be passed to deserialize_translations() and
+# import.ExportedTranslations(). It accumulates translations and is
 # modified in place (it is not returned). Note that translations are
-# registered only if they correspond to an existing source text, and
+# registered only if they correspond to an existing source text and
 # are skipped otherwise.
 tr_new <- Translator$new(id = "test-translator")
 tr_new$set_text(en = "Hello, world!")

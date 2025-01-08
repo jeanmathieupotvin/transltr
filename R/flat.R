@@ -6,7 +6,7 @@
 #' @details
 #' The Flat format (**F**lat **L**ist **A**s **T**ext, or FLAT) is a minimal
 #' textual data serialization format optimized for \R [`list`][list] objects.
-#' Elements are converted to character strings, and organized into unindented
+#' Elements are converted to character strings and organized into unindented
 #' sections identified by a tag. Call [flat_example()] for a valid example.
 #'
 #' [flat_serialize()] serializes `x` into a FLAT object.
@@ -24,14 +24,14 @@
 #' Aside from debugging purposes, they should not be called outside of the
 #' former.
 #'
-#' [flat_tag()] creates tags from names extracted from `x`, and formats them.
+#' [flat_tag()] creates tags from names extracted from `x` and formats them.
 #' Tags may not be unique, depending on `x`'s structure and names.
 #'
 #' [flat_format()] recursively formats the elements of `x` as part of the
 #' serialization process. It
 #'
 #'   * converts `NULL` to the `"NULL"` character string,
-#'   * converts other elements to character strings using [format()], and
+#'   * converts other elements to character strings using [format()] and
 #'   * replaces empty lists by a `"<empty-list>"` constant treated as a placeholder.
 #'
 #' @param x A list. It can be empty.
@@ -130,7 +130,7 @@ flat_deserialize <- function(string = "", tag_sep = ": ") {
 
     # Un-escape octothorpes (\#).
     # readLines() and text_read() automatically
-    # escape backslashes: \ is read as \\, and
+    # escape backslashes: \ is read as \\ and
     # \# is read as \\#. It is replaced by a #.
     string <- gsub(r"{(?<!\\)(?:\\\\)*#}", "#", string, perl = TRUE)
 
@@ -161,7 +161,7 @@ flat_deserialize <- function(string = "", tag_sep = ": ") {
     # Recursively restructuring list-like objects is
     # harder to achieve with usual R patterns. Below,
     # we start with an empty accumulator, loops over
-    # each tag/contents pair, and sequentially define
+    # each tag/contents pair and sequentially define
     # levels within it. Since we grow an object, this
     # is usually a no go, but this is actually very
     # fast (parsing is completed in microseconds).
@@ -231,7 +231,7 @@ flat_tag <- function(x = list(), tag_sep = ": ", tag_empty = "") {
     count <- 0L
 
     for (i in seq_len(xlen)) {
-        # Extract names, and replace them by
+        # Extract names and replace them by
         # empty labels if they do not exist,
         # or if some are empty strings.
         tags <- names(x[i]) %??% rep_len(
@@ -244,7 +244,7 @@ flat_tag <- function(x = list(), tag_sep = ": ", tag_empty = "") {
         }
 
         # Return the names if x[[i]] is not a list. Otherwise,
-        # traverse it, and do the same. We do not recurse into
+        # traverse it and do the same. We do not recurse into
         # special objects such as pairlists, expressions,
         # closures, etc.
         acc[[i]] <- if (is.list(x[[i]])) {
@@ -292,7 +292,7 @@ flat_example <- function() {
             `Creating Them` = "Tags are constructed from names extracted from the original object.",
             "Missing names are substituted by a numbered standard label automatically."),
         Comments = c(
-            "What follows after an octothorpe is treated as a comment, and is ignored.",
+            "What follows after an octothorpe is treated as a comment and is ignored.",
             "# This is a comment.",
             "Inline comments are also allowed. # This is a comment.",
             "Escape octothorpes (\\#) to treat them as regular characters."))

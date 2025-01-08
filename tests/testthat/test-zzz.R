@@ -1,5 +1,5 @@
 test_that(".onLoad() registers options of the package", {
-    # Options are removed, and restored afterwards.
+    # Options are removed and restored afterwards.
     withr::local_options(transltr.default.path = NULL)
     transltr:::.onLoad(.Library, "transltr")
 

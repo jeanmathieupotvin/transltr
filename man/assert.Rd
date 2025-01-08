@@ -172,7 +172,7 @@ criterion is not met.
 Guard clauses tend to be verbose and recycled many times within a project.
 This makes it hard to keep error messages consistent over time. \verb{assert_*()}
 functions encapsulate usual guard clause into simple semantic functions.
-This reduces code repetition, and number of required unit tests. See
+This reduces code repetition and number of required unit tests. See
 Examples below.
 
 By convention, \link[base:NA]{NA} values are \strong{always} disallowed. Package

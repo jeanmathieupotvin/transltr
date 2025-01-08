@@ -34,7 +34,7 @@ if (interactive()) {
         require(withr)
     })
 
-    # Attach aliases, and small dev tools.
+    # Attach aliases and small dev tools.
     # Names are as small as possible by design.
     attach(name = "tools:transltr:dev", what = local({
         # Exhaustive build checks.

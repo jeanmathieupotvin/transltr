@@ -1,6 +1,6 @@
 #' Read and Write Translations
 #'
-#' Export [`Translator`][Translator] objects to text files, and import such
+#' Export [`Translator`][Translator] objects to text files and import such
 #' files back into \R as [`Translator`][Translator] objects.
 #'
 #' @details
@@ -9,7 +9,7 @@
 #' independently from other fields. Two types of objects are created from
 #' a [`Translator`][Translator] object: a single *Exported Translator*, and
 #' zero, or more *Exported Translations*. These objects are portable because
-#' they are textual representations that can be inspected, and modified using
+#' they are textual representations that can be inspected and modified using
 #' a wide variety of tools and systems.
 #'
 #' Exported objects are stored in plain text files. The inner workings of the
@@ -74,7 +74,7 @@
 #'
 #' Note that underlying entries of `Translations Files` (a standard field of
 #' Exported Translator objects) may be modified afterwards. The file paths it
-#' contains are cached by [translations_read()], and reused automatically.
+#' contains are cached by [translations_read()] and reused automatically.
 #'
 #' [translations_read()] returns an S3 object of class
 #' [`ExportedTranslations`][export()].
@@ -118,7 +118,7 @@
 #' # This creates 3 files:
 #' #
 #' #   1. 1 Exported Translator file, and
-#' #   2. 2 Exported Translations files (one for language "es", and another
+#' #   2. 2 Exported Translations files (one for language "es" and another
 #' #      one for language "fr"). The file for language "es" contains
 #' #      placeholders for future translations.
 #' translator_write(tr, temp_path)

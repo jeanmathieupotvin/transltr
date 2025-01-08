@@ -14,7 +14,7 @@
 #' Guard clauses tend to be verbose and recycled many times within a project.
 #' This makes it hard to keep error messages consistent over time. `assert_*()`
 #' functions encapsulate usual guard clause into simple semantic functions.
-#' This reduces code repetition, and number of required unit tests. See
+#' This reduces code repetition and number of required unit tests. See
 #' Examples below.
 #'
 #' By convention, [NA][base::NA] values are **always** disallowed. Package

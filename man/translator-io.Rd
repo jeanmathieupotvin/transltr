@@ -65,7 +65,7 @@ the Exported Translator file (by default).
 
 Note that underlying entries of \verb{Translations Files} (a standard field of
 Exported Translator objects) may be modified afterwards. The file paths it
-contains are cached by \code{\link[=translations_read]{translations_read()}}, and reused automatically.
+contains are cached by \code{\link[=translations_read]{translations_read()}} and reused automatically.
 
 \code{\link[=translations_read]{translations_read()}} returns an S3 object of class
 \code{\link[=export]{ExportedTranslations}}.
@@ -75,7 +75,7 @@ side-effect of creating a single Exported Translations file to the location
 given by \code{path}.
 }
 \description{
-Export \code{\link{Translator}} objects to text files, and import such
+Export \code{\link{Translator}} objects to text files and import such
 files back into \R as \code{\link{Translator}} objects.
 }
 \details{
@@ -84,7 +84,7 @@ a \code{\link{Translator}} object is split. Translations are exported
 independently from other fields. Two types of objects are created from
 a \code{\link{Translator}} object: a single \emph{Exported Translator}, and
 zero, or more \emph{Exported Translations}. These objects are portable because
-they are textual representations that can be inspected, and modified using
+they are textual representations that can be inspected and modified using
 a wide variety of tools and systems.
 
 Exported objects are stored in plain text files. The inner workings of the
@@ -150,7 +150,7 @@ tr <- translator(
 # This creates 3 files:
 #
 #   1. 1 Exported Translator file, and
-#   2. 2 Exported Translations files (one for language "es", and another
+#   2. 2 Exported Translations files (one for language "es" and another
 #      one for language "fr"). The file for language "es" contains
 #      placeholders for future translations.
 translator_write(tr, temp_path)

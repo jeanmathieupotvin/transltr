@@ -40,7 +40,7 @@ of environment variable \code{TRANSLTR_SOURCE_LANGUAGE}. It returns \code{"en"} 
 latter is unset.
 }
 \description{
-Get or set (globally) the current language, and source language.
+Get or set the current, and source languages.
 
 They are registered as environment variables named
 \code{TRANSLTR_LANGUAGE}, and \code{TRANSLTR_SOURCE_LANGUAGE}.

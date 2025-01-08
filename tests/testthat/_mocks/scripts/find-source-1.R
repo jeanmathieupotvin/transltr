@@ -64,7 +64,7 @@ server <- function(input, output) {
 }
 
 
-# Create the application, and run it -------------------------------------------
+# Create the application and run it --------------------------------------------
 
 
 shiny::shinyApp(ui = ui, server = server)

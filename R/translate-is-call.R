@@ -7,14 +7,14 @@
 #'
 #' @details
 #' An *implicit* call does not specify the namespace, i.e. `translate()`. It
-#' may refer to *any* such function, and may not correspond to [translate()].
-#' This depends on the user's intents at compile time, and on the
+#' may refer to *any* such function and may not correspond to [translate()].
+#' This depends on the user's intents at compile time and on the
 #' [search][search()] path at runtime.
 #'
 #' An *explicit* call includes the namespace, i.e. `transltr::translate()`.
 #' There is no ambiguity.
 #'
-#' \R is sometimes an odd language, and this function covers some unusual use
+#' \R is sometimes an odd language and this function covers some unusual use
 #' cases. See Examples below. By design, it **does not** detect calls to method
 #' [`Translator$translate()`][Translator]. Using the latter is discouraged.
 #'

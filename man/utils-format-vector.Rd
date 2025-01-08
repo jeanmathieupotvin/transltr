@@ -17,7 +17,7 @@ format_vector(
 }
 \arguments{
 \item{x}{A \link[=vector]{vector} of any \link[=vector]{atomic} mode, a
-\link[=list]{list}, or a \link[=pairlist]{pairlist}. It can be empty,
+\link[=list]{list}, or a \link[=pairlist]{pairlist}. It can be empty
 and it can contain \link[base:NA]{NA} values.}
 
 \item{label}{A \code{NULL}, or a non-empty and non-\link[base:NA]{NA} character
@@ -31,7 +31,7 @@ current \emph{nesting level} to use for indentation purposes.}
 \item{indent}{A non-\link[base:NA]{NA} integer value. The number of single
 space(s) to use for each \code{level} when indenting name/value pairs.}
 
-\item{fill_names}{A non-\link[base:NA]{NA} logical value. Should \code{NULL}, and
+\item{fill_names}{A non-\link[base:NA]{NA} logical value. Should \code{NULL} and
 empty names be replaced by names created from the elements' underlying
 positions? Positions are relative to each \code{level}.}
 
@@ -56,7 +56,7 @@ Format \link[=vector]{atomic} vectors, \link[=list]{lists}, and
 }
 \details{
 \code{\link[=format_vector]{format_vector()}} is an alternative to \code{\link[utils:str]{utils::str()}} that exposes a much
-simpler generic formatting interface, and yields terser outputs of name/value
+simpler generic formatting interface and yields terser outputs of name/value
 pairs. Indentation is used for nested values.
 
 \code{\link[=format_vector]{format_vector()}} does not attempt to cover all \R objects like
@@ -106,7 +106,7 @@ object <- list(
 
 cat(transltr:::format_vector(object), sep = "\n")
 
-# Using custom representations, and adding names derived
+# Using custom representations and adding names derived
 # from positions (for elements that do not have a name).
 cat(sep = "\n", transltr:::format_vector(
   object,

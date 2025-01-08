@@ -1,12 +1,12 @@
 #' Find Source Text
 #'
-#' Find, and extract source text that requires translation.
+#' Find and extract source text that requires translation.
 #'
 #' [find_source()] and [find_source_in_files()] look for calls to [translate()]
-#' in \R scripts, and convert them to [`Text`][Text] objects via [as_text()].
+#' in \R scripts and convert them to [`Text`][Text] objects via [as_text()].
 #'
 #' [find_source()] further constructs a [`Translator`][Translator] object from
-#' the set of [`Text`][Text] objects. It can later be exported, and imported
+#' the set of [`Text`][Text] objects. It can later be exported and imported
 #' via [translator_write()] and [translator_read()] respectively.
 #'
 #' ## Methodology
@@ -16,10 +16,10 @@
 #' steps to extract source text from a single \R script.
 #'
 #'   1. It is read with [text_read()].
-#'   2. It is parsed with [parse()], and underlying tokens are extracted from
+#'   2. It is parsed with [parse()] and underlying tokens are extracted from
 #'      parsed expressions with [utils::getParseData()].
 #'   3. Each expression token (`expr`) is converted to language objects with
-#'      [str2lang()]. Parsing errors, and invalid expressions are silently
+#'      [str2lang()]. Parsing errors and invalid expressions are silently
 #'      skipped.
 #'   4. Valid [`call`][call()] objects stemming from step 3 are filtered with
 #'      [is_translate_call()].

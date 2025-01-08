@@ -4,8 +4,8 @@ mock_file_eucjp_path <- get_mock_path("io-text-eucjp", "txt")
 # Below, 8 non-ASCII characters are written. These are purposely
 # non-standard and require a multi-byte encoding. They represent
 # a mix of Hiragana and Kanji characters (stemming from Japanese
-# syllabaries), and non-standard punctuation symbols. When using
-# UTF-8, they all require 3 bytes (each), and therefore, 24 bytes
+# syllabaries) and non-standard punctuation symbols. When using
+# UTF-8, they all require 3 bytes (each) and therefore, 24 bytes
 # should be written to match expectations (nchar(,"bytes") should
 # return 24). The expected byte sequences were extracted from
 # https://symbl.cc/.
@@ -36,7 +36,7 @@ test_that("text_read() validates path", {
     temp_dir  <- withr::local_tempdir(pattern  = "a-test-directory")
     temp_file <- withr::local_tempfile(pattern = "a-non-readable-file")
 
-    # Create file, and change permissions.
+    # Create file and change permissions.
     # 222 = write-only for owner / group / other.
     # It can still be deleted afterwards.
     file.create(temp_file)
@@ -92,7 +92,7 @@ test_that("text_write() validates path", {
     temp_dir  <- withr::local_tempdir(pattern  = "a-test-directory")
     temp_file <- withr::local_tempfile(pattern = "a-non-writable-file")
 
-    # Create file, and change permissions.
+    # Create file and change permissions.
     # 444 = read-only for owner / group / other.
     # It can still be deleted afterwards.
     file.create(temp_file)

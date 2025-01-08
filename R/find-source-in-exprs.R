@@ -53,7 +53,7 @@
 #' transltr:::find_source_in_file(temp_file, strict = FALSE, verbose = TRUE)
 #'
 #' # You may also read the dummy script, parse it, extract calls
-#' # to translate() from it, and coerce them as Text objects.
+#' # to translate() from it and coerce them as Text objects.
 #' # find_source_exprs() is (mostly) just a semantic wrapper for
 #' # utils::getParseData(parse(temp_file)).
 #' exprs <- transltr:::find_source_exprs(temp_file)

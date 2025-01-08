@@ -2,7 +2,7 @@
 #'
 #' [text_read()] and [text_write()] respectively wrap [base::readLines()] and
 #' [base::writeLines()]. They further validate their arguments, normalize
-#' file paths, and re-encode inputs to `UTF-8` before reading and writing.
+#' file paths and re-encode inputs to `UTF-8` before reading and writing.
 #'
 #' @template param-path
 #'
@@ -24,7 +24,7 @@
 #' @examples
 #' lines <- c(
 #'   "Hello, world!",
-#'   "These are lines to be written, and read afterwards.",
+#'   "These are lines to be written and read afterwards.",
 #'   "Bye!")
 #'
 #' temp_file <- tempfile()

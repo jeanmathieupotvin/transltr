@@ -1,15 +1,14 @@
 #' Source Text
 #'
-#' Store, structure, and manipulate **a single** source text, and its
-#' translations.
+#' Structure a source text and its translations.
 #'
 #' A [`Text`][Text] object is a piece of text that is extracted from \R source
 #' scripts.
 #'
 #'   * It (typically) has one or more [`Locations`][Location] within a project.
-#'   * It is complemented by any number of translations, and further attributes.
+#'   * It is complemented by any number of translations and further attributes.
 #'
-#' The [`Text`][Text] class structures this information, and exposes a set of
+#' The [`Text`][Text] class structures this information and exposes a set of
 #' methods to manipulate it.
 #'
 #' ## Combining Text Objects
@@ -17,13 +16,13 @@
 #' [c()] can only combine [`Text`][Text] objects having the same `hash`.
 #' This is equivalent to having the same `hash_algorithm`, `source_lang`,
 #' and `source_text`. In that case, the underlying translations and
-#' [`Location`][Location] objects are combined, and a new object is returned.
+#' [`Location`][Location] objects are combined and a new object is returned.
 #' It throws an error if all [`Text`][Text] objects are empty (they have no
 #' set `source_lang`).
 #'
 #' [merge_texts()] is a generalized version of [c()] that handles any number
 #' of [`Text`][Text] objects having possibly different hashes. It can be
-#' viewed as a vectorized version of [c()]. It silently ignores, and drops
+#' viewed as a vectorized version of [c()]. It silently ignores and drops
 #' all empty [`Text`][Text] objects.
 #'
 #' ## Coercion
@@ -37,7 +36,7 @@
 #' @param x Any \R object.
 #'
 #' @param ... Usage depends on the underlying function.
-#'   * Any number of [`Location`][Location] objects, and/or named character
+#'   * Any number of [`Location`][Location] objects and/or named character
 #'     strings for [text()] (in no preferred order).
 #'   * Any number of [`Text`][Text] objects for [merge_texts()] and S3
 #'     method [c()].

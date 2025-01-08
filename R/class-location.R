@@ -1,8 +1,7 @@
 #' Source Locations
 #'
-#' Store, structure, and manipulate source locations. Class
-#' [`Location`][Location] is a lighter alternative to [srcfile()], and other
-#' related functionalities.
+#' Structure and manipulate source locations. Class [`Location`][Location] is
+#' a lighter alternative to [srcfile()] and other related functionalities.
 #'
 #' A [`Location`][Location] is a set of one or more line/column ranges
 #' referencing contents (like text or source code) within a common *origin*
@@ -11,7 +10,7 @@
 #' matters is the underlying context.
 #'
 #' [`Location`][Location] objects may refer to multiple distinct ranges for
-#' the the same origin. This is why arguments `line1`, `col1`, `line2`, and
+#' the the same origin. This is why arguments `line1`, `col1`, `line2` and
 #' `col2` accept integer vectors (and not only scalar values).
 #'
 #' ## Combining Location Objects

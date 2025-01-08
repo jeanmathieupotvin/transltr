@@ -67,9 +67,8 @@ and S3 method \code{\link[=c]{c()}}.
 objects.
 }
 \description{
-Store, structure, and manipulate source locations. Class
-\code{\link{Location}} is a lighter alternative to \code{\link[=srcfile]{srcfile()}}, and other
-related functionalities.
+Structure and manipulate source locations. Class \code{\link{Location}} is
+a lighter alternative to \code{\link[=srcfile]{srcfile()}} and other related functionalities.
 }
 \details{
 A \code{\link{Location}} is a set of one or more line/column ranges
@@ -79,7 +78,7 @@ identified by an underlying \code{path}. The latter is generic and can be
 matters is the underlying context.
 
 \code{\link{Location}} objects may refer to multiple distinct ranges for
-the the same origin. This is why arguments \code{line1}, \code{col1}, \code{line2}, and
+the the same origin. This is why arguments \code{line1}, \code{col1}, \code{line2} and
 \code{col2} accept integer vectors (and not only scalar values).
 \subsection{Combining Location Objects}{
 

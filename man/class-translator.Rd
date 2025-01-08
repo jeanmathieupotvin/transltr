@@ -19,7 +19,7 @@ is_translator(x)
 \arguments{
 \item{...}{Usage depends on the underlying function.
 \itemize{
-\item Any number of \code{\link{Text}} objects, and/or named character
+\item Any number of \code{\link{Text}} objects and/or named character
 strings for \code{\link[=translator]{translator()}} (in no preferred order).
 \item Further arguments passed to or from other methods for \code{\link[=format]{format()}},
 and \code{\link[=print]{print()}}.
@@ -46,17 +46,17 @@ information for identification purposes.}
 \code{\link[=print]{print()}} returns argument \code{x} invisibly.
 }
 \description{
-Store, structure, and manipulate source text\strong{s}, and their translations.
+Structure and manipulate the source text of a project and its translations.
 }
 \details{
 A \code{\link{Translator}} object encapsulates the source text of a
-project (or any other \emph{context}), and all related translations. It exposes
+project (or any other \emph{context}) and all related translations. It exposes
 a set of methods that can be used to manipulate this information, but it
 is designed in such a way that its methods can be ignored most of the time.
 
 Under the hood, \code{\link{Translator}} objects are collections of
 \code{\link{Text}} objects. These do most of the work. They are treated as
-lower-level component, and in typical situations, users rarely interact
+lower-level component and in typical situations, users rarely interact
 with them.
 \subsection{Translating Text}{
 
@@ -68,7 +68,7 @@ called by the former.
 
 \subsection{Exporting and Importing Translators}{
 
-\code{\link{Translator}} objects can be saved, and exported with
+\code{\link{Translator}} objects can be saved and exported with
 \code{\link[=translator_write]{translator_write()}}.
 
 They can be imported back into an \R session with \code{\link[=translator_read]{translator_read()}}.
@@ -548,7 +548,7 @@ Map a language code to a native language name.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{...}}{Any number of named, non-empty, and non-\link[base:NA]{NA}
-character strings. Names are codes, and values are native
+character strings. Names are codes and values are native
 languages. See field \code{native_languages} for more information.}
 }
 \if{html}{\out{</div>}}

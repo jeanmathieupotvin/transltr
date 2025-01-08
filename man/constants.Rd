@@ -49,7 +49,7 @@ It emits strings of 40 hexadecimal characters.
 
 Method \code{utf8} is a simple method derived from cumulative sums of UTF-8 code
 points (converted to integers). It is slightly faster than method \code{sha1} for
-small inputs, and emits hashes with a width porportional to the underlying
+small inputs and emits hashes with a width porportional to the underlying
 input's length. It is used for testing purposes.
 
 Strictly speaking, this method is not a hashing algorithm per se. Instead,

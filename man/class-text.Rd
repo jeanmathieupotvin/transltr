@@ -42,7 +42,7 @@ as_text(x, ...)
 \arguments{
 \item{...}{Usage depends on the underlying function.
 \itemize{
-\item Any number of \code{\link{Location}} objects, and/or named character
+\item Any number of \code{\link{Location}} objects and/or named character
 strings for \code{\link[=text]{text()}} (in no preferred order).
 \item Any number of \code{\link{Text}} objects for \code{\link[=merge_texts]{merge_texts()}} and S3
 method \code{\link[=c]{c()}}.
@@ -90,31 +90,30 @@ class \code{\link{Text}}.
 can be empty if all underlying \code{\link{Text}} objects are empty.
 }
 \description{
-Store, structure, and manipulate \strong{a single} source text, and its
-translations.
+Structure a source text and its translations.
 }
 \details{
 A \code{\link{Text}} object is a piece of text that is extracted from \R source
 scripts.
 \itemize{
 \item It (typically) has one or more \code{\link[=Location]{Locations}} within a project.
-\item It is complemented by any number of translations, and further attributes.
+\item It is complemented by any number of translations and further attributes.
 }
 
-The \code{\link{Text}} class structures this information, and exposes a set of
+The \code{\link{Text}} class structures this information and exposes a set of
 methods to manipulate it.
 \subsection{Combining Text Objects}{
 
 \code{\link[=c]{c()}} can only combine \code{\link{Text}} objects having the same \code{hash}.
 This is equivalent to having the same \code{hash_algorithm}, \code{source_lang},
 and \code{source_text}. In that case, the underlying translations and
-\code{\link{Location}} objects are combined, and a new object is returned.
+\code{\link{Location}} objects are combined and a new object is returned.
 It throws an error if all \code{\link{Text}} objects are empty (they have no
 set \code{source_lang}).
 
 \code{\link[=merge_texts]{merge_texts()}} is a generalized version of \code{\link[=c]{c()}} that handles any number
 of \code{\link{Text}} objects having possibly different hashes. It can be
-viewed as a vectorized version of \code{\link[=c]{c()}}. It silently ignores, and drops
+viewed as a vectorized version of \code{\link[=c]{c()}}. It silently ignores and drops
 all empty \code{\link{Text}} objects.
 }
 
