@@ -8,7 +8,7 @@
 #'
 #' @usage
 #' ## Expected usage in tests/testthat/test-io-text.R
-#' read_text(get_mock_path("io-text-eucjp", "txt"))
+#' read_text(get_mock_path("text-io-eucjp", "txt"))
 #'
 #' @note
 #' This header is included in the output of [read_text()]. Since it only

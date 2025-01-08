@@ -4,7 +4,7 @@
 #'
 #' @usage
 #' ## Expected usage in tests/testthat/test-io-text.R
-#' read_text(get_mock_path("io-text-utf8", "txt"))
+#' read_text(get_mock_path("text-io-utf8", "txt"))
 #'
 #' @note
 #' This header is included in the output of [read_text()].

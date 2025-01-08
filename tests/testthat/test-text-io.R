@@ -1,5 +1,5 @@
-mock_file_utf8_path  <- get_mock_path("io-text-utf8",  "txt")
-mock_file_eucjp_path <- get_mock_path("io-text-eucjp", "txt")
+mock_file_utf8_path  <- get_mock_path("text-io-utf8",  "txt")
+mock_file_eucjp_path <- get_mock_path("text-io-eucjp", "txt")
 
 # Below, 8 non-ASCII characters are written. These are purposely
 # non-standard and require a multi-byte encoding. They represent
