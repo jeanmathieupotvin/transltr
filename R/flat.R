@@ -252,10 +252,14 @@ flat_tag <- function(x = list(), tag_sep = ": ", tag_empty = "") {
 flat_format <- function(x = list()) {
     assert_list(x, TRUE)
 
+    if (!length(x)) {
+        return(list("<empty list>"))
+    }
+
     return(
         lapply(x, \(el) {
             if (is.list(el)) {
-                if (length(el)) flat_format(el) else list("<empty list>")
+                flat_format(el)
             } else {
                 paste0(format(el), collapse = "\n")
             }
