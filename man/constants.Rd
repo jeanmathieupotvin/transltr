@@ -8,21 +8,29 @@ constant(which = "")
 }
 \arguments{
 \item{which}{A non-empty and non-\link[base:NA]{NA} character string. The name
-of the constant to fetch.}
+of the constant to fetch. See below for defined values.}
 }
 \value{
-\code{\link[=constant]{constant()}} returns the requested constant, or \code{NULL} if it is unavailable.
-See Examples below.
+\code{\link[=constant]{constant()}} returns the requested constant, or \code{NULL} if it is unavailable.\tabular{lll}{
+   \code{which} \tab \strong{Shape} \tab \strong{Value} \cr
+   \code{"algorithms"} \tab \code{character(2)} \tab \code{c("sha1", "utf8")} \cr
+   \code{"concat"} \tab \code{character(1)} \tab \code{" "} \cr
+   \code{"empty"} \tab \code{character(1)} \tab \code{"<empty>"} \cr
+   \code{"null"} \tab \code{character(1)} \tab \code{"<null>"} \cr
+   \code{"unset"} \tab \code{character(1)} \tab \code{"<unset>"} \cr
+   \code{"unknown"} \tab \code{character(1)} \tab \code{"<unknown>"} \cr
+   \code{"untranslated"} \tab \code{character(1)} \tab \code{"# Insert a translation here."} \cr
+}
 }
 \description{
 Fetch a constant used by \code{\link{transltr}}. Constants ensure
 consistency among all features of the package.
 }
-\section{Hashing Algorithms}{
+\section{Algorithms returned by \code{constant("algorithms")}}{
 
 Hashing algorithms map an arbitrary character string to a shorter string of
 hexadecimal characters. It typically has a fixed width and is highly likely
-to be unique. Available methods are listed by \code{constant("algorithms")}.
+to be unique.
 \subsection{Secure Hash Algorithm 1}{
 
 Method \code{sha1} corresponds to SHA-1 (Secure Hash Algorithm version 1), a
@@ -41,7 +49,7 @@ It emits strings of 40 hexadecimal characters.
 Method \code{utf8} is a simple method derived from cumulative sums of UTF-8 code
 points (converted to integers). It is slightly faster than method \code{sha1} for
 small inputs, and emits hashes with a width porportional to the underlying
-input's length.
+input's length. It is used for testing purposes.
 
 Strictly speaking, this method is not a hashing algorithm per se. Instead,
 it should be viewed as an identification algorithm that is highly likely to
@@ -50,13 +58,13 @@ produce different values for different inputs.
 }
 
 \examples{
-transltr:::constant("algorithms")    ## Outputs c("sha1", "utf8")
-transltr:::constant("concat")        ## Outputs " "
-transltr:::constant("empty")         ## Outputs "<empty>"
-transltr:::constant("null")          ## Outputs "<null>"
-transltr:::constant("unset")         ## Outputs "<unset>"
-transltr:::constant("unknown")       ## Outputs "<unknown>"
-transltr:::constant("untranslated")  ## Outputs "# Erase this comment and provide a translation."
+transltr:::constant("algorithms")
+transltr:::constant("concat")
+transltr:::constant("empty")
+transltr:::constant("null")
+transltr:::constant("unset")
+transltr:::constant("unknown")
+transltr:::constant("untranslated")
 
 # NULL is returned if which has no corresponding entry.
 transltr:::constant("__undefined__")

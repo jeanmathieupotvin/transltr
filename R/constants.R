@@ -4,16 +4,25 @@
 #' consistency among all features of the package.
 #'
 #' @param which A non-empty and non-[NA][base::NA] character string. The name
-#'   of the constant to fetch.
+#'   of the constant to fetch. See below for defined values.
 #'
 #' @returns
 #' [constant()] returns the requested constant, or `NULL` if it is unavailable.
-#' See Examples below.
 #'
-#' @section Hashing Algorithms:
+#' | `which`          | **Shape**      | **Value**                        |
+#' | ---------------- | -------------- | -------------------------------- |
+#' | `"algorithms"`   | `character(2)` | `c("sha1", "utf8")`              |
+#' | `"concat"`       | `character(1)` | `" "`                            |
+#' | `"empty"`        | `character(1)` | `"<empty>"`                      |
+#' | `"null"`         | `character(1)` | `"<null>"`                       |
+#' | `"unset"`        | `character(1)` | `"<unset>"`                      |
+#' | `"unknown"`      | `character(1)` | `"<unknown>"`                    |
+#' | `"untranslated"` | `character(1)` | `"# Insert a translation here."` |
+#'
+#' @section Algorithms returned by `constant("algorithms")`:
 #' Hashing algorithms map an arbitrary character string to a shorter string of
 #' hexadecimal characters. It typically has a fixed width and is highly likely
-#' to be unique. Available methods are listed by `constant("algorithms")`.
+#' to be unique.
 #'
 #' ## Secure Hash Algorithm 1
 #'
@@ -32,20 +41,20 @@
 #' Method `utf8` is a simple method derived from cumulative sums of UTF-8 code
 #' points (converted to integers). It is slightly faster than method `sha1` for
 #' small inputs, and emits hashes with a width porportional to the underlying
-#' input's length.
+#' input's length. It is used for testing purposes.
 #'
 #' Strictly speaking, this method is not a hashing algorithm per se. Instead,
 #' it should be viewed as an identification algorithm that is highly likely to
 #' produce different values for different inputs.
 #'
 #' @examples
-#' transltr:::constant("algorithms")    ## Outputs c("sha1", "utf8")
-#' transltr:::constant("concat")        ## Outputs " "
-#' transltr:::constant("empty")         ## Outputs "<empty>"
-#' transltr:::constant("null")          ## Outputs "<null>"
-#' transltr:::constant("unset")         ## Outputs "<unset>"
-#' transltr:::constant("unknown")       ## Outputs "<unknown>"
-#' transltr:::constant("untranslated")  ## Outputs "# Erase this comment and provide a translation."
+#' transltr:::constant("algorithms")
+#' transltr:::constant("concat")
+#' transltr:::constant("empty")
+#' transltr:::constant("null")
+#' transltr:::constant("unset")
+#' transltr:::constant("unknown")
+#' transltr:::constant("untranslated")
 #'
 #' # NULL is returned if which has no corresponding entry.
 #' transltr:::constant("__undefined__")
@@ -63,7 +72,7 @@ constant <- function(which = "") {
             null         = "<null>",
             unset        = "<unset>",
             unknown      = "<unknown>",
-            untranslated = "# Erase this comment and provide a translation.",
+            untranslated = "# Insert a translation here.",
             NULL))
 }
 
