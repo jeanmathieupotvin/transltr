@@ -29,7 +29,7 @@
     Condition
       Error:
       ! 'hashes' cannot be overwritten.
-      Update them by setting 'hash_algorithm', and by setting, or removing 'Text' objects.
+      Update them by setting 'hash_algorithm' and by setting, or removing 'Text' objects.
 
 # active binding source_texts validates value
 
