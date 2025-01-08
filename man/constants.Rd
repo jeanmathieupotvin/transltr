@@ -16,6 +16,7 @@ of the constant to fetch. See below for defined values.}
    \code{"algorithms"} \tab \code{character(2)} \tab \code{c("sha1", "utf8")} \cr
    \code{"concat"} \tab \code{character(1)} \tab \code{" "} \cr
    \code{"empty"} \tab \code{character(1)} \tab \code{"<empty>"} \cr
+   \code{"empty-list"} \tab \code{character(1)} \tab \code{"<empty list>"} \cr
    \code{"null"} \tab \code{character(1)} \tab \code{"<null>"} \cr
    \code{"unset"} \tab \code{character(1)} \tab \code{"<unset>"} \cr
    \code{"unknown"} \tab \code{character(1)} \tab \code{"<unknown>"} \cr
@@ -61,6 +62,7 @@ produce different values for different inputs.
 transltr:::constant("algorithms")
 transltr:::constant("concat")
 transltr:::constant("empty")
+transltr:::constant("empty-list")
 transltr:::constant("null")
 transltr:::constant("unset")
 transltr:::constant("unknown")

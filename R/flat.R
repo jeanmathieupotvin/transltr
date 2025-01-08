@@ -30,8 +30,7 @@
 #'
 #'   * converts `NULL` to the `"NULL"` character string,
 #'   * converts other elements to character strings using [format()], and
-#'   * transforms empty lists into lists containing `"<empty list>"`. The
-#'     latter is treated as a placeholder.
+#'   * replaces empty lists by a `"<empty-list>"` constant treated as a placeholder.
 #'
 #' @param x A list.
 #'
@@ -93,7 +92,7 @@
 #'
 #' # flat_format() is a helper function to ease the
 #' # serialization process. See Details for more information.
-#' expected <- list(a = "NULL", b = list("<empty list>"), c = "1\n2")
+#' expected <- list(a = "NULL", b = constant("empty-list"), c = "1\n2")
 #' current  <- transltr:::flat_format(list(a = NULL, b = list(), c = c(1L, 2L)))
 #' identical(current, expected)
 #'
@@ -168,7 +167,7 @@ flat_deserialize <- function(string = "", tag_sep = ": ") {
         lvls     <- tags_lvls[[ti]]
         lvls_len <- length(lvls)
         lvls_ind <- seq_along(lvls)
-        value    <- if (identical(values[[ti]], "<empty list>")) {
+        value    <- if (identical(values[[ti]], constant("empty-list"))) {
             list()
         } else {
             values[[ti]]
@@ -257,7 +256,7 @@ flat_format <- function(x = list()) {
     assert_list(x, TRUE)
 
     if (!length(x)) {
-        return("<empty list>")
+        return(constant("empty-list"))
     }
 
     out <- lapply(x, \(el) {

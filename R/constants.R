@@ -14,6 +14,7 @@
 #' | `"algorithms"`   | `character(2)` | `c("sha1", "utf8")`              |
 #' | `"concat"`       | `character(1)` | `" "`                            |
 #' | `"empty"`        | `character(1)` | `"<empty>"`                      |
+#' | `"empty-list"`   | `character(1)` | `"<empty list>"`                 |
 #' | `"null"`         | `character(1)` | `"<null>"`                       |
 #' | `"unset"`        | `character(1)` | `"<unset>"`                      |
 #' | `"unknown"`      | `character(1)` | `"<unknown>"`                    |
@@ -51,6 +52,7 @@
 #' transltr:::constant("algorithms")
 #' transltr:::constant("concat")
 #' transltr:::constant("empty")
+#' transltr:::constant("empty-list")
 #' transltr:::constant("null")
 #' transltr:::constant("unset")
 #' transltr:::constant("unknown")
@@ -69,6 +71,7 @@ constant <- function(which = "") {
             algorithms   = c("sha1", "utf8"),
             concat       = " ",
             empty        = "<empty>",
+            `empty-list` = "<empty list>",
             null         = "<null>",
             unset        = "<unset>",
             unknown      = "<unknown>",

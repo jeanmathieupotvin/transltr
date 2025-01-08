@@ -77,8 +77,7 @@ serialization process. It
 \itemize{
 \item converts \code{NULL} to the \code{"NULL"} character string,
 \item converts other elements to character strings using \code{\link[=format]{format()}}, and
-\item transforms empty lists into lists containing \code{"<empty list>"}. The
-latter is treated as a placeholder.
+\item replaces empty lists by a \code{"<empty-list>"} constant treated as a placeholder.
 }
 }
 }
@@ -114,7 +113,7 @@ transltr:::flat_tag(x)
 
 # flat_format() is a helper function to ease the
 # serialization process. See Details for more information.
-expected <- list(a = "NULL", b = list("<empty list>"), c = "1\n2")
+expected <- list(a = "NULL", b = constant("empty-list"), c = "1\n2")
 current  <- transltr:::flat_format(list(a = NULL, b = list(), c = c(1L, 2L)))
 identical(current, expected)
 
