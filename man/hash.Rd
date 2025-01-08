@@ -39,9 +39,9 @@ Values passed to these arguments are concatenated with a colon character for
 hashing purposes.
 }
 \examples{
-transltr:::hash("en", "Hello, world!", "sha1")     ## Outputs a string.
-transltr:::hash("en", "Hello, world!", "utf8")     ## Outputs a string.
-transltr:::hash("en", "Hello, world!", "_error_")  ## Outputs NULL.
+transltr:::hash("en", "Hello, world!", "sha1")     ## Outputs a string
+transltr:::hash("en", "Hello, world!", "utf8")     ## Outputs a string
+transltr:::hash("en", "Hello, world!", "_error_")  ## Outputs NULL
 
 }
 \seealso{
