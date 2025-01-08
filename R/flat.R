@@ -257,18 +257,18 @@ flat_format <- function(x = list()) {
     assert_list(x, TRUE)
 
     if (!length(x)) {
-        return(list("<empty list>"))
+        return("<empty list>")
     }
 
-    return(
-        lapply(x, \(el) {
-            if (is.list(el)) {
-                flat_format(el)
-            } else {
-                paste0(format(el), collapse = "\n")
-            }
-        })
-    )
+    out <- lapply(x, \(el) {
+        if (is.list(el)) {
+            return(flat_format(el))
+        }
+
+        return(paste0(format(el), collapse = "\n"))
+    })
+
+    return(out)
 }
 
 #' @rdname flat

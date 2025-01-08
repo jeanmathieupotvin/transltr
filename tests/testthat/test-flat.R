@@ -47,6 +47,10 @@ test_that("_tag() retains the structure of x when replacing empty names by posit
 # flat_format() ----------------------------------------------------------------
 
 
+test_that("_format() returns a constant if x is empty", {
+    expect_identical(flat_format(), "<empty list>")
+})
+
 test_that("_format() returns a list having the same shape as x", {
     # Lengths, types, and attributes (like names) must be preserved.
     x <- list(a = 1L, b = 2L, cd = list(c = 3L, d = 4L))
@@ -54,6 +58,11 @@ test_that("_format() returns a list having the same shape as x", {
     expect_identical(
         flat_format(x),
         list(a = "1", b = "2", cd = list(c = "3", d = "4")))
+})
+
+test_that("_format() validates x", {
+    expect_error(flat_format(1L))
+    expect_snapshot(flat_format(1L), error = TRUE)
 })
 
 test_that("_format() coerces elements of x to character strings", {
@@ -93,15 +102,10 @@ test_that("_format() coerces elements of x to character strings", {
                 f = "00\n00")))
 })
 
-test_that("_format() replaces empty contents of empty lists by a constant", {
-    expect_identical(flat_format(list()), list("<empty list>"))
-    expect_identical(flat_format(list(list())), list(list("<empty list>")))
-    expect_identical(flat_format(list(list(list()))), list(list(list("<empty list>"))))
-})
-
-test_that("_format() validates x", {
-    expect_error(flat_format(1L))
-    expect_snapshot(flat_format(1L), error = TRUE)
+test_that("_format() replaces empty lists by a constant", {
+    expect_identical(flat_format(list()), "<empty list>")
+    expect_identical(flat_format(list(list())), list("<empty list>"))
+    expect_identical(flat_format(list(list(list()))), list(list("<empty list>")))
 })
 
 
