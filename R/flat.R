@@ -16,6 +16,8 @@
 #' one, but [atomic] vectors are not reconstituted (they are deserialized
 #' as elements of length 1). Elements are further left as character strings.
 #'
+#' The convention is to serialize an empty list to an empty character string.
+#'
 #' ## Internal mechanisms
 #'
 #' [flat_tag()] and [flat_format()] are called internally by [flat_serialize()].
@@ -23,7 +25,7 @@
 #' former.
 #'
 #' [flat_tag()] creates tags from names extracted from `x`, and formats them.
-#' Tags may not be unique, depending on `x`'s structure, and names.
+#' Tags may not be unique, depending on `x`'s structure and names.
 #'
 #' [flat_format()] recursively formats the elements of `x` as part of the
 #' serialization process. It
@@ -32,7 +34,7 @@
 #'   * converts other elements to character strings using [format()], and
 #'   * replaces empty lists by a `"<empty-list>"` constant treated as a placeholder.
 #'
-#' @param x A list.
+#' @param x A list. It can be empty.
 #'
 #' @param tag_sep A non-empty and non-[NA][base::NA] character string. The
 #'   separator to use when creating tags from names (recursively) extracted
@@ -42,16 +44,16 @@
 #'   as a substitute for empty names. Positional indices are automatically
 #'   appended to it to ensure tags are always unique.
 #'
-#' @param string A non-empty and non-[NA][base::NA] character string. Contents
-#'   to deserialize.
+#' @param string A non-[NA][base::NA] character string. It can be empty.
+#'   Contents to deserialize.
 #'
 #' @returns
-#' [flat_serialize()] returns a character string.
+#' [flat_serialize()] returns a character string, possibly empty.
 #'
 #' [flat_deserialize()] returns a named list, possibly empty. Its structure
 #' depends on the underlying tags.
 #'
-#' [flat_tag()] returns a character vector.
+#' [flat_tag()] returns a character vector, possibly empty.
 #'
 #' [flat_format()] returns an unnamed list having the same *shape* as `x`. See
 #' Details.
@@ -96,22 +98,27 @@
 #' current  <- transltr:::flat_format(list(a = NULL, b = list(), c = c(1L, 2L)))
 #' identical(current, expected)
 #'
+#' # An empty list is serialized to an empty string by convention.
+#' flat_serialize(list())  ## Outputs ""
+#' flat_deserialize("")    ## Outputs list()
+#'
 #' @rdname flat
 #' @keywords internal
 flat_serialize <- function(x = list(), tag_sep = ": ", tag_empty = "") {
-    # NOTE: flat_deserialize() indirectly relies on sep.
-    # See tags_match. It should not be changed.
-    sep    <- "\n\n"
-    x      <- flat_format(x)
+    # Regex in flat_deserialize() relies
+    # on sep. It should not be changed.
+    sep <- "\n\n"
+
     tags   <- flat_tag(x, tag_sep, tag_empty)
-    values <- unlist(x, TRUE, FALSE)
+    values <- unlist(flat_format(x), TRUE, FALSE)
+
     return(paste0(sprintf(":: %s%s%s", tags, sep, values), collapse = sep))
 }
 
 #' @rdname flat
 #' @keywords internal
 flat_deserialize <- function(string = "", tag_sep = ": ") {
-    assert_chr1(string)
+    assert_chr1(string, TRUE)
     assert_chr1(tag_sep)
 
     # Remove comments.

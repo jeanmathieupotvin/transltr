@@ -1,3 +1,30 @@
+# flat_serialize() -------------------------------------------------------------
+
+
+test_that("_serialize() returns a character string", {
+    out <- flat_serialize(list(1L, 2L, 3L))
+
+    expect_type(out, "character")
+    expect_length(out, 1L)
+})
+
+test_that("_serialize() serializes empty lists to an empty character string", {
+    expect_identical(flat_serialize(list()), "")
+})
+
+test_that("_serialize() serializes lists into streams of unindented sections beginning by ::", {
+    expect_identical(
+        flat_serialize(list(a = 1L, b = 2L, c = 3L)),
+        ":: a\n\n1\n\n:: b\n\n2\n\n:: c\n\n3")
+    expect_identical(
+        flat_serialize(list(a = 1L, b = 2L, cd = list(c = 3L, d = 4L))),
+        ":: a\n\n1\n\n:: b\n\n2\n\n:: cd: c\n\n3\n\n:: cd: d\n\n4")
+    expect_identical(
+        flat_serialize(list(a = 1L, b = 2L, cd = list(c = 3L, d = 4L))),
+        ":: a\n\n1\n\n:: b\n\n2\n\n:: cd: c\n\n3\n\n:: cd: d\n\n4")
+})
+
+
 # flat_tag() -------------------------------------------------------------------
 
 

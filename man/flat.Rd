@@ -19,7 +19,7 @@ flat_format(x = list())
 flat_example()
 }
 \arguments{
-\item{x}{A list.}
+\item{x}{A list. It can be empty.}
 
 \item{tag_sep}{A non-empty and non-\link[base:NA]{NA} character string. The
 separator to use when creating tags from names (recursively) extracted
@@ -29,16 +29,16 @@ from \code{x}.}
 as a substitute for empty names. Positional indices are automatically
 appended to it to ensure tags are always unique.}
 
-\item{string}{A non-empty and non-\link[base:NA]{NA} character string. Contents
-to deserialize.}
+\item{string}{A non-\link[base:NA]{NA} character string. It can be empty.
+Contents to deserialize.}
 }
 \value{
-\code{\link[=flat_serialize]{flat_serialize()}} returns a character string.
+\code{\link[=flat_serialize]{flat_serialize()}} returns a character string, possibly empty.
 
 \code{\link[=flat_deserialize]{flat_deserialize()}} returns a named list, possibly empty. Its structure
 depends on the underlying tags.
 
-\code{\link[=flat_tag]{flat_tag()}} returns a character vector.
+\code{\link[=flat_tag]{flat_tag()}} returns a character vector, possibly empty.
 
 \code{\link[=flat_format]{flat_format()}} returns an unnamed list having the same \emph{shape} as \code{x}. See
 Details.
@@ -63,6 +63,8 @@ sections identified by a tag. Call \code{\link[=flat_example]{flat_example()}} f
 back into a list. The latter has (almost) the same shape as the original
 one, but \link{atomic} vectors are not reconstituted (they are deserialized
 as elements of length 1). Elements are further left as character strings.
+
+The convention is to serialize an empty list to an empty character string.
 \subsection{Internal mechanisms}{
 
 \code{\link[=flat_tag]{flat_tag()}} and \code{\link[=flat_format]{flat_format()}} are called internally by \code{\link[=flat_serialize]{flat_serialize()}}.
@@ -70,7 +72,7 @@ Aside from debugging purposes, they should not be called outside of the
 former.
 
 \code{\link[=flat_tag]{flat_tag()}} creates tags from names extracted from \code{x}, and formats them.
-Tags may not be unique, depending on \code{x}'s structure, and names.
+Tags may not be unique, depending on \code{x}'s structure and names.
 
 \code{\link[=flat_format]{flat_format()}} recursively formats the elements of \code{x} as part of the
 serialization process. It
@@ -116,6 +118,10 @@ transltr:::flat_tag(x)
 expected <- list(a = "NULL", b = constant("empty-list"), c = "1\n2")
 current  <- transltr:::flat_format(list(a = NULL, b = list(), c = c(1L, 2L)))
 identical(current, expected)
+
+# An empty list is serialized to an empty string by convention.
+flat_serialize(list())  ## Outputs ""
+flat_deserialize("")    ## Outputs list()
 
 }
 \keyword{internal}
