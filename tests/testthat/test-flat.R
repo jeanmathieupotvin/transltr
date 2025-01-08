@@ -1,3 +1,49 @@
+# flat_tag() -------------------------------------------------------------------
+
+
+test_that("_tag() returns a character", {
+    expect_type(flat_tag(), "character")
+    expect_length(flat_tag(), 0L)
+
+    expect_type(flat_tag(list(1L)), "character")
+    expect_length(flat_tag(list(1L)), 1L)
+})
+
+test_that("_tag() validates x", {
+    expect_error(flat_tag(1L))
+    expect_snapshot(flat_tag(1L), error = TRUE)
+})
+
+test_that("_tag() validates tag_sep", {
+    expect_error(flat_tag(tag_sep = 1L))
+    expect_snapshot(flat_tag(tag_sep = 1L), error = TRUE)
+})
+
+test_that("_tag() validates tag_empty", {
+    expect_error(flat_tag(tag_empty = 1L))
+    expect_snapshot(flat_tag(tag_empty = 1L), error = TRUE)
+})
+
+test_that("_tag() creates tags from names", {
+    x <- list(a = 1L, b = 2L, cd = list(c = 3L, d = 4L), e = list())
+
+    expect_identical(flat_tag(x), c("a", "b", "cd: c", "cd: d", "e: "))
+})
+
+test_that("_tag() replaces empty names by positions and tag_empty", {
+    x <- list(a = 1L, b = 2L, list())
+
+    expect_identical(flat_tag(x), c("a", "b", "[3]: "))
+    expect_identical(flat_tag(x, tag_empty = "_"), c("a", "b", "_[3]: "))
+})
+
+test_that("_tag() retains the structure of x when replacing empty names by positions", {
+    x <- list(1L, 2L, list(3L, 4L), 5L)
+
+    expect_identical(flat_tag(x), c("[1]", "[2]", "[3]: [1]", "[3]: [2]", "[4]"))
+})
+
+
 # flat_format() ----------------------------------------------------------------
 
 

@@ -209,6 +209,10 @@ flat_tag <- function(x = list(), tag_sep = ": ", tag_empty = "") {
     assert_chr1(tag_sep)
     assert_chr1(tag_empty, TRUE)
 
+    if (!length(x)) {
+        return(character())
+    }
+
     # Preallocate an accumulator to register
     # concatenated names for each level of x.
     # It is coerced to a vector below.

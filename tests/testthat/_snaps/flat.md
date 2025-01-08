@@ -1,3 +1,27 @@
+# _tag() validates x
+
+    Code
+      flat_tag(1L)
+    Condition
+      Error:
+      ! 'x' must be a list.
+
+# _tag() validates tag_sep
+
+    Code
+      flat_tag(tag_sep = 1L)
+    Condition
+      Error:
+      ! 'tag_sep' must be a non-NA and non-empty character of length 1.
+
+# _tag() validates tag_empty
+
+    Code
+      flat_tag(tag_empty = 1L)
+    Condition
+      Error:
+      ! 'tag_empty' must be a non-NA character of length 1.
+
 # _format() validates x
 
     Code
