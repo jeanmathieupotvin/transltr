@@ -96,7 +96,7 @@ translator <- function(..., id = uuid(), hash_algorithm = constant("algorithms")
     if (anyNA(m <- match(trans$languages, names(trans$native_languages)))) {
         warning(call. = FALSE, sprintf(
             "some languages are missing an equivalent native language name: %s.",
-            to_string(trans$languages[is.na(m)], TRUE, ", and ")))
+            str_to(trans$languages[is.na(m)], TRUE, ", and ")))
     }
 
     return(trans)
@@ -116,7 +116,7 @@ format.Translator <- function(x, ...) {
     # Long lines are truncated by format_vector().
     if (!is.null(source_texts <- x$source_texts)) {
         langs <- lapply(x$hashes, \(h) {
-            to_string(x$get_text(h)$languages, last_sep = ", ")
+            str_to(x$get_text(h)$languages, last_sep = ", ")
         })
 
         # Names of source_texts are reduced hashes.

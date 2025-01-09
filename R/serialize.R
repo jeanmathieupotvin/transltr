@@ -706,7 +706,7 @@ validate.ExportedTranslator <- function(x, ...) {
         stopf(
             "in 'ExportedTranslator' '%s': 'Hashing Algorithm' must be a YAML scalar equal to %s.",
             get_uuid(x),
-            to_string(constant("algorithms"), TRUE))
+            str_to(constant("algorithms"), TRUE))
     }
     if (!is_chr1(x[["Source Language"]])) {
         stopf(
@@ -783,7 +783,7 @@ validate.ExportedText <- function(x, ...) {
         stopf(
             "in 'ExportedText' '%s': 'Hashing Algorithm' must be a YAML scalar equal to %s.",
             get_uuid(x),
-            to_string(constant("algorithms"), TRUE))
+            str_to(constant("algorithms"), TRUE))
     }
     if (!is.null(source_lang) && !is_chr1(source_lang)) {
         stopf(
@@ -930,7 +930,7 @@ translations_files <- function(tr = translator(), parent_dir) {
         if (length(missing)) {
             stopf(
                 "there is a mismatch between 'Translations Files' and 'Languages'. Check language(s) %s.",
-                to_string(missing, TRUE, ", and"))
+                str_to(missing, TRUE, ", and"))
         }
 
         return(files)

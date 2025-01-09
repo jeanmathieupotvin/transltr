@@ -56,7 +56,7 @@
 #'   character string (possibly empty) otherwise.
 #'
 #' @param quote_values A non-[NA][base::NA] logical value. Should `choices`
-#'   be quoted? This argument is passed to [to_string()].
+#'   be quoted? This argument is passed to [str_to()].
 #'
 #' @returns
 #' [is_int()],
@@ -428,7 +428,7 @@ assert_match <- function(
         err_msg <- sprintf(
             "'%s' must be equal to %s.",
             x_name,
-            to_string(choices, quote_values))
+            str_to(choices, quote_values))
 
         if (throw_error) stops(err_msg)
     }

@@ -132,7 +132,7 @@ character string (possibly empty) otherwise.}
 underlying name of \code{x}.}
 
 \item{quote_values}{A non-\link[base:NA]{NA} logical value. Should \code{choices}
-be quoted? This argument is passed to \code{\link[=to_string]{to_string()}}.}
+be quoted? This argument is passed to \code{\link[=str_to]{str_to()}}.}
 }
 \value{
 \code{\link[=is_int]{is_int()}},

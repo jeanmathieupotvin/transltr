@@ -54,7 +54,7 @@ identical(x, list(c(1L, 1L, 1L), c(2L, 2L), 3L))
 Other utility functions: 
 \code{\link{format_vector}()},
 \code{\link{stops}()},
-\code{\link{to_string}()}
+\code{\link{str_to}()}
 }
 \concept{utility functions}
 \keyword{internal}

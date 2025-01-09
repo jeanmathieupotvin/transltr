@@ -38,7 +38,7 @@ transltr:::stopf("'\%s' calls '\%s' by design.", "stopf()", "stops()")
 \seealso{
 Other utility functions: 
 \code{\link{format_vector}()},
-\code{\link{to_string}()},
+\code{\link{str_to}()},
 \code{\link{vapply_1l}()}
 }
 \concept{utility functions}

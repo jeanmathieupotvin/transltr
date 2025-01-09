@@ -146,7 +146,7 @@ cat(sep = "\n", transltr:::format_vector(
 
 Other utility functions: 
 \code{\link{stops}()},
-\code{\link{to_string}()},
+\code{\link{str_to}()},
 \code{\link{vapply_1l}()}
 }
 \concept{utility functions}
