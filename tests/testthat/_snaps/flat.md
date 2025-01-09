@@ -1,3 +1,39 @@
+# _deserialize() validates string
+
+    Code
+      flat_deserialize(1L)
+    Condition
+      Error:
+      ! 'string' must be a non-NA character of length 1.
+
+# _deserialize() validates tag_sep
+
+    Code
+      flat_deserialize(tag_sep = 1L)
+    Condition
+      Error:
+      ! 'tag_sep' must be a non-NA and non-empty character of length 1.
+
+# _deserialize() throws an error if a node has another child node
+
+    Code
+      # This is an invalid FLAT object.
+      invalid <- ":: Level: Node\n\na\n\n:: Level: Node: Lower node\n\nb"
+      cat(invalid, "\n")
+    Output
+      :: Level: Node
+      
+      a
+      
+      :: Level: Node: Lower node
+      
+      b 
+    Code
+      flat_deserialize(invalid)
+    Condition
+      Error:
+      ! 'string' has an invalid structure. Check 'Level: Node' tags.
+
 # _tag() validates x
 
     Code
@@ -57,8 +93,8 @@
       
       :: Comments
       
-      What follows after an octothorpe is treated as a comment, and is ignored.
-      # This is a comment.                                                     
-      Inline comments are also allowed. # This is a comment.                   
-      Escape octothorpes (\#) to treat them as regular characters.            
+      What follows after an octothorpe is treated as a comment and is ignored.
+      # This is a comment.                                                    
+      Inline comments are also allowed. # This is a comment.                  
+      Escape octothorpes (\#) to treat them as regular characters.           
 

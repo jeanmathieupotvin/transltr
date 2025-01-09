@@ -12,9 +12,11 @@
 #' [flat_serialize()] serializes `x` into a FLAT object.
 #'
 #' [flat_deserialize()] is the inverse operation: it converts a FLAT object
-#' back into a list. The latter has (almost) the same shape as the original
-#' one, but [atomic] vectors are not reconstituted (they are deserialized
-#' as elements of length 1). Elements are further left as character strings.
+#' back into a list. The latter has the same shape as the original one, but
+#'
+#'   * [atomic] vectors are not reconstituted (they are deserialized as
+#'     elements of length 1), and
+#'   * all elements are also left as character strings.
 #'
 #' The convention is to serialize an empty list to an empty character string.
 #'
@@ -94,13 +96,17 @@
 #'
 #' # flat_format() is a helper function to ease the
 #' # serialization process. See Details for more information.
-#' expected <- list(a = "NULL", b = constant("empty-list"), c = "1\n2")
-#' current  <- transltr:::flat_format(list(a = NULL, b = list(), c = c(1L, 2L)))
+#' expected <- list(
+#'   a = "NULL",
+#'   b = transltr:::constant("empty-list"),
+#'   c = "1\n2")
+#'
+#' current <- transltr:::flat_format(list(a = NULL, b = list(), c = c(1L, 2L)))
 #' identical(current, expected)
 #'
 #' # An empty list is serialized to an empty string by convention.
-#' flat_serialize(list())  ## Outputs ""
-#' flat_deserialize("")    ## Outputs list()
+#' transltr:::flat_serialize(list())  ## Outputs ""
+#' transltr:::flat_deserialize("")    ## Outputs list()
 #'
 #' @rdname flat
 #' @keywords internal
@@ -128,11 +134,10 @@ flat_deserialize <- function(string = "", tag_sep = ": ") {
     # lines are removed. We ignore escaped octothorpes.
     string <- gsub(r"{[ \t\n]*(?<!\\)(?:\\\\)*#(.*?)(?=\n|$)}", "", string, perl = TRUE)
 
-    # Un-escape octothorpes (\#).
-    # readLines() and text_read() automatically
-    # escape backslashes: \ is read as \\ and
-    # \# is read as \\#. It is replaced by a #.
-    string <- gsub(r"{(?<!\\)(?:\\\\)*#}", "#", string, perl = TRUE)
+    # Un-escape (regular) octothorpes (\#).
+    # R automatically escape backslashes: \
+    # is read as \\, so \# is read as \\#.
+    string <- gsub(r"{(\\)+#}", "#", string, perl = TRUE)
 
     # This regex matches (and captures) titles
     # that begins by ::, ends with one or more
@@ -186,7 +191,7 @@ flat_deserialize <- function(string = "", tag_sep = ": ") {
             # one is not a list (a terminal node), then the
             # underlying FLAT object is invalid.
             if (li > 1L && !is.list(acc[[lvl[-li]]])) {
-                stopf("'string' has an invalid structure. Check '%s' tag(s).",
+                stopf("'string' has an invalid structure. Check '%s' tags.",
                     paste0(lvl[-li], collapse = tag_sep))
             }
 

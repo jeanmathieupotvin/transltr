@@ -1,0 +1,29 @@
+:: Remove: 1
+
+# A comment to remove.
+
+Remove. # A comment to remove.
+
+:: Remove: 2
+
+\\# A comment to remove.
+
+Remove. \\# A comment to remove.
+
+:: Remove: 3
+
+\\\\# A comment to remove.
+
+Remove. \\\\# A comment to remove.
+
+:: Keep: 1
+
+\# This is a valid octothorpe.
+
+Keep. \# This is a valid octothorpe.
+
+:: Keep: 2
+
+\\\# A comment to keep.
+
+Keep. \\\# A comment to keep.

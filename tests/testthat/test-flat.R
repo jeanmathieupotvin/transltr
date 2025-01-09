@@ -1,3 +1,8 @@
+# This mock object contains a lot of comments (#)
+# and escaped comments (\#) for testing purposes.
+mock_flat_object_path <- get_mock_path("flat-object", "txt")
+
+
 # flat_serialize() -------------------------------------------------------------
 
 
@@ -28,7 +33,88 @@ test_that("_serialize() serializes lists into streams of unindented sections beg
 # flat_deserialize() -----------------------------------------------------------
 
 
+test_that("_deserialize() returns a named list", {
+    out <- flat_deserialize(flat_serialize(list(a = 1L, b = 2L, c = 3L)))
 
+    expect_type(out, "list")
+    expect_length(out, 3L)
+    expect_named(out, c("a", "b", "c"))
+})
+
+test_that("_deserialize() validates string", {
+    expect_error(flat_deserialize(1L))
+    expect_snapshot(flat_deserialize(1L), error = TRUE)
+})
+
+test_that("_deserialize() validates tag_sep", {
+    expect_error(flat_deserialize(tag_sep = 1L))
+    expect_snapshot(flat_deserialize(tag_sep = 1L), error = TRUE)
+})
+
+test_that("_deserialize() deserializes empty character strings to empty lists", {
+    expect_identical(flat_deserialize(""), list())
+})
+
+test_that("_deserialize() removes comments", {
+    flat_1   <- ":: a\n\n1\n# Comment to ignore.\n\n:: b\n\n2\n\n:: c\n\n3"
+    flat_2   <- ":: a\n\n1 # In-line comment to ignore.\n\n:: b\n\n2\n\n:: c\n\n3"
+    expected <- list(a = "1", b = "2", c = "3")
+
+    expect_identical(flat_deserialize(flat_1), expected)
+    expect_identical(flat_deserialize(flat_2), expected)
+})
+
+test_that("_deserialize() treats escaped # as regular # being part of the contents", {
+    # An escaped octothorpe (\#) is written \\# because \ must
+    # be escaped in R. We also test that \\\# (written \\\\\\#)
+    # yields a regular octothorpe for consistency.
+    flat_1 <- ":: a\n\n\\# This is a valid octothorpe."
+    flat_2 <- ":: a\n\n\\\\\\# This is a valid octothorpe."
+
+    expect_identical(flat_deserialize(flat_1)$a, "# This is a valid octothorpe.")
+    expect_identical(flat_deserialize(flat_2)$a, "# This is a valid octothorpe.")
+})
+
+test_that("_deserialize() handles mixed comments and escaped octothorpes", {
+    flat     <- paste0(text_read(mock_flat_object_path), collapse = "\n")
+    expected <- list(
+        Remove = list(
+            `1` = "Remove.",   # Normal comments are ignored.
+            `2` = "Remove.",   # \\# is the same as #.
+            `3` = "Remove."),  # \\\\# is the same as \\#.
+        Keep = list(
+            `1` = "# This is a valid octothorpe.\n\nKeep. # This is a valid octothorpe.",  # \# is a regular #.
+            `2` = "# A comment to keep.\n\nKeep. # A comment to keep."))                   # \\\# is the same as \#.
+
+    expect_identical(flat_deserialize(flat), expected)
+})
+
+test_that("_deserialize() handles multi-line contents appropriately", {
+    flat <- ":: a\n\nThis is\nmulti-line\n\ncontents\n\n\nwith\nspaces.\n\n:: b\n\n2"
+
+    expect_identical(
+        flat_deserialize(flat),
+        list(a = "This is\nmulti-line\n\ncontents\n\n\nwith\nspaces.", b = "2"))
+})
+
+test_that("_deserialize() deserializes <empty-list> constants to empty lists", {
+    empty_list <- list(a = list())
+
+    expect_identical(flat_deserialize(flat_serialize(empty_list)), empty_list)
+})
+
+test_that("_deserialize() throws an error if a node has another child node", {
+    # This is obviously not possible.
+    # A node is always terminal by design.
+    expect_error(flat_deserialize(":: Level: Node\n\na\n\n:: Level: Node: Lower node\n\nb"))
+    expect_snapshot(error = TRUE, {
+        "This is an invalid FLAT object."
+        invalid <- ":: Level: Node\n\na\n\n:: Level: Node: Lower node\n\nb"
+        cat(invalid, "\n")
+
+        flat_deserialize(invalid)
+    })
+})
 
 
 # flat_tag() -------------------------------------------------------------------

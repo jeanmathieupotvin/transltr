@@ -60,9 +60,12 @@ sections identified by a tag. Call \code{\link[=flat_example]{flat_example()}} f
 \code{\link[=flat_serialize]{flat_serialize()}} serializes \code{x} into a FLAT object.
 
 \code{\link[=flat_deserialize]{flat_deserialize()}} is the inverse operation: it converts a FLAT object
-back into a list. The latter has (almost) the same shape as the original
-one, but \link{atomic} vectors are not reconstituted (they are deserialized
-as elements of length 1). Elements are further left as character strings.
+back into a list. The latter has the same shape as the original one, but
+\itemize{
+\item \link{atomic} vectors are not reconstituted (they are deserialized as
+elements of length 1), and
+\item all elements are also left as character strings.
+}
 
 The convention is to serialize an empty list to an empty character string.
 \subsection{Internal mechanisms}{
@@ -115,13 +118,17 @@ transltr:::flat_tag(x)
 
 # flat_format() is a helper function to ease the
 # serialization process. See Details for more information.
-expected <- list(a = "NULL", b = constant("empty-list"), c = "1\n2")
-current  <- transltr:::flat_format(list(a = NULL, b = list(), c = c(1L, 2L)))
+expected <- list(
+  a = "NULL",
+  b = transltr:::constant("empty-list"),
+  c = "1\n2")
+
+current <- transltr:::flat_format(list(a = NULL, b = list(), c = c(1L, 2L)))
 identical(current, expected)
 
 # An empty list is serialized to an empty string by convention.
-flat_serialize(list())  ## Outputs ""
-flat_deserialize("")    ## Outputs list()
+transltr:::flat_serialize(list())  ## Outputs ""
+transltr:::flat_deserialize("")    ## Outputs list()
 
 }
 \keyword{internal}
