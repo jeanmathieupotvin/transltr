@@ -474,7 +474,10 @@ export.Translator <- function(x, set_uuid = TRUE, parent_dir, ...) {
             export(x$get_text(hash), set_uuid, ...)
         }))
 
-    out$`_Uuid` <- if (set_uuid) uuid() else NULL
+    if (set_uuid) {
+        out$`_Uuid` <- uuid()
+    }
+
     return(
         structure(out,
             class = "ExportedTranslator",
@@ -504,7 +507,10 @@ export.Text <- function(x, set_uuid = TRUE, set_translations = FALSE, ...) {
         },
         Locations = unname(lapply(x$locations, export, set_uuid, ...)))
 
-    out$`_Uuid` <- if (set_uuid) uuid() else NULL
+    if (set_uuid) {
+        out$`_Uuid` <- uuid()
+    }
+
     return(
         structure(out,
             class = "ExportedText",
@@ -522,7 +528,10 @@ export.Location <- function(x, set_uuid = TRUE, ...) {
         Path    = x$path,
         Ranges  = .location_format_range(x, ...))
 
-    out$`_Uuid` <- if (set_uuid) uuid() else NULL
+    if (set_uuid) {
+        out$`_Uuid` <- uuid()
+    }
+
     return(
         structure(out,
             class = "ExportedLocation",
