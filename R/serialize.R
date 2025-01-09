@@ -428,14 +428,13 @@ export_translations <- function(tr = translator(), lang = "", set_uuid = TRUE) {
     })
 
     out <- list(
-        `_Uuid`           = NULL,
+        `_Uuid`           = if (set_uuid) uuid(),
         Identifier        = tr$id,
         `Language Code`   = lang,
         Language          = native_languages[[lang]],
         `Source Language` = native_languages[[source_lang]],
         Translations      = translations)
 
-    out$`_Uuid` <- if (set_uuid) uuid() else NULL
     return(
         structure(out,
             class = "ExportedTranslations",
@@ -464,7 +463,7 @@ export.Translator <- function(x, set_uuid = TRUE, parent_dir, ...) {
     files <- translations_files(x, parent_dir)
 
     out <- list(
-        `_Uuid`              = NULL,
+        `_Uuid`              = if (set_uuid) uuid(),
         Identifier           = x$id,
         `Hashing Algorithm`  = x$hash_algorithm,
         `Source Language`    = x$source_langs,
@@ -473,10 +472,6 @@ export.Translator <- function(x, set_uuid = TRUE, parent_dir, ...) {
         `Texts`              = lapply(x$hashes, \(hash) {
             export(x$get_text(hash), set_uuid, ...)
         }))
-
-    if (set_uuid) {
-        out$`_Uuid` <- uuid()
-    }
 
     return(
         structure(out,
@@ -494,7 +489,7 @@ export.Text <- function(x, set_uuid = TRUE, set_translations = FALSE, ...) {
     is_set <- x$source_lang != constant("unset")
 
     out <- list(
-        `_Uuid`             = NULL,
+        `_Uuid`             = if (set_uuid) uuid(),
         `Hashing Algorithm` = x$hash_algorithm,
         Hash                = if (is_set) x$hash,
         `Source Language`   = if (is_set) x$source_lang,
@@ -506,10 +501,6 @@ export.Text <- function(x, set_uuid = TRUE, set_translations = FALSE, ...) {
                 width = 80L)
         },
         Locations = unname(lapply(x$locations, export, set_uuid, ...)))
-
-    if (set_uuid) {
-        out$`_Uuid` <- uuid()
-    }
 
     return(
         structure(out,
@@ -524,13 +515,9 @@ export.Location <- function(x, set_uuid = TRUE, ...) {
     assert_lgl1(set_uuid)
 
     out <- list(
-        `_Uuid` = NULL,
+        `_Uuid` = if (set_uuid) uuid(),
         Path    = x$path,
         Ranges  = .location_format_range(x, ...))
-
-    if (set_uuid) {
-        out$`_Uuid` <- uuid()
-    }
 
     return(
         structure(out,
