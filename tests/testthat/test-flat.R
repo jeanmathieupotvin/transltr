@@ -232,6 +232,7 @@ test_that("_format() replaces empty lists by a constant", {
 
 
 test_that("_example() returns a character string invisibly", {
+    withr::local_output_sink(tempfile())
     out <- flat_example()
 
     expect_type(out, "character")
