@@ -17,7 +17,7 @@
 #'
 #' @template param-strict
 #'
-#' @template param-hash-algorithm
+#' @template param-algorithm
 #'
 #' @template param-verbose
 #'
@@ -63,14 +63,14 @@
 #' @rdname find-source-in-file
 #' @keywords internal
 find_source_in_file <- function(
-    path           = "",
-    encoding       = "UTF-8",
-    strict         = TRUE,
-    hash_algorithm = constant("algorithms"),
-    verbose        = FALSE)
+    path      = "",
+    encoding  = "UTF-8",
+    strict    = TRUE,
+    algorithm = constant("algorithms"),
+    verbose   = FALSE)
 {
     tokens <- find_source_exprs(path, encoding)
-    texts  <- find_source_in_exprs(tokens, path, strict, hash_algorithm)
+    texts  <- find_source_in_exprs(tokens, path, strict, algorithm)
 
     if (verbose) {
         cat(sep = "\n", sprintf(
@@ -85,10 +85,10 @@ find_source_in_file <- function(
 #' @rdname find-source-in-file
 #' @keywords internal
 find_source_in_exprs <- function(
-    tokens         = utils::getParseData(),
-    path           = "",
-    strict         = TRUE,
-    hash_algorithm = constant("algorithms"))
+    tokens    = utils::getParseData(),
+    path      = "",
+    strict    = TRUE,
+    algorithm = constant("algorithms"))
 {
     # Parsing errors are skipped silently. This is required whenever
     # native pipes are used. They introduce placeholders (_) in expr
@@ -109,9 +109,9 @@ find_source_in_exprs <- function(
             x        = code[is_call],
             location = locations,
             more     = list(
-                strict         = strict,
-                hash_algorithm = hash_algorithm,
-                validate       = FALSE)))
+                strict    = strict,
+                algorithm = algorithm,
+                validate  = FALSE)))
 }
 
 #' @rdname find-source-in-file

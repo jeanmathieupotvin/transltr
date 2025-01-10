@@ -459,19 +459,7 @@ validate <- function(x, ...) {
 export.Translator <- function(x, set_uuid = TRUE, parent_dir, ...) {
     assert_lgl1(set_uuid)
 
-    # It validates x and parent_dir.
-    files <- translations_files(x, parent_dir)
-
-    out <- list(
-        `_Uuid`              = if (set_uuid) uuid(),
-        Identifier           = x$id,
-        `Hashing Algorithm`  = x$hash_algorithm,
-        `Source Language`    = x$source_langs,
-        Languages            = as.list(x$native_languages),
-        `Translations Files` = files,
-        `Texts`              = lapply(x$hashes, \(hash) {
-            export(x$get_text(hash), set_uuid, ...)
-        }))
+        Algorithm  = x$algorithm,
 
     return(
         structure(out,
@@ -490,7 +478,7 @@ export.Text <- function(x, set_uuid = TRUE, set_translations = FALSE, ...) {
 
     out <- list(
         `_Uuid`             = if (set_uuid) uuid(),
-        `Hashing Algorithm` = x$hash_algorithm,
+        Algorithm         = x$algorithm,
         Hash                = if (is_set) x$hash,
         `Source Language`   = if (is_set) x$source_lang,
         `Source Text`       = if (is_set) strwrap(x$source_text, 80L),
@@ -542,7 +530,7 @@ import.ExportedTranslator <- function(x, ...) {
 #' @keywords internal
 #' @export
 import.ExportedText  <- function(x, ...) {
-    txt <- Text$new(x[["Hashing Algorithm"]])
+    txt <- Text$new(x[["Algorithm"]])
 
     source_lang <- x[["Source Language"]]
     source_text <- x[["Source Text"]]
@@ -698,9 +686,9 @@ validate.ExportedTranslator <- function(x, ...) {
             "in 'ExportedTranslator' '%s': 'Identifier' must be a YAML scalar parsed as a non-empty R character string.",
             get_uuid(x))
     }
-    if (!is_match(x[["Hashing Algorithm"]], constant("algorithms"))) {
+    if (!is_match(x[["Algorithm"]], constant("algorithms"))) {
         stopf(
-            "in 'ExportedTranslator' '%s': 'Hashing Algorithm' must be a YAML scalar equal to %s.",
+            "in 'ExportedTranslator' '%s': 'Algorithm' must be a YAML scalar equal to %s.",
             get_uuid(x),
             str_to(constant("algorithms"), TRUE))
     }
@@ -775,9 +763,9 @@ validate.ExportedText <- function(x, ...) {
             "in 'ExportedText' '%s': 'Hash' must be a YAML null (~), or a YAML scalar parsed as a non-empty R character string.",
             get_uuid(x))
     }
-    if (!is_match(x[["Hashing Algorithm"]], constant("algorithms"))) {
+    if (!is_match(x[["Algorithm"]], constant("algorithms"))) {
         stopf(
-            "in 'ExportedText' '%s': 'Hashing Algorithm' must be a YAML scalar equal to %s.",
+            "in 'ExportedText' '%s': 'Algorithm' must be a YAML scalar equal to %s.",
             get_uuid(x),
             str_to(constant("algorithms"), TRUE))
     }

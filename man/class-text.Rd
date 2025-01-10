@@ -15,7 +15,7 @@
 text(
   ...,
   source_lang = language_source_get(),
-  hash_algorithm = constant("algorithms")
+  algorithm = constant("algorithms")
 )
 
 is_text(x)
@@ -26,7 +26,7 @@ is_text(x)
 
 \method{c}{Text}(...)
 
-merge_texts(..., hash_algorithm = constant("algorithms"))
+merge_texts(..., algorithm = constant("algorithms"))
 
 as_text(x, ...)
 
@@ -34,7 +34,7 @@ as_text(x, ...)
   x,
   strict = FALSE,
   location = transltr::location(),
-  hash_algorithm = constant("algorithms"),
+  algorithm = constant("algorithms"),
   validate = TRUE,
   ...
 )
@@ -60,9 +60,9 @@ to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
 Doing so maximizes portability and cross-compatibility between packages.}
 
-\item{hash_algorithm}{A non-empty and non-\link[base:NA]{NA} character string
-equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing source
-information for identification purposes.}
+\item{algorithm}{A non-empty and non-\link[base:NA]{NA} character string
+equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
+source information for identification purposes.}
 
 \item{x}{Any \R object.}
 
@@ -105,8 +105,8 @@ methods to manipulate it.
 \subsection{Combining Text Objects}{
 
 \code{\link[=c]{c()}} can only combine \code{\link{Text}} objects having the same \code{hash}.
-This is equivalent to having the same \code{hash_algorithm}, \code{source_lang},
-and \code{source_text}. In that case, the underlying translations and
+This is equivalent to having the same \code{algorithm}, \code{source_lang}, and
+\code{source_text}. In that case, the underlying translations and
 \code{\link{Location}} objects are combined and a new object is returned.
 It throws an error if all \code{\link{Text}} objects are empty (they have no
 set \code{source_lang}).
@@ -163,7 +163,7 @@ print(txt3)
 
 # Combine Texts objects.
 # They must have the same hash
-# (same souce_text, source_lang, and hash_algorithm).
+# (same souce_text, source_lang, and algorithm).
 c(txt1, txt2)
 
 # Otherwise, c() throws an error.
@@ -255,16 +255,15 @@ txt$rm_location("a")
 \describe{
 \item{\code{hash}}{A non-empty and non-\link[base:NA]{NA} character string. A
 reproducible hash generated from \code{source_lang} and \code{source_text},
-and by using the algorithm specified by \code{hash_algorithm}. It is
-used as a unique identifier for the underlying \code{\link{Text}}
-object.
+and by using the algorithm specified by \code{algorithm}. It is used
+as a unique identifier for the underlying \code{\link{Text}} object.
 
 This is a \strong{read-only} field. It is automatically updated
-whenever fields \code{source_lang} and/or \code{hash_algorithm} are updated.}
+whenever fields \code{source_lang} and/or \code{algorithm} are updated.}
 
-\item{\code{hash_algorithm}}{A non-empty and non-\link[base:NA]{NA} character string
-equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing source
-information for identification purposes.}
+\item{\code{algorithm}}{A non-empty and non-\link[base:NA]{NA} character string
+equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
+source information for identification purposes.}
 
 \item{\code{source_lang}}{A non-empty and non-\link[base:NA]{NA} character string. The
 language of the (untranslated) source text.
@@ -313,15 +312,15 @@ to update it.}
 \subsection{Method \code{new()}}{
 Create a \code{\link{Text}} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Text$new(hash_algorithm = constant("algorithms"))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Text$new(algorithm = constant("algorithms"))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{hash_algorithm}}{A non-empty and non-\link[base:NA]{NA} character string
-equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing source
-information for identification purposes.}
+\item{\code{algorithm}}{A non-empty and non-\link[base:NA]{NA} character string
+equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
+source information for identification purposes.}
 }
 \if{html}{\out{</div>}}
 }

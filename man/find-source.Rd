@@ -10,7 +10,7 @@ find_source(
   encoding = "UTF-8",
   strict = TRUE,
   id = uuid(),
-  hash_algorithm = constant("algorithms"),
+  algorithm = constant("algorithms"),
   native_languages = character(),
   verbose = TRUE
 )
@@ -19,7 +19,7 @@ find_source_in_files(
   paths = character(),
   encoding = "UTF-8",
   strict = TRUE,
-  hash_algorithm = constant("algorithms"),
+  algorithm = constant("algorithms"),
   verbose = TRUE
 )
 }
@@ -42,9 +42,9 @@ namespace, i.e. \code{translate()}.}
 unique identifier for the \code{\link{Translator}} object. Beware of
 plausible collisions when using user-defined values.}
 
-\item{hash_algorithm}{A non-empty and non-\link[base:NA]{NA} character string
-equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing source
-information for identification purposes.}
+\item{algorithm}{A non-empty and non-\link[base:NA]{NA} character string
+equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
+source information for identification purposes.}
 
 \item{native_languages}{A named character vector of non-empty and
 non-\link[base:NA]{NA} values. It can be empty. It is used to to construct

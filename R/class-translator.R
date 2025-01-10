@@ -36,7 +36,7 @@
 #'
 #' @template param-id
 #'
-#' @template param-hash-algorithm
+#' @template param-algorithm
 #'
 #' @returns
 #' [translator()] returns an [`R6`][R6::R6] object of class
@@ -84,8 +84,8 @@
 #'
 #' @rdname class-translator
 #' @export
-translator <- function(..., id = uuid(), hash_algorithm = constant("algorithms")) {
-    trans <- Translator$new(id, hash_algorithm)
+translator <- function(..., id = uuid(), algorithm = constant("algorithms")) {
+    trans <- Translator$new(id, algorithm)
     dots  <- list(...)
 
     do.call(trans$set_texts, dots[vapply_1l(dots, is_text)])
@@ -125,7 +125,7 @@ format.Translator <- function(x, ...) {
 
     xlist <- list(
         Identifier     = x$id,
-        Algorithm      = x$hash_algorithm,
+        Algorithm      = x$algorithm,
         Languages      = x$native_languages,
         `Source Texts` = source_texts)
 
@@ -146,10 +146,10 @@ Translator <- R6::R6Class("Translator",
     lock_objects = TRUE,
     cloneable    = FALSE,
     private      = list(
-        .id           = constant("unset"), # See $id
-        .hash_algo    = constant("unset"), # See $hash_algorithm
-        .native_langs = NULL,              # See $native_languages, $initialize -> new.env()
-        .texts       = NULL,               # See $intialize -> new.env()
+        .id           = constant("unset"),  # See $id
+        .algorithm    = constant("unset"),  # See $algorithm
+        .native_langs = NULL,               # See $native_languages, $initialize -> new.env()
+        .texts        = NULL,               # See $intialize -> new.env()
 
         # @description Compress a hash.
         #
@@ -196,19 +196,21 @@ Translator <- R6::R6Class("Translator",
             return(private$.id)
         },
 
-        #' @template field-hash-algorithm
-        hash_algorithm = \(value) {
+        #' @template field-algorithm
+        algorithm = \(value) {
             if (!missing(value)) {
-                assert_chr1(value, x_name = "hash_algorithm")
-                assert_match(value, constant("algorithms"),
-                    quote_values = TRUE,
-                    x_name       = "hash_algorithm")
+                assert_algorithm <- \(algorithm = constant("algorithms")) {
+                    assert_arg(algorithm, TRUE)
+                    return(algorithm)
+                }
 
-                # Update hash_algorithm of each Text.
-                eapply(private$.texts, \(txt) txt$hash_algorithm <- value)
+                value <- assert_algorithm(value)
 
-                # Update object's hash_algorithm.
-                private$.hash_algo <- value
+                # Update algorithm of each Text.
+                eapply(private$.texts, \(txt) txt$algorithm <- value)
+
+                # Update object's algorithm.
+                private$.algorithm <- value
 
                 # Reassign updated Text under new hashes.
                 texts          <- as.list(private$.texts)
@@ -216,19 +218,19 @@ Translator <- R6::R6Class("Translator",
                 do.call(self$set_texts, texts)
             }
 
-            return(private$.hash_algo)
+            return(private$.algorithm)
         },
 
         #' @field hashes A character vector of non-empty and non-[NA][base::NA]
         #'   values, or `NULL`. The set of all `hash` exposed by registered
         #'   [`Text`][Text] objects. If there is none, `hashes` is `NULL`.
         #'   This is a **read-only** field. It is automatically updated
-        #'   whenever field `hash_algorithm` is updated.
+        #'   whenever field `algorithm` is updated.
         hashes = \(value) {
             if (!missing(value)) {
                 stops(
                     "'hashes' cannot be overwritten.\n",
-                    "Update them by setting 'hash_algorithm' and by setting, or removing 'Text' objects.")
+                    "Update them by setting 'algorithm' and by setting, or removing 'Text' objects.")
             }
 
             hashes <- eapply(private$.texts, `[[`, i = "hash")
@@ -335,21 +337,19 @@ Translator <- R6::R6Class("Translator",
         #'
         #' @template param-id
         #'
-        #' @template param-hash-algorithm
+        #' @template param-algorithm
         #'
         #' @return An [`R6`][R6::R6] object of class [`Translator`][Translator].
         #'
         #' @examples
         #' # Consider using translator() instead.
         #' tr <- Translator$new()
-        initialize = \(id = uuid(), hash_algorithm = constant("algorithms")) {
-            assert_chr1(id)
-            assert_arg(hash_algorithm, TRUE)
-
-            private$.id           <- id
-            private$.hash_algo    <- hash_algorithm
+        initialize = \(id = uuid(), algorithm = constant("algorithms")) {
             private$.native_langs <- new.env(parent = emptyenv())
             private$.texts        <- new.env(parent = emptyenv())
+
+            self$id        <- id
+            self$algorithm <- algorithm
             return(self)
         },
 
@@ -397,7 +397,7 @@ Translator <- R6::R6Class("Translator",
             # validated here to throw a coherent error message.
             assert_chr1(source_lang)
             text <- normalize(..., concat = concat)
-            hash <- hash(source_lang, text, private$.hash_algo)
+            hash <- hash(source_lang, text, self$algorithm)
             return(self$get_translation(hash, lang))
         },
 
@@ -452,8 +452,8 @@ Translator <- R6::R6Class("Translator",
         #' tr$set_text(en = "Hello, world!", location())
         set_text = \(..., source_lang = language_source_get()) {
             txt <- text(...,
-                source_lang    = source_lang,
-                hash_algorithm = private$.hash_algo)
+                source_lang = source_lang,
+                algorithm   = self$algorithm)
 
             self$set_texts(txt)
             return(invisible())
@@ -494,7 +494,11 @@ Translator <- R6::R6Class("Translator",
                 return(invisible())
             }
 
-            args   <- c(as.list(private$.texts), list(...), hash_algorithm = private$.hash_algo)
+            args  <- c(
+                as.list(private$.texts),
+                list(...),
+                algorithm = self$algorithm)
+
             texts <- do.call(merge_texts, args)
             names(texts) <- vapply_1c(texts, `[[`, i = "hash")
 

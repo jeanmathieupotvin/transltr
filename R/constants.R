@@ -21,9 +21,10 @@
 #' | `"untranslated"` | `character(1)` | `"# Insert a translation here."` |
 #'
 #' @section Algorithms returned by `constant("algorithms")`:
-#' Hashing algorithms map an arbitrary character string to a shorter string of
-#' hexadecimal characters. It typically has a fixed width and is highly likely
-#' to be unique.
+#' These algorithms map a character string to another character string of
+#' hexadecimal characters highly likely to be unique. The latter is typically
+#' much shorter and is used to uniquely identify a source text (and the
+#' underlying source language). Two algorithms are available.
 #'
 #' ## Secure Hash Algorithm 1
 #'
@@ -42,11 +43,7 @@
 #' Method `utf8` is a simple method derived from cumulative sums of UTF-8 code
 #' points (converted to integers). It is slightly faster than method `sha1` for
 #' small inputs and emits hashes with a width porportional to the underlying
-#' input's length. It is used for testing purposes.
-#'
-#' Strictly speaking, this method is not a hashing algorithm per se. Instead,
-#' it should be viewed as an identification algorithm that is highly likely to
-#' produce different values for different inputs.
+#' input's length. It is used for testing purposes internally.
 #'
 #' @examples
 #' transltr:::constant("algorithms")

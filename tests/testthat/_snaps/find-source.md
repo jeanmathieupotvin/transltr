@@ -46,13 +46,13 @@
       Error:
       ! 'strict' must be a non-NA logical of length 1 ('TRUE' or 'FALSE').
 
-# find_source_in_files() validates hash_algorithm
+# find_source_in_files() validates algorithm
 
     Code
-      find_source_in_files(path_mock1, hash_algorithm = 1L)
+      find_source_in_files(path_mock1, algorithm = 1L)
     Condition
       Error:
-      ! 'hash_algorithm' must be equal to 'sha1', or 'utf8'.
+      ! 'algorithm' must be equal to 'sha1', or 'utf8'.
 
 # find_source_in_files() validates verbose
 

@@ -8,7 +8,7 @@
 \alias{Translator}
 \title{Source Texts and Translations}
 \usage{
-translator(..., id = uuid(), hash_algorithm = constant("algorithms"))
+translator(..., id = uuid(), algorithm = constant("algorithms"))
 
 is_translator(x)
 
@@ -29,9 +29,9 @@ and \code{\link[=print]{print()}}.
 unique identifier for the \code{\link{Translator}} object. Beware of
 plausible collisions when using user-defined values.}
 
-\item{hash_algorithm}{A non-empty and non-\link[base:NA]{NA} character string
-equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing source
-information for identification purposes.}
+\item{algorithm}{A non-empty and non-\link[base:NA]{NA} character string
+equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
+source information for identification purposes.}
 
 \item{x}{Any \R object.}
 }
@@ -201,15 +201,15 @@ tr$rm_text("256e0d7")
 unique identifier for the underlying object. Beware of plausible
 collisions when using user-defined values.}
 
-\item{\code{hash_algorithm}}{A non-empty and non-\link[base:NA]{NA} character string
-equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing source
-information for identification purposes.}
+\item{\code{algorithm}}{A non-empty and non-\link[base:NA]{NA} character string
+equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
+source information for identification purposes.}
 
 \item{\code{hashes}}{A character vector of non-empty and non-\link[base:NA]{NA}
 values, or \code{NULL}. The set of all \code{hash} exposed by registered
 \code{\link{Text}} objects. If there is none, \code{hashes} is \code{NULL}.
 This is a \strong{read-only} field. It is automatically updated
-whenever field \code{hash_algorithm} is updated.}
+whenever field \code{algorithm} is updated.}
 
 \item{\code{source_texts}}{A character vector of non-empty and
 non-\link[base:NA]{NA} values, or \code{NULL}. The set of all
@@ -271,7 +271,7 @@ more information.}
 \subsection{Method \code{new()}}{
 Create a \code{\link{Translator}} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Translator$new(id = uuid(), hash_algorithm = constant("algorithms"))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Translator$new(id = uuid(), algorithm = constant("algorithms"))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -281,9 +281,9 @@ Create a \code{\link{Translator}} object.
 unique identifier for the \code{\link{Translator}} object. Beware of
 plausible collisions when using user-defined values.}
 
-\item{\code{hash_algorithm}}{A non-empty and non-\link[base:NA]{NA} character string
-equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing source
-information for identification purposes.}
+\item{\code{algorithm}}{A non-empty and non-\link[base:NA]{NA} character string
+equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
+source information for identification purposes.}
 }
 \if{html}{\out{</div>}}
 }

@@ -4,7 +4,7 @@
 \alias{hash}
 \title{Hashing}
 \usage{
-hash(lang = "", text = "", hash_algorithm = "")
+hash(lang = "", text = "", algorithm = "")
 }
 \arguments{
 \item{lang}{A non-empty and non-\link[base:NA]{NA} character string. The
@@ -19,12 +19,12 @@ to maximize portability and cross-compatibility.}
 
 \item{text}{A non-\link[base:NA]{NA} character string. It can be empty.}
 
-\item{hash_algorithm}{A non-empty and non-\link[base:NA]{NA} character string
-equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing source
-information for identification purposes.}
+\item{algorithm}{A non-empty and non-\link[base:NA]{NA} character string
+equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
+source information for identification purposes.}
 }
 \value{
-\code{\link[=hash]{hash()}} returns a character string, or \code{NULL} if \code{hash_algorithm} is not
+\code{\link[=hash]{hash()}} returns a character string, or \code{NULL} if \code{algorithm} is not
 supported.
 }
 \description{

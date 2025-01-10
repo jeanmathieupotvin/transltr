@@ -6,21 +6,21 @@
       Error:
       ! 'id' must be a non-NA and non-empty character of length 1.
 
-# active binding hash_algorithm validates value
+# active binding algorithm validates value
 
     Code
-      tr1$hash_algorithm <- 1L
+      tr1$algorithm <- 1L
     Condition
       Error:
-      ! 'hash_algorithm' must be a non-NA and non-empty character of length 1.
+      ! 'algorithm' must be equal to 'sha1', or 'utf8'.
 
 ---
 
     Code
-      tr1$hash_algorithm <- "new-algo"
+      tr1$algorithm <- "new-algo"
     Condition
       Error:
-      ! 'hash_algorithm' must be equal to 'sha1', or 'utf8'.
+      ! 'algorithm' must be equal to 'sha1', or 'utf8'.
 
 # active binding hashes validates value
 
@@ -29,7 +29,7 @@
     Condition
       Error:
       ! 'hashes' cannot be overwritten.
-      Update them by setting 'hash_algorithm' and by setting, or removing 'Text' objects.
+      Update them by setting 'algorithm' and by setting, or removing 'Text' objects.
 
 # active binding source_texts validates value
 
@@ -65,22 +65,6 @@
     Condition
       Error:
       ! use 'set_native_languages()' to update 'native_languages'.
-
-# $initialize() validates id
-
-    Code
-      Translator$new(1L)
-    Condition
-      Error:
-      ! 'id' must be a non-NA and non-empty character of length 1.
-
-# $initialize() validates hash_algorithm
-
-    Code
-      Translator$new(hash_algorithm = 1L)
-    Condition
-      Error:
-      ! 'hash_algorithm' must be equal to 'sha1', or 'utf8'.
 
 # $translate() validates source_lang
 

@@ -15,10 +15,10 @@
 #'
 #' @template param-lang
 #'
-#' @template param-hash-algorithm
+#' @template param-algorithm
 #'
 #' @returns
-#' [hash()] returns a character string, or `NULL` if `hash_algorithm` is not
+#' [hash()] returns a character string, or `NULL` if `algorithm` is not
 #' supported.
 #'
 #' @seealso
@@ -33,11 +33,11 @@
 #' transltr:::hash("en", "Hello, world!", "_error_")  ## Outputs NULL
 #'
 #' @keywords internal
-hash <- function(lang = "", text = "", hash_algorithm = "") {
+hash <- function(lang = "", text = "", algorithm = "") {
     x <- sprintf("%s:%s", lang, text)
 
     return(
-        switch(hash_algorithm,
+        switch(algorithm,
             sha1 = digest::digest(
                 charToRaw(x),
                 algo      = "sha1",

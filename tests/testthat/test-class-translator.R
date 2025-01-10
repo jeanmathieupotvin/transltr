@@ -54,17 +54,17 @@ test_that("active binding id validates value", {
     expect_snapshot(tr1$id <- 1L, error = TRUE)
 })
 
-test_that("active binding hash_algorithm returns algorithm", {
-    expect_identical(tr1$hash_algorithm, "sha1")
+test_that("active binding algorithm returns algorithm", {
+    expect_identical(tr1$algorithm, "sha1")
 })
 
-test_that("active binding hash_algorithm sets new value", {
+test_that("active binding algorithm sets new value", {
     tr <- test_translator()
-    tr$hash_algorithm <- "utf8"
+    tr$algorithm <- "utf8"
 
-    expect_identical(tr$hash_algorithm, "utf8")
+    expect_identical(tr$algorithm, "utf8")
 
-    # Test that Texts objects' hash_algorithm are updated.
+    # Test that Texts objects' algorithm are updated.
     expect_identical(tr$hashes, c(`12351` = "12351", `17818` = "17818"))
     expect_identical(tr$get_text("12351")$hash, "12351")
     expect_identical(tr$get_text("17818")$hash, "17818")
@@ -74,11 +74,11 @@ test_that("active binding hash_algorithm sets new value", {
     expect_null(tr$get_text("2ac373a"))
 })
 
-test_that("active binding hash_algorithm validates value", {
-    expect_error(tr1$hash_algorithm <- 1L)
-    expect_error(tr1$hash_algorithm <- "new-algo")
-    expect_snapshot(tr1$hash_algorithm <- 1L,         error = TRUE)
-    expect_snapshot(tr1$hash_algorithm <- "new-algo", error = TRUE)
+test_that("active binding algorithm validates value", {
+    expect_error(tr1$algorithm <- 1L)
+    expect_error(tr1$algorithm <- "new-algo")
+    expect_snapshot(tr1$algorithm <- 1L,         error = TRUE)
+    expect_snapshot(tr1$algorithm <- "new-algo", error = TRUE)
 })
 
 test_that("active binding hashes returns hashes", {
@@ -191,19 +191,9 @@ test_that("$initialize() works", {
 
     expect_s3_class(tr, c("Translator", "R6"), exact = TRUE)
     expect_identical(tr$id, "test-id")
-    expect_identical(tr$hash_algorithm, "utf8")
+    expect_identical(tr$algorithm, "utf8")
     expect_type(tr$.__enclos_env__$private$.native_langs, "environment")
     expect_type(tr$.__enclos_env__$private$.texts, "environment")
-})
-
-test_that("$initialize() validates id", {
-    expect_error(Translator$new(1L))
-    expect_snapshot(Translator$new(1L), error = TRUE)
-})
-
-test_that("$initialize() validates hash_algorithm", {
-    expect_error(Translator$new(hash_algorithm = 1L))
-    expect_snapshot(Translator$new(hash_algorithm = 1L), error = TRUE)
 })
 
 test_that("$translate() returns a character string if translation is available", {
@@ -370,13 +360,13 @@ test_that("translator() returns an R6 object of class Translator", {
             location("a", 1L, 2L, 3L, 4L),
             en = "Hello, world!",
             fr = "Bonjour, monde!"),
-        hash_algorithm = "utf8",
+        algorithm = "utf8",
         # These arguments should be ignored silently.
         1L, 1.0, 1.0 + 2i, raw(1L))
 
     expect_s3_class(tr, c("Translator", "R6"), exact = TRUE)
     expect_identical(tr$id, "test-translator")
-    expect_identical(tr$hash_algorithm, "utf8")
+    expect_identical(tr$algorithm, "utf8")
     expect_identical(tr$hashes, c(`12351` = "12351"))
     expect_identical(tr$source_texts, c(`12351` = "Hello, world!"))
     expect_identical(tr$languages, c("en", "fr"))

@@ -39,21 +39,21 @@ test_that("active binding hash throws an error if value is not missing", {
     expect_snapshot(txt1$hash <- "new-hash", error = TRUE)
 })
 
-test_that("active binding hash_algorithm returns hashing algorithm", {
-    expect_identical(txt1$hash_algorithm, "sha1")
+test_that("active binding algorithm returns hashing algorithm", {
+    expect_identical(txt1$algorithm, "sha1")
 })
 
-test_that("active binding hash_algorithm validates value", {
-    expect_error(txt1$hash_algorithm <- 1L)
-    expect_error(txt1$hash_algorithm <- "new-algo")
-    expect_snapshot(txt1$hash_algorithm <- 1L,         error = TRUE)
-    expect_snapshot(txt1$hash_algorithm <- "new-algo", error = TRUE)
+test_that("active binding algorithm validates value", {
+    expect_error(txt1$algorithm <- 1L)
+    expect_error(txt1$algorithm <- "new-algo")
+    expect_snapshot(txt1$algorithm <- 1L,         error = TRUE)
+    expect_snapshot(txt1$algorithm <- "new-algo", error = TRUE)
 })
 
-test_that("active binding hash_algorithm sets new value and new hash", {
+test_that("active binding algorithm sets new value and new hash", {
     txt <- test_text()
-    txt$hash_algorithm <- "utf8"
-    expect_identical(txt$hash_algorithm, "utf8")
+    txt$algorithm <- "utf8"
+    expect_identical(txt$algorithm, "utf8")
     expect_identical(txt$hash, "12351")
 })
 
@@ -132,13 +132,8 @@ test_that("$initialize() works", {
     txt <- Text$new("utf8")
 
     expect_s3_class(txt, c("Text", "R6"), exact = TRUE)
-    expect_identical(txt$hash_algorithm, "utf8")
+    expect_identical(txt$algorithm, "utf8")
     expect_type(txt$.__enclos_env__$private$.translations, "environment")
-})
-
-test_that("$initialize() validates hash_algorithm", {
-    expect_error(Text$new(1L))
-    expect_snapshot(Text$new(1L), error = TRUE)
 })
 
 test_that("$get_translation() works", {
@@ -267,7 +262,7 @@ test_that("text() returns an R6 object of class Text", {
 
     expect_s3_class(txt, c("Text", "R6"), exact = TRUE)
     expect_identical(txt$hash, "256e0d707386d0fcd9abf10ad994000bdaa25812")
-    expect_identical(txt$hash_algorithm, "sha1")
+    expect_identical(txt$algorithm, "sha1")
     expect_identical(txt$source_lang, "en")
     expect_identical(txt$source_text, "Hello, world!")
     expect_identical(txt$translations, c(
@@ -388,7 +383,7 @@ test_that("c.Text() returns a Text object", {
 
     expect_s3_class(out, "Text")
     expect_identical(out$hash, txt1$hash)
-    expect_identical(out$hash_algorithm, txt1$hash_algorithm)
+    expect_identical(out$algorithm, txt1$algorithm)
     expect_identical(out$source_lang, txt1$source_lang)
     expect_identical(out$source_text, txt1$source_text)
     expect_identical(out$translations, c(
@@ -466,9 +461,9 @@ test_that("merge_texts() validates ...", {
     expect_snapshot(merge_texts(txt1, 1L, txt2), error = TRUE)
 })
 
-test_that("merge_texts() validates hash_algorithm", {
-    expect_error(merge_texts(txt1, txt2, hash_algorithm = "error"))
-    expect_snapshot(merge_texts(txt1, txt2, hash_algorithm = "error"), error = TRUE)
+test_that("merge_texts() validates algorithm", {
+    expect_error(merge_texts(txt1, txt2, algorithm = "error"))
+    expect_snapshot(merge_texts(txt1, txt2, algorithm = "error"), error = TRUE)
 })
 
 test_that("merge_texts() combines Text objects having different hashes", {
@@ -516,12 +511,12 @@ test_that("as_text() works", {
 test_that("as_text.call() returns a Text object", {
     txt <- as_text(
         call("translate", "Hello,", "world!"),
-        location       = location("test"),
-        hash_algorithm = "utf8")
+        location  = location("test"),
+        algorithm = "utf8")
 
     expect_s3_class(txt, "Text")
     expect_identical(txt$hash, "12351")
-    expect_identical(txt$hash_algorithm, "utf8")
+    expect_identical(txt$algorithm, "utf8")
     expect_identical(txt$source_lang, "en")
     expect_identical(txt$source_text, "Hello, world!")
     expect_identical(txt$locations, list(test = location("test")))

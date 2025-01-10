@@ -29,9 +29,10 @@ consistency among all features of the package.
 }
 \section{Algorithms returned by \code{constant("algorithms")}}{
 
-Hashing algorithms map an arbitrary character string to a shorter string of
-hexadecimal characters. It typically has a fixed width and is highly likely
-to be unique.
+These algorithms map a character string to another character string of
+hexadecimal characters highly likely to be unique. The latter is typically
+much shorter and is used to uniquely identify a source text (and the
+underlying source language). Two algorithms are available.
 \subsection{Secure Hash Algorithm 1}{
 
 Method \code{sha1} corresponds to SHA-1 (Secure Hash Algorithm version 1), a
@@ -50,11 +51,7 @@ It emits strings of 40 hexadecimal characters.
 Method \code{utf8} is a simple method derived from cumulative sums of UTF-8 code
 points (converted to integers). It is slightly faster than method \code{sha1} for
 small inputs and emits hashes with a width porportional to the underlying
-input's length. It is used for testing purposes.
-
-Strictly speaking, this method is not a hashing algorithm per se. Instead,
-it should be viewed as an identification algorithm that is highly likely to
-produce different values for different inputs.
+input's length. It is used for testing purposes internally.
 }
 }
 

@@ -54,7 +54,7 @@
 #'
 #' @template param-id
 #'
-#' @template param-hash-algorithm
+#' @template param-algorithm
 #'
 #' @template param-verbose
 #'
@@ -107,7 +107,7 @@ find_source <- function(
     encoding         = "UTF-8",
     strict           = TRUE,
     id               = uuid(),
-    hash_algorithm   = constant("algorithms"),
+    algorithm        = constant("algorithms"),
     native_languages = character(),
     verbose          = TRUE)
 {
@@ -129,8 +129,8 @@ find_source <- function(
         include.dirs = TRUE,
         no..         = TRUE)
 
-    texts <- find_source_in_files(paths, encoding, strict, hash_algorithm, verbose)
-    trans <- Translator$new(id, hash_algorithm)
+    texts <- find_source_in_files(paths, encoding, strict, algorithm, verbose)
+    trans <- Translator$new(id, algorithm)
 
     storage.mode(native_languages) <- "list"
     do.call(trans$set_native_languages, native_languages)
@@ -141,22 +141,17 @@ find_source <- function(
 #' @rdname find-source
 #' @export
 find_source_in_files <- function(
-    paths          = character(),
-    encoding       = "UTF-8",
-    strict         = TRUE,
-    hash_algorithm = constant("algorithms"),
-    verbose        = TRUE)
+    paths     = character(),
+    encoding  = "UTF-8",
+    strict    = TRUE,
+    algorithm = constant("algorithms"),
+    verbose   = TRUE)
 {
-    # encoding is validated by text_read() below.
     assert_chr(paths)
     assert_lgl1(strict)
-    assert_arg(hash_algorithm, TRUE)
+    assert_arg(algorithm, TRUE)
     assert_lgl1(verbose)
 
-    texts <- lapply(paths, find_source_in_file,
-        encoding,
-        strict,
-        hash_algorithm,
-        verbose)
+    texts <- lapply(paths, find_source_in_file, encoding, strict, algorithm, verbose)
     return(unlist(texts, FALSE))
 }

@@ -14,8 +14,8 @@
 #' ## Combining Text Objects
 #'
 #' [c()] can only combine [`Text`][Text] objects having the same `hash`.
-#' This is equivalent to having the same `hash_algorithm`, `source_lang`,
-#' and `source_text`. In that case, the underlying translations and
+#' This is equivalent to having the same `algorithm`, `source_lang`, and
+#' `source_text`. In that case, the underlying translations and
 #' [`Location`][Location] objects are combined and a new object is returned.
 #' It throws an error if all [`Text`][Text] objects are empty (they have no
 #' set `source_lang`).
@@ -47,7 +47,7 @@
 #'
 #' @template param-source-lang
 #'
-#' @template param-hash-algorithm
+#' @template param-algorithm
 #'
 #' @template param-strict
 #'
@@ -103,7 +103,7 @@
 #'
 #' # Combine Texts objects.
 #' # They must have the same hash
-#' # (same souce_text, source_lang, and hash_algorithm).
+#' # (same souce_text, source_lang, and algorithm).
 #' c(txt1, txt2)
 #'
 #' # Otherwise, c() throws an error.
@@ -129,8 +129,8 @@
 #' @export
 text <- function(
     ...,
-    source_lang    = language_source_get(),
-    hash_algorithm = constant("algorithms"))
+    source_lang = language_source_get(),
+    algorithm   = constant("algorithms"))
 {
     assert_chr1(source_lang)
 
@@ -144,7 +144,7 @@ text <- function(
             "It is treated as the source text.")
     }
 
-    txt <- Text$new(hash_algorithm)
+    txt <- Text$new(algorithm)
     do.call(txt$set_translations, texts)
     do.call(txt$set_locations, locs)
     txt$source_lang <- source_lang
@@ -168,7 +168,7 @@ format.Text <- function(x, ...) {
     xlist <- list(
         Hash          = x$hash,
         `Source Lang` = x$source_lang,
-        Algorithm     = x$hash_algorithm,
+        Algorithm     = x$algorithm,
         Translations  = x$translations,
         Locations     = locations)
 
@@ -195,7 +195,7 @@ c.Text <- function(...) {
     hashes <- vapply_1c(texts, `[[`, i = "hash")
 
     # Checking hashes simultaneously checks equality
-    # of hash_algorithm, source_lang and source_text.
+    # of algorithm, source_lang and source_text.
     if (!all(hashes[[1L]] == hashes[-1L])) {
         stops("all 'hash' must be equal in order to combine 'Text' objects.")
     }
@@ -211,7 +211,7 @@ c.Text <- function(...) {
     trans <- unlist(lapply(texts, `[[`, i = "translations"))
     locs  <- unlist(lapply(texts, `[[`, i = "locations"), FALSE)
 
-    txt <- Text$new(..1$hash_algorithm)
+    txt <- Text$new(..1$algorithm)
     do.call(txt$set_translations, as.list(trans))
     do.call(txt$set_locations, locs)
     txt$source_lang <- ..1$source_lang
@@ -221,13 +221,13 @@ c.Text <- function(...) {
 #' @rdname class-text
 #' @keywords internal
 #' @export
-merge_texts <- function(..., hash_algorithm = constant("algorithms")) {
+merge_texts <- function(..., algorithm = constant("algorithms")) {
     if (!all(vapply_1l(texts <- list(...), is_text))) {
         stops("values passed to '...' must all be 'Text' objects.")
     }
 
-    assert_arg(hash_algorithm, TRUE)
-    lapply(texts, \(txt) txt$hash_algorithm <- hash_algorithm)
+    assert_arg(algorithm, TRUE)
+    lapply(texts, \(txt) txt$algorithm <- algorithm)
 
     # Texts with no hash have no set source text
     # and source language. These Texts cannot be
@@ -249,10 +249,10 @@ as_text <- function(x, ...) {
 #' @rdname class-text
 #' @export
 as_text.call <- function(x,
-    strict         = FALSE,
-    location       = transltr::location(),
-    hash_algorithm = constant("algorithms"),
-    validate       = TRUE,
+    strict    = FALSE,
+    location  = transltr::location(),
+    algorithm = constant("algorithms"),
+    validate  = TRUE,
     ...)
 {
     assert_lgl1(validate)
@@ -275,7 +275,7 @@ as_text.call <- function(x,
     concat      <- args$concat      %??% constant("concat")
     source_lang <- args$source_lang %??% language_source_get()
 
-    txt <- Text$new(hash_algorithm)
+    txt <- Text$new(algorithm)
     txt$set_locations(location)
     txt$set_translation(source_lang, normalize(dots, concat = concat))
     txt$source_lang <- source_lang
@@ -290,21 +290,20 @@ Text <- R6::R6Class("Text",
     lock_objects = TRUE,
     cloneable    = FALSE,
     private      = list(
-        .hash         = constant("unset"), # See $hash
-        .hash_algo    = constant("unset"), # See $hash_algorithm
-        .source_lang  = constant("unset"), # See $source_lang
-        .translations = NULL,              # See $translations
-        .locations    = NULL               # See $locations
+        .hash         = constant("unset"),  # See $hash
+        .algorithm    = constant("unset"),  # See $algorithm
+        .source_lang  = constant("unset"),  # See $source_lang
+        .translations = NULL,               # See $translations
+        .locations    = NULL                # See $locations
     ),
     active = list(
         #' @field hash A non-empty and non-[NA][base::NA] character string. A
         #'   reproducible hash generated from `source_lang` and `source_text`,
-        #'   and by using the algorithm specified by `hash_algorithm`. It is
-        #'   used as a unique identifier for the underlying [`Text`][Text]
-        #'   object.
+        #'   and by using the algorithm specified by `algorithm`. It is used
+        #'   as a unique identifier for the underlying [`Text`][Text] object.
         #'
         #'   This is a **read-only** field. It is automatically updated
-        #'   whenever fields `source_lang` and/or `hash_algorithm` are updated.
+        #'   whenever fields `source_lang` and/or `algorithm` are updated.
         hash = \(value) {
             if (!missing(value)) {
                 stops(
@@ -315,15 +314,15 @@ Text <- R6::R6Class("Text",
             return(private$.hash)
         },
 
-        #' @template field-hash-algorithm
-        hash_algorithm = \(value) {
+        #' @template field-algorithm
+        algorithm = \(value) {
             if (!missing(value)) {
-                assert_chr1(value, x_name = "hash_algorithm")
-                assert_match(value, constant("algorithms"),
-                    quote_values = TRUE,
-                    x_name       = "hash_algorithm")
+                assert_algorithm <- \(algorithm = constant("algorithms")) {
+                    assert_arg(algorithm, TRUE)
+                    return(algorithm)
+                }
 
-                private$.hash_algo <- value
+                private$.algorithm <- assert_algorithm(value)
 
                 if (!is.null(source_text <- self$source_text)) {
                     private$.hash <- hash(
@@ -333,7 +332,7 @@ Text <- R6::R6Class("Text",
                 }
             }
 
-            return(private$.hash_algo)
+            return(private$.algorithm)
         },
 
         #' @template field-source-lang
@@ -348,7 +347,7 @@ Text <- R6::R6Class("Text",
                 private$.hash <- hash(
                     value,
                     self$get_translation(value),
-                    self$hash_algorithm)
+                    self$algorithm)
             }
 
             return(private$.source_lang)
@@ -410,21 +409,18 @@ Text <- R6::R6Class("Text",
     public = list(
         #' @description Create a [`Text`][Text] object.
         #'
-        #' @template param-hash-algorithm
+        #' @template param-algorithm
         #'
         #' @return An [`R6`][R6::R6] object of class [`Text`][Text].
         #'
         #' @examples
         #' # Consider using text() instead.
         #' txt <- Text$new()
-        initialize = \(hash_algorithm = constant("algorithms")) {
-            assert_arg(hash_algorithm, TRUE)
-
-            # self$hash_algorithm is not used here
-            # because source translation is not set.
-            private$.hash_algo    <- hash_algorithm
+        initialize = \(algorithm = constant("algorithms")) {
             private$.translations <- new.env(parent = emptyenv())
             private$.locations    <- new.env(parent = emptyenv())
+
+            self$algorithm <- algorithm
             return(self)
         },
 

@@ -7,21 +7,21 @@
       ! 'hash' cannot be overwritten.
       Update it by setting 'source_lang' instead.
 
-# active binding hash_algorithm validates value
+# active binding algorithm validates value
 
     Code
-      txt1$hash_algorithm <- 1L
+      txt1$algorithm <- 1L
     Condition
       Error:
-      ! 'hash_algorithm' must be a non-NA and non-empty character of length 1.
+      ! 'algorithm' must be equal to 'sha1', or 'utf8'.
 
 ---
 
     Code
-      txt1$hash_algorithm <- "new-algo"
+      txt1$algorithm <- "new-algo"
     Condition
       Error:
-      ! 'hash_algorithm' must be equal to 'sha1', or 'utf8'.
+      ! 'algorithm' must be equal to 'sha1', or 'utf8'.
 
 # active binding source_lang validates value
 
@@ -75,14 +75,6 @@
       Error:
       ! 'locations' cannot be overwritten.
       Update them by setting, or removing 'Location' objects.
-
-# $initialize() validates hash_algorithm
-
-    Code
-      Text$new(1L)
-    Condition
-      Error:
-      ! 'hash_algorithm' must be equal to 'sha1', or 'utf8'.
 
 # $get_translation() validates lang
 
@@ -262,13 +254,13 @@
       Error:
       ! values passed to '...' must all be 'Text' objects.
 
-# merge_texts() validates hash_algorithm
+# merge_texts() validates algorithm
 
     Code
-      merge_texts(txt1, txt2, hash_algorithm = "error")
+      merge_texts(txt1, txt2, algorithm = "error")
     Condition
       Error:
-      ! 'hash_algorithm' must be equal to 'sha1', or 'utf8'.
+      ! 'algorithm' must be equal to 'sha1', or 'utf8'.
 
 # as_text.call() validates x
 

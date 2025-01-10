@@ -58,7 +58,7 @@ test_that("export.Text() returns a named list of S3 class ExportedText", {
     expect_type(out$`_Uuid`, "character")
     expect_length(out$`_Uuid`, 1L)
 
-    expect_identical(out$`Hashing Algorithm`, txt$hash_algorithm)
+    expect_identical(out$Algorithm, txt$algorithm)
     expect_identical(out$Hash, txt$hash)
     expect_identical(out$`Source Language`, txt$source_lang)
     expect_identical(out$`Source Text`, txt$source_text)

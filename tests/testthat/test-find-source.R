@@ -14,9 +14,9 @@ texts_mock2 <- find_source_in_exprs(tokens_mock2, path_mock2)
 
 test_that("find_source() returns a Translator object", {
     out <- find_source(path_mock_dir,
-        verbose          = FALSE,
-        id               = "test-find-source",
-        hash_algorithm   = "utf8",
+        verbose   = FALSE,
+        id        = "test-find-source",
+        algorithm = "utf8",
         native_languages = c(
             en = "English",
             fr = "Français",
@@ -25,7 +25,7 @@ test_that("find_source() returns a Translator object", {
 
     expect_s3_class(out, c("Translator", "R6"), exact = TRUE)
     expect_identical(out$id, "test-find-source")
-    expect_identical(out$hash_algorithm, "utf8")
+    expect_identical(out$algorithm, "utf8")
     expect_identical(out$hashes, c(
         `950`   = "950",
         `951`   = "951",
@@ -110,9 +110,9 @@ test_that("find_source_in_files() validates strict", {
     expect_snapshot(find_source_in_files(path_mock1, strict = 1L), error = TRUE)
 })
 
-test_that("find_source_in_files() validates hash_algorithm", {
-    expect_error(find_source_in_files(path_mock1, hash_algorithm = 1L))
-    expect_snapshot(find_source_in_files(path_mock1, hash_algorithm = 1L), error = TRUE)
+test_that("find_source_in_files() validates algorithm", {
+    expect_error(find_source_in_files(path_mock1, algorithm = 1L))
+    expect_snapshot(find_source_in_files(path_mock1, algorithm = 1L), error = TRUE)
 })
 
 test_that("find_source_in_files() validates verbose", {
