@@ -26,7 +26,7 @@ test_that("find_source_in_file() works", {
     expect_true(all(vapply_1l(texts_mock2, is_text)))
 })
 
-test_that("find_source_in_file() outputs basic information if .verbose is true", {
+test_that("find_source_in_file() outputs basic information if verbose is true", {
     expect_output(find_source_in_file(path_mock1, verbose = TRUE), "Extracted 2 source text")
     expect_output(find_source_in_file(path_mock2, verbose = TRUE), "Extracted 10 source text")
 })
@@ -44,7 +44,7 @@ test_that("find_source_in_exprs() returns a list of Text objects", {
     expect_true(all(vapply_1l(texts_mock2, is_text)))
 })
 
-test_that("find_source_in_exprs() only processes explicit calls if .strict is true", {
+test_that("find_source_in_exprs() only processes explicit calls if strict is true", {
     # See the documentation of is_translate_call() for
     # more information on implicit and explicit calls.
     source_texts1 <- vapply_1c(texts_mock1, `[[`, i = "source_text")
@@ -54,7 +54,7 @@ test_that("find_source_in_exprs() only processes explicit calls if .strict is tr
     expect_identical(source_texts2, c("b", "d", "e", "f", "h", "i", "j", "k", "l", "n"))
 })
 
-test_that("find_source_in_exprs() processes all calls if .strict is false", {
+test_that("find_source_in_exprs() processes all calls if strict is false", {
     texts_mock1  <- find_source_in_exprs(tokens_mock1, path_mock1, FALSE)
     texts_mock2  <- find_source_in_exprs(tokens_mock2, path_mock2, FALSE)
     source_texts1 <- vapply_1c(texts_mock1, `[[`, i = "source_text")
