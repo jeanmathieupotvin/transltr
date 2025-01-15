@@ -9,48 +9,48 @@
 \alias{serialize_translations}
 \alias{deserialize}
 \alias{deserialize_translations}
-\alias{export}
 \alias{export_translations}
-\alias{import}
-\alias{validate}
+\alias{export}
 \alias{export.Translator}
 \alias{export.Text}
 \alias{export.Location}
+\alias{assert.ExportedTranslator}
+\alias{assert.ExportedText}
+\alias{assert.ExportedLocation}
+\alias{import}
 \alias{import.ExportedTranslator}
 \alias{import.ExportedText}
 \alias{import.ExportedLocation}
 \alias{import.ExportedTranslations}
 \alias{import.default}
-\alias{validate.ExportedTranslator}
-\alias{validate.ExportedText}
-\alias{validate.ExportedLocation}
-\alias{validate.ExportedTranslations}
-\alias{validate.default}
-\alias{translations_files}
-\alias{get_uuid}
+\alias{format_errors}
 \title{Serialize Objects}
 \usage{
 serialize(x, ...)
 
-serialize_translations(tr = translator(), lang = "", set_uuid = TRUE)
+serialize_translations(tr = translator(), lang = "")
 
 deserialize(string = "")
 
 deserialize_translations(string = "", tr)
 
+export_translations(tr = translator(), lang = "")
+
 export(x, ...)
 
-export_translations(tr = translator(), lang = "", set_uuid = TRUE)
+\method{export}{Translator}(x, ...)
+
+\method{export}{Text}(x, id = uuid(), set_translations = FALSE, ...)
+
+\method{export}{Location}(x, id = uuid(), ...)
+
+\method{assert}{ExportedTranslator}(x, throw_error = TRUE, ...)
+
+\method{assert}{ExportedText}(x, throw_error = TRUE, ...)
+
+\method{assert}{ExportedLocation}(x, throw_error = TRUE, ...)
 
 import(x, ...)
-
-validate(x, ...)
-
-\method{export}{Translator}(x, set_uuid = TRUE, parent_dir, ...)
-
-\method{export}{Text}(x, set_uuid = TRUE, set_translations = FALSE, ...)
-
-\method{export}{Location}(x, set_uuid = TRUE, ...)
 
 \method{import}{ExportedTranslator}(x, ...)
 
@@ -62,19 +62,7 @@ validate(x, ...)
 
 \method{import}{default}(x, ...)
 
-\method{validate}{ExportedTranslator}(x, ...)
-
-\method{validate}{ExportedText}(x, ...)
-
-\method{validate}{ExportedLocation}(x, ...)
-
-\method{validate}{ExportedTranslations}(x, ...)
-
-\method{validate}{default}(x, ...)
-
-translations_files(tr = translator(), parent_dir)
-
-get_uuid(x)
+format_errors(errors = character(), id = uuid(), throw_error = TRUE)
 }
 \arguments{
 \item{x}{Any \R object.}
@@ -98,28 +86,27 @@ to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}
 to maximize portability and cross-compatibility.}
 
-\item{set_uuid}{A non-\link[base:NA]{NA} logical value. Should a \verb{_Uuid} field
-uniquely identifying outputs of \code{\link[=export]{export()}} be included? If \code{TRUE}, it is
-set equal to \code{\link[=uuid]{uuid()}}. This field is required by \code{\link[=validate]{validate()}} to throw
-meaningful error messages­.}
-
 \item{string}{A non-empty and non-\link[base:NA]{NA} character string. Contents
 to deserialize.}
 
-\item{parent_dir}{An \strong{optional} non-\link[base:NA]{NA} character string. It
-can be empty. The parent directory to use when creating entries of field
-\verb{Translations Files} of an \code{\link[=export]{ExportedTranslator}} object. See
-\code{\link[=translator_write]{translator_write()}} for more information. Empty values are converted to
-the root location (\code{/}) by \code{\link[=file.path]{file.path()}}.}
+\item{id}{A non-empty and non-\link[base:NA]{NA} character string. A unique
+identifier for the underlying object. It is used for validation purposes.}
 
 \item{set_translations}{A non-\link[base:NA]{NA} logical value. Should
 translations be included in the resulting \code{\link[=export]{ExportedText}}
 object? If \code{FALSE}, field \code{Translations} is set equal to \code{NULL}.}
+
+\item{throw_error}{A non-\link[base:NA]{NA} logical value. Should an error be
+thrown? If so, \code{\link[=stops]{stops()}} is called. Otherwise, error messages are returned
+as a character vector (possibly empty).}
+
+\item{errors}{A character vector of non-\link[base:NA]{NA} values. It can be
+empty. Messages describing why object(s) are invalid.}
 }
 \value{
-\code{\link[=serialize]{serialize()}} and \code{\link[=serialize_translations]{serialize_translations()}} return a character string:
-a \href{https://yaml.org/spec/1.1/}{YAML} string and a \link[=flat_serialize]{FLAT}
-string, respectively.
+See other sections for further information.
+
+\code{\link[=serialize]{serialize()}}, and \code{\link[=serialize_translations]{serialize_translations()}} return a character string.
 
 \code{\link[=export]{export()}} returns a named list of S3 class
 \itemize{
@@ -129,83 +116,35 @@ object,
 \item \code{\link[=export]{ExportedLocation}} if \code{x} is a \code{\link{Location}} object.
 }
 
-See Details above for more information.
+\code{\link[=export_translations]{export_translations()}} returns an \code{\link[=export]{ExportedTranslations}} object.
 
-\code{\link[=export_translations]{export_translations()}} returns a named list of S3 class
-\code{\link[=export]{ExportedTranslations}} containing the following elements.
-
-\describe{
-\item{\verb{_Uuid}}{A non-empty and non-\link[base:NA]{NA} character
-string if \code{set_uuid} is \code{TRUE}. A
-\href{https://en.wikipedia.org/wiki/Universally_unique_identifier}{universally unique identifier}
-used to throw suitable error messages. It should be ignored by users.}
-\item{\code{Identifier}}{The unique identifier of \code{x}. See
-\code{\link[=Translator]{Translator$id}} for more information.}
-\item{\verb{Language Code}}{The value of \code{lang}.}
-\item{\code{Language}}{The target (native) language. See
-\code{\link[=Translator]{Translator$native_languages}} for more information.}
-\item{\verb{Source Language}}{The source language. See
-\code{\link[=Translator]{Translator$source_langs}} for more information.}
-\item{\code{Translations}}{A named list containing further named lists. Each
-sublist contains two values:
-\describe{
-\item{\verb{Source Text}}{A non-empty and non-\link[base:NA]{NA} character
-string.}
-\item{\code{Translation}}{A non-empty and non-\link[base:NA]{NA} character
-string, or \code{NULL} if unavailable.}
-}
-See \code{\link[=Text]{Text$translations}} for more information. Their names are
-(reduced) hashes extracted from \code{x}.}
-}
-
-\code{\link[=deserialize]{deserialize()}} and \code{\link[=import]{import()}} returns
+\code{\link[=deserialize]{deserialize()}} and \code{\link[=import]{import()}} return
 \itemize{
-\item a \code{\link{Translator}} object if \code{x} is an
+\item a \code{\link{Translator}} object if \code{x} is a valid
 \code{\link[=export]{ExportedTranslator}} object,
-\item a \code{\link{Text}} object if \code{x} is an \code{\link[=export]{ExportedText}} object,
-\item a \code{\link{Location}} object if \code{x} an \code{\link[=export]{ExportedLocation}}
-object.
+\item a \code{\link{Text}} object if \code{x} is a valid \code{\link[=export]{ExportedText}}
+object, or
+\item a \code{\link{Location}} object if \code{x} a valid
+\code{\link[=export]{ExportedLocation}} object.
 }
-
-\code{\link[=import.ExportedTranslator]{import.ExportedTranslator()}} further sets a \code{translations_files} attribute
-holding the cached value of \verb{x$Translations Files}.
 
 \code{\link[=deserialize_translations]{deserialize_translations()}} and \code{\link[=import.ExportedTranslations]{import.ExportedTranslations()}} return an
-\code{\link[=export]{ExportedTranslations}} object. Its contents is reformatted, if
-necessary.
+\code{\link[=export]{ExportedTranslations}} object. They further register imported
+translations if a \code{\link{Translator}} object is passed to \code{tr}.
 \itemize{
-\item \code{\link[=import.ExportedTranslations]{import.ExportedTranslations()}} further registers imported translations
-if a \code{\link{Translator}} object is passed to itself, or to
-\code{\link[=deserialize_translations]{deserialize_translations()}}. Translations must correspond to an existing
-source text (a registered \code{\link{Text}} object). Otherwise, they are
-skipped silently. The \code{\link{Translator}} object is updated
-\strong{by reference} and is not returned (\code{\link{Translator}} objects
-are \link[=environment]{environments}).
+\item Translations must correspond to an existing source text (a registered
+\code{\link{Text}} object). Otherwise, they are skipped.
+\item The value passed to \code{tr} is updated \strong{by reference} and is not returned.
 }
 
 \code{\link[=import.default]{import.default()}} is used for its side-effect of throwing an error for
 unsupported objects.
 
-\code{\link[=validate]{validate()}} returns \code{x} if it is valid and throws an error otherwise. It
-is designed to fail fast: error messages are \strong{not accumulated}. Classes
-(and underlying objects) that does not have a \code{\link[=validate]{validate()}} method are
-considered to be valid by default.
-
-\code{\link[=validate.default]{validate.default()}} simply returns \code{x} like \code{\link[=identity]{identity()}} would.
-
-\code{\link[=translations_files]{translations_files()}} returns a named list.
-\itemize{
-\item If \code{tr} has a valid \code{translations_files} attribute (a non-empty named
-list), it is returned. See \code{\link[=import.ExportedTranslator]{import.ExportedTranslator()}} for more
-information.
-\item Otherwise, a named list of file paths is constructed from
-\code{tr$native_languages} (the source language is ignored).
-See \code{\link[=Translator]{Translator$native_languages}} for more information.
-}
-
-\code{\link[=get_uuid]{get_uuid()}} safely extracts field \verb{_Uuid} from \code{x} and returns it if the
-underlying value is a non-empty and non-\link[base:NA]{NA} character string.
-Otherwise, a default value is returned.
+\code{\link[=assert.ExportedTranslator]{assert.ExportedTranslator()}},
+\code{\link[=assert.ExportedText]{assert.ExportedText()}},
+\code{\link[=assert.ExportedLocation]{assert.ExportedLocation()}}, and
+\code{\link[=format_errors]{format_errors()}} return a character vector, possibly empty. If \code{throw_error}
+is \code{TRUE}, an error is thrown if an object is invalid.
 }
 \description{
 Convert \code{\link{Translator}} objects, \code{\link{Text}} objects, and
@@ -220,27 +159,26 @@ vive-versa.
 The information contained within a \code{\link{Translator}} object is
 split by default. Unless \code{set_translations} is \code{TRUE}, translations are
 serialized independently from other fields. This is useful when creating
-\link[=translator_write]{Exported Translator files} and
-\link[=translations_read]{Exported Translations files}.
+Translator files and translations files.
 
 While \code{\link[=serialize]{serialize()}} and \code{\link[=serialize_translations]{serialize_translations()}} are distinct, they share
 a common \emph{design} and perform the same \emph{thing}, at least conceptually. The
-same is true for \code{\link[=deserialize]{deserialize()}} and \code{\link[=deserialize_translations]{deserialize_translations()}}.
+same is true for \code{\link[=deserialize]{deserialize()}} and \code{\link[=deserialize_translations]{deserialize_translations()}}. These 4
+functions are those that should be used in almost all circumstances.
 \subsection{Serialization}{
 
 The data serialization process performed by \code{\link[=serialize]{serialize()}} and
 \code{\link[=serialize_translations]{serialize_translations()}} is internally broken down into 2 steps: objects
 are first \emph{exported} before being \emph{serialized}.
 
-\code{\link[=export]{export()}} and \code{\link[=export_translations]{export_translations()}} are \emph{preserializers} that convert
-objects into \emph{transient} objects of class \code{\link[=export]{Exported*}}. Their
-sole purpose is to ease the conversion of environments to textual
-representations (\code{\link{Translator}} objects and \code{\link{Text}}
-objects are stored as environments internally). They are never returned to
-the user: \code{\link[=serialize]{serialize()}} and \code{\link[=serialize_translations]{serialize_translations()}} immediately transform
-them into suitable character strings. The latter outputs a
-\link[=flat_serialize]{FLAT object} and the former, a
-\link[yaml:as.yaml]{YAML object}.
+\code{\link[=export]{export()}} and \code{\link[=export_translations]{export_translations()}} are \emph{preserializing mechanisms} that
+convert objects into \emph{transient} objects that ease the conversion process.
+They are never returned to the user: \code{\link[=serialize]{serialize()}}, and
+\code{\link[=serialize_translations]{serialize_translations()}} immediately transform them into character strings.
+
+\code{\link[=serialize]{serialize()}} returns a \link[yaml:as.yaml]{YAML object}.
+
+\code{\link[=serialize_translations]{serialize_translations()}} returns a \link[=flat_serialize]{FLAT object}.
 }
 
 \subsection{Deserialization}{
@@ -249,57 +187,89 @@ The data deserialization process performed by \code{\link[=deserialize]{deserial
 \code{\link[=deserialize_translations]{deserialize_translations()}} is internally broken down into 3 steps: objects
 are first \emph{deserialized}, then \emph{validated} and finally, \emph{imported}.
 
-\code{\link[=deserialize]{deserialize()}} and \code{\link[=deserialize_translations]{deserialize_translations()}} first deserializes \code{string}
-into an \R named list that is \strong{presumed} to be an object of class
-\code{\link[=export]{Exported*}}. The former relies on underlying
-\href{https://yaml.org/spec/1.1/#id858600}{YAML tags} to make such assumptions.
-The contents of the resulting \emph{transient} object is then thoroughly checked
-with \code{\link[=validate]{validate()}}, which dispatches on the object's \strong{presumed} class.
-Finally, a valid object is \emph{imported} back into an appropriate \R object
-via \code{\link[=import]{import()}}.
+\code{\link[=deserialize]{deserialize()}} and \code{\link[=deserialize_translations]{deserialize_translations()}} are
+\emph{raw deserializer mechanisms}: \code{string} is converted into an \R named list
+that is \strong{presumed} to be an \emph{exported} object. \code{\link[=deserialize]{deserialize()}} relies on
+\href{https://yaml.org/spec/1.1/#id858600}{YAML tags} to infer the class of each
+object.
 
-Note that custom fields and comments added by users to serialized objects
-are ignored by \code{\link[=validate]{validate()}} and discarded entirely by \code{\link[=import]{import()}}.
+The contents of the \emph{transient} objects is thoroughly checked with an
+\code{\link[=assert]{assert()}} method (based on the underlying presumed class). Valid objects
+are \emph{imported} back into an appropriate \R object with \code{\link[=import]{import()}}.
+
+Custom fields and comments added by users to serialized objects are ignored.
 }
 
-\subsection{\code{Exported} Classes}{
+\subsection{Formatting errors}{
 
-\code{\link[=export]{Exported*}} may refer to classes
+\code{\link[=assert]{assert()}} methods accumulate error messages before returning, or throwing
+them. \code{\link[=format_errors]{format_errors()}} is a helper function that eases this process. It
+exists to avoid repeting code in each method. There is no reason to call
+it outside of \code{\link[=assert]{assert()}} methods.
+}
+}
+\note{
+Dividing the serialization and deserialization processes into multiple steps
+helps keeping the underlying functions short, and easier to test.
+}
+\section{Exported Objects}{
+
+An exported object is a named list of S3 class
 \code{\link[=export]{ExportedTranslator}},
 \code{\link[=export]{ExportedText}},
 \code{\link[=export]{ExportedLocation}}, or
-\code{\link[=export]{ExportedTranslations}}.
+\code{\link[=export]{ExportedTranslations}} and
+always having a \code{tag} attribute whose value is equal to the super-class of
+\code{x}.
 
-Generally speaking, an \code{\link[=export]{Exported*}} object is a named list of S3
-class \code{\link[=export]{Exported*}} always having a \code{tag} attribute whose value is
-equal to the super-class of argument \code{x}. The exact class depends on \code{x}.
-\code{\link[=export]{Exported*}} objects can be converted back to equivalent \R
-objects via \code{\link[=import]{import()}}.
-
-There are three main differences between an object and its \emph{exported}
+There are four main differences between an object and its \emph{exported}
 counterpart.
 \enumerate{
-\item field names are written as whole (human-readable) words,
-\item source text is treated independently from translations, and
-\item unset fields are set equal to \code{NULL} (a \code{~} in YAML).
+\item Field names are slightly more verbose.
+\item Source text is treated independently from translations.
+\item Unset fields are set equal to \code{NULL} (a \code{~} in YAML).
+\item Each object has an \code{Identifier} used to locate errors.
 }
 
-The information is otherwise identical, albeit structured differently for
-presentational purposes.
+The correspondance between objects is self-explanatory.
+\itemize{
+\item See class \code{\link{Translator}} for more information on class
+\code{\link[=export]{ExportedTranslator}}.
+\item See class \code{\link{Text}} for more information on class
+\code{\link[=export]{ExportedText}}.
+\item See class \code{\link{Location}} for more information on class
+\code{\link[=export]{ExportedLocation}}.
 }
 
-\subsection{The \code{ExportedTranslations} Super-class}{
-
-\code{\link[=export_translations]{export_translations()}} is different because it returns an object of S3 class
-\code{\link[=export]{ExportedTranslations}} which has no \emph{unexported} counterpart.
-Its purpose is to restructure translations extracted from a
-\code{\link{Translator}} object by language. It is used to create
-\link[=translations_read]{Exported Translations file}.
+You may also explore provided examples below.
+\subsection{The \code{ExportedTranslations} Class}{
 
 \code{\link[=export]{ExportedTranslations}} objects are created from a
-\code{\link{Translator}} object. The value passed to \code{lang} must have a
-corresponding registered native language name. See
-\code{\link[=Translator]{Translator$native_languages}} for more information.
+\code{\link{Translator}} object with \code{\link[=export_translations]{export_translations()}}. Their purpose
+is to restructure translations by language. They are different from other
+exported objects because there is no corresponding \code{Translations} class.
+
+An \code{\link[=export]{ExportedTranslations}} object is a named list of S3 class
+\code{\link[=export]{ExportedTranslations}} containing the following elements.
+
+\describe{
+\item{\code{Identifier}}{The unique identifier of argument \code{tr}. See
+\code{\link[=Translator]{Translator$id}} for more information.}
+\item{\verb{Language Code}}{The value of argument \code{lang}.}
+\item{\code{Language}}{The translation's language. See
+\code{\link[=Translator]{Translator$native_languages}} for more information.}
+\item{\verb{Source Language}}{The source text's language. See
+\code{\link[=Translator]{Translator$source_langs}} for more information.}
+\item{\code{Translations}}{A named list containing further named lists. Each
+sublist contains two values:
+\describe{
+\item{\verb{Source Text}}{A non-empty and non-\link[base:NA]{NA} character
+string.}
+\item{\code{Translation}}{A non-empty and non-\link[base:NA]{NA} character
+string.}
+}
+See \code{\link[=Text]{Text$translations}} for more information.}
+}
 
 Unavailable translations are automatically replaced by a placeholder that
 depends on the \emph{context}:
@@ -309,6 +279,7 @@ depends on the \emph{context}:
 }
 }
 }
+
 \examples{
 # Set source language.
 language_source_set("en")
@@ -317,27 +288,26 @@ language_source_set("en")
 loc <- location("file-a", 1L, 2L, 3L, 4L)
 
 txt <- text(
-  location("a", 1L, 2L, 3L, 4L),
-  en = "Hello, world!",
-  fr = "Bonjour, monde!",
-  es = "¡Hola, mundo!")
-
-tr <- translator(
-  id = "test-translator",
-  en = "English",
-  es = "Español",
-  fr = "Français",
-  text(
     location("a", 1L, 2L, 3L, 4L),
     en = "Hello, world!",
-    fr = "Bonjour, monde!"),
-  text(
-    location("b", 1L, 2L, 3L, 4L),
-    en = "Farewell, world!",
-    fr = "Au revoir, monde!"))
+    fr = "Bonjour, monde!",
+    es = "¡Hola, mundo!")
 
-# Serialize objects. This is what translator_write(),
-# and translations_write() call internally.
+tr <- translator(
+    id = "test-translator",
+    en = "English",
+    es = "Español",
+    fr = "Français",
+    text(
+        location("a", 1L, 2L, 3L, 4L),
+        en = "Hello, world!",
+        fr = "Bonjour, monde!"),
+    text(
+        location("b", 1L, 2L, 3L, 4L),
+        en = "Farewell, world!",
+        fr = "Au revoir, monde!"))
+
+# Serialize objects.
 transltr:::serialize(loc)
 transltr:::serialize(txt)
 transltr:::serialize(tr)
@@ -345,78 +315,68 @@ transltr:::serialize_translations(tr, "fr")
 transltr:::serialize_translations(tr, "es")
 
 # serialize() and serialize_translations() both call export() internally.
-# Field `_Uuid` can be omitted by setting set_uuid equal to `FALSE`.
-transltr:::export(loc, set_uuid = FALSE)
+# Argument id sets the value of field Identifier. For Translator objects,
+# the latter is always equal to its 'id' field.
+transltr:::export(loc, id = "example-id")
 transltr:::export(txt)
 transltr:::export(tr)
 transltr:::export_translations(tr, "fr")
-transltr:::export_translations(tr, "es", set_uuid = FALSE)
+transltr:::export_translations(tr, "es")
 
 # Translations can be exported along with original objects.
 # This is not the default behavior of the package.
 transltr:::export(txt, set_translations = TRUE)
 transltr:::export(tr,  set_translations = TRUE)
 
-# Deserialize objects. This is what translator_read() and
-# translations_read() call internally.
+# Deserialize objects.
 transltr:::deserialize(transltr:::serialize(loc))
 transltr:::deserialize(transltr:::serialize(txt))
 transltr:::deserialize(transltr:::serialize(tr))
 transltr:::deserialize_translations(transltr:::serialize_translations(tr, "fr"))
 transltr:::deserialize_translations(transltr:::serialize_translations(tr, "es"))
 
-# deserialize() and deserialize_translations() both call validate()
-# internally. validate() checks that the underlying input can safely be
-# passed to import(). What deserialization functions internally passes to
-# validate() are candidate 'Exported' objects that may, or may not be valid.
-transltr:::validate(transltr:::export(loc))
-transltr:::validate(transltr:::export(txt))
-transltr:::validate(transltr:::export(tr))
-transltr:::validate(transltr:::export_translations(tr, "fr"))
+# Validate objects.
+# import() calls assert() internally. It checks
+# that the input is valid and can be imported.
+transltr:::assert(transltr:::export(loc))
+transltr:::assert(transltr:::export(txt))
+transltr:::assert(transltr:::export(tr))
 
-# Introduce an error in an ExportedLocation object for illustration purposes.
-# validate() uses field `_Uuid` to throw meaningful error messages.
-loc_err <- transltr:::export(loc)
-loc_err$Path <- 1L
+# assert() accumulates errors before throwing them.
+# Below an ExportedTranslator object is created, and errors
+# are injected into it to illustrate how the mechanism works.
+tr_invalid <- transltr:::export(tr)
 
-\dontrun{transltr:::validate(loc_err)}
+tr_invalid$Algorithm <- 1.0
+tr_invalid$Languages <- c("English", "Español", "Français")
+tr_invalid$Texts[[1L]]$`Source Language` <- NULL
+tr_invalid$Texts[[2L]]$Locations[[1L]]$Path <- 1i
+tr_invalid$Texts[[2L]]$Locations[[1L]]$Ranges <- "Ln 1, Col 2 @ Ln 3"
 
-# deserialize() and deserialize_translations() both call import() on valid
-# Exported* objects. Any `_Uuid` field is discarded by import().
+\dontrun{transltr:::assert(tr_invalid)}
+
+# assert() does not have a method for ExportedTranslations
+# objects. It dispatches to assert.default() which considers
+# the former as being always valid.
+transltr:::assert(transltr:::export_translations(tr, "fr"))
+
+# import() is the conceptual inverse of export().
 transltr:::import(transltr:::export(loc))
 transltr:::import(transltr:::export(txt))
-transltr:::import(transltr:::export(tr))
-transltr:::import(transltr:::export_translations(tr, "fr"))
-transltr:::import(transltr:::export_translations(tr, "es"))
 
-# import() is the conceptual inverse of export(). However, this is not
-# quite true for import.ExportedTranslations(), because it replaces any
-# previous placeholders stemming from export_translations() with another
-# placeholder (for internal consistency).
-cat(transltr:::serialize_translations(tr, "es"), "\n")
-transltr:::deserialize_translations(transltr:::serialize_translations(tr, "es"))
+tr <- transltr:::import(transltr:::export(tr))
+transltr:::import(transltr:::export_translations(tr, "fr"), tr)
+transltr:::import(transltr:::export_translations(tr, "es"), tr)
 
-# A Translator object may be passed to deserialize_translations() and
-# import.ExportedTranslations(). It accumulates translations and is
-# modified in place (it is not returned). Note that translations are
-# registered only if they correspond to an existing source text and
-# are skipped otherwise.
-tr_new <- Translator$new(id = "test-translator")
-tr_new$set_text(en = "Hello, world!")
-tr_new$set_text(en = "Farewell, world!")
-transltr:::deserialize_translations(transltr:::serialize_translations(tr, "fr"), tr_new)
+# Format errors stemming from assert().
+errors <- c(
+    "'Source Language' must be a null, or a non-empty character string.",
+    "'Translations' must be a null, or a mapping of non-empty character strings.")
 
-# translations_files() is used to create the 'Translations Files' field
-# of an ExportedTranslator object.
-transltr:::translations_files(tr)
-transltr:::translations_files(tr, getwd())
+format_errors(throw_error = FALSE)
+format_errors(errors, "my-text-object", FALSE)
 
-# It is also used to fetch internal attribute `translations_files` set by
-# import.ExportedTranslator().
-transltr:::translations_files(transltr:::import(transltr:::export(tr)))
-
-transltr:::get_uuid(transltr:::export(loc))  ## Outputs the current uuid
-transltr:::get_uuid(1L)  ## Outputs "<unkwnown>"
+\dontrun{format_errors(errors, "my-text-object")}
 
 }
 \seealso{

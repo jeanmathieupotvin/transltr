@@ -4,104 +4,100 @@
 #' files back into \R as [`Translator`][Translator] objects.
 #'
 #' @details
-#' To ease collaboration and maintenance, the information contained within
-#' a [`Translator`][Translator] object is split. Translations are exported
-#' independently from other fields. Two types of objects are created from
-#' a [`Translator`][Translator] object: a single *Exported Translator*, and
-#' zero, or more *Exported Translations*. These objects are portable because
-#' they are textual representations that can be inspected and modified using
-#' a wide variety of tools and systems.
+#' The information contained within a [`Translator`][Translator] object is
+#' split: translations are reorganized by language and exported independently
+#' from other fields.
 #'
-#' Exported objects are stored in plain text files. The inner workings of the
-#' serialization process are thoroughly described in [serialize()].
+#' [translator_write()] creates two types of file: a single *Translator file*,
+#' and zero, or more *translations files*. These are plain text files that can
+#' be inspected and modified using a wide variety of tools and systems. They
+#' target different audiences:
 #'
-#' [translator_write()] creates two types of file: one file containing an
-#' Exported Translator, and further file(s) containing Exported Translations.
-#' They target different audiences:
+#'   * the Translator file is useful to developers, and
+#'   * translations files are meant to be shared with non-technical
+#'     collaborators such as translators.
 #'
-#'   * Exported Translator files are useful to **developers**, and
-#'   * Exported Translations files are useful to **non-technical collaborators**
-#'     such as translators.
+#' [translator_read()] first reads a Translator file and creates a
+#' [`Translator`][Translator] object from it. It then calls
+#' [translations_paths()] to list expected translations files (that should
+#' normally be stored alongside the Translator file), attempts to read them,
+#' and registers successfully imported translations.
 #'
-#' ## Exported Translator
+#' There are two requirements.
 #'
-#' An Exported Translator is a [YAML 1.1](https://yaml.org/spec/1.1/)
+#'   * All files must be stored in the same directory. By default, this is set
+#'     equal to `inst/transltr/` (see `getOption("transltr.default.path")`).
+#'   * Filenames of translations files are standardized and must correspond to
+#'     languages (language codes, see `lang`).
+#'
+#' The inner workings of the serialization process are thoroughly described in
+#' [serialize()].
+#'
+#' ## Translator file
+#'
+#' A Translator file contains a [YAML](https://yaml.org/spec/1.1/) (1.1)
 #' representation of a [`Translator`][Translator] object stripped of all
-#' its translations except those that are registered as source text. It
-#' references related Exported Translations files via a `Translations Files`
-#' field.
+#' its translations except those that are registered as source text.
 #'
-#' ## Exported Translations
+#' ## Translations files
 #'
-#' Translations registered in a [`Translator`][Translator] object are extracted,
-#' grouped by language, and stored in distinct file(s). One Exported
-#' Translations is created for each non-source native language registered in
-#' `x`. Fore more information, see [`Translator$native_languages`][Translator].
-#'
-#' An Exported Translations is a [FLAT 1.0][flat_serialize()] representation.
-#' This format is custom, and attempts to be as simple as possible for
-#' non-technical collaborators.
+#' A translations file contains a [FLAT][flat_serialize()] representation of
+#' a set of translations sharing the same target language. This format attempts
+#' to be as simple as possible for non-technical collaborators.
 #'
 #' @param path A non-empty and non-[NA][base::NA] character string. A path to
 #'   a file to read from, or write to.
 #'
-#'   * This file must be an Exported Translator file for [translator_read()].
-#'   * This file must be an Exported Translations file for [translations_read()].
+#'   * This file must be a Translator file for [translator_read()].
+#'   * This file must be a translations file for [translations_read()].
 #'
 #'   See Details for more information. [translator_write()] automatically
-#'   creates the parent directory of `path` (recursively) if it does not exist.
+#'   creates the parent directories of `path` (recursively) if they do not
+#'   exist.
 #'
 #' @param tr A [`Translator`][Translator] object.
 #'
-#' @param overwrite A non-[NA][base::NA] logical value. Should an existing
-#'   *Exported Translator* file (pointed to by `path`) be overwritten? An
-#'   error is thrown otherwise.
+#' @param overwrite A non-[NA][base::NA] logical value. Should existing
+#'   files be overwritten? If such files are detected and `overwrite` is
+#'   set equal to `TRUE`, an error is thrown.
 #'
 #' @template param-encoding
 #'
 #' @template param-lang
+#'
+#' @template param-verbose
 #'
 #' @returns
 #' [translator_read()] returns an [`R6`][R6::R6] object of class
 #' [`Translator`][Translator].
 #'
 #' [translator_write()] returns `NULL`, invisibly. It is used for its
-#' side-effects of simultaneously
+#' side-effects of
 #'
-#'   * creating an Exported Translator file to the location given by `path`, and
-#'   * creating further Exported Translations file(s) in the same directory as
-#'     the Exported Translator file (by default).
-#'
-#' Note that underlying entries of `Translations Files` (a standard field of
-#' Exported Translator objects) may be modified afterwards. The file paths it
-#' contains are cached by [translations_read()] and reused automatically.
+#'   * creating a Translator file to the location given by `path`, and
+#'   * creating further translations file(s) in the same directory.
 #'
 #' [translations_read()] returns an S3 object of class
 #' [`ExportedTranslations`][export()].
 #'
-#' [translations_write()] returns `NULL`, invisibly. It is used for its
-#' side-effect of creating a single Exported Translations file to the location
-#' given by `path`.
+#' [translations_write()] returns `NULL`, invisibly.
+#'
+#' [translations_paths()] returns a named character vector.
 #'
 #' @seealso
 #' [`Translator`][Translator],
 #' [serialize()]
 #'
 #' @examples
-#' # In what follows, ASCII characters are preferred because R has poor
-#' # support for non-ASCII characters used in documentation (help pages),
-#' # and they must be used cautiously. In practice, any alphabet (any UTF-8
-#' # character) may be used to represent native languages and translations.
-#'
 #' # Set source language.
 #' language_source_set("en")
 #'
-#' # Create a path to a (future) Exported Translator file.
+#' # Create a path to a temporary Translator file.
 #' temp_path <- tempfile(pattern = "translator_", fileext = ".yml")
+#' temp_dir  <- dirname(temp_path)  ## tempdir() could also be used
 #'
 #' # Create a Translator object.
-#' # This would normally be done automatically
-#' # by find_source(), or translator_read().
+#' # This would normally be done by find_source(), or translator_read().
 #' tr <- translator(
 #'   id = "test-translator",
 #'   en = "English",
@@ -114,50 +110,66 @@
 #'     en = "Farewell, world!",
 #'     fr = "Au revoir, monde!"))
 #'
-#' # Export it.
-#' # This creates 3 files:
-#' #
-#' #   1. 1 Exported Translator file, and
-#' #   2. 2 Exported Translations files (one for language "es" and another
-#' #      one for language "fr"). The file for language "es" contains
-#' #      placeholders for future translations.
+#' # Export it. This creates 3 files: 1 Translator file, and 2 translations
+#' # files because two non-source languages are registered. The file for
+#' # language "es" contains placeholders and must be completed.
 #' translator_write(tr, temp_path)
 #' translator_read(temp_path)
 #'
-#' # Inspect their (raw) contents.
-#' cat(readLines(temp_path), sep = "\n")
-#' cat(readLines(file.path(dirname(temp_path), "fr.txt")), sep = "\n")
-#' cat(readLines(file.path(dirname(temp_path), "es.txt")), sep = "\n")
-#'
 #' # Translations can be read individually.
-#' translations_read(file.path(dirname(temp_path), "fr.txt"))
-#' translations_read(file.path(dirname(temp_path), "es.txt"))
+#' translations_files <- translations_paths(tr, temp_dir)
+#' translations_read(translations_files[["es"]])
+#' translations_read(translations_files[["fr"]])
 #'
-#' # This is rarely useful, but translations can also be
-#' # exported individually. You may use this to add a new
-#' # language, as long as
-#' #
-#' #   1. it has a corresponding entry in the underlying Translator object, and
-#' #   2. it has corresponding entries in the underlying Exported Translator
-#' #      (fields 'Languages' and 'Translations Files' must be updated).
-#' #
-#' # Consider using translator_write() instead.
+#' # This is rarely useful, but translations can also be exported individually.
+#' # You may use this to add a new language, as long as it has an entry in the
+#' # underlying Translator object (or file).
 #' tr$set_native_languages(el = "Greek")
-#' translations_write(tr, file.path(dirname(temp_path), "el.txt"), "el")
-#' translations_read(file.path(dirname(temp_path), "el.txt"))
+#'
+#' translations_files <- translations_paths(tr, temp_dir)
+#'
+#' translations_write(tr, translations_files[["el"]], "el")
+#' translations_read(file.path(temp_dir, "el.txt"))
 #'
 #' @rdname translator-io
 #' @export
 translator_read <- function(
     path     = getOption("transltr.default.path"),
-    encoding = "UTF-8")
+    encoding = "UTF-8",
+    verbose  = TRUE)
 {
+    assert_lgl1(verbose)
+
     string <- paste0(text_read(path, encoding), collapse = "\n")
     tr     <- deserialize(string)
 
-    # Read all Exported Translations files,
-    # import them, and register translations.
-    lapply(translations_files(tr), translations_read, encoding, tr)
+    # translations_paths() checks that tr has
+    # a single source language before reading
+    # translations files.
+    transl_files <- translations_paths(tr, dirname(path))
+
+    lapply(transl_files, \(path) {
+        if (verbose) cat("Reading translations from '", path, "'... ", sep = "")
+
+        tryCatch({
+            # tr is updated by reference via import().
+            lang <- translations_read(path, encoding, tr)[["Language Code"]]
+            if (verbose) cat("OK ['", lang, "'].\n", sep = "")
+        },
+        error = \(err) {
+            # Do not throw an error if something goes wrong
+            # when verbose is TRUE. Report the error as a
+            # console output and move on to the next file.
+            if (verbose) {
+                cat("NOT OK.\n", " Error: ", err$message, "\n", sep = "")
+                return(invisible())
+            }
+
+            stopf("in '%s': %s", path, err$message)
+        })
+
+        return(invisible())
+    })
 
     return(tr)
 }
@@ -167,60 +179,48 @@ translator_read <- function(
 translator_write <- function(
     tr        = translator(),
     path      = getOption("transltr.default.path"),
-    overwrite = FALSE)
+    overwrite = FALSE,
+    verbose   = TRUE)
 {
-    # tr object is validated below by call to
-    # translations_files(). It requires a valid
-    # path, so it is thoroughly checked before.
     assert_chr1(path)
     assert_lgl1(overwrite)
+    assert_lgl1(verbose)
 
-    path_abs     <- normalizePath(path, mustWork = FALSE)
-    path_dir     <- dirname(path)
-    path_dir_abs <- dirname(path_abs)
-
-    if (!overwrite && file.exists(path_abs)) {
-        # Path is shown instead of its
-        # absolute/canonical equivalent
-        # to avoid confusion.
-        stopf(
-            "'path' ('%s') already exists. Set 'overwrite' equal to 'TRUE' before proceeding.",
-            path)
+    if (!overwrite && file.exists(path)) {
+        stops("'path' already exists. Set 'overwrite' equal to 'TRUE'.")
     }
-    if (!dir.exists(path_dir_abs) &&
-        !dir.create(path_dir_abs, TRUE, TRUE) || .__LGL_DEBUG_FLAG) {
-        # Absolute path to directory is shown,
-        # because it likely will be required
-        # for debugging purposes.
+    if (!dir.exists(parent_dir <- dirname(path)) &&
+        !dir.create(parent_dir, TRUE, TRUE) || .__LGL_DEBUG_FLAG) {
         stopf(
-            "parent directory of path ('%s') could not be created. %s",
+            "parent directory ('%s') of 'path' could not be created. %s",
             "Create it manually, or change 'path'.",
-            path_dir_abs)
+            parent_dir)
     }
 
-    transl_paths <- translations_files(tr, path_dir)
-    comments     <- c(
-        "# Exported Translator",
+    # translations_paths() checks that tr is a
+    # Translator and has a single source language.
+    transl_paths <- translations_paths(tr, parent_dir)
+
+    # Write Exported Translations (one per non-source
+    # native language) in the same directory as path.
+    map(path = transl_paths, lang = names(transl_paths), \(path, lang) {
+        if (verbose) {
+            cat(sprintf("Writing '%s' translations to '%s'.", lang, path),
+                sep = "\n")
+        }
+
+        translations_write(tr, path, lang)
+    })
+
+    comments <- c(
+        "# Translator",
         "#",
-        "# Instructions:",
-        "#  - You may edit Identifier, Languages, and Translations Files.",
-        "#  - Do not edit other fields by hand; edit source scripts instead.",
-        "#  - Field _Uuid uniquely identifies underlying objects.",
-        "#  - Translations are stored in distinct Exported Translations files.",
+        "# - You may edit fields Identifier, and Languages.",
+        "# - Do not edit other fields by hand. Edit source scripts instead.",
         "%YAML 1.1",
         "---")
 
-    # Write the Exported Translator.
-    text_write(c(comments, serialize(tr, parent_dir = path_dir)), path)
-
-    # Write Exported Translations (one per
-    # non-source native language). They are
-    # written in the same directory as path.
-    map(translations_write,
-        path = transl_paths,
-        lang = names(transl_paths),
-        more = list(tr = tr))
-
+    text_write(c(comments, serialize(tr)), path)
     return(invisible())
 }
 
@@ -235,20 +235,41 @@ translations_read <- function(path = "", encoding = "UTF-8", tr) {
 #' @export
 translations_write <- function(tr = translator(), path = "", lang = "") {
     comments <- c(
-        "# Exported Translations",
+        "# Translations",
         "#",
-        "# Instructions:",
-        "#  - Edit each 'Translation' section below.",
-        "#    - Translate what is in each preceding 'Source Text' section.",
-        "#    - Do not edit other sections.",
-        "#  - Choose UTF-8 whenever you have to select a character encoding.",
-        "#  - You may use any text editor.",
-        "#  - You may split long sentences with single new lines.",
-        "#  - You may include comments.",
-        "#    - What follows an octothorpe (#) is ignored until the next line.",
-        "#    - An escaped octothorpe (\\#) is treated as normal text.",
+        "# - Edit each 'Translation' section below.",
+        "#   - Translate what is in each preceding 'Source Text' section.",
+        "#   - Do not edit other sections.",
+        "# - Choose UTF-8 whenever you have to select a character encoding.",
+        "# - You may use any text editor.",
+        "# - You may split long sentences with single new lines.",
+        "# - You may include comments.",
+        "#   - What follows an octothorpe (#) is ignored until the next line.",
+        "#   - An escaped octothorpe (\\#) is treated as normal text.",
         "")
 
     text_write(c(comments, serialize_translations(tr, lang)), path)
     return(invisible())
+}
+
+#' @rdname translator-io
+#' @export
+translations_paths <- function(tr = translator(), parent_dir = "") {
+    assert_chr1(parent_dir)
+
+    if (!is_translator(tr)) {
+        stops("'tr' must be a 'Translator' object.")
+    }
+    if (length(source_lang <- tr$source_langs) > 1L) {
+        stops("all 'Text' objects of 'tr' must have the same 'source_lang'.")
+    }
+
+    native_langs <- tr$native_languages
+    native_langs <- native_langs[names(native_langs) != tr$source_langs]
+
+    langs <- names(native_langs)
+    files <- file.path(parent_dir, sprintf("%s.txt", langs))
+    names(files) <- langs
+
+    return(files)
 }

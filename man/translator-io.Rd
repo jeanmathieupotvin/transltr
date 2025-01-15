@@ -5,41 +5,53 @@
 \alias{translator_write}
 \alias{translations_read}
 \alias{translations_write}
+\alias{translations_paths}
 \title{Read and Write Translations}
 \usage{
-translator_read(path = getOption("transltr.default.path"), encoding = "UTF-8")
+translator_read(
+  path = getOption("transltr.default.path"),
+  encoding = "UTF-8",
+  verbose = TRUE
+)
 
 translator_write(
   tr = translator(),
   path = getOption("transltr.default.path"),
-  overwrite = FALSE
+  overwrite = FALSE,
+  verbose = TRUE
 )
 
 translations_read(path = "", encoding = "UTF-8", tr)
 
 translations_write(tr = translator(), path = "", lang = "")
+
+translations_paths(tr = translator(), parent_dir = "")
 }
 \arguments{
 \item{path}{A non-empty and non-\link[base:NA]{NA} character string. A path to
 a file to read from, or write to.
 \itemize{
-\item This file must be an Exported Translator file for \code{\link[=translator_read]{translator_read()}}.
-\item This file must be an Exported Translations file for \code{\link[=translations_read]{translations_read()}}.
+\item This file must be a Translator file for \code{\link[=translator_read]{translator_read()}}.
+\item This file must be a translations file for \code{\link[=translations_read]{translations_read()}}.
 }
 
 See Details for more information. \code{\link[=translator_write]{translator_write()}} automatically
-creates the parent directory of \code{path} (recursively) if it does not exist.}
+creates the parent directories of \code{path} (recursively) if they do not
+exist.}
 
 \item{encoding}{A non-empty and non-\link[base:NA]{NA} character string. The
 underlying source character encoding. In almost all cases, this should
 be UTF-8. Other encodings are internally re-encoded to UTF-8 for
 portability.}
 
+\item{verbose}{A non-\link[base:NA]{NA} logical value. Should progress
+information be reported?}
+
 \item{tr}{A \code{\link{Translator}} object.}
 
-\item{overwrite}{A non-\link[base:NA]{NA} logical value. Should an existing
-\emph{Exported Translator} file (pointed to by \code{path}) be overwritten? An
-error is thrown otherwise.}
+\item{overwrite}{A non-\link[base:NA]{NA} logical value. Should existing
+files be overwritten? If such files are detected and \code{overwrite} is
+set equal to \code{TRUE}, an error is thrown.}
 
 \item{lang}{A non-empty and non-\link[base:NA]{NA} character string. The
 underlying language.
@@ -56,84 +68,78 @@ to maximize portability and cross-compatibility.}
 \code{\link{Translator}}.
 
 \code{\link[=translator_write]{translator_write()}} returns \code{NULL}, invisibly. It is used for its
-side-effects of simultaneously
+side-effects of
 \itemize{
-\item creating an Exported Translator file to the location given by \code{path}, and
-\item creating further Exported Translations file(s) in the same directory as
-the Exported Translator file (by default).
+\item creating a Translator file to the location given by \code{path}, and
+\item creating further translations file(s) in the same directory.
 }
-
-Note that underlying entries of \verb{Translations Files} (a standard field of
-Exported Translator objects) may be modified afterwards. The file paths it
-contains are cached by \code{\link[=translations_read]{translations_read()}} and reused automatically.
 
 \code{\link[=translations_read]{translations_read()}} returns an S3 object of class
 \code{\link[=export]{ExportedTranslations}}.
 
-\code{\link[=translations_write]{translations_write()}} returns \code{NULL}, invisibly. It is used for its
-side-effect of creating a single Exported Translations file to the location
-given by \code{path}.
+\code{\link[=translations_write]{translations_write()}} returns \code{NULL}, invisibly.
+
+\code{\link[=translations_paths]{translations_paths()}} returns a named character vector.
 }
 \description{
 Export \code{\link{Translator}} objects to text files and import such
 files back into \R as \code{\link{Translator}} objects.
 }
 \details{
-To ease collaboration and maintenance, the information contained within
-a \code{\link{Translator}} object is split. Translations are exported
-independently from other fields. Two types of objects are created from
-a \code{\link{Translator}} object: a single \emph{Exported Translator}, and
-zero, or more \emph{Exported Translations}. These objects are portable because
-they are textual representations that can be inspected and modified using
-a wide variety of tools and systems.
+The information contained within a \code{\link{Translator}} object is
+split: translations are reorganized by language and exported independently
+from other fields.
 
-Exported objects are stored in plain text files. The inner workings of the
-serialization process are thoroughly described in \code{\link[=serialize]{serialize()}}.
-
-\code{\link[=translator_write]{translator_write()}} creates two types of file: one file containing an
-Exported Translator, and further file(s) containing Exported Translations.
-They target different audiences:
+\code{\link[=translator_write]{translator_write()}} creates two types of file: a single \emph{Translator file},
+and zero, or more \emph{translations files}. These are plain text files that can
+be inspected and modified using a wide variety of tools and systems. They
+target different audiences:
 \itemize{
-\item Exported Translator files are useful to \strong{developers}, and
-\item Exported Translations files are useful to \strong{non-technical collaborators}
-such as translators.
+\item the Translator file is useful to developers, and
+\item translations files are meant to be shared with non-technical
+collaborators such as translators.
 }
-\subsection{Exported Translator}{
 
-An Exported Translator is a \href{https://yaml.org/spec/1.1/}{YAML 1.1}
+\code{\link[=translator_read]{translator_read()}} first reads a Translator file and creates a
+\code{\link{Translator}} object from it. It then calls
+\code{\link[=translations_paths]{translations_paths()}} to list expected translations files (that should
+normally be stored alongside the Translator file), attempts to read them,
+and registers successfully imported translations.
+
+There are two requirements.
+\itemize{
+\item All files must be stored in the same directory. By default, this is set
+equal to \verb{inst/transltr/} (see \code{getOption("transltr.default.path")}).
+\item Filenames of translations files are standardized and must correspond to
+languages (language codes, see \code{lang}).
+}
+
+The inner workings of the serialization process are thoroughly described in
+\code{\link[=serialize]{serialize()}}.
+\subsection{Translator file}{
+
+A Translator file contains a \href{https://yaml.org/spec/1.1/}{YAML} (1.1)
 representation of a \code{\link{Translator}} object stripped of all
-its translations except those that are registered as source text. It
-references related Exported Translations files via a \verb{Translations Files}
-field.
+its translations except those that are registered as source text.
 }
 
-\subsection{Exported Translations}{
+\subsection{Translations files}{
 
-Translations registered in a \code{\link{Translator}} object are extracted,
-grouped by language, and stored in distinct file(s). One Exported
-Translations is created for each non-source native language registered in
-\code{x}. Fore more information, see \code{\link[=Translator]{Translator$native_languages}}.
-
-An Exported Translations is a \link[=flat_serialize]{FLAT 1.0} representation.
-This format is custom, and attempts to be as simple as possible for
-non-technical collaborators.
+A translations file contains a \link[=flat_serialize]{FLAT} representation of
+a set of translations sharing the same target language. This format attempts
+to be as simple as possible for non-technical collaborators.
 }
 }
 \examples{
-# In what follows, ASCII characters are preferred because R has poor
-# support for non-ASCII characters used in documentation (help pages),
-# and they must be used cautiously. In practice, any alphabet (any UTF-8
-# character) may be used to represent native languages and translations.
-
 # Set source language.
 language_source_set("en")
 
-# Create a path to a (future) Exported Translator file.
+# Create a path to a temporary Translator file.
 temp_path <- tempfile(pattern = "translator_", fileext = ".yml")
+temp_dir  <- dirname(temp_path)  ## tempdir() could also be used
 
 # Create a Translator object.
-# This would normally be done automatically
-# by find_source(), or translator_read().
+# This would normally be done by find_source(), or translator_read().
 tr <- translator(
   id = "test-translator",
   en = "English",
@@ -146,37 +152,26 @@ tr <- translator(
     en = "Farewell, world!",
     fr = "Au revoir, monde!"))
 
-# Export it.
-# This creates 3 files:
-#
-#   1. 1 Exported Translator file, and
-#   2. 2 Exported Translations files (one for language "es" and another
-#      one for language "fr"). The file for language "es" contains
-#      placeholders for future translations.
+# Export it. This creates 3 files: 1 Translator file, and 2 translations
+# files because two non-source languages are registered. The file for
+# language "es" contains placeholders and must be completed.
 translator_write(tr, temp_path)
 translator_read(temp_path)
 
-# Inspect their (raw) contents.
-cat(readLines(temp_path), sep = "\n")
-cat(readLines(file.path(dirname(temp_path), "fr.txt")), sep = "\n")
-cat(readLines(file.path(dirname(temp_path), "es.txt")), sep = "\n")
-
 # Translations can be read individually.
-translations_read(file.path(dirname(temp_path), "fr.txt"))
-translations_read(file.path(dirname(temp_path), "es.txt"))
+translations_files <- translations_paths(tr, temp_dir)
+translations_read(translations_files[["es"]])
+translations_read(translations_files[["fr"]])
 
-# This is rarely useful, but translations can also be
-# exported individually. You may use this to add a new
-# language, as long as
-#
-#   1. it has a corresponding entry in the underlying Translator object, and
-#   2. it has corresponding entries in the underlying Exported Translator
-#      (fields 'Languages' and 'Translations Files' must be updated).
-#
-# Consider using translator_write() instead.
+# This is rarely useful, but translations can also be exported individually.
+# You may use this to add a new language, as long as it has an entry in the
+# underlying Translator object (or file).
 tr$set_native_languages(el = "Greek")
-translations_write(tr, file.path(dirname(temp_path), "el.txt"), "el")
-translations_read(file.path(dirname(temp_path), "el.txt"))
+
+translations_files <- translations_paths(tr, temp_dir)
+
+translations_write(tr, translations_files[["el"]], "el")
+translations_read(file.path(temp_dir, "el.txt"))
 
 }
 \seealso{

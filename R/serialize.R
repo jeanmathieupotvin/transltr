@@ -13,12 +13,12 @@
 #' The information contained within a [`Translator`][Translator] object is
 #' split by default. Unless `set_translations` is `TRUE`, translations are
 #' serialized independently from other fields. This is useful when creating
-#' [Exported Translator files][translator_write()] and
-#' [Exported Translations files][translations_read()].
+#' Translator files and translations files.
 #'
 #' While [serialize()] and [serialize_translations()] are distinct, they share
 #' a common *design* and perform the same *thing*, at least conceptually. The
-#' same is true for [deserialize()] and [deserialize_translations()].
+#' same is true for [deserialize()] and [deserialize_translations()]. These 4
+#' functions are those that should be used in almost all circumstances.
 #'
 #' ## Serialization
 #'
@@ -26,15 +26,14 @@
 #' [serialize_translations()] is internally broken down into 2 steps: objects
 #' are first *exported* before being *serialized*.
 #'
-#' [export()] and [export_translations()] are *preserializers* that convert
-#' objects into *transient* objects of class [`Exported*`][export()]. Their
-#' sole purpose is to ease the conversion of environments to textual
-#' representations ([`Translator`][Translator] objects and [`Text`][Text]
-#' objects are stored as environments internally). They are never returned to
-#' the user: [serialize()] and [serialize_translations()] immediately transform
-#' them into suitable character strings. The latter outputs a
-#' [FLAT object][flat_serialize()] and the former, a
-#' [YAML object][yaml::as.yaml()].
+#' [export()] and [export_translations()] are *preserializing mechanisms* that
+#' convert objects into *transient* objects that ease the conversion process.
+#' They are never returned to the user: [serialize()], and
+#' [serialize_translations()] immediately transform them into character strings.
+#'
+#' [serialize()] returns a [YAML object][yaml::as.yaml()].
+#'
+#' [serialize_translations()] returns a [FLAT object][flat_serialize()].
 #'
 #' ## Deserialization
 #'
@@ -42,60 +41,24 @@
 #' [deserialize_translations()] is internally broken down into 3 steps: objects
 #' are first *deserialized*, then *validated* and finally, *imported*.
 #'
-#' [deserialize()] and [deserialize_translations()] first deserializes `string`
-#' into an \R named list that is **presumed** to be an object of class
-#' [`Exported*`][export()]. The former relies on underlying
-#' [YAML tags](https://yaml.org/spec/1.1/#id858600) to make such assumptions.
-#' The contents of the resulting *transient* object is then thoroughly checked
-#' with [validate()], which dispatches on the object's **presumed** class.
-#' Finally, a valid object is *imported* back into an appropriate \R object
-#' via [import()].
+#' [deserialize()] and [deserialize_translations()] are
+#' *raw deserializer mechanisms*: `string` is converted into an \R named list
+#' that is **presumed** to be an *exported* object. [deserialize()] relies on
+#' [YAML tags](https://yaml.org/spec/1.1/#id858600) to infer the class of each
+#' object.
 #'
-#' Note that custom fields and comments added by users to serialized objects
-#' are ignored by [validate()] and discarded entirely by [import()].
+#' The contents of the *transient* objects is thoroughly checked with an
+#' [assert()] method (based on the underlying presumed class). Valid objects
+#' are *imported* back into an appropriate \R object with [import()].
 #'
-#' ## `Exported` Classes
+#' Custom fields and comments added by users to serialized objects are ignored.
 #'
-#' [`Exported*`][export()] may refer to classes
-#' [`ExportedTranslator`][export()],
-#' [`ExportedText`][export()],
-#' [`ExportedLocation`][export()], or
-#' [`ExportedTranslations`][export()].
+#' ## Formatting errors
 #'
-#' Generally speaking, an [`Exported*`][export()] object is a named list of S3
-#' class [`Exported*`][export()] always having a `tag` attribute whose value is
-#' equal to the super-class of argument `x`. The exact class depends on `x`.
-#' [`Exported*`][export()] objects can be converted back to equivalent \R
-#' objects via [import()].
-#'
-#' There are three main differences between an object and its *exported*
-#' counterpart.
-#'
-#'   1. field names are written as whole (human-readable) words,
-#'   2. source text is treated independently from translations, and
-#'   3. unset fields are set equal to `NULL` (a `~` in YAML).
-#'
-#' The information is otherwise identical, albeit structured differently for
-#' presentational purposes.
-#'
-#' ## The `ExportedTranslations` Super-class
-#'
-#' [export_translations()] is different because it returns an object of S3 class
-#' [`ExportedTranslations`][export()] which has no *unexported* counterpart.
-#' Its purpose is to restructure translations extracted from a
-#' [`Translator`][Translator] object by language. It is used to create
-#' [Exported Translations file][translations_read()].
-#'
-#' [`ExportedTranslations`][export()] objects are created from a
-#' [`Translator`][Translator] object. The value passed to `lang` must have a
-#' corresponding registered native language name. See
-#' [`Translator$native_languages`][Translator] for more information.
-#'
-#' Unavailable translations are automatically replaced by a placeholder that
-#' depends on the *context*:
-#'
-#'   * [`constant("untranslated")`][constant()] for [export()], and
-#'   * [`constant("empty")`][constant()] for [import()].
+#' [assert()] methods accumulate error messages before returning, or throwing
+#' them. [format_errors()] is a helper function that eases this process. It
+#' exists to avoid repeting code in each method. There is no reason to call
+#' it outside of [assert()] methods.
 #'
 #' @param x Any \R object.
 #'
@@ -109,29 +72,26 @@
 #' @param string A non-empty and non-[NA][base::NA] character string. Contents
 #'   to deserialize.
 #'
-#' @param parent_dir An **optional** non-[NA][base::NA] character string. It
-#'   can be empty. The parent directory to use when creating entries of field
-#'   `Translations Files` of an [`ExportedTranslator`][export()] object. See
-#'   [translator_write()] for more information. Empty values are converted to
-#'   the root location (`/`) by [file.path()].
-#'
-#' @param set_uuid A non-[NA][base::NA] logical value. Should a `_Uuid` field
-#'   uniquely identifying outputs of [export()] be included? If `TRUE`, it is
-#'   set equal to [uuid()]. This field is required by [validate()] to throw
-#'   meaningful error messages­.
+#' @param id A non-empty and non-[NA][base::NA] character string. A unique
+#'   identifier for the underlying object. It is used for validation purposes.
 #'
 #' @param set_translations A non-[NA][base::NA] logical value. Should
 #'   translations be included in the resulting [`ExportedText`][export()]
 #'   object? If `FALSE`, field `Translations` is set equal to `NULL`.
 #'
-#' @template param-lang
-#'
 #' @param ... Further arguments passed to, or from other methods.
 #'
+#' @param errors A character vector of non-[NA][base::NA] values. It can be
+#'   empty. Messages describing why object(s) are invalid.
+#'
+#' @template param-lang
+#'
+#' @template param-throw-error
+#'
 #' @returns
-#' [serialize()] and [serialize_translations()] return a character string:
-#' a [YAML](https://yaml.org/spec/1.1/) string and a [FLAT][flat_serialize()]
-#' string, respectively.
+#' See other sections for further information.
+#'
+#' [serialize()], and [serialize_translations()] return a character string.
 #'
 #' [export()] returns a named list of S3 class
 #'
@@ -140,22 +100,79 @@
 #'   * [`ExportedText`][export()] if `x` is a [`Text`][Text] object, or
 #'   * [`ExportedLocation`][export()] if `x` is a [`Location`][Location] object.
 #'
-#' See Details above for more information.
+#' [export_translations()] returns an [`ExportedTranslations`][export()] object.
 #'
-#' [export_translations()] returns a named list of S3 class
+#' [deserialize()] and [import()] return
+#'
+#'   * a [`Translator`][Translator] object if `x` is a valid
+#'     [`ExportedTranslator`][export()] object,
+#'   * a [`Text`][Text] object if `x` is a valid [`ExportedText`][export()]
+#'     object, or
+#'   * a [`Location`][Location] object if `x` a valid
+#'     [`ExportedLocation`][export()] object.
+#'
+#' [deserialize_translations()] and [import.ExportedTranslations()] return an
+#' [`ExportedTranslations`][export()] object. They further register imported
+#' translations if a [`Translator`][Translator] object is passed to `tr`.
+#'
+#'   * Translations must correspond to an existing source text (a registered
+#'     [`Text`][Text] object). Otherwise, they are skipped.
+#'   * The value passed to `tr` is updated **by reference** and is not returned.
+#'
+#' [import.default()] is used for its side-effect of throwing an error for
+#' unsupported objects.
+#'
+#' [assert.ExportedTranslator()],
+#' [assert.ExportedText()],
+#' [assert.ExportedLocation()], and
+#' [format_errors()] return a character vector, possibly empty. If `throw_error`
+#' is `TRUE`, an error is thrown if an object is invalid.
+#'
+#' @section Exported Objects:
+#' An exported object is a named list of S3 class
+#' [`ExportedTranslator`][export()],
+#' [`ExportedText`][export()],
+#' [`ExportedLocation`][export()], or
+#' [`ExportedTranslations`][export()] and
+#' always having a `tag` attribute whose value is equal to the super-class of
+#' `x`.
+#'
+#' There are four main differences between an object and its *exported*
+#' counterpart.
+#'
+#'   1. Field names are slightly more verbose.
+#'   2. Source text is treated independently from translations.
+#'   3. Unset fields are set equal to `NULL` (a `~` in YAML).
+#'   4. Each object has an `Identifier` used to locate errors.
+#'
+#' The correspondance between objects is self-explanatory.
+#'
+#'   * See class [`Translator`][Translator] for more information on class
+#'     [`ExportedTranslator`][export()].
+#'   * See class [`Text`][Text] for more information on class
+#'     [`ExportedText`][export()].
+#'   * See class [`Location`][Location] for more information on class
+#'     [`ExportedLocation`][export()].
+#'
+#' You may also explore provided examples below.
+#'
+#' ## The `ExportedTranslations` Class
+#'
+#' [`ExportedTranslations`][export()] objects are created from a
+#' [`Translator`][Translator] object with [export_translations()]. Their purpose
+#' is to restructure translations by language. They are different from other
+#' exported objects because there is no corresponding `Translations` class.
+#'
+#' An [`ExportedTranslations`][export()] object is a named list of S3 class
 #' [`ExportedTranslations`][export()] containing the following elements.
 #'
 #' \describe{
-#'   \item{`_Uuid`}{A non-empty and non-[NA][base::NA] character
-#'     string if `set_uuid` is `TRUE`. A
-#'     [universally unique identifier](https://en.wikipedia.org/wiki/Universally_unique_identifier)
-#'     used to throw suitable error messages. It should be ignored by users.}
-#'   \item{`Identifier`}{The unique identifier of `x`. See
+#'   \item{`Identifier`}{The unique identifier of argument `tr`. See
 #'     [`Translator$id`][Translator] for more information.}
-#'   \item{`Language Code`}{The value of `lang`.}
-#'   \item{`Language`}{The target (native) language. See
+#'   \item{`Language Code`}{The value of argument `lang`.}
+#'   \item{`Language`}{The translation's language. See
 #'     [`Translator$native_languages`][Translator] for more information.}
-#'   \item{`Source Language`}{The source language. See
+#'   \item{`Source Language`}{The source text's language. See
 #'     [`Translator$source_langs`][Translator] for more information.}
 #'   \item{`Translations`}{A named list containing further named lists. Each
 #'     sublist contains two values:
@@ -163,57 +180,20 @@
 #'       \item{`Source Text`}{A non-empty and non-[NA][base::NA] character
 #'         string.}
 #'       \item{`Translation`}{A non-empty and non-[NA][base::NA] character
-#'         string, or `NULL` if unavailable.}
+#'         string.}
 #'     }
-#'     See [`Text$translations`][Text] for more information. Their names are
-#'     (reduced) hashes extracted from `x`.}
+#'     See [`Text$translations`][Text] for more information.}
 #' }
 #'
-#' [deserialize()] and [import()] returns
+#' Unavailable translations are automatically replaced by a placeholder that
+#' depends on the *context*:
 #'
-#'   * a [`Translator`][Translator] object if `x` is an
-#'     [`ExportedTranslator`][export()] object,
-#'   * a [`Text`][Text] object if `x` is an [`ExportedText`][export()] object,
-#'   * a [`Location`][Location] object if `x` an [`ExportedLocation`][export()]
-#'     object.
+#'   * [`constant("untranslated")`][constant()] for [export()], and
+#'   * [`constant("empty")`][constant()] for [import()].
 #'
-#' [import.ExportedTranslator()] further sets a `translations_files` attribute
-#' holding the cached value of `x$Translations Files`.
-#'
-#' [deserialize_translations()] and [import.ExportedTranslations()] return an
-#' [`ExportedTranslations`][export()] object. Its contents is reformatted, if
-#' necessary.
-#'
-#'   * [import.ExportedTranslations()] further registers imported translations
-#'     if a [`Translator`][Translator] object is passed to itself, or to
-#'     [deserialize_translations()]. Translations must correspond to an existing
-#'     source text (a registered [`Text`][Text] object). Otherwise, they are
-#'     skipped silently. The [`Translator`][Translator] object is updated
-#'     **by reference** and is not returned ([`Translator`][Translator] objects
-#'     are [environments][environment]).
-#'
-#' [import.default()] is used for its side-effect of throwing an error for
-#' unsupported objects.
-#'
-#' [validate()] returns `x` if it is valid and throws an error otherwise. It
-#' is designed to fail fast: error messages are **not accumulated**. Classes
-#' (and underlying objects) that does not have a [validate()] method are
-#' considered to be valid by default.
-#'
-#' [validate.default()] simply returns `x` like [identity()] would.
-#'
-#' [translations_files()] returns a named list.
-#'
-#'   * If `tr` has a valid `translations_files` attribute (a non-empty named
-#'     list), it is returned. See [import.ExportedTranslator()] for more
-#'     information.
-#'   * Otherwise, a named list of file paths is constructed from
-#'     `tr$native_languages` (the source language is ignored).
-#'     See [`Translator$native_languages`][Translator] for more information.
-#'
-#' [get_uuid()] safely extracts field `_Uuid` from `x` and returns it if the
-#' underlying value is a non-empty and non-[NA][base::NA] character string.
-#' Otherwise, a default value is returned.
+#' @note
+#' Dividing the serialization and deserialization processes into multiple steps
+#' helps keeping the underlying functions short, and easier to test.
 #'
 #' @seealso
 #' [Official YAML 1.1 specification](https://yaml.org/spec/1.1/),
@@ -240,27 +220,26 @@
 #' loc <- location("file-a", 1L, 2L, 3L, 4L)
 #'
 #' txt <- text(
-#'   location("a", 1L, 2L, 3L, 4L),
-#'   en = "Hello, world!",
-#'   fr = "Bonjour, monde!",
-#'   es = "¡Hola, mundo!")
-#'
-#' tr <- translator(
-#'   id = "test-translator",
-#'   en = "English",
-#'   es = "Español",
-#'   fr = "Français",
-#'   text(
 #'     location("a", 1L, 2L, 3L, 4L),
 #'     en = "Hello, world!",
-#'     fr = "Bonjour, monde!"),
-#'   text(
-#'     location("b", 1L, 2L, 3L, 4L),
-#'     en = "Farewell, world!",
-#'     fr = "Au revoir, monde!"))
+#'     fr = "Bonjour, monde!",
+#'     es = "¡Hola, mundo!")
 #'
-#' # Serialize objects. This is what translator_write(),
-#' # and translations_write() call internally.
+#' tr <- translator(
+#'     id = "test-translator",
+#'     en = "English",
+#'     es = "Español",
+#'     fr = "Français",
+#'     text(
+#'         location("a", 1L, 2L, 3L, 4L),
+#'         en = "Hello, world!",
+#'         fr = "Bonjour, monde!"),
+#'     text(
+#'         location("b", 1L, 2L, 3L, 4L),
+#'         en = "Farewell, world!",
+#'         fr = "Au revoir, monde!"))
+#'
+#' # Serialize objects.
 #' transltr:::serialize(loc)
 #' transltr:::serialize(txt)
 #' transltr:::serialize(tr)
@@ -268,78 +247,68 @@
 #' transltr:::serialize_translations(tr, "es")
 #'
 #' # serialize() and serialize_translations() both call export() internally.
-#' # Field `_Uuid` can be omitted by setting set_uuid equal to `FALSE`.
-#' transltr:::export(loc, set_uuid = FALSE)
+#' # Argument id sets the value of field Identifier. For Translator objects,
+#' # the latter is always equal to its 'id' field.
+#' transltr:::export(loc, id = "example-id")
 #' transltr:::export(txt)
 #' transltr:::export(tr)
 #' transltr:::export_translations(tr, "fr")
-#' transltr:::export_translations(tr, "es", set_uuid = FALSE)
+#' transltr:::export_translations(tr, "es")
 #'
 #' # Translations can be exported along with original objects.
 #' # This is not the default behavior of the package.
 #' transltr:::export(txt, set_translations = TRUE)
 #' transltr:::export(tr,  set_translations = TRUE)
 #'
-#' # Deserialize objects. This is what translator_read() and
-#' # translations_read() call internally.
+#' # Deserialize objects.
 #' transltr:::deserialize(transltr:::serialize(loc))
 #' transltr:::deserialize(transltr:::serialize(txt))
 #' transltr:::deserialize(transltr:::serialize(tr))
 #' transltr:::deserialize_translations(transltr:::serialize_translations(tr, "fr"))
 #' transltr:::deserialize_translations(transltr:::serialize_translations(tr, "es"))
 #'
-#' # deserialize() and deserialize_translations() both call validate()
-#' # internally. validate() checks that the underlying input can safely be
-#' # passed to import(). What deserialization functions internally passes to
-#' # validate() are candidate 'Exported' objects that may, or may not be valid.
-#' transltr:::validate(transltr:::export(loc))
-#' transltr:::validate(transltr:::export(txt))
-#' transltr:::validate(transltr:::export(tr))
-#' transltr:::validate(transltr:::export_translations(tr, "fr"))
+#' # Validate objects.
+#' # import() calls assert() internally. It checks
+#' # that the input is valid and can be imported.
+#' transltr:::assert(transltr:::export(loc))
+#' transltr:::assert(transltr:::export(txt))
+#' transltr:::assert(transltr:::export(tr))
 #'
-#' # Introduce an error in an ExportedLocation object for illustration purposes.
-#' # validate() uses field `_Uuid` to throw meaningful error messages.
-#' loc_err <- transltr:::export(loc)
-#' loc_err$Path <- 1L
+#' # assert() accumulates errors before throwing them.
+#' # Below an ExportedTranslator object is created, and errors
+#' # are injected into it to illustrate how the mechanism works.
+#' tr_invalid <- transltr:::export(tr)
 #'
-#' \dontrun{transltr:::validate(loc_err)}
+#' tr_invalid$Algorithm <- 1.0
+#' tr_invalid$Languages <- c("English", "Español", "Français")
+#' tr_invalid$Texts[[1L]]$`Source Language` <- NULL
+#' tr_invalid$Texts[[2L]]$Locations[[1L]]$Path <- 1i
+#' tr_invalid$Texts[[2L]]$Locations[[1L]]$Ranges <- "Ln 1, Col 2 @ Ln 3"
 #'
-#' # deserialize() and deserialize_translations() both call import() on valid
-#' # Exported* objects. Any `_Uuid` field is discarded by import().
+#' \dontrun{transltr:::assert(tr_invalid)}
+#'
+#' # assert() does not have a method for ExportedTranslations
+#' # objects. It dispatches to assert.default() which considers
+#' # the former as being always valid.
+#' transltr:::assert(transltr:::export_translations(tr, "fr"))
+#'
+#' # import() is the conceptual inverse of export().
 #' transltr:::import(transltr:::export(loc))
 #' transltr:::import(transltr:::export(txt))
-#' transltr:::import(transltr:::export(tr))
-#' transltr:::import(transltr:::export_translations(tr, "fr"))
-#' transltr:::import(transltr:::export_translations(tr, "es"))
 #'
-#' # import() is the conceptual inverse of export(). However, this is not
-#' # quite true for import.ExportedTranslations(), because it replaces any
-#' # previous placeholders stemming from export_translations() with another
-#' # placeholder (for internal consistency).
-#' cat(transltr:::serialize_translations(tr, "es"), "\n")
-#' transltr:::deserialize_translations(transltr:::serialize_translations(tr, "es"))
+#' tr <- transltr:::import(transltr:::export(tr))
+#' transltr:::import(transltr:::export_translations(tr, "fr"), tr)
+#' transltr:::import(transltr:::export_translations(tr, "es"), tr)
 #'
-#' # A Translator object may be passed to deserialize_translations() and
-#' # import.ExportedTranslations(). It accumulates translations and is
-#' # modified in place (it is not returned). Note that translations are
-#' # registered only if they correspond to an existing source text and
-#' # are skipped otherwise.
-#' tr_new <- Translator$new(id = "test-translator")
-#' tr_new$set_text(en = "Hello, world!")
-#' tr_new$set_text(en = "Farewell, world!")
-#' transltr:::deserialize_translations(transltr:::serialize_translations(tr, "fr"), tr_new)
+#' # Format errors stemming from assert().
+#' errors <- c(
+#'     "'Source Language' must be a null, or a non-empty character string.",
+#'     "'Translations' must be a null, or a mapping of non-empty character strings.")
 #'
-#' # translations_files() is used to create the 'Translations Files' field
-#' # of an ExportedTranslator object.
-#' transltr:::translations_files(tr)
-#' transltr:::translations_files(tr, getwd())
+#' format_errors(throw_error = FALSE)
+#' format_errors(errors, "my-text-object", FALSE)
 #'
-#' # It is also used to fetch internal attribute `translations_files` set by
-#' # import.ExportedTranslator().
-#' transltr:::translations_files(transltr:::import(transltr:::export(tr)))
-#'
-#' transltr:::get_uuid(transltr:::export(loc))  ## Outputs the current uuid
-#' transltr:::get_uuid(1L)  ## Outputs "<unkwnown>"
+#' \dontrun{format_errors(errors, "my-text-object")}
 #'
 #' @rdname serialize
 #' @keywords internal
@@ -355,8 +324,8 @@ serialize <- function(x, ...) {
 
 #' @rdname serialize
 #' @keywords internal
-serialize_translations <- function(tr = translator(), lang = "", set_uuid = TRUE) {
-    return(flat_serialize(export_translations(tr, lang, set_uuid)))
+serialize_translations <- function(tr = translator(), lang = "") {
+    return(flat_serialize(export_translations(tr, lang)))
 }
 
 #' @rdname serialize
@@ -370,12 +339,11 @@ deserialize <- function(string = "") {
             eval.expr      = FALSE,
             as.named.list  = TRUE,
             merge.warning  = TRUE,
-            # The YAML engine identifies classes from
-            # tags. import() does the rest, see below.
+            # Classes are inferred from existing tags.
             handlers = list(
-                ExportedTranslator = \(x) { structure(x, class = "ExportedTranslator") },
-                ExportedText       = \(x) { structure(x, class = "ExportedText") },
-                ExportedLocation   = \(x) { structure(x, class = "ExportedLocation") }))
+                Translator = \(x) structure(x, class = "ExportedTranslator"),
+                Text       = \(x) structure(x, class = "ExportedText"),
+                Location   = \(x) structure(x, class = "ExportedLocation")))
     },
     condition = \(cond) {
         stopf(
@@ -387,27 +355,20 @@ deserialize <- function(string = "") {
             gsub("[ \n\t.]*$", ".", tolower(cond$message)))
     })
 
-    return(import(validate(obj)))
+    return(import(obj))
 }
 
 #' @rdname serialize
 #' @keywords internal
 deserialize_translations <- function(string = "", tr) {
     obj <- structure(flat_deserialize(string), class = "ExportedTranslations")
-    return(import(validate(obj), tr))
+    return(import(obj, tr))
 }
 
 #' @rdname serialize
 #' @keywords internal
-export <- function(x, ...) {
-    UseMethod("export")
-}
-
-#' @rdname serialize
-#' @keywords internal
-export_translations <- function(tr = translator(), lang = "", set_uuid = TRUE) {
+export_translations <- function(tr = translator(), lang = "") {
     assert_chr1(lang)
-    assert_lgl1(set_uuid)
 
     if (!is_translator(tr)) {
         stops("'tr' must be a 'Translator' object.")
@@ -428,101 +389,242 @@ export_translations <- function(tr = translator(), lang = "", set_uuid = TRUE) {
     })
 
     out <- list(
-        `_Uuid`           = if (set_uuid) uuid(),
         Identifier        = tr$id,
         `Language Code`   = lang,
         Language          = native_languages[[lang]],
         `Source Language` = native_languages[[source_lang]],
         Translations      = translations)
 
-    return(
-        structure(out,
-            class = "ExportedTranslations",
-            tag   = "ExportedTranslations"))
+    return(structure(out, class = "ExportedTranslations", tag = "Translations"))
+}
+
+#' @rdname serialize
+#' @keywords internal
+export <- function(x, ...) {
+    UseMethod("export")
+}
+
+#' @rdname serialize
+#' @keywords internal
+#' @export
+export.Translator <- function(x, ...) {
+    out <- list(
+        Identifier = x$id,
+        Algorithm  = x$algorithm,
+        Languages  = as.list(x$native_languages),
+        Texts      = map(
+            export,
+            x    = lapply(x$hashes, x$get_text),
+            id   = names(x$hashes),
+            more = list(...)))
+
+    return(structure(out, class = "ExportedTranslator", tag = "Translator"))
+}
+
+#' @rdname serialize
+#' @keywords internal
+#' @export
+export.Text <- function(x, id = uuid(), set_translations = FALSE, ...) {
+    assert_chr1(id)
+    assert_lgl1(set_translations)
+
+    source_is_set <- x$source_lang != constant("unset")
+    translations  <- if (set_translations) {
+        langs <- names(x$translations)
+        trans <- x$translations[langs[-match(x$source_lang, langs, 0L)]]
+        lapply(trans, strwrap, width = 80L)
+    }
+
+    out <- list(
+        Identifier        = id,
+        Algorithm         = x$algorithm,
+        Hash              = if (source_is_set) x$hash,
+        `Source Language` = if (source_is_set) x$source_lang,
+        `Source Text`     = if (source_is_set) strwrap(x$source_text, 80L),
+        Translations      = translations,
+        Locations         = map(
+            export,
+            x    = x$locations,
+            id   = sprintf("%s:%s", id, names(x$locations)),
+            more = list(...)))
+
+    return(structure(out, class = "ExportedText", tag = "Text"))
+}
+
+#' @rdname serialize
+#' @keywords internal
+#' @export
+export.Location <- function(x, id = uuid(), ...) {
+    assert_chr1(id)
+
+    out <- list(
+        Identifier = id,
+        Path       = x$path,
+        Ranges     = range_format(x))
+
+    return(structure(out, class = "ExportedLocation", tag = "Location"))
+}
+
+#' @rdname serialize
+#' @export
+assert.ExportedTranslator <- function(x, throw_error = TRUE, ...) {
+    # This prevents any out-of-bound
+    # errors that may stem from `[[`.
+    if (!is.list(x)) {
+        x <- list()
+    }
+
+    id    <- x[["Identifier"]]
+    algo  <- x[["Algorithm"]]
+    langs <- x[["Languages"]]
+    texts <- x[["Texts"]]
+
+    # Accumulate error messages.
+    errors <- c(
+        # Validate Identifier.
+        if (!is_chr1(id)) {
+            "'Identifier' must be a non-empty character string."
+        },
+        # Validate Algorithm.
+        if (!is_match(algo, constant("algorithms"))) {
+            sprintf(
+                "'Algorithm' must be equal to %s.",
+                str_to(constant("algorithms"), TRUE))
+        },
+        # Validate Languages.
+        if (!is_list(langs, TRUE) || !is_named(langs) &&
+            !all(vapply_1l(langs, is_chr1))) {
+            "'Languages' must a mapping of non-empty character strings."
+        },
+        # Validate Texts.
+        if (!is_list(texts, TRUE) ||
+            !all(vapply_1l(texts, inherits, what = "ExportedText"))) {
+            "'Texts' must a sequence of 'Text' objects."
+        },
+        # Validate contents of each Text object.
+        unlist(lapply(texts, assert, throw_error = FALSE, ...))
+    )
+
+    return(format_errors(errors, id, throw_error))
+}
+
+#' @rdname serialize
+#' @export
+assert.ExportedText <- function(x, throw_error = TRUE, ...) {
+    # This prevents any out-of-bound
+    # errors that may stem from `[[`.
+    if (!is.list(x)) {
+        x <- list()
+    }
+
+    xnames <- names(x)
+    id     <- x[["Identifier"]]
+    algo   <- x[["Algorithm"]]
+    hash   <- x[["Hash"]]
+    lang   <- x[["Source Language"]]
+    text   <- x[["Source Text"]]
+    trans  <- x[["Translations"]]
+    locs   <- x[["Locations"]]
+
+    # Accumulate error messages.
+    errors <- c(
+        # Validate Algorithm.
+        if (!is_match(algo, constant("algorithms"))) {
+            sprintf(
+                "'Algorithm' must be equal to %s.",
+                str_to(constant("algorithms"), TRUE))
+        },
+        # Validate Hash.
+        # Hash can be NULL and this is
+        # different from a missing field.
+        if (!match("Hash", xnames, 0L) || !is.null(hash) && !is_chr1(hash)) {
+            "'Hash' must be a null, or a non-empty character string."
+        },
+        if (!is.null(hash) && is.null(text) || is.null(lang)) {
+            "'Hash' is defined but not 'Source Text', and/or 'Source Lang'."
+        },
+        # Validate Source Language.
+        # Source Language can be NULL and
+        # this is different from a missing field.
+        if (!match("Source Language", xnames, 0L) ||
+            !is.null(lang) && !is_chr1(lang)) {
+            "'Source Language' must be a null, or a non-empty character string."
+        },
+        # Validate Source Text.
+        # Source Text can be NULL and this
+        # is different from a missing field.
+        if (!match("Source Text", xnames, 0L) ||
+            !is.null(text) && !is_chr1(text)) {
+            "'Source Text' must be a null, or a non-empty character string."
+        },
+        if (!is.null(lang) && is.null(text) || !is.null(text) && is.null(lang)) {
+            "'Source Language' is defined but not 'Source Text', or vice-versa."
+        },
+        # Validate Translations.
+        if (!is.null(trans) &&
+            !is_list(trans, TRUE) || !is_named(trans) &&
+            !all(vapply_1l(trans, is_chr1))) {
+            "'Translations' must be a null, or a mapping of non-empty character strings."
+        },
+        # Validate Locations.
+        if (!is_list(locs, TRUE) ||
+            !all(vapply_1l(locs, inherits, what = "ExportedLocation"))) {
+            "'Locations' must be a sequence of 'Location' objects."
+        },
+        # Validate contents of each Location object.
+        unlist(lapply(locs, assert, throw_error = FALSE, ...))
+    )
+
+    return(format_errors(errors, id, throw_error))
+}
+
+#' @rdname serialize
+#' @export
+assert.ExportedLocation <- function(x, throw_error = TRUE, ...) {
+    # This prevents any out-of-bound
+    # errors that may stem from `[[`.
+    if (!is.list(x)) {
+        x <- list()
+    }
+
+    id     <- x[["Identifier"]]
+    path   <- x[["Path"]]
+    ranges <- x[["Ranges"]]
+
+    # Accumulate error messages.
+    errors <- c(
+        # Validate Path.
+        if (!is_chr1(path)) {
+            "'Path' must be a non-empty character string."
+        },
+        # Validate Ranges.
+        if (!is_chr(ranges) || !all(range_is_parseable(ranges))) {
+            sprintf(
+                "'Ranges' must be a single %s character string, or a sequence of such values.",
+                constant("range-format"))
+        }
+    )
+
+    # c() returns NULL above if all values are valid.
+    return(format_errors(errors %??% character(), id, throw_error))
 }
 
 #' @rdname serialize
 #' @keywords internal
 import <- function(x, ...) {
+    assert(x, ...)
     UseMethod("import")
-}
-
-#' @rdname serialize
-#' @keywords internal
-validate <- function(x, ...) {
-    UseMethod("validate")
-}
-
-#' @rdname serialize
-#' @keywords internal
-#' @export
-export.Translator <- function(x, set_uuid = TRUE, parent_dir, ...) {
-    assert_lgl1(set_uuid)
-
-        Algorithm  = x$algorithm,
-
-    return(
-        structure(out,
-            class = "ExportedTranslator",
-            tag   = "ExportedTranslator"))
-}
-
-#' @rdname serialize
-#' @keywords internal
-#' @export
-export.Text <- function(x, set_uuid = TRUE, set_translations = FALSE, ...) {
-    assert_lgl1(set_uuid)
-    assert_lgl1(set_translations)
-
-    is_set <- x$source_lang != constant("unset")
-
-    out <- list(
-        `_Uuid`             = if (set_uuid) uuid(),
-        Algorithm         = x$algorithm,
-        Hash                = if (is_set) x$hash,
-        `Source Language`   = if (is_set) x$source_lang,
-        `Source Text`       = if (is_set) strwrap(x$source_text, 80L),
-        Translations        = if (set_translations) {
-            lapply(
-                x$translations[names(x$translations) != x$source_lang],
-                strwrap,
-                width = 80L)
-        },
-        Locations = unname(lapply(x$locations, export, set_uuid, ...)))
-
-    return(
-        structure(out,
-            class = "ExportedText",
-            tag   = "ExportedText"))
-}
-
-#' @rdname serialize
-#' @keywords internal
-#' @export
-export.Location <- function(x, set_uuid = TRUE, ...) {
-    assert_lgl1(set_uuid)
-
-    out <- list(
-        `_Uuid` = if (set_uuid) uuid(),
-        Path    = x$path,
-        Ranges  = .location_format_range(x, ...))
-
-    return(
-        structure(out,
-            class = "ExportedLocation",
-            tag   = "ExportedLocation"))
 }
 
 #' @rdname serialize
 #' @keywords internal
 #' @export
 import.ExportedTranslator <- function(x, ...) {
-    tr <- Translator$new(x[["Identifier"]], x[["Hashing Algorithm"]])
+    tr <- Translator$new(x[["Identifier"]], x[["Algorithm"]])
 
     do.call(tr$set_native_languages, x[["Languages"]])
     do.call(tr$set_texts, lapply(x[["Texts"]], import, ...))
 
-    attr(tr, "translations_files") <- x[["Translations Files"]]
     return(tr)
 }
 
@@ -548,12 +650,12 @@ import.ExportedText  <- function(x, ...) {
     # to ensure proper comparisons. %??% has
     # precedence over !=.
     if (x[["Hash"]] %??% constant("unset") != txt$hash) {
-        warning(call. = FALSE,
-            sprintf(
-                "in 'Text' '%s': 'Hash' is not equal to expected hash ('%s').",
-                get_uuid(x),
-                txt$hash),
-            " The latter will be used.")
+        warn_msg <- sprintf(
+            "['%s'] 'Hash' is not equal to computed hash ('%s'). The latter will be used.",
+            x[["Identifier"]],
+            txt$hash)
+
+        warning(warn_msg, call. = FALSE)
     }
 
     return(txt)
@@ -563,25 +665,7 @@ import.ExportedText  <- function(x, ...) {
 #' @keywords internal
 #' @export
 import.ExportedLocation <- function(x, ...) {
-    # Extract digits from ranges, construct
-    # character vectors of numbers and try
-    # converting them to integers. This works
-    # with all supported formats.
-    ranges <- x[["Ranges"]]
-    chrs   <- regmatches(ranges, gregexpr("[0123456789]+", ranges))
-    ints   <- suppressWarnings(lapply(chrs, as.integer))
-
-    # Validate resulting integer vectors.
-    # There should be one for each range.
-    # The callback returns nothing.
-    map(ints = ints, index = seq_along(ints), fun = \(ints, index) {
-        if (length(ints) != 4L || anyNA(ints) || !all(ints > 0L)) {
-            stopf(
-                "in 'Location' '%s': the following range cannot be converted: '%s'.",
-                get_uuid(x),
-                ranges[[index]])
-        }
-    })
+    ints <- range_parse(x[["Ranges"]])
 
     return(
         location(
@@ -635,7 +719,7 @@ import.ExportedTranslations <- function(x, tr, ...) {
         }
         if (!identical(x[["Identifier"]], tr$id)) {
             stopf(
-                "'Identifier' ('%s') of translations does not match expected 'Translator$id' ('%s').",
+                "'Identifier' ('%s') does not match the 'Translator' object's identifier ('%s').",
                 x[["Identifier"]], tr$id)
         }
 
@@ -661,274 +745,31 @@ import.ExportedTranslations <- function(x, tr, ...) {
 #' @keywords internal
 import.default <- function(x, ...) {
     stops(
-        "deserialized object is not supported by 'transltr'.",
-        " The underlying serialization is likely missing a '!<type>' tag.")
+        "deserialized object is not supported by transltr.",
+        " It is likely missing a '!<type>' tag, or has an invalid one.")
 }
 
 #' @rdname serialize
 #' @keywords internal
-#' @export
-validate.ExportedTranslator <- function(x, ...) {
-    # This prevents any subscript out
-    # of bounds error stemming from `[[`.
-    if (!is.list(x)) {
-        stopf(
-            "in 'ExportedTranslator' '%s': invalid object's structure. It is not a 'ExportedTranslator' object, even if a YAML tag states it is.",
-            constant("unknown"))
-    }
+format_errors <- function(
+    errors      = character(),
+    id          = uuid(),
+    throw_error = TRUE)
+{
+    assert_chr(errors, TRUE)
 
-    langs <- x[["Languages"]]
-    files <- x[["Translations Files"]]
-    texts <- x[["Texts"]]
+    if (length(errors)) {
+        assert_lgl1(throw_error)
+        id <- as.character(id %??% constant("unknown"))
 
-    if (!is_chr1(x[["Identifier"]])) {
-        stopf(
-            "in 'ExportedTranslator' '%s': 'Identifier' must be a YAML scalar parsed as a non-empty R character string.",
-            get_uuid(x))
-    }
-    if (!is_match(x[["Algorithm"]], constant("algorithms"))) {
-        stopf(
-            "in 'ExportedTranslator' '%s': 'Algorithm' must be a YAML scalar equal to %s.",
-            get_uuid(x),
-            str_to(constant("algorithms"), TRUE))
-    }
-    if (!is_chr1(x[["Source Language"]])) {
-        stopf(
-            "in 'ExportedTranslator' '%s': 'Source Language' must be a YAML scalar parsed as a non-empty R character string.",
-            get_uuid(x))
-    }
-    if (!is_list(langs, TRUE) || !is_named(langs)) {
-        stopf(
-            "in 'ExportedTranslator' '%s': 'Languages' must a YAML mapping.",
-            get_uuid(x))
-    }
-    if (!all(vapply_1l(langs, is_chr1))) {
-        stopf(
-            "in 'ExportedTranslator' '%s': entries of 'Languages' must all be YAML scalars parsed as a non-empty R character strings.",
-            get_uuid(x))
-    }
-    if (!is_list(files, TRUE) || !is_named(files)) {
-        stopf(
-            "in 'ExportedTranslator' '%s': 'Translations Files' must a YAML mapping.",
-            get_uuid(x))
-    }
-    if (!all(vapply_1l(files, is_chr1))) {
-        stopf(
-            "in 'ExportedTranslator' '%s': entries of 'Translations Files' must all be YAML scalars parsed as non-empty R character strings.",
-            get_uuid(x))
-    }
-    if (!is_list(texts, TRUE) || !is_named(texts)) {
-        stopf(
-            "in 'ExportedTranslator' '%s': 'Texts' must a YAML mapping.",
-            get_uuid(x))
-    }
-    if (!all(vapply_1l(texts, inherits, what = "ExportedText"))) {
-        stopf(
-            "in 'ExportedTranslator' '%s': entries of 'Texts' must all be 'Text' objects.",
-            get_uuid(x))
-    }
-
-    # Remove source_lang from languages that
-    # require an Exported Translations file.
-    langs <- names(langs)[names(langs) != x[["Source Language"]]]
-
-    if (!setequal(names(files), langs)) {
-        stopf(
-            "in 'ExportedTranslator' '%s': at least one entry in 'Translations Files' is missing a corresponding entry in 'Languages', or vice-versa.",
-            get_uuid(x))
-    }
-
-    return(x)
-}
-
-#' @rdname serialize
-#' @keywords internal
-#' @export
-validate.ExportedText <- function(x, ...) {
-    # This prevents any subscript out
-    # of bounds error stemming from `[[`.
-    if (!is.list(x)) {
-        stopf(
-            "in 'ExportedText' '%s': invalid object's structure. It is not a 'ExportedText' object, even if a YAML tag states it is.",
-            constant("unknown"))
-    }
-
-    hash         <- x[["Hash"]]
-    source_lang  <- x[["Source Language"]]
-    source_text  <- x[["Source Text"]]
-    translations <- x[["Translations"]]
-
-    if (!is.null(hash) && !is_chr1(hash)) {
-        stopf(
-            "in 'ExportedText' '%s': 'Hash' must be a YAML null (~), or a YAML scalar parsed as a non-empty R character string.",
-            get_uuid(x))
-    }
-    if (!is_match(x[["Algorithm"]], constant("algorithms"))) {
-        stopf(
-            "in 'ExportedText' '%s': 'Algorithm' must be a YAML scalar equal to %s.",
-            get_uuid(x),
-            str_to(constant("algorithms"), TRUE))
-    }
-    if (!is.null(source_lang) && !is_chr1(source_lang)) {
-        stopf(
-            "in 'ExportedText' '%s': 'Source Language' must be a YAML null (~), or a YAML parsed as a non-empty R character string.",
-            get_uuid(x))
-    }
-    if (!is.null(source_text) && !is_chr1(source_text)) {
-        stopf(
-            "in 'ExportedText' '%s': 'Source Text' must be a YAML null (~), or a YAML parsed as a non-empty R character string.",
-            get_uuid(x))
-    }
-    if (!is.null(source_lang) && is.null(source_text) ||
-        !is.null(source_text) && is.null(source_lang)) {
-        stopf(
-            "in 'ExportedText' '%s': 'Source Language' is defined but not 'Source Text', or vice-versa.",
-            get_uuid(x))
-    }
-    if (!is.null(translations) &&
-        !is_list(translations, TRUE) || !is_named(translations)) {
-        stopf(
-            "in 'ExportedText' '%s': 'Translations' must be a YAML null (~), or a YAML mapping.",
-            get_uuid(x))
-    }
-    if (!all(vapply_1l(translations, is_chr1))) {
-        stopf(
-            "in 'ExportedText' '%s': entries of 'Translations' must all be YAML scalars parsed as non-empty R character strings.",
-            get_uuid(x))
-    }
-
-    return(x)
-}
-
-#' @rdname serialize
-#' @keywords internal
-#' @export
-validate.ExportedLocation <- function(x, ...) {
-    # This prevents any subscript out
-    # of bounds error stemming from `[[`.
-    if (!is.list(x)) {
-        stopf(
-            "in 'ExportedLocation' '%s': invalid object's structure. It is not a 'ExportedLocation' object, even if a YAML tag states it is.",
-            constant("unknown"))
-    }
-    if (!is_chr1(x[["Path"]])) {
-        stopf(
-            "in 'ExportedLocation' '%s': 'Path' must be a YAML scalar parsed as a non-empty R character string.",
-            get_uuid(x))
-    }
-    if (!is_chr1(x[["Ranges"]])) {
-        stopf(
-            "in 'ExportedLocation' '%s': 'Ranges' must be a YAML sequence of scalars.",
-            get_uuid(x))
-    }
-    if (!all(vapply_1l(x[["Ranges"]], is_chr1))) {
-        stopf(
-            "in 'ExportedLocation' '%s': entries of the 'Ranges' sequence must all be YAML scalars parsed as non-empty R character strings.",
-            get_uuid(x))
-    }
-
-    return(x)
-}
-
-#' @rdname serialize
-#' @keywords internal
-#' @export
-validate.ExportedTranslations <- function(x, ...) {
-    # FIXME: check if this is right with unit tests.
-    # This prevents any subscript out
-    # of bounds error stemming from `[[`.
-    if (!is.list(x)) {
-        stopf(
-            "in 'ExportedTranslations' '%s': invalid object's structure. It is not an 'ExportedTranslations' object.",
-            constant("unknown"))
-    }
-    if (!is_chr1(x[["Identifier"]])) {
-        stopf(
-            "in 'ExportedTranslations' '%s': 'Identifier' must be parsed as a non-empty R character string.",
-            get_uuid(x))
-    }
-    if (!is_chr1(x[["Language Code"]])) {
-        stopf(
-            "in 'ExportedTranslations' '%s': 'Language Code' must be parsed as a non-empty R character string.",
-            get_uuid(x))
-    }
-    if (!is_chr1(x[["Language"]])) {
-        stopf(
-            "in 'ExportedTranslations' '%s': 'Language' must be parsed as a non-empty R character string.",
-            get_uuid(x))
-    }
-    if (!is_chr1(x[["Source Language"]])) {
-        stopf(
-            "in 'ExportedTranslations' '%s': 'Source Language' must be parsed as a non-empty R character string.",
-            get_uuid(x))
-    }
-
-    translations <- x[["Translations"]]
-
-    if (!is.null(translations) &&
-        !is_list(translations, TRUE) || !is_named(translations)) {
-        stopf(
-            "in 'ExportedTranslations' '%s': 'Translations' must be parsed as a non-empty R list.",
-            get_uuid(x))
-    }
-
-    return(x)
-}
-
-#' @rdname serialize
-#' @keywords internal
-#' @export
-validate.default <- function(x, ...) {
-    return(x)
-}
-
-#' @rdname serialize
-#' @keywords internal
-translations_files <- function(tr = translator(), parent_dir) {
-    if (!is_translator(tr)) {
-        stops("'tr' must be a 'Translator' object.")
-    }
-    if (length(source_lang <- tr$source_langs) > 1L) {
-        stops("all 'Text' objects of 'tr' must have the same 'source_lang'.")
-    }
-    if (!missing(parent_dir)) {
-        assert_chr1(parent_dir, TRUE)
-    }
-
-    # Remove source_lang from languages that
-    # require an Exported Translations file.
-    langs <- names(tr$native_languages)
-    langs <- langs[langs != source_lang]
-
-    # Check attribute 'translations_files' and return
-    # it if it exists. It contains cached paths stemming
-    # from a previous call to import().
-    if (!is.null(files <- attr(tr, "translations_files"))) {
-        assert_list(files,  x_name = "Translations Files")
-        assert_named(files, x_name = "Translations Files")
-
-        # Check if the set of keys of Translations Files is
-        # the same set, or a subset of the Languages keys.
-        missing <- names(files)[!match(names(files), langs, 0L)]
-
-        if (length(missing)) {
-            stopf(
-                "there is a mismatch between 'Translations Files' and 'Languages'. Check language(s) %s.",
-                str_to(missing, TRUE, ", and"))
+        if (throw_error) {
+            stops(
+                sprintf("in object '%s':\n", id),
+                paste0(" - ", errors, collapse = "\n"))
         }
 
-        return(files)
+        return(sprintf("['%s'] %s", id, errors))
     }
 
-    files <- sprintf("%s.txt", langs)
-    paths <- if (missing(parent_dir)) files else file.path(parent_dir, files)
-    return(structure(as.list(paths), names = langs))
-}
-
-#' @rdname serialize
-#' @keywords internal
-get_uuid <- function(x) {
-    default <- constant("unknown")
-    id      <- tryCatch(x[["_Uuid"]], condition = \(cond) return(default))
-    return(if (is_chr1(id)) id else default)
+    return(character())
 }
