@@ -100,8 +100,8 @@ object? If \code{FALSE}, field \code{Translations} is set equal to \code{NULL}.}
 thrown? If so, \code{\link[=stops]{stops()}} is called. Otherwise, error messages are returned
 as a character vector (possibly empty).}
 
-\item{errors}{A character vector of non-\link[base:NA]{NA} values. It can be
-empty. Messages describing why object(s) are invalid.}
+\item{errors}{A \code{NULL}, or a non-empty character vector of
+non-\link[base:NA]{NA} values. Messages describing why object(s) are invalid.}
 }
 \value{
 See other sections for further information.
@@ -373,10 +373,10 @@ errors <- c(
     "'Source Language' must be a null, or a non-empty character string.",
     "'Translations' must be a null, or a mapping of non-empty character strings.")
 
-format_errors(throw_error = FALSE)
-format_errors(errors, "my-text-object", FALSE)
+transltr:::format_errors(throw_error = FALSE)
+transltr:::format_errors(errors, "my-text-object", FALSE)
 
-\dontrun{format_errors(errors, "my-text-object")}
+\dontrun{transltr:::format_errors(errors, "my-text-object")}
 
 }
 \seealso{

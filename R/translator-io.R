@@ -61,6 +61,9 @@
 #'   files be overwritten? If such files are detected and `overwrite` is
 #'   set equal to `TRUE`, an error is thrown.
 #'
+#' @param parent_dir A non-empty and non-[NA][base::NA] character string. A
+#'   path to a parent directory.
+#'
 #' @template param-encoding
 #'
 #' @template param-lang

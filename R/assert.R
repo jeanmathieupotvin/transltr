@@ -155,7 +155,7 @@
 #' \dontrun{foo("d")  ## Since "d" is not a valid value, an error is thrown.}
 #'
 #' # assert.default() always returns an empty character vector.
-#' assert(structure(list(), class = "MyList"))
+#' transltr:::assert(structure(list(), class = "MyList"))
 #'
 #' @rdname assert
 #' @keywords internal

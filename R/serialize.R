@@ -81,8 +81,8 @@
 #'
 #' @param ... Further arguments passed to, or from other methods.
 #'
-#' @param errors A character vector of non-[NA][base::NA] values. It can be
-#'   empty. Messages describing why object(s) are invalid.
+#' @param errors A `NULL`, or a non-empty character vector of
+#'   non-[NA][base::NA] values. Messages describing why object(s) are invalid.
 #'
 #' @template param-lang
 #'
@@ -305,10 +305,10 @@
 #'     "'Source Language' must be a null, or a non-empty character string.",
 #'     "'Translations' must be a null, or a mapping of non-empty character strings.")
 #'
-#' format_errors(throw_error = FALSE)
-#' format_errors(errors, "my-text-object", FALSE)
+#' transltr:::format_errors(throw_error = FALSE)
+#' transltr:::format_errors(errors, "my-text-object", FALSE)
 #'
-#' \dontrun{format_errors(errors, "my-text-object")}
+#' \dontrun{transltr:::format_errors(errors, "my-text-object")}
 #'
 #' @rdname serialize
 #' @keywords internal
@@ -606,7 +606,7 @@ assert.ExportedLocation <- function(x, throw_error = TRUE, ...) {
     )
 
     # c() returns NULL above if all values are valid.
-    return(format_errors(errors %??% character(), id, throw_error))
+    return(format_errors(errors, id, throw_error))
 }
 
 #' @rdname serialize
@@ -756,10 +756,10 @@ format_errors <- function(
     id          = uuid(),
     throw_error = TRUE)
 {
-    assert_chr(errors, TRUE)
-
     if (length(errors)) {
+        assert_chr(errors)
         assert_lgl1(throw_error)
+
         id <- as.character(id %??% constant("unknown"))
 
         if (throw_error) {

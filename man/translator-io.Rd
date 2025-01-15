@@ -62,6 +62,9 @@ to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/IETF_language_tag}{IETF BCP 47}, or
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}
 to maximize portability and cross-compatibility.}
+
+\item{parent_dir}{A non-empty and non-\link[base:NA]{NA} character string. A
+path to a parent directory.}
 }
 \value{
 \code{\link[=translator_read]{translator_read()}} returns an \code{\link[R6:R6Class]{R6}} object of class
