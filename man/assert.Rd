@@ -20,6 +20,8 @@
 \alias{assert_named}
 \alias{assert_match}
 \alias{assert_arg}
+\alias{assert}
+\alias{assert.default}
 \title{Assertions}
 \usage{
 is_int(x, allow_empty = FALSE)
@@ -98,6 +100,10 @@ assert_match(
 )
 
 assert_arg(x, quote_values = FALSE, throw_error = TRUE)
+
+assert(x, ...)
+
+\method{assert}{default}(x, ...)
 }
 \arguments{
 \item{x}{Any \R object.}
@@ -125,8 +131,8 @@ having no names at all.}
 partially matched? If so, \code{\link[base:pmatch]{base::pmatch()}} is used.}
 
 \item{throw_error}{A non-\link[base:NA]{NA} logical value. Should an error be
-thrown? If so, \code{\link[=stops]{stops()}} is called. The error message is returned as a
-character string (possibly empty) otherwise.}
+thrown? If so, \code{\link[=stops]{stops()}} is called. Otherwise, error messages are returned
+as a character vector (possibly empty).}
 
 \item{x_name}{A non-empty and non-\link[base:NA]{NA} character string. The
 underlying name of \code{x}.}
@@ -145,6 +151,7 @@ be quoted? This argument is passed to \code{\link[=str_to]{str_to()}}.}
 \code{\link[=is_named]{is_named()}}, and
 \code{\link[=is_match]{is_match()}} return a logical value.
 
+\code{\link[=assert]{assert()}},
 \code{\link[=assert_int]{assert_int()}},
 \code{\link[=assert_chr]{assert_chr()}},
 \code{\link[=assert_lgl1]{assert_lgl1()}},
@@ -153,10 +160,13 @@ be quoted? This argument is passed to \code{\link[=str_to]{str_to()}}.}
 \code{\link[=assert_list]{assert_list()}},
 \code{\link[=assert_between]{assert_between()}},
 \code{\link[=assert_named]{assert_named()}},
-\code{\link[=assert_match]{assert_match()}},
-\code{\link[=assert_arg]{assert_arg()}} return an empty character string if \code{x} meets the underlying
+\code{\link[=assert_match]{assert_match()}}, and
+\code{\link[=assert_arg]{assert_arg()}} return an empty character vector if \code{x} meets the underlying
 criteria and throw an error otherwise. If \code{throw_error} is \code{FALSE}, the
-error message is returned as a character string.
+error message is returned as a character vector. Unless otherwise stated,
+the latter is of length 1 (a character string).
+
+\code{\link[=assert.default]{assert.default()}} always returns an empty character vector.
 }
 \description{
 These functions are a functional implementation of defensive programming.
@@ -181,6 +191,10 @@ By convention, \link[base:NA]{NA} values are \strong{always} disallowed. Package
 \code{\link[=assert_arg]{assert_arg()}} is a partial refactoring of \code{\link[base:match.arg]{base::match.arg()}}. It relies
 on \code{\link[=assert_match]{assert_match()}} internally and does not have an equivalent \code{is_arg()}
 function. It must be called within another function.
+
+\code{\link[=assert]{assert()}} is a S3 generic function that covers specific data structures.
+Classes (and underlying objects) that do not have an \code{\link[=assert]{assert()}} method are
+considered to be valid by default.
 }
 \examples{
 transltr:::is_int(c(1L, 2L))        ## TRUE
@@ -247,6 +261,9 @@ foo <- function(value = c("a", "b", "c")) {
 
 foo("a")
 \dontrun{foo("d")  ## Since "d" is not a valid value, an error is thrown.}
+
+# assert.default() always returns an empty character vector.
+assert(structure(list(), class = "MyList"))
 
 }
 \keyword{internal}

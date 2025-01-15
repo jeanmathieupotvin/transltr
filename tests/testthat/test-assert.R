@@ -222,7 +222,7 @@ test_that("is_match() exactly matches x by default", {
 
 
 test_that("assert_int() returns an empty character if x is valid", {
-    expect_identical(assert_int(1L), "")
+    expect_identical(assert_int(1L), character())
 })
 
 test_that("assert_int() throws an error by default if x is invalid", {
@@ -255,7 +255,7 @@ test_that("assert_int() sets argument's name", {
 
 
 test_that("assert_chr() returns an empty character if x is valid", {
-    expect_identical(assert_chr("a"), "")
+    expect_identical(assert_chr("a"), character())
 })
 
 test_that("assert_chr() throws an error by default if x is invalid", {
@@ -286,7 +286,7 @@ test_that("assert_chr() sets argument's name", {
 
 
 test_that("assert_lgl1() returns an empty character if x is valid", {
-    expect_identical(assert_lgl1(TRUE), "")
+    expect_identical(assert_lgl1(TRUE), character())
 })
 
 test_that("assert_lgl1() throws an error by default if x is invalid", {
@@ -319,7 +319,7 @@ test_that("assert_lgl1() sets argument's name", {
 
 
 test_that("assert_int1() returns an empty character if x is valid", {
-    expect_identical(assert_int1(1L), "")
+    expect_identical(assert_int1(1L), character())
 })
 
 test_that("assert_int1() throws an error by default if x is invalid", {
@@ -352,7 +352,7 @@ test_that("assert_int1() sets argument's name", {
 
 
 test_that("assert_chr1() returns an empty character if x is valid", {
-    expect_identical(assert_chr1("a"), "")
+    expect_identical(assert_chr1("a"), character())
 })
 
 test_that("assert_chr1() throws an error by default if x is invalid", {
@@ -383,7 +383,7 @@ test_that("assert_chr1() sets argument's name", {
 
 
 test_that("assert_list() returns an empty character if x is valid", {
-    expect_identical(assert_list(list(1L)), "")
+    expect_identical(assert_list(list(1L)), character())
 })
 
 test_that("assert_list() throws an error by default if x is invalid", {
@@ -414,7 +414,7 @@ test_that("assert_list() sets argument's name", {
 
 
 test_that("assert_between() returns an empty character if x is valid", {
-    expect_identical(assert_between(1L), "")
+    expect_identical(assert_between(1L), character())
 })
 
 test_that("assert_between() throws an error by default if x is invalid", {
@@ -453,8 +453,8 @@ test_that("assert_between() sets argument's name", {
 
 
 test_that("assert_named() returns an empty character if x is valid", {
-    expect_identical(assert_named(list()), "")
-    expect_identical(assert_named(list(a = 1L)), "")
+    expect_identical(assert_named(list()), character())
+    expect_identical(assert_named(list(a = 1L)), character())
 })
 
 test_that("assert_named() throws an error by default if x is invalid", {
@@ -499,7 +499,7 @@ test_that("assert_named() sets argument's name", {
 
 
 test_that("assert_match() returns an empty character if x is valid", {
-    expect_identical(assert_match(1L, c(1L, 2L)), "")
+    expect_identical(assert_match(1L, c(1L, 2L)), character())
 })
 
 test_that("assert_match() throws an error by default if x is invalid", {
@@ -544,7 +544,7 @@ test_that("assert_match() sets argument's name", {
 
 
 test_that("assert_arg() returns an empty character if x is valid", {
-    expect_identical(wrap_assert_arg(1L), "")
+    expect_identical(wrap_assert_arg(1L), character())
 })
 
 test_that("assert_arg() throws an error by default if x is invalid", {
@@ -583,4 +583,18 @@ test_that("assert_arg() sets argument's name", {
 
 test_that("assert_arg() assigns default value in parent env if x is missing", {
     expect_identical(wrap_assert_arg_alt(), 1L)
+})
+
+
+# assert() ---------------------------------------------------------------------
+
+
+test_that("assert() works", {
+    # assert(1L) is different from assert_int1(1L).
+    expect_identical(assert(1L), character())
+})
+
+test_that("assert.default() works", {
+    # assert() has no method for character.
+    expect_identical(assert("test"), character())
 })

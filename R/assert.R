@@ -24,6 +24,10 @@
 #' on [assert_match()] internally and does not have an equivalent `is_arg()`
 #' function. It must be called within another function.
 #'
+#' [assert()] is a S3 generic function that covers specific data structures.
+#' Classes (and underlying objects) that do not have an [assert()] method are
+#' considered to be valid by default.
+#'
 #' @param x Any \R object.
 #'
 #' @param x_name A non-empty and non-[NA][base::NA] character string. The
@@ -51,12 +55,10 @@
 #' @param allow_partial A non-[NA][base::NA] logical value. Should `x` be
 #'   partially matched? If so, [base::pmatch()] is used.
 #'
-#' @param throw_error A non-[NA][base::NA] logical value. Should an error be
-#'   thrown? If so, [stops()] is called. The error message is returned as a
-#'   character string (possibly empty) otherwise.
-#'
 #' @param quote_values A non-[NA][base::NA] logical value. Should `choices`
 #'   be quoted? This argument is passed to [str_to()].
+#'
+#' @template param-throw-error
 #'
 #' @returns
 #' [is_int()],
@@ -69,6 +71,7 @@
 #' [is_named()], and
 #' [is_match()] return a logical value.
 #'
+#' [assert()],
 #' [assert_int()],
 #' [assert_chr()],
 #' [assert_lgl1()],
@@ -77,10 +80,13 @@
 #' [assert_list()],
 #' [assert_between()],
 #' [assert_named()],
-#' [assert_match()],
-#' [assert_arg()] return an empty character string if `x` meets the underlying
+#' [assert_match()], and
+#' [assert_arg()] return an empty character vector if `x` meets the underlying
 #' criteria and throw an error otherwise. If `throw_error` is `FALSE`, the
-#' error message is returned as a character string.
+#' error message is returned as a character vector. Unless otherwise stated,
+#' the latter is of length 1 (a character string).
+#'
+#' [assert.default()] always returns an empty character vector.
 #'
 #' @examples
 #' transltr:::is_int(c(1L, 2L))        ## TRUE
@@ -147,6 +153,9 @@
 #'
 #' foo("a")
 #' \dontrun{foo("d")  ## Since "d" is not a valid value, an error is thrown.}
+#'
+#' # assert.default() always returns an empty character vector.
+#' assert(structure(list(), class = "MyList"))
 #'
 #' @rdname assert
 #' @keywords internal
@@ -231,7 +240,7 @@ assert_int <- function(
     throw_error = TRUE,
     x_name      = deparse(substitute(x)))
 {
-    err_msg <- ""
+    err_msg <- character()
 
     if (!is_int(x, allow_empty)) {
         err_msg <- sprintf(
@@ -253,7 +262,7 @@ assert_chr <- function(
     throw_error = TRUE,
     x_name      = deparse(substitute(x)))
 {
-    err_msg <- ""
+    err_msg <- character()
 
     if (!is_chr(x, allow_empty)) {
         err_msg <- sprintf(
@@ -274,7 +283,7 @@ assert_lgl1 <- function(
     throw_error = TRUE,
     x_name      = deparse(substitute(x)))
 {
-    err_msg <- ""
+    err_msg <- character()
 
     if (!is_lgl1(x)) {
         err_msg <- sprintf(
@@ -294,7 +303,7 @@ assert_int1 <- function(
     throw_error = TRUE,
     x_name      = deparse(substitute(x)))
 {
-    err_msg <- ""
+    err_msg <- character()
 
     if (!is_int1(x)) {
         err_msg <- sprintf(
@@ -315,7 +324,7 @@ assert_chr1 <- function(
     throw_error        = TRUE,
     x_name             = deparse(substitute(x)))
 {
-    err_msg <- ""
+    err_msg <- character()
 
     if (!is_chr1(x, allow_empty_string)) {
         err_msg <- sprintf(
@@ -337,7 +346,7 @@ assert_list <- function(
     throw_error = TRUE,
     x_name      = deparse(substitute(x)))
 {
-    err_msg <- ""
+    err_msg <- character()
 
     if (!is_list(x, allow_empty)) {
         err_msg <- sprintf(
@@ -360,7 +369,7 @@ assert_between <- function(
     throw_error = TRUE,
     x_name      = deparse(substitute(x)))
 {
-    err_msg <- ""
+    err_msg <- character()
 
     if (!is_between(x, min, max)) {
         is_inf <- is.infinite(c(min, max))
@@ -397,7 +406,7 @@ assert_named <- function(
     throw_error       = TRUE,
     x_name            = deparse(substitute(x)))
 {
-    err_msg <- ""
+    err_msg <- character()
 
     if (!is_named(x, allow_empty_names, allow_na_names)) {
         err_msg <- sprintf(
@@ -422,7 +431,7 @@ assert_match <- function(
     throw_error   = TRUE,
     x_name        = deparse(substitute(x)))
 {
-    err_msg <- ""
+    err_msg <- character()
 
     if (!is_match(x, choices, allow_partial)) {
         err_msg <- sprintf(
@@ -443,9 +452,8 @@ assert_arg <- function(
     quote_values = FALSE,
     throw_error  = TRUE)
 {
-    # What follows is a (partial) refactoring of base::match.arg().
+    # This is a refactoring of base::match.arg().
     # Many thanks to the original authors.
-    err_msg   <- ""
     i_stack   <- sys.parent()
     parent    <- sys.frame(i_stack)
     x_formals <- formals(sys.function(i_stack))
@@ -459,7 +467,7 @@ assert_arg <- function(
     # returned.
     if (identical(x, x_choices)) {
         assign(x_name, x_choices[[1L]], parent)
-        return("")
+        return(character())
     }
 
     return(
@@ -470,4 +478,17 @@ assert_arg <- function(
             quote_values  = quote_values,
             throw_error   = throw_error,
             x_name        = x_name))
+}
+
+#' @rdname assert
+#' @keywords internal
+assert <- function(x, ...) {
+    UseMethod("assert")
+}
+
+#' @rdname assert
+#' @keywords internal
+#' @export
+assert.default <- function(x, ...) {
+    return(character())
 }
