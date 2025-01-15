@@ -41,8 +41,8 @@ namespace, i.e. \code{translate()}.}
 equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
 source information for identification purposes.}
 
-\item{verbose}{A non-\link[base:NA]{NA} logical value. Should basic information
-on extracted source texts be outputted?}
+\item{verbose}{A non-\link[base:NA]{NA} logical value. Should progress
+information be reported?}
 
 \item{tokens}{A \code{\link[=data.frame]{data.frame}} returned by
 \code{\link[utils:getParseData]{utils::getParseData()}}. It must always minimally contain

@@ -51,8 +51,8 @@ non-\link[base:NA]{NA} values. It can be empty. It is used to to construct
 a mapping of language codes to native language names. See field
 \code{\link[=Translator]{Translator$native_languages}} for more information.}
 
-\item{verbose}{A non-\link[base:NA]{NA} logical value. Should basic information
-on extracted source texts be outputted?}
+\item{verbose}{A non-\link[base:NA]{NA} logical value. Should progress
+information be reported?}
 
 \item{paths}{A character vector of non-empty and non-\link[base:NA]{NA} values.
 A set of paths to \R source scripts that must be searched.}
