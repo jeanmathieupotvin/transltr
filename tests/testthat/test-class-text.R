@@ -315,11 +315,11 @@ test_that("format() returns a character", {
         "  c:",
         "   <Location>",
         "    Path: c",
-        "    Ranges: line 1, column 2 @ line 3, column 4",
+        "    Ranges: Ln 1, Col 2 @ Ln 3, Col 4",
         "  d:",
         "   <Location>",
         "    Path: d",
-        "    Ranges: line 5, column 6 @ line 7, column 8"))
+        "    Ranges: Ln 5, Col 6 @ Ln 7, Col 8"))
 
     expect_type(fmt_txt_empty, "character")
     expect_length(fmt_txt_empty, 6L)
@@ -351,11 +351,11 @@ test_that("format() sets names of locations equal to base names", {
         "  c:",
         "   <Location>",
         "    Path: /absolute/path/to/source/script/c",
-        "    Ranges: line 1, column 2 @ line 3, column 4",
+        "    Ranges: Ln 1, Col 2 @ Ln 3, Col 4",
         "  d:",
         "   <Location>",
         "    Path: /absolute/path/to/source/script/d",
-        "    Ranges: line 5, column 6 @ line 7, column 8"))
+        "    Ranges: Ln 5, Col 6 @ Ln 7, Col 8"))
     expect_snapshot(print(txt))
 })
 

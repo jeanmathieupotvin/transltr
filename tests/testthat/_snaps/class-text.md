@@ -189,11 +189,11 @@
         c:
          <Location>
           Path: /absolute/path/to/source/script/c
-          Ranges: line 1, column 2 @ line 3, column 4
+          Ranges: Ln 1, Col 2 @ Ln 3, Col 4
         d:
          <Location>
           Path: /absolute/path/to/source/script/d
-          Ranges: line 5, column 6 @ line 7, column 8
+          Ranges: Ln 5, Col 6 @ Ln 7, Col 8
 
 # print() works
 
@@ -213,11 +213,11 @@
         a:
          <Location>
           Path: a
-          Ranges: line 1, column 2 @ line 3, column 4
+          Ranges: Ln 1, Col 2 @ Ln 3, Col 4
         b:
          <Location>
           Path: b
-          Ranges: line 5, column 6 @ line 7, column 8
+          Ranges: Ln 5, Col 6 @ Ln 7, Col 8
 
 # c.Text() validates ...
 

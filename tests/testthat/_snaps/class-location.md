@@ -78,14 +78,6 @@
       Error:
       ! line1', 'col1', 'line2', and 'col2' must all have the same length.
 
-# .location_format_range() validates how
-
-    Code
-      format(location(), "error")
-    Condition
-      Error:
-      ! 'how' must be equal to 'long', 'short', or 'shorter'.
-
 # print() works
 
     Code
@@ -93,7 +85,7 @@
     Output
       <Location>
        Path: tests/testthat/my-test-file
-       Ranges: ln 1, col 2 @ ln 3, col 4
+       Ranges: Ln 1, Col 2 @ Ln 3, Col 4
 
 ---
 
@@ -103,8 +95,8 @@
       <Location>
        Path: tests/testthat/my-test-file
        Ranges:
-        line  1, column  22 @ line   10, column 1
-        line 11, column 222 @ line 3333, column 4
+        Ln  1, Col  22 @ Ln   10, Col 1
+        Ln 11, Col 222 @ Ln 3333, Col 4
 
 # c.Location() validates ...
 
@@ -129,4 +121,28 @@
     Condition
       Error:
       ! values passed to '...' must all be 'Location' objects.
+
+# range_format() validates x
+
+    Code
+      range_format(1L)
+    Condition
+      Error:
+      ! 'x' must be a 'Location' object.
+
+# range_parse() validates strings
+
+    Code
+      range_parse(1L)
+    Condition
+      Error:
+      ! 'ranges' must be a non-empty character vector of non-NA values.
+
+# range_is_parseable() validates strings
+
+    Code
+      range_is_parseable(1L)
+    Condition
+      Error:
+      ! 'ranges' must be a non-empty character vector of non-NA values.
 

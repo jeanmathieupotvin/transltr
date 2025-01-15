@@ -23,6 +23,14 @@
 #' number of [`Location`][Location] objects having possibly different paths.
 #' It can be viewed as a vectorized version of [c()].
 #'
+#' ## Ranges
+#'
+#' Ranges are `r constant("range-format")` strings created on-the-fly from
+#' [`Location`][Location] objects for outputting purposes.
+#'
+#' [range_format()], [range_parse()], and [range_is_parseable()] are internal
+#' functions respectively used to create, parse, and validate ranges.
+#'
 #' @param path A non-empty and non-[NA][base::NA] character string. The origin
 #'   of the range(s).
 #'
@@ -32,16 +40,10 @@
 #' @param line2,col2 A non-empty integer vector of non-[NA][base::NA] values.
 #'   The (inclusive) end(s) of what is being referenced.
 #'
-#' @param x Any \R object.
+#' @param x Any \R object. A [`Location`][Location] object for [range_parse()].
 #'
-#' @param how A character string equal to `"long"`, `"short"`, or `"shorter"`.
-#'   How to format range(s):
-#'
-#'   * `"long"` yields `"line <line1>, column <col1> @ line <line2>, column <col2>"`,
-#'   * `"short"` yields `"ln <line1>, col <col1> @ ln <line2>, col <col2>"`, and
-#'   * `"shorter"` yields `"<line1>,<col1> @ <line2>,<col2>"`.
-#'
-#'   Underlying `line1`, `col1`, `line2`, and `col2` values are always aligned.
+#' @param ranges A character vector of non-[NA][base::NA] and non-empty values.
+#'   The ranges to extract pairs of indices (line, column) from. See Details.
 #'
 #' @param ... Usage depends on the underlying function.
 #'   * Any number of [`Location`][Location] objects for [merge_locations()]
@@ -63,6 +65,15 @@
 #' [merge_locations()] returns a list of (combined) [`Location`][Location]
 #' objects.
 #'
+#' [range_format()] returns a character vector. It assumes that `x` is valid.
+#'
+#' [range_parse()] returns a list having the same length as `ranges`. Each
+#' element is an integer vectors containing 4 non-[NA][base::NA] values (unless
+#' the underlying range is invalid).
+#'
+#' [range_is_parseable()] returns a logical vector having the same length as
+#' `ranges`.
+#'
 #' @examples
 #' # Create Location objects.
 #' loc1 <- location("file-a", 1L, 2L, 3L, 4L)
@@ -71,11 +82,9 @@
 #'
 #' is_location(loc1)  ## TRUE
 #'
-#' # There are multiple ways to format Location objects.
-#' # print() calls format() internally, as expected.
+#' print(loc1)
+#' print(loc2)
 #' print(loc3)
-#' print(loc3, how = "short")
-#' print(loc3, how = "shorter")
 #'
 #' # Combine Location objects.
 #' # They must have the same path.
@@ -94,6 +103,13 @@
 #' # bound to variable x in the global environment.
 #' x <- "This is a string and it is held in memory for some purpose."
 #' location("<environment: R_GlobalEnv: x>", 1L, 11L, 1L, 16L)
+#'
+#' # Create ranges, like format() does.
+#' ranges <- range_format(loc3)
+#'
+#' # Check whether ranges can be parsed (to integer vectors), and parse them.
+#' range_is_parseable(ranges)
+#' range_parse(ranges)
 #'
 #' @aliases Location
 #' @rdname class-location
@@ -153,8 +169,8 @@ is_location <- function(x) {
 
 #' @rdname class-location
 #' @export
-format.Location <- function(x, how = c("long", "short", "shorter"), ...) {
-    xlist <- list(Path = x$path, Ranges = .location_format_range(x, how))
+format.Location <- function(x, ...) {
+    xlist <- list(Path = x$path, Ranges = range_format(x))
     return(c("<Location>", format_vector(xlist, level = 1L)))
 }
 
@@ -202,19 +218,43 @@ merge_locations <- function(...) {
     return(lapply(groups, \(group) do.call(c, group)))
 }
 
+#' @rdname class-location
+#' @keywords internal
+range_format <- function(x = location()) {
+    if (!is_location(x)) {
+        stops("'x' must be a 'Location' object.")
+    }
 
-# Internal functions -----------------------------------------------------------
+    chars <- lapply(x[-1L], encodeString, width = NULL, justify = "right")
+    return(do.call(sprintf, c(constant("range-sprintf"), chars)))
+}
 
+#' @rdname class-location
+#' @keywords internal
+range_parse <- function(ranges = character()) {
+    assert_chr(ranges)
 
-.location_format_range <- function(x, how = c("long", "short", "shorter"), ...) {
-    assert_arg(how, TRUE)
+    matches <- gregexpr(constant("range-pattern"), ranges, perl = TRUE)
+    starts  <- sapply(matches, attr, "capture.start")
+    widths  <- sapply(matches, attr, "capture.length")
+    ends    <- starts + widths - 1L
 
-    fmt <- switch(how,
-        long    = "line %s, column %s @ line %s, column %s",
-        short   = "ln %s, col %s @ ln %s, col %s",
-        shorter = "%s,%s @ %s,%s")
+    # as.integer() may throw warnings
+    # if characters cannot be coerced.
+    # We hide these from the user, as
+    # there is nothing else they can do.
+    numbers <- suppressWarnings(
+        lapply(seq_along(ranges), \(i)  {
+            as.integer(substring(ranges[[i]], starts[, i], ends[, i]))
+        })
+    )
 
-    # First elements of x is 'path'. It is ignored.
-    chars <- lapply(x, encodeString, width = NULL, justify = "right")
-    return(sprintf(fmt, chars[[2L]], chars[[3L]], chars[[4L]], chars[[5L]]))
+    return(numbers)
+}
+
+#' @rdname class-location
+#' @keywords internal
+range_is_parseable <- function(ranges = character()) {
+    assert_chr(ranges)
+    return(grepl(constant("range-pattern"), ranges))
 }
