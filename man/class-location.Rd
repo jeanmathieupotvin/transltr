@@ -8,9 +8,6 @@
 \alias{print.Location}
 \alias{c.Location}
 \alias{merge_locations}
-\alias{range_format}
-\alias{range_parse}
-\alias{range_is_parseable}
 \title{Source Locations}
 \usage{
 location(path = tempfile(), line1 = 1L, col1 = 1L, line2 = 1L, col2 = 1L)
@@ -24,12 +21,6 @@ is_location(x)
 \method{c}{Location}(...)
 
 merge_locations(...)
-
-range_format(x = location())
-
-range_parse(ranges = character())
-
-range_is_parseable(ranges = character())
 }
 \arguments{
 \item{path}{A non-empty and non-\link[base:NA]{NA} character string. The origin
@@ -41,7 +32,7 @@ The (inclusive) starting point(s) of what is being referenced.}
 \item{line2, col2}{A non-empty integer vector of non-\link[base:NA]{NA} values.
 The (inclusive) end(s) of what is being referenced.}
 
-\item{x}{Any \R object. A \code{\link{Location}} object for \code{\link[=range_parse]{range_parse()}}.}
+\item{x}{Any \R object.}
 
 \item{...}{Usage depends on the underlying function.
 \itemize{
@@ -50,9 +41,6 @@ and S3 method \code{\link[=c]{c()}}.
 \item Further arguments passed to or from other methods for \code{\link[=format]{format()}} and
 \code{\link[=print]{print()}}.
 }}
-
-\item{ranges}{A character vector of non-\link[base:NA]{NA} and non-empty values.
-The ranges to extract pairs of indices (line, column) from. See Details.}
 }
 \value{
 \code{\link[=location]{location()}}, and \code{\link[=c]{c()}} return a named list of length 5 and of S3 class
@@ -67,15 +55,6 @@ The ranges to extract pairs of indices (line, column) from. See Details.}
 
 \code{\link[=merge_locations]{merge_locations()}} returns a list of (combined) \code{\link{Location}}
 objects.
-
-\code{\link[=range_format]{range_format()}} returns a character vector. It assumes that \code{x} is valid.
-
-\code{\link[=range_parse]{range_parse()}} returns a list having the same length as \code{ranges}. Each
-element is an integer vectors containing 4 non-\link[base:NA]{NA} values (unless
-the underlying range is invalid).
-
-\code{\link[=range_is_parseable]{range_is_parseable()}} returns a logical vector having the same length as
-\code{ranges}.
 }
 \description{
 Structure and manipulate source locations. Class \code{\link{Location}} is
@@ -100,15 +79,6 @@ non-duplicated range(s).
 \code{\link[=merge_locations]{merge_locations()}} is a generalized version of \code{\link[=c]{c()}} that handles any
 number of \code{\link{Location}} objects having possibly different paths.
 It can be viewed as a vectorized version of \code{\link[=c]{c()}}.
-}
-
-\subsection{Ranges}{
-
-Ranges are \verb{Ln <int>, Col <int> @ Ln <int>, Col <int>} strings created on-the-fly from
-\code{\link{Location}} objects for outputting purposes.
-
-\code{\link[=range_format]{range_format()}}, \code{\link[=range_parse]{range_parse()}}, and \code{\link[=range_is_parseable]{range_is_parseable()}} are internal
-functions respectively used to create, parse, and validate ranges.
 }
 }
 \examples{
@@ -140,13 +110,6 @@ merge_locations(loc1, loc2, loc3)
 # bound to variable x in the global environment.
 x <- "This is a string and it is held in memory for some purpose."
 location("<environment: R_GlobalEnv: x>", 1L, 11L, 1L, 16L)
-
-# Create ranges, like format() does.
-ranges <- range_format(loc3)
-
-# Check whether ranges can be parsed (to integer vectors), and parse them.
-range_is_parseable(ranges)
-range_parse(ranges)
 
 }
 \keyword{internal}

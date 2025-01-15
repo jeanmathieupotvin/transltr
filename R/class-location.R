@@ -23,14 +23,6 @@
 #' number of [`Location`][Location] objects having possibly different paths.
 #' It can be viewed as a vectorized version of [c()].
 #'
-#' ## Ranges
-#'
-#' Ranges are `r constant("range-format")` strings created on-the-fly from
-#' [`Location`][Location] objects for outputting purposes.
-#'
-#' [range_format()], [range_parse()], and [range_is_parseable()] are internal
-#' functions respectively used to create, parse, and validate ranges.
-#'
 #' @param path A non-empty and non-[NA][base::NA] character string. The origin
 #'   of the range(s).
 #'
@@ -40,10 +32,7 @@
 #' @param line2,col2 A non-empty integer vector of non-[NA][base::NA] values.
 #'   The (inclusive) end(s) of what is being referenced.
 #'
-#' @param x Any \R object. A [`Location`][Location] object for [range_parse()].
-#'
-#' @param ranges A character vector of non-[NA][base::NA] and non-empty values.
-#'   The ranges to extract pairs of indices (line, column) from. See Details.
+#' @param x Any \R object.
 #'
 #' @param ... Usage depends on the underlying function.
 #'   * Any number of [`Location`][Location] objects for [merge_locations()]
@@ -64,15 +53,6 @@
 #'
 #' [merge_locations()] returns a list of (combined) [`Location`][Location]
 #' objects.
-#'
-#' [range_format()] returns a character vector. It assumes that `x` is valid.
-#'
-#' [range_parse()] returns a list having the same length as `ranges`. Each
-#' element is an integer vectors containing 4 non-[NA][base::NA] values (unless
-#' the underlying range is invalid).
-#'
-#' [range_is_parseable()] returns a logical vector having the same length as
-#' `ranges`.
 #'
 #' @examples
 #' # Create Location objects.
@@ -103,13 +83,6 @@
 #' # bound to variable x in the global environment.
 #' x <- "This is a string and it is held in memory for some purpose."
 #' location("<environment: R_GlobalEnv: x>", 1L, 11L, 1L, 16L)
-#'
-#' # Create ranges, like format() does.
-#' ranges <- range_format(loc3)
-#'
-#' # Check whether ranges can be parsed (to integer vectors), and parse them.
-#' range_is_parseable(ranges)
-#' range_parse(ranges)
 #'
 #' @aliases Location
 #' @rdname class-location
@@ -218,7 +191,45 @@ merge_locations <- function(...) {
     return(lapply(groups, \(group) do.call(c, group)))
 }
 
-#' @rdname class-location
+
+#' Source Ranges
+#'
+#' Create, parse, and validate source ranges.
+#'
+#' Ranges are `r constant("range-format")` strings created on-the-fly from
+#' [`Location`][Location] objects for outputting purposes.
+#'
+#' @param x A [`Location`][Location] object.
+#'
+#' @param ranges A character vector of non-[NA][base::NA] and non-empty values.
+#'   The ranges to extract pairs of indices (line, column) from.
+#'
+#' @returns
+#' [range_format()] returns a character vector. It assumes that `x` is valid.
+#'
+#' [range_parse()] returns a list having the same length as `ranges`. Each
+#' element is an integer vectors containing 4 non-[NA][base::NA] values (unless
+#' the underlying range is invalid).
+#'
+#' [range_is_parseable()] returns a logical vector having the same length as
+#' `ranges`.
+#'
+#' @examples
+#' # Create a Location object.
+#' loc <- location("file-c", c(9L, 10L), c(11L, 12L), c(13L, 14L), c(15L, 16L))
+#'
+#' # Create ranges like format.Location() does.
+#' ranges <- transltr:::range_format(loc)
+#'
+#' # Check whether ranges can be parsed (to integer vectors), and parse them.
+#' transltr:::range_is_parseable(ranges)
+#' transltr:::range_parse(ranges)
+#'
+#' @seealso
+#' [`Location`][Location],
+#' [`ExportedLocation`][ExportedLocation],
+#'
+#' @rdname class-location-ranges
 #' @keywords internal
 range_format <- function(x = location()) {
     if (!is_location(x)) {
@@ -229,7 +240,7 @@ range_format <- function(x = location()) {
     return(do.call(sprintf, c(constant("range-sprintf"), chars)))
 }
 
-#' @rdname class-location
+#' @rdname class-location-ranges
 #' @keywords internal
 range_parse <- function(ranges = character()) {
     assert_chr(ranges)
@@ -252,7 +263,7 @@ range_parse <- function(ranges = character()) {
     return(numbers)
 }
 
-#' @rdname class-location
+#' @rdname class-location-ranges
 #' @keywords internal
 range_is_parseable <- function(ranges = character()) {
     assert_chr(ranges)
