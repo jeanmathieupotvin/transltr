@@ -13,14 +13,17 @@ of the constant to fetch. See below for defined values.}
 \value{
 \code{\link[=constant]{constant()}} returns the requested constant, or \code{NULL} if it is unavailable.\tabular{lll}{
    \code{which} \tab \strong{Shape} \tab \strong{Value} \cr
-   \code{"algorithms"} \tab \code{character(2)} \tab \code{c("sha1", "utf8")} \cr
-   \code{"concat"} \tab \code{character(1)} \tab \code{" "} \cr
-   \code{"empty"} \tab \code{character(1)} \tab \code{"<empty>"} \cr
-   \code{"empty-list"} \tab \code{character(1)} \tab \code{"<empty list>"} \cr
-   \code{"null"} \tab \code{character(1)} \tab \code{"<null>"} \cr
-   \code{"unset"} \tab \code{character(1)} \tab \code{"<unset>"} \cr
-   \code{"unknown"} \tab \code{character(1)} \tab \code{"<unknown>"} \cr
-   \code{"untranslated"} \tab \code{character(1)} \tab \code{"# Insert a translation here."} \cr
+   \code{algorithms} \tab \code{character(2)} \tab \code{c("sha1", "utf8")} \cr
+   \code{concat} \tab \code{character(1)} \tab \code{" "} \cr
+   \code{empty} \tab \code{character(1)} \tab \code{"<empty>"} \cr
+   \code{empty-list} \tab \code{character(1)} \tab \code{"<empty list>"} \cr
+   \code{null} \tab \code{character(1)} \tab \code{"<null>"} \cr
+   \code{unset} \tab \code{character(1)} \tab \code{"<unset>"} \cr
+   \code{unknown} \tab \code{character(1)} \tab \code{"<unknown>"} \cr
+   \code{untranslated} \tab \code{character(1)} \tab \code{"# Insert a translation here."} \cr
+   \code{range-sprintf} \tab \code{character(1)} \tab \code{"Ln \%s, Col \%s @ Ln \%s, Col \%s"} \cr
+   \code{range-format} \tab \code{character(1)} \tab \code{"Ln <int>, Col <int> @ Ln <int>, Col <int>"} \cr
+   \code{range-pattern} \tab \code{character(1)} \tab \code{"^Ln[ \\t]*([0-9.]+),[ \\t]*Col[ \\t]*..."} \cr
 }
 }
 \description{
@@ -64,6 +67,9 @@ transltr:::constant("null")
 transltr:::constant("unset")
 transltr:::constant("unknown")
 transltr:::constant("untranslated")
+transltr:::constant("range-sprintf")
+transltr:::constant("range-format")
+transltr:::constant("range-pattern")
 
 # NULL is returned if which has no corresponding entry.
 transltr:::constant("__undefined__")
