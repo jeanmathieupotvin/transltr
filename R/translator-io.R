@@ -57,6 +57,11 @@
 #'
 #' @param tr A [`Translator`][Translator] object.
 #'
+#'   This argument is `NULL` by default for [translations_read()]. If a
+#'   [`Translator`][Translator] object is passed to this function, it
+#'   will read translations and further register them (as long as they
+#'   correspond to an existing source text).
+#'
 #' @param overwrite A non-[NA][base::NA] logical value. Should existing
 #'   files be overwritten? If such files are detected and `overwrite` is
 #'   set equal to `TRUE`, an error is thrown.
@@ -229,7 +234,7 @@ translator_write <- function(
 
 #' @rdname translator-io
 #' @export
-translations_read <- function(path = "", encoding = "UTF-8", tr) {
+translations_read <- function(path = "", encoding = "UTF-8", tr = NULL) {
     string <- paste0(text_read(path, encoding), collapse = "\n")
     return(deserialize_translations(string, tr))
 }

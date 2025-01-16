@@ -21,11 +21,12 @@ translator_write(
   verbose = TRUE
 )
 
-translations_read(path = "", encoding = "UTF-8", tr)
+translations_read(path = "", encoding = "UTF-8", tr = NULL)
 
 translations_write(tr = translator(), path = "", lang = "")
 
-translations_paths(tr = translator(), parent_dir = "")
+translations_paths(
+  tr = translator(),
 }
 \arguments{
 \item{path}{A non-empty and non-\link[base:NA]{NA} character string. A path to
@@ -47,7 +48,12 @@ portability.}
 \item{verbose}{A non-\link[base:NA]{NA} logical value. Should progress
 information be reported?}
 
-\item{tr}{A \code{\link{Translator}} object.}
+\item{tr}{A \code{\link{Translator}} object.
+
+This argument is \code{NULL} by default for \code{\link[=translations_read]{translations_read()}}. If a
+\code{\link{Translator}} object is passed to this function, it
+will read translations and further register them (as long as they
+correspond to an existing source text).}
 
 \item{overwrite}{A non-\link[base:NA]{NA} logical value. Should existing
 files be overwritten? If such files are detected and \code{overwrite} is

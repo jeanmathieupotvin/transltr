@@ -32,7 +32,7 @@ serialize_translations(tr = translator(), lang = "")
 
 deserialize(string = "")
 
-deserialize_translations(string = "", tr)
+deserialize_translations(string = "", tr = NULL)
 
 export_translations(tr = translator(), lang = "")
 
@@ -58,7 +58,7 @@ import(x, ...)
 
 \method{import}{ExportedLocation}(x, ...)
 
-\method{import}{ExportedTranslations}(x, tr, ...)
+\method{import}{ExportedTranslations}(x, tr = NULL, ...)
 
 \method{import}{default}(x, ...)
 
@@ -71,10 +71,10 @@ format_errors(errors = character(), id = uuid(), throw_error = TRUE)
 
 \item{tr}{A \code{\link{Translator}} object.
 
-This argument is \strong{optional} for \code{\link[=deserialize_translations]{deserialize_translations()}} and
-\code{\link[=import.ExportedTranslations]{import.ExportedTranslations()}}. It allows a \code{\link{Translator}}
-object to register imported translations as long as they correspond to
-an existing source text (a registered \code{\link{Text}} object).}
+This argument is \code{NULL} by default for \code{\link[=deserialize_translations]{deserialize_translations()}} and
+\code{\link[=import.ExportedTranslations]{import.ExportedTranslations()}}. If a \code{\link{Translator}} object
+is passed to these functions, they will import translations and further
+register them (as long as they correspond to an existing source text).}
 
 \item{lang}{A non-empty and non-\link[base:NA]{NA} character string. The
 underlying language.

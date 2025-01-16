@@ -64,10 +64,10 @@
 #'
 #' @param tr A [`Translator`][Translator] object.
 #'
-#'   This argument is **optional** for [deserialize_translations()] and
-#'   [import.ExportedTranslations()]. It allows a [`Translator`][Translator]
-#'   object to register imported translations as long as they correspond to
-#'   an existing source text (a registered [`Text`][Text] object).
+#'   This argument is `NULL` by default for [deserialize_translations()] and
+#'   [import.ExportedTranslations()]. If a [`Translator`][Translator] object
+#'   is passed to these functions, they will import translations and further
+#'   register them (as long as they correspond to an existing source text).
 #'
 #' @param string A non-empty and non-[NA][base::NA] character string. Contents
 #'   to deserialize.
@@ -362,7 +362,7 @@ deserialize <- function(string = "") {
 
 #' @rdname serialize
 #' @keywords internal
-deserialize_translations <- function(string = "", tr) {
+deserialize_translations <- function(string = "", tr = NULL) {
     obj <- structure(flat_deserialize(string), class = "ExportedTranslations")
     return(import(obj, tr))
 }
@@ -724,7 +724,7 @@ import.ExportedTranslations <- function(x, tr, ...) {
 
     # Translator and Text objects are environments. They
     # have reference semantics and are updated in place.
-    if (!missing(tr)) {
+    if (!is.null(tr)) {
         if (!is_translator(tr)) {
             stops("'tr' must be a 'Translator' object.")
         }
