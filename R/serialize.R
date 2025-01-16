@@ -690,7 +690,8 @@ import.ExportedLocation <- function(x, ...) {
 #' @rdname serialize
 #' @keywords internal
 #' @export
-import.ExportedTranslations <- function(x, tr, ...) {
+import.ExportedTranslations <- function(x, tr = NULL, ...) {
+    # FIXME: this will likely require an assert() method.
     x[["Translations"]] <- lapply(x[["Translations"]], \(subsection) {
         placeholder <- constant("empty")
 
@@ -737,14 +738,18 @@ import.ExportedTranslations <- function(x, tr, ...) {
         lang <- x[["Language Code"]]
         do.call(tr$set_native_languages, structure(x["Language"], names = lang))
 
-        # Hashes are passed as names.
-        translations <- lapply(x[["Translations"]], `[[`, i = "Translation")
-        hashes       <- names(translations)
+        # Unavailable (empty) translations are skipped
+        # silently and not registered. lapply() is used
+        # to preserve names, which are required below
+        # (names correspond to reduced hashes).
+        trans  <- lapply(x[["Translations"]], `[[`, i = "Translation")
+        trans  <- trans[!vapply_1l(trans, identical, constant("empty"))]
+        hashes <- names(trans)
 
-        # Register translations.
-        map(hashes, translations, fun = \(hash, translation) {
+        # Register translations (by reference).
+        map(hashes, trans, fun = \(hash, trans) {
             if (!is.null(txt <- tr$get_text(hash))) {
-                txt$set_translation(lang, translation)
+                txt$set_translation(lang, trans)
             }
         })
     }

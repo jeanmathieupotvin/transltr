@@ -173,7 +173,11 @@ translator_read <- function(
                 return(invisible())
             }
 
-            stopf("in '%s': %s", path, err$message)
+            # NOTE: this line of code is covered by 2 expectations
+            # in the test block "translator_read() reports errors",
+            # but covr sees it as being uncovered. Disabling its
+            # coverage until a fix is found.
+            stopf("in '%s': %s", path, err$message) # nocov
         })
 
         return(invisible())
@@ -198,11 +202,8 @@ translator_write <- function(
         stops("'path' already exists. Set 'overwrite' equal to 'TRUE'.")
     }
     if (!dir.exists(parent_dir <- dirname(path)) &&
-        !dir.create(parent_dir, TRUE, TRUE) || .__LGL_DEBUG_FLAG) {
-        stopf(
-            "parent directory ('%s') of 'path' could not be created. %s",
-            "Create it manually, or change 'path'.",
-            parent_dir)
+        !dir.create(parent_dir, FALSE, TRUE)) {
+        stops("parent directory of 'path' could not be created.")
     }
 
     # translations_paths() checks that tr is a
@@ -246,8 +247,6 @@ translations_write <- function(tr = translator(), path = "", lang = "") {
         "# Translations",
         "#",
         "# - Edit each 'Translation' section below.",
-        "#   - Translate what is in each preceding 'Source Text' section.",
-        "#   - Do not edit other sections.",
         "# - Choose UTF-8 whenever you have to select a character encoding.",
         "# - You may use any text editor.",
         "# - You may split long sentences with single new lines.",
@@ -262,7 +261,10 @@ translations_write <- function(tr = translator(), path = "", lang = "") {
 
 #' @rdname translator-io
 #' @export
-translations_paths <- function(tr = translator(), parent_dir = "") {
+translations_paths <- function(
+    tr         = translator(),
+    parent_dir = dirname(getOption("transltr.default.path")))
+{
     assert_chr1(parent_dir)
 
     if (!is_translator(tr)) {

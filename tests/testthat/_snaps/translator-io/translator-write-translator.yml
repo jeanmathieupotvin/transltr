@@ -1,0 +1,40 @@
+# Translator
+#
+# - You may edit fields Identifier, and Languages.
+# - Do not edit other fields by hand. Edit source scripts instead.
+%YAML 1.1
+---
+!<Translator>
+Identifier: test-translator
+Algorithm: sha1
+Languages:
+  el: Ελληνικά
+  en: English
+  es: Español
+  fr: Français
+Texts:
+  - !<Text>
+    Identifier: 256e0d7
+    Algorithm: sha1
+    Hash: 256e0d707386d0fcd9abf10ad994000bdaa25812
+    Source Language: en
+    Source Text: Hello, world!
+    Translations: ~
+    Locations:
+      - !<Location>
+        Identifier: 256e0d7:a
+        Path: a
+        Ranges: Ln 1, Col 2 @ Ln 3, Col 4
+  - !<Text>
+    Identifier: 2ac373a
+    Algorithm: sha1
+    Hash: 2ac373aa699a6712cdaddbead28031d537de29bc
+    Source Language: en
+    Source Text: Farewell, world!
+    Translations: ~
+    Locations:
+      - !<Location>
+        Identifier: 2ac373a:b
+        Path: b
+        Ranges: Ln 5, Col 6 @ Ln 7, Col 8
+

@@ -27,6 +27,8 @@ translations_write(tr = translator(), path = "", lang = "")
 
 translations_paths(
   tr = translator(),
+  parent_dir = dirname(getOption("transltr.default.path"))
+)
 }
 \arguments{
 \item{path}{A non-empty and non-\link[base:NA]{NA} character string. A path to
