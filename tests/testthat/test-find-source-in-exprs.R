@@ -1,5 +1,5 @@
-path_mock1 <- get_mock_path("scripts/find-source-1")
-path_mock2 <- get_mock_path("scripts/find-source-2")
+path_mock1 <- get_mock_path(file.path("find-source", "r-script1"))
+path_mock2 <- get_mock_path(file.path("find-source", "r-script2"))
 
 tokens_mock1 <- find_source_exprs(path_mock1)
 tokens_mock2 <- find_source_exprs(path_mock2)
@@ -73,7 +73,7 @@ test_that("find_source_in_exprs() processes all calls if strict is false", {
 
 test_that("find_source_in_exprs() uses source locations returned by the parser", {
     # Locations were determined manually by
-    # inspecting mock script find-source-1.
+    # inspecting mock script rscript-1.
     texts_mock <- find_source_in_exprs(tokens_mock1, path_mock1, FALSE)
     locations   <- unlist(lapply(texts_mock, `[[`, i = "locations"), FALSE, FALSE)
 

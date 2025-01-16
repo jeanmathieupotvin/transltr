@@ -1,5 +1,5 @@
-path_mock1    <- get_mock_path("scripts/find-source-1")
-path_mock2    <- get_mock_path("scripts/find-source-2")
+path_mock1    <- get_mock_path(file.path("find-source", "r-script1"))
+path_mock2    <- get_mock_path(file.path("find-source", "r-script2"))
 path_mock_dir <- dirname(path_mock1)
 
 tokens_mock1 <- find_source_exprs(path_mock1)
@@ -12,7 +12,7 @@ texts_mock2 <- find_source_in_exprs(tokens_mock2, path_mock2)
 # find_source() ----------------------------------------------------------------
 
 
-test_that("find_source() returns a Translator object", {
+test_that("find_source() returns an R6 object of class Translator", {
     out <- find_source(path_mock_dir,
         verbose   = FALSE,
         id        = "test-find-source",
@@ -75,9 +75,10 @@ test_that("find_source() validates native_languages", {
 })
 
 test_that("find_source() ignores files not having file extensions R or Rprofile", {
-    # Source texts "x" and "y" are in scripts/find-source-3, a
-    # file with no extension. Therefore, it should be skipped,
-    # and x/y should not be registered in the output.
+    # Source texts "x" and "y" are in rscript-3, a
+    # file with no extension. Therefore, it should
+    # be skipped, and x/y should not be registered
+    # in the output.
     out <- find_source(path_mock_dir, verbose = FALSE)
 
     expect_true(all(is.na(match(c("x", "y"), out$source_texts))))

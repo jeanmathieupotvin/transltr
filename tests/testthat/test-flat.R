@@ -1,6 +1,6 @@
 # This mock object contains a lot of comments (#)
 # and escaped comments (\#) for testing purposes.
-mock_flat_object_path <- get_mock_path("flat-object", "txt")
+mock_flat_object_path <- get_mock_path(file.path("flat", "object"), "txt")
 
 
 # flat_serialize() -------------------------------------------------------------
