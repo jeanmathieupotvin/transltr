@@ -5,8 +5,6 @@
 ^\.local$
 ^\.scripts$
 
-^\.clocignore$
-
 ^\.Rprofile$
 ^\.Rprof\.out$
 
