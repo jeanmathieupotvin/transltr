@@ -100,8 +100,8 @@ object? If \code{FALSE}, field \code{Translations} is set equal to \code{NULL}.}
 thrown? If so, \code{\link[=stops]{stops()}} is called. Otherwise, error messages are returned
 as a character vector (possibly empty).}
 
-\item{errors}{A \code{NULL}, or a non-empty character vector of
-non-\link[base:NA]{NA} values. Messages describing why object(s) are invalid.}
+\item{errors}{A non-empty character vector of non-\link[base:NA]{NA} values.
+Error message(s) describing why object(s) are invalid.}
 }
 \value{
 See other sections for further information.
@@ -141,10 +141,13 @@ translations if a \code{\link{Translator}} object is passed to \code{tr}.
 unsupported objects.
 
 \code{\link[=assert.ExportedTranslator]{assert.ExportedTranslator()}},
-\code{\link[=assert.ExportedText]{assert.ExportedText()}},
-\code{\link[=assert.ExportedLocation]{assert.ExportedLocation()}}, and
-\code{\link[=format_errors]{format_errors()}} return a character vector, possibly empty. If \code{throw_error}
-is \code{TRUE}, an error is thrown if an object is invalid.
+\code{\link[=assert.ExportedText]{assert.ExportedText()}}, and
+\code{\link[=assert.ExportedLocation]{assert.ExportedLocation()}},
+return a character vector, possibly empty. If \code{throw_error} is \code{TRUE}, an
+error is thrown if an object is invalid.
+
+\code{\link[=format_errors]{format_errors()}} returns a character vector, and outputs its contents as
+an error if \code{throw_error} is \code{TRUE}.
 }
 \description{
 Convert \code{\link{Translator}} objects, \code{\link{Text}} objects, and
@@ -368,12 +371,11 @@ tr <- transltr:::import(transltr:::export(tr))
 transltr:::import(transltr:::export_translations(tr, "fr"), tr)
 transltr:::import(transltr:::export_translations(tr, "es"), tr)
 
-# Format errors stemming from assert().
+# Format errors (stemming from the validation process of assert()).
 errors <- c(
     "'Source Language' must be a null, or a non-empty character string.",
     "'Translations' must be a null, or a mapping of non-empty character strings.")
 
-transltr:::format_errors(throw_error = FALSE)
 transltr:::format_errors(errors, "my-text-object", FALSE)
 
 \dontrun{transltr:::format_errors(errors, "my-text-object")}

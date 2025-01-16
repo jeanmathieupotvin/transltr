@@ -81,8 +81,8 @@
 #'
 #' @param ... Further arguments passed to, or from other methods.
 #'
-#' @param errors A `NULL`, or a non-empty character vector of
-#'   non-[NA][base::NA] values. Messages describing why object(s) are invalid.
+#' @param errors A non-empty character vector of non-[NA][base::NA] values.
+#'   Error message(s) describing why object(s) are invalid.
 #'
 #' @template param-lang
 #'
@@ -123,10 +123,13 @@
 #' unsupported objects.
 #'
 #' [assert.ExportedTranslator()],
-#' [assert.ExportedText()],
-#' [assert.ExportedLocation()], and
-#' [format_errors()] return a character vector, possibly empty. If `throw_error`
-#' is `TRUE`, an error is thrown if an object is invalid.
+#' [assert.ExportedText()], and
+#' [assert.ExportedLocation()],
+#' return a character vector, possibly empty. If `throw_error` is `TRUE`, an
+#' error is thrown if an object is invalid.
+#'
+#' [format_errors()] returns a character vector, and outputs its contents as
+#' an error if `throw_error` is `TRUE`.
 #'
 #' @section Exported Objects:
 #' An exported object is a named list of S3 class
@@ -300,12 +303,11 @@
 #' transltr:::import(transltr:::export_translations(tr, "fr"), tr)
 #' transltr:::import(transltr:::export_translations(tr, "es"), tr)
 #'
-#' # Format errors stemming from assert().
+#' # Format errors (stemming from the validation process of assert()).
 #' errors <- c(
 #'     "'Source Language' must be a null, or a non-empty character string.",
 #'     "'Translations' must be a null, or a mapping of non-empty character strings.")
 #'
-#' transltr:::format_errors(throw_error = FALSE)
 #' transltr:::format_errors(errors, "my-text-object", FALSE)
 #'
 #' \dontrun{transltr:::format_errors(errors, "my-text-object")}
@@ -505,7 +507,11 @@ assert.ExportedTranslator <- function(x, throw_error = TRUE, ...) {
         unlist(lapply(texts, assert, throw_error = FALSE, ...))
     )
 
-    return(format_errors(errors, id, throw_error))
+    if (length(errors)) {
+        return(format_errors(errors, id, throw_error))
+    }
+
+    return(character())
 }
 
 #' @rdname serialize
@@ -518,7 +524,6 @@ assert.ExportedText <- function(x, throw_error = TRUE, ...) {
     }
 
     xnames <- names(x)
-    id     <- x[["Identifier"]]
     algo   <- x[["Algorithm"]]
     hash   <- x[["Hash"]]
     lang   <- x[["Source Language"]]
@@ -575,7 +580,11 @@ assert.ExportedText <- function(x, throw_error = TRUE, ...) {
         unlist(lapply(locs, assert, throw_error = FALSE, ...))
     )
 
-    return(format_errors(errors, id, throw_error))
+    if (length(errors)) {
+        return(format_errors(errors, x[["Identifier"]], throw_error))
+    }
+
+    return(character())
 }
 
 #' @rdname serialize
@@ -587,7 +596,6 @@ assert.ExportedLocation <- function(x, throw_error = TRUE, ...) {
         x <- list()
     }
 
-    id     <- x[["Identifier"]]
     path   <- x[["Path"]]
     ranges <- x[["Ranges"]]
 
@@ -605,8 +613,11 @@ assert.ExportedLocation <- function(x, throw_error = TRUE, ...) {
         }
     )
 
-    # c() returns NULL above if all values are valid.
-    return(format_errors(errors, id, throw_error))
+    if (length(errors)) {
+        return(format_errors(errors, x[["Identifier"]], throw_error))
+    }
+
+    return(character())
 }
 
 #' @rdname serialize
@@ -756,20 +767,18 @@ format_errors <- function(
     id          = uuid(),
     throw_error = TRUE)
 {
-    if (length(errors)) {
-        assert_chr(errors)
-        assert_lgl1(throw_error)
+    assert_chr(errors)
+    assert_lgl1(throw_error)
 
-        id <- as.character(id %??% constant("unknown"))
+    # This guarantees id will be
+    # valid in almost all cases.
+    id <- as.character(id %??% constant("unknown"))
 
-        if (throw_error) {
-            stops(
-                sprintf("in object '%s':\n", id),
-                paste0(" - ", errors, collapse = "\n"))
-        }
-
-        return(sprintf("['%s'] %s", id, errors))
+    if (throw_error) {
+        stops(
+            sprintf("in object '%s':\n", id),
+            paste0(" - ", errors, collapse = "\n"))
     }
 
-    return(character())
+    return(sprintf("['%s'] %s", id, errors))
 }
