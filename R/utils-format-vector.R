@@ -180,16 +180,21 @@ format_vector <- function(
         i_name <- xnames[[i]]
         i_x    <- x[[i]]
 
-        # NULL and empty objects are treated as litteral
-        # character values to ensure they are printed as
-        # expected. Beware! An empty pairlist is the same
-        # as NULL.
+        # Print element in a (more) semantic way.
         i_x <- if (is.null(i_x)) {
+            # Print NULL (and empty pairlists)
+            # as a litteral character string.
             null
         } else if (!length(i_x)) {
-            # Type is added to empty
-            # to signal what is empty.
+            # Print other empty objects as litteral
+            # character strings that state their
+            # emptiness and their type.
             sprintf("%s [%s]", empty, typeof(i_x))
+        } else if (is.character(i_x) && !all(is_nz <- nzchar(i_x))) {
+            # Empty character strings are printed in a
+            # way¸that clearly conveys their emptiness.
+            i_x[!is_nz] <- r"{""}"
+            i_x
         } else {
             i_x
         }

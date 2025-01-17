@@ -220,3 +220,24 @@ test_that("it replaces empty objects by empty", {
         cat(out, sep = "\n")
     })
 })
+
+test_that("it replaces empty character strings by pairs of double quotes", {
+    out <- format_vector(list(a = "a", b = "", c = "c"))
+
+    # It works as a single element.
+    expect_identical(format_vector(list("")), r"{""}")
+
+    # It works as a child element of a list.
+    expect_identical(out, c("a: a", r"{b: ""}", "c: c"))
+
+    # It works as a value of a character.
+    expect_identical(
+        format_vector(list(v = c(a = "a", b = "", c = "c"))),
+        c("v:", " a: a", r"{ b: ""}", " c: c"))
+
+    expect_snapshot({
+        "An example of format_vector() replacing empty character strings."
+        "See the underlying test block to inspect the input."
+        cat(out, sep = "\n")
+    })
+})

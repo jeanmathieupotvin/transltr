@@ -136,3 +136,14 @@
        p: <empty> [list]
        q: <null>
 
+# it replaces empty character strings by pairs of double quotes
+
+    Code
+      # An example of format_vector() replacing empty character strings.
+      # See the underlying test block to inspect the input.
+      cat(out, sep = "\n")
+    Output
+      a: a
+      b: ""
+      c: c
+
