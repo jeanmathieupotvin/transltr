@@ -315,13 +315,7 @@
 #' @rdname serialize
 #' @keywords internal
 serialize <- function(x, ...) {
-    return(
-        yaml::as.yaml(
-            export(x, ...),
-            line.sep = "\n",
-            indent   = 2L,
-            unicode  = TRUE,
-            indent.mapping.sequence = TRUE))
+    return(yaml::as.yaml(export(x, ...), indent.mapping.sequence = TRUE))
 }
 
 #' @rdname serialize
