@@ -376,12 +376,12 @@ export_translations <- function(tr = translator(), lang = "") {
         stops("'lang' must have a corresponding native language registered in 'tr'.")
     }
 
-    placeholder  <- constant("untranslated")
+    untranslated <- constant("untranslated")
     translations <- lapply(lapply(tr$hashes, tr$get_text), \(txt) {
         return(
             list(
-                `Source Text` = txt$source_text %??% placeholder,
-                Translation   = txt$get_translation(lang) %??% placeholder))
+                `Source Text` = txt$source_text,
+                Translation   = txt$get_translation(lang) %??% untranslated))
     })
 
     out <- list(

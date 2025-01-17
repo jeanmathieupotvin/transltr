@@ -89,3 +89,101 @@
               Path: b
               Ranges: Ln 5, Col 6 @ Ln 7, Col 8
 
+# export_translations() validates lang
+
+    Code
+      export_translations(tr, 1L)
+    Condition
+      Error:
+      ! 'lang' must be a non-NA and non-empty character of length 1.
+
+---
+
+    Code
+      export_translations(tr, "missing-lang")
+    Condition
+      Error:
+      ! 'lang' must have a corresponding native language registered in 'tr'.
+
+# export_translations() validates tr
+
+    Code
+      export_translations(tr, "fr")
+    Condition
+      Error:
+      ! all 'Text' objects of 'tr' must have the same 'source_lang'.
+
+# serialize_translations() serializes translations as expected
+
+    Code
+      cat(serialize_translations(tr, "el"), "\n")
+    Output
+      :: Identifier
+      
+      test-translator
+      
+      :: Language Code
+      
+      el
+      
+      :: Language
+      
+      Ελληνικά
+      
+      :: Source Language
+      
+      English
+      
+      :: Translations: 256e0d7: Source Text
+      
+      Hello, world!
+      
+      :: Translations: 256e0d7: Translation
+      
+      # Insert a translation here.
+      
+      :: Translations: 2ac373a: Source Text
+      
+      Farewell, world!
+      
+      :: Translations: 2ac373a: Translation
+      
+      # Insert a translation here. 
+
+---
+
+    Code
+      cat(serialize_translations(tr, "fr"), "\n")
+    Output
+      :: Identifier
+      
+      test-translator
+      
+      :: Language Code
+      
+      fr
+      
+      :: Language
+      
+      Français
+      
+      :: Source Language
+      
+      English
+      
+      :: Translations: 256e0d7: Source Text
+      
+      Hello, world!
+      
+      :: Translations: 256e0d7: Translation
+      
+      Bonjour, monde!
+      
+      :: Translations: 2ac373a: Source Text
+      
+      Farewell, world!
+      
+      :: Translations: 2ac373a: Translation
+      
+      Au revoir, monde! 
+

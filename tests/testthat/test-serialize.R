@@ -229,3 +229,99 @@ test_that("serialize() serializes objects as expected", {
     expect_snapshot(cat(serialize(txt1, id = "test-id")))
     expect_snapshot(cat(serialize(tr)))
 })
+
+
+# export_translations() --------------------------------------------------------
+
+
+test_that("export_translations() returns a S3 object of class ExportedTranslations", {
+    lang   <- "fr"
+    hashes <- tr$hashes
+    out    <- export_translations(tr, lang)
+
+    expect_s3_class(out, "ExportedTranslations")
+    expect_identical(attr(out, "tag"), "Translations")
+
+    expect_type(out, "list")
+    expect_length(out, 5L)
+    expect_named(out, c(
+        "Identifier",
+        "Language Code",
+        "Language",
+        "Source Language",
+        "Translations"))
+
+    expect_identical(out$Identifier, tr$id)
+    expect_identical(out$`Language Code`, lang)
+    expect_identical(out$Language, tr$native_languages[[lang]])
+    expect_identical(out$`Source Language`, tr$native_languages[[tr$source_langs]])
+    expect_identical(out$Translations, structure(
+        list(
+            list(
+                `Source Text` = txt1$source_text,
+                Translation   = txt1$get_translation(lang)),
+            list(
+                `Source Text` = txt2$source_text,
+                Translation   = txt2$get_translation(lang))),
+        names = c(
+            names(hashes[hashes == txt1$hash]),
+            names(hashes[hashes == txt2$hash]))))
+})
+
+test_that("export_translations() validates lang", {
+    expect_error(export_translations(tr, 1L))
+    expect_error(export_translations(tr, "missing-lang"))
+    expect_snapshot(export_translations(tr, 1L), error = TRUE)
+    expect_snapshot(export_translations(tr, "missing-lang"), error = TRUE)
+})
+
+test_that("export_translations() validates tr", {
+    tr <- translator(
+        id = "test-translator",
+        en = "English",
+        fr = "Français",
+        text(
+            source_lang = "en",
+            en = "Hello, world!",
+            fr = "Bonjour, monde!"),
+        text(
+            source_lang = "fr",
+            en = "Farewell, world!",
+            fr = "Au revoir, monde!"))
+
+    expect_error(export_translations(tr, "fr"))
+    expect_snapshot(export_translations(tr, "fr"), error = TRUE)
+})
+
+test_that("export_translations() sets each translation equal to constant 'untranslated' if required", {
+    out <- export_translations(tr, "el")
+
+    expect_identical(out$Translations$`256e0d7`$Translation, constant("untranslated"))
+    expect_identical(out$Translations$`2ac373a`$Translation, constant("untranslated"))
+})
+
+
+# serialize_translations() -----------------------------------------------------
+
+
+test_that("serialize_translations() returns a character string", {
+    out <- serialize_translations(tr, "fr")
+
+    expect_type(out, "character")
+    expect_length(out, 1L)
+})
+
+test_that("serialize() uses expected flat formatting options", {
+    # The only formatting option to
+    # check is the label.sep argument.
+    out <- serialize_translations(tr, "fr")
+
+    expect_match(out, ":: Translations: 256e0d7: Source Text")
+    expect_match(out, ":: Translations: 256e0d7: Translation")
+})
+
+test_that("serialize_translations() serializes translations as expected", {
+    expect_snapshot(cat(serialize_translations(tr, "el"), "\n"))
+    expect_snapshot(cat(serialize_translations(tr, "fr"), "\n"))
+})
+
