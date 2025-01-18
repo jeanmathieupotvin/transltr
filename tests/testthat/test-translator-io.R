@@ -41,10 +41,6 @@ comments_translations_file <- c(
 # translations_paths() ---------------------------------------------------------
 
 
-# Since almost all test blocks below explicitly depend on translations_paths()
-# (they call it directly), the latter is tested first.
-
-
 test_that("translations_paths() returns a named character", {
     # translations_paths() exclude the source language
     # because it does not require a translations file.
@@ -101,11 +97,6 @@ test_that("translations_paths() returns expected file paths", {
 
 
 # translator_write() -----------------------------------------------------------
-
-
-# Since some test blocks covering translator_read() explicitly depend on
-# translator_write() (they call it directly), the latter is tested first.
-# It must work to test translator_read().
 
 
 test_that("translator_write() returns null invisibly", {
@@ -289,11 +280,6 @@ test_that("translator_read() reports errors", {
 
 
 # translations_write() ---------------------------------------------------------
-
-
-# Since some test blocks covering translations_read() explicitly depend on
-# translations_write() (they call it directly), the latter is tested first.
-# It must work to test translations_read().
 
 
 test_that("translations_write() returns null invisibly", {
