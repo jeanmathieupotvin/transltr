@@ -122,6 +122,11 @@ test_that("translator_write() validates verbose", {
     expect_snapshot(translator_write(tr, verbose = 1L), error = TRUE)
 })
 
+test_that("translator_write() validates translations", {
+    expect_error(translator_write(tr, translations = 1L))
+    expect_snapshot(translator_write(tr, translations = 1L), error = TRUE)
+})
+
 test_that("translator_write() throws an error if path exists and overwrite is false", {
     temp_file <- withr::local_tempfile(pattern = "_translator_", fileext = ".yml")
     withr::defer(file.remove(translations_paths(tr, dirname(temp_file))))
@@ -190,6 +195,17 @@ test_that("translator_write() outputs basic information if verbose is true", {
     expect_snapshot(translator_write(tr, temp_file, TRUE))
 })
 
+test_that("translator_write() does not write translations files if translations is false", {
+    temp_file <- withr::local_tempfile(pattern = "_translator_", fileext = ".yml")
+    translations_files <- translations_paths(tr, dirname(temp_file))
+
+    # There should be no output.
+    expect_silent(translator_write(tr, temp_file, TRUE, translations = FALSE))
+
+    # Translations files should not exist.
+    expect_true(all(!file.exists(translations_files)))
+})
+
 
 # translator_read() ------------------------------------------------------------
 
@@ -208,6 +224,11 @@ test_that("translator_read() returns an R6 object of class Translator", {
 test_that("translator_read() validates verbose", {
     expect_error(translator_read(verbose = 1L))
     expect_snapshot(translator_read(verbose = 1L), error = TRUE)
+})
+
+test_that("translator_read() validates translations", {
+    expect_error(translator_read(translations = 1L))
+    expect_snapshot(translator_read(translations = 1L), error = TRUE)
 })
 
 test_that("translator_read() reads all related translations files", {
@@ -276,6 +297,20 @@ test_that("translator_read() reports errors", {
 
     expect_error(translator_read(temp_file, verbose = FALSE))
     expect_snapshot(translator_read(temp_file, verbose = FALSE), error = TRUE)
+})
+
+test_that("translator_read() does not read translations files if translations is false", {
+    withr::local_options(
+        transltr.default.path = withr::local_tempfile(
+            pattern = "_translator_",
+            fileext = ".yml"))
+    translator_write(tr, verbose = FALSE)
+
+    # There should be no output.
+    expect_silent(translator_read(translations = FALSE))
+
+    # There should be no translations (aside from source text).
+    expect_identical(translator_read(translations = FALSE)$languages, "en")
 })
 
 
