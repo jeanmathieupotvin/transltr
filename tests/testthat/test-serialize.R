@@ -37,7 +37,7 @@ test_that("export() works", {
 # export.Location() ------------------------------------------------------------
 
 
-test_that("export.Location() returns a S3 object of class ExportedLocation", {
+test_that("export.Location() returns an object of S3 class ExportedLocation", {
     out <- export(loc1, id = "test-id")
 
     expect_s3_class(out, "ExportedLocation")
@@ -61,7 +61,7 @@ test_that("export.Location() validates id", {
 # export.Text() ----------------------------------------------------------------
 
 
-test_that("export.Text() returns a S3 object of class ExportedText", {
+test_that("export.Text() returns an object of S3 class ExportedText", {
     out    <- export(txt1, id = "test-id")
     loc_id <- sprintf("test-id:%s", loc1$path)
 
@@ -163,7 +163,7 @@ test_that("export.Text() wraps source text and translations longer than 80 chars
 # export.Translator() ----------------------------------------------------------
 
 
-test_that("export.Translator() returns a S3 object of class ExportedTranslator", {
+test_that("export.Translator() returns an object of S3 class ExportedTranslator", {
     out    <- export(tr)
     hashes <- tr$hashes
 
@@ -234,7 +234,7 @@ test_that("serialize() serializes objects as expected", {
 # export_translations() --------------------------------------------------------
 
 
-test_that("export_translations() returns a S3 object of class ExportedTranslations", {
+test_that("export_translations() returns an object of S3 class ExportedTranslations", {
     lang   <- "fr"
     hashes <- tr$hashes
     out    <- export_translations(tr, lang)
@@ -791,3 +791,20 @@ test_that("deserialize() throws an error when string is an invalid yaml object",
     expect_snapshot(deserialize("a: 1\nb 2\n"), error = TRUE)
 })
 
+
+# import.ExportedTranslations() ------------------------------------------------
+
+
+# FIXME: evaluate whether an assert() method is required first.
+
+
+# deserialize_translations() ---------------------------------------------------
+
+
+test_that("deserialize_translations() returns an object of S3 class ExportedTranslations", {
+    # deserialize_translations() returns the output
+    # of import() (import.ExportedTranslations()).
+    out <- serialize_translations(tr, "fr")
+
+    expect_s3_class(deserialize_translations(out), "ExportedTranslations")
+})
