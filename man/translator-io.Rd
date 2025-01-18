@@ -11,14 +11,16 @@
 translator_read(
   path = getOption("transltr.default.path"),
   encoding = "UTF-8",
-  verbose = TRUE
+  verbose = TRUE,
+  translations = TRUE
 )
 
 translator_write(
   tr = translator(),
   path = getOption("transltr.default.path"),
   overwrite = FALSE,
-  verbose = TRUE
+  verbose = TRUE,
+  translations = TRUE
 )
 
 translations_read(path = "", encoding = "UTF-8", tr = NULL)
@@ -49,6 +51,9 @@ portability.}
 
 \item{verbose}{A non-\link[base:NA]{NA} logical value. Should progress
 information be reported?}
+
+\item{translations}{A non-\link[base:NA]{NA} logical value. Should translations
+files also be read, or written along with \code{path} (the Translator file)?}
 
 \item{tr}{A \code{\link{Translator}} object.
 
@@ -82,7 +87,8 @@ path to a parent directory.}
 side-effects of
 \itemize{
 \item creating a Translator file to the location given by \code{path}, and
-\item creating further translations file(s) in the same directory.
+\item creating further translations file(s) in the same directory if
+\code{translations} is \code{TRUE}.
 }
 
 \code{\link[=translations_read]{translations_read()}} returns an S3 object of class

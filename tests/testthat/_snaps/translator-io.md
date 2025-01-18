@@ -46,6 +46,14 @@
       Error:
       ! 'verbose' must be a non-NA logical of length 1 ('TRUE' or 'FALSE').
 
+# translator_write() validates translations
+
+    Code
+      translator_write(tr, translations = 1L)
+    Condition
+      Error:
+      ! 'translations' must be a non-NA logical of length 1 ('TRUE' or 'FALSE').
+
 # translator_write() throws an error if path exists and overwrite is false
 
     Code
@@ -78,6 +86,14 @@
     Condition
       Error:
       ! 'verbose' must be a non-NA logical of length 1 ('TRUE' or 'FALSE').
+
+# translator_read() validates translations
+
+    Code
+      translator_read(translations = 1L)
+    Condition
+      Error:
+      ! 'translations' must be a non-NA logical of length 1 ('TRUE' or 'FALSE').
 
 # translator_read() outputs basic information if verbose is true
 

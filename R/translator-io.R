@@ -66,6 +66,9 @@
 #'   files be overwritten? If such files are detected and `overwrite` is
 #'   set equal to `TRUE`, an error is thrown.
 #'
+#' @param translations A non-[NA][base::NA] logical value. Should translations
+#'   files also be read, or written along with `path` (the Translator file)?
+#'
 #' @param parent_dir A non-empty and non-[NA][base::NA] character string. A
 #'   path to a parent directory.
 #'
@@ -83,7 +86,8 @@
 #' side-effects of
 #'
 #'   * creating a Translator file to the location given by `path`, and
-#'   * creating further translations file(s) in the same directory.
+#'   * creating further translations file(s) in the same directory if
+#'     `translations` is `TRUE`.
 #'
 #' [translations_read()] returns an S3 object of class
 #' [`ExportedTranslations`][export()].
@@ -142,11 +146,13 @@
 #' @rdname translator-io
 #' @export
 translator_read <- function(
-    path     = getOption("transltr.default.path"),
-    encoding = "UTF-8",
-    verbose  = TRUE)
+    path         = getOption("transltr.default.path"),
+    encoding     = "UTF-8",
+    verbose      = TRUE,
+    translations = TRUE)
 {
     assert_lgl1(verbose)
+    assert_lgl1(translations)
 
     string <- paste0(text_read(path, encoding), collapse = "\n")
     tr     <- deserialize(string)
@@ -156,32 +162,36 @@ translator_read <- function(
     # translations files.
     transl_files <- translations_paths(tr, dirname(path))
 
-    lapply(transl_files, \(path) {
-        if (verbose) cat("Reading translations from '", path, "'... ", sep = "")
-
-        tryCatch({
-            # tr is updated by reference via import().
-            lang <- translations_read(path, encoding, tr)[["Language Code"]]
-            if (verbose) cat("OK ['", lang, "'].\n", sep = "")
-        },
-        error = \(err) {
-            # Do not throw an error if something goes wrong
-            # when verbose is TRUE. Report the error as a
-            # console output and move on to the next file.
+    if (translations) {
+        lapply(transl_files, \(path) {
             if (verbose) {
-                cat("NOT OK.\n", " Error: ", err$message, "\n", sep = "")
-                return(invisible())
+                cat("Reading translations from '", path, "'... ", sep = "")
             }
 
-            # NOTE: this line of code is covered by 2 expectations
-            # in the test block "translator_read() reports errors",
-            # but covr sees it as being uncovered. Disabling its
-            # coverage until a fix is found.
-            stopf("in '%s': %s", path, err$message) # nocov
-        })
+            tryCatch({
+                # tr is updated by reference via import().
+                lang <- translations_read(path, encoding, tr)[["Language Code"]]
+                if (verbose) cat("OK ['", lang, "'].\n", sep = "")
+            },
+            error = \(err) {
+                # Do not throw an error if something goes wrong
+                # when verbose is TRUE. Report the error as a
+                # console output and move on to the next file.
+                if (verbose) {
+                    cat("NOT OK.\n", " Error: ", err$message, "\n", sep = "")
+                    return(invisible())
+                }
 
-        return(invisible())
-    })
+                # NOTE: this line of code is covered by 2 expectations
+                # in the test block "translator_read() reports errors",
+                # but covr sees it as being uncovered. Disabling its
+                # coverage until a fix is found.
+                stopf("in '%s': %s", path, err$message) # nocov
+            })
+
+            return(invisible())
+        })
+    }
 
     return(tr)
 }
@@ -189,14 +199,16 @@ translator_read <- function(
 #' @rdname translator-io
 #' @export
 translator_write <- function(
-    tr        = translator(),
-    path      = getOption("transltr.default.path"),
-    overwrite = FALSE,
-    verbose   = TRUE)
+    tr           = translator(),
+    path         = getOption("transltr.default.path"),
+    overwrite    = FALSE,
+    verbose      = TRUE,
+    translations = TRUE)
 {
     assert_chr1(path)
     assert_lgl1(overwrite)
     assert_lgl1(verbose)
+    assert_lgl1(translations)
 
     if (!overwrite && file.exists(path)) {
         stops("'path' already exists. Set 'overwrite' equal to 'TRUE'.")
@@ -210,16 +222,18 @@ translator_write <- function(
     # Translator and has a single source language.
     transl_paths <- translations_paths(tr, parent_dir)
 
-    # Write Exported Translations (one per non-source
-    # native language) in the same directory as path.
-    map(path = transl_paths, lang = names(transl_paths), \(path, lang) {
-        if (verbose) {
-            cat(sprintf("Writing '%s' translations to '%s'.", lang, path),
-                sep = "\n")
-        }
+    if (translations) {
+        # Write Exported Translations (one per non-source
+        # native language) in the same directory as path.
+        map(path = transl_paths, lang = names(transl_paths), \(path, lang) {
+            if (verbose) {
+                cat(sprintf("Writing '%s' translations to '%s'.", lang, path),
+                    sep = "\n")
+            }
 
-        translations_write(tr, path, lang)
-    })
+            translations_write(tr, path, lang)
+        })
+    }
 
     comments <- c(
         "# Translator",
