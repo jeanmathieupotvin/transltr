@@ -37,10 +37,7 @@ usethis::use_description(
             translatable strings. Provide translations and seamlessly retrieve
             them at runtime."))
 
-usethis::use_mit_license("Jean-Mathieu Potvin")
-
 usethis::use_testthat(parallel = FALSE)
-
 usethis::use_package("digest")
 usethis::use_package("R6")
 usethis::use_package("utils")

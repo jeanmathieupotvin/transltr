@@ -27,6 +27,9 @@ usethis::use_github_action("check-standard")
 usethis::use_github_action("test-coverage")
 usethis::use_github_actions_badge("check-standard", "jeanmathieupotvin/transltr")
 
+# Create files LICENSE, and LICENSE.md.
+usethis::use_mit_license("Jean-Mathieu Potvin")
+
 # Create file README.md.
 usethis::use_readme_md(open = FALSE)
 usethis::use_cran_badge()
