@@ -329,7 +329,19 @@ serialize_translations <- function(tr = translator(), lang = "") {
 deserialize <- function(string = "") {
     assert_chr1(string)
 
-    obj <- tryCatch({
+    # Callback function for tryCatch() below.
+    # It handles errors, and warnings.
+    throw_condition <- \(cond) {
+        stopf(
+            "while unserializing object: %s",
+            # Below we attempt to formulate a coherent
+            # sentence from error messages returned by
+            # the YAML parser. This is not perfect, but
+            # better than nothing.
+            gsub("[ \n\t.]*$", ".", tolower(cond$message)))
+    }
+
+    obj <- tryCatch(condition = throw_condition, {
         yaml::yaml.load(string,
             # eval.expr is disallowed for security.
             eval.expr      = FALSE,
@@ -340,15 +352,6 @@ deserialize <- function(string = "") {
                 Translator = \(x) structure(x, class = "ExportedTranslator"),
                 Text       = \(x) structure(x, class = "ExportedText"),
                 Location   = \(x) structure(x, class = "ExportedLocation")))
-    },
-    condition = \(cond) {
-        stopf(
-            "while unserializing object: %s",
-            # Below we attempt to formulate a coherent
-            # sentence from error messages returned by
-            # the YAML parser. This is not perfect, but
-            # better than nothing.
-            gsub("[ \n\t.]*$", ".", tolower(cond$message)))
     })
 
     return(import(obj))

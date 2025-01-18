@@ -407,3 +407,49 @@
        - ['test-id'] 'Hash' must be a null, or a non-empty character string.
        - ['test-id'] 'Algorithm' must be equal to 'sha1', or 'utf8'.
 
+# import.default() works
+
+    Code
+      import(1L)
+    Condition
+      Error:
+      ! deserialized object is not supported by transltr. It is likely missing a '!<type>' tag, or has an invalid one.
+
+# import.ExportedText() throws a warning if hash is invalid
+
+    Code
+      import(etxt1)
+    Condition
+      Warning:
+      ['test-id'] 'Hash' is not equal to computed hash ('256e0d707386d0fcd9abf10ad994000bdaa25812'). The latter will be used.
+    Output
+      <Text>
+       Hash: 256e0d707386d0fcd9abf10ad994000bdaa25812
+       Source Lang: en
+       Algorithm: sha1
+       Translations:
+        en: Hello, world!
+        es: ¡Hola Mundo!
+        fr: Bonjour, monde!
+       Locations:
+        a:
+         <Location>
+          Path: a
+          Ranges: Ln 1, Col 2 @ Ln 3, Col 4
+
+# deserialize() validates string
+
+    Code
+      deserialize(1L)
+    Condition
+      Error:
+      ! 'string' must be a non-NA and non-empty character of length 1.
+
+# deserialize() throws an error when string is an invalid yaml object
+
+    Code
+      deserialize("a: 1\nb 2\n")
+    Condition
+      Error:
+      ! while unserializing object: scanner error: while scanning a simple key at line 2, column 1 could not find expected ':' at line 3, column 1.
+

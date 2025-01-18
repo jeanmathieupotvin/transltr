@@ -688,3 +688,106 @@ test_that("assert.ExportedTranslator() detects invalid Texts field", {
     expect_snapshot(assert(out1), error = TRUE)
     expect_snapshot(assert(out3), error = TRUE)
 })
+
+
+# import() ---------------------------------------------------------------------
+
+
+test_that("import() works", {
+    expect_s3_class(import(export(location())),       "Location")
+    expect_s3_class(import(export(Text$new())),       "Text")
+    expect_s3_class(import(export(Translator$new())), "Translator")
+})
+
+test_that("import() calls assert() before dispatching", {
+    loc <- location("a", 1L, 2L, 3L, 4L)
+    invalid      <- export(loc)
+    invalid$Path <- 1L
+
+    expect_error(import(invalid))
+})
+
+
+# import.default() -------------------------------------------------------------
+
+
+test_that("import.default() works", {
+    expect_error(import(1L))
+    expect_snapshot(import(1L), error = TRUE)
+})
+
+
+# import.ExportedLocation() ----------------------------------------------------
+
+
+test_that("import.ExportedLocation() returns an object of R6 class Location", {
+    out <- import(export(loc1))
+
+    expect_s3_class(out, "Location")
+    expect_identical(out, loc1)
+})
+
+test_that("import.ExportedLocation() handles multiple ranges", {
+    loc <- location("a", c(1L, 5L), c(2L, 6L), c(3L, 7L), c(4L, 8L))
+
+    expect_identical(import(export(loc)), loc)
+})
+
+
+# import.ExportedText() --------------------------------------------------------
+
+
+test_that("import.ExportedText() returns an object of R6 class Text", {
+    out <- import(export(txt1, set_translations = TRUE))
+
+    expect_s3_class(out, "Text")
+    expect_identical(out, txt1)
+})
+
+test_that("import.ExportedText() only set source_lang and source_text if they are not null", {
+    txt <- Text$new()
+    import(export(txt, set_translations = TRUE))
+
+    expect_identical(import(export(txt, set_translations = TRUE)), txt)
+})
+
+test_that("import.ExportedText() throws a warning if hash is invalid", {
+    etxt1 <- export(txt1, "test-id", set_translations = TRUE)
+    etxt1$Hash <- "invalidhash"
+
+    expect_warning(import(etxt1))
+    expect_snapshot(import(etxt1))
+})
+
+
+# import.ExportedTranslator() --------------------------------------------------
+
+
+test_that("import.ExportedTranslator() returns an object of R6 class Translator", {
+    out <- import(export(tr, set_translations = TRUE))
+
+    expect_s3_class(out, "Translator")
+    expect_identical(out, tr)
+})
+
+
+# deserialize() ----------------------------------------------------------------
+
+
+test_that("deserialize() returns an object of R6 class Location, Text, or Translator", {
+    # deserialize() returns the output of import().
+    expect_s3_class(deserialize(serialize(location())),       "Location")
+    expect_s3_class(deserialize(serialize(Text$new())),       "Text")
+    expect_s3_class(deserialize(serialize(Translator$new())), "Translator")
+})
+
+test_that("deserialize() validates string", {
+    expect_error(deserialize(1L))
+    expect_snapshot(deserialize(1L), error = TRUE)
+})
+
+test_that("deserialize() throws an error when string is an invalid yaml object", {
+    expect_error(deserialize("a: 1\nb 2\n"))
+    expect_snapshot(deserialize("a: 1\nb 2\n"), error = TRUE)
+})
+
