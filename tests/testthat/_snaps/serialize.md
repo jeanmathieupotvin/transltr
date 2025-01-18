@@ -258,7 +258,6 @@
       ! in object '<unknown>':
        - 'Algorithm' must be equal to 'sha1', or 'utf8'.
        - 'Hash' must be a null, or a non-empty character string.
-       - 'Hash' is defined but not 'Source Text', and/or 'Source Lang'.
        - 'Source Language' must be a null, or a non-empty character string.
        - 'Source Text' must be a null, or a non-empty character string.
        - 'Translations' must be a null, or a mapping of non-empty character strings.

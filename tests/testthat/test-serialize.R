@@ -448,7 +448,6 @@ test_that("assert.ExportedText() returns a character if x is invalid and throw_e
     expect_identical(out, c(
         "['<unknown>'] 'Algorithm' must be equal to 'sha1', or 'utf8'.",
         "['<unknown>'] 'Hash' must be a null, or a non-empty character string.",
-        "['<unknown>'] 'Hash' is defined but not 'Source Text', and/or 'Source Lang'.",
         "['<unknown>'] 'Source Language' must be a null, or a non-empty character string.",
         "['<unknown>'] 'Source Text' must be a null, or a non-empty character string.",
         "['<unknown>'] 'Translations' must be a null, or a mapping of non-empty character strings.",

@@ -540,7 +540,7 @@ assert.ExportedText <- function(x, throw_error = TRUE, ...) {
         if (!match("Hash", xnames, 0L) || !is.null(hash) && !is_chr1(hash)) {
             "'Hash' must be a null, or a non-empty character string."
         },
-        if (!is.null(hash) && is.null(text) || is.null(lang)) {
+        if (!is.null(hash) && (is.null(text) || is.null(lang))) {
             "'Hash' is defined but not 'Source Text', and/or 'Source Lang'."
         },
         # Validate Source Language.
@@ -757,6 +757,7 @@ import.ExportedTranslations <- function(x, tr = NULL, ...) {
 
 #' @rdname serialize
 #' @keywords internal
+#' @export
 import.default <- function(x, ...) {
     stops(
         "deserialized object is not supported by transltr.",
