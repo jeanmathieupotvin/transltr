@@ -488,7 +488,8 @@ assert.ExportedTranslator <- function(x, throw_error = TRUE, ...) {
                 str_to(constant("algorithms"), TRUE))
         },
         # Validate Languages.
-        if (!is_list(langs, TRUE) || !is_named(langs) &&
+        if (!is_list(langs, TRUE) ||
+            !is_named(langs) ||
             !all(vapply_1l(langs, is_chr1))) {
             "'Languages' must a mapping of non-empty character strings."
         },
@@ -556,13 +557,16 @@ assert.ExportedText <- function(x, throw_error = TRUE, ...) {
             !is.null(text) && !is_chr1(text)) {
             "'Source Text' must be a null, or a non-empty character string."
         },
-        if (!is.null(lang) && is.null(text) || !is.null(text) && is.null(lang)) {
+        if (!is.null(lang) && is.null(text) ||
+            !is.null(text) && is.null(lang)) {
             "'Source Language' is defined but not 'Source Text', or vice-versa."
         },
         # Validate Translations.
-        if (!is.null(trans) &&
-            !is_list(trans, TRUE) || !is_named(trans) &&
-            !all(vapply_1l(trans, is_chr1))) {
+        if (!match("Translations", xnames, 0L) ||
+            !is.null(trans) && (
+                !is_list(trans, TRUE) ||
+                !is_named(trans) ||
+                !all(vapply_1l(trans, is_chr1)))) {
             "'Translations' must be a null, or a mapping of non-empty character strings."
         },
         # Validate Locations.

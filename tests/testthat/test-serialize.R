@@ -289,7 +289,9 @@ test_that("export_translations() validates tr", {
             en = "Farewell, world!",
             fr = "Au revoir, monde!"))
 
+    expect_error(export_translations(1L))
     expect_error(export_translations(tr, "fr"))
+    expect_snapshot(export_translations(1L, "fr"), error = TRUE)
     expect_snapshot(export_translations(tr, "fr"), error = TRUE)
 })
 
@@ -325,3 +327,365 @@ test_that("serialize_translations() serializes translations as expected", {
     expect_snapshot(cat(serialize_translations(tr, "fr"), "\n"))
 })
 
+
+# format_errors() --------------------------------------------------------------
+
+
+test_that("format_errors() returns a character if throw_error is false", {
+    out <- format_errors("", throw_error = FALSE)
+
+    expect_type(out, "character")
+    expect_length(out, 1L)
+})
+
+test_that("format_errors() throws an error if throw_error is true", {
+    expect_error(format_errors(""))
+})
+
+test_that("format_errors() validates errors", {
+    expect_error(format_errors(1L))
+    expect_snapshot(format_errors(1L), error = TRUE)
+})
+
+test_that("format_errors() validates throw_error", {
+    expect_error(format_errors("", throw_error = 1L))
+    expect_snapshot(format_errors("", throw_error = 1L), error = TRUE)
+})
+
+test_that("format_errors() substitutes null value passed to id", {
+    expect_identical(format_errors("", NULL, FALSE), "['<unknown>'] ")
+})
+
+test_that("format_errors() converts non-character values passed to id", {
+    expect_identical(format_errors("", 111L, FALSE), "['111'] ")
+})
+
+test_that("format_errors() formats errors as expected", {
+    errors <- c(
+        "'Hash' must be a null, or a non-empty character string.",
+        "'Hash' is defined but not 'Source Text', and/or 'Source Lang'.")
+    expected <- c(
+        "['test-id'] 'Hash' must be a null, or a non-empty character string.",
+        "['test-id'] 'Hash' is defined but not 'Source Text', and/or 'Source Lang'.")
+
+    # throw_error is FALSE.
+    expect_identical(format_errors(errors, "test-id", FALSE), expected)
+
+    # throw_error is TRUE.
+    expect_error(format_errors(errors, "test-id"), "in object 'test-id':\n")
+    expect_snapshot(format_errors(errors, "test-id"), error = TRUE)
+})
+
+
+# assert.ExportedLocation() ----------------------------------------------------
+
+
+test_that("assert.ExportedLocation() returns a character if x is valid", {
+    out <- assert(export(loc1))
+
+    expect_type(out, "character")
+    expect_length(out, 0L)
+})
+
+test_that("assert.ExportedLocation() returns a character if x is invalid and throw_error is false", {
+    # By creating an integer of class ExportedLocation, we
+    # simultaneously check that (1) it is replaced by an
+    # empty list, and (2) all errors are accumulated and
+    # reported.
+    invalid <- structure(1L, class = "ExportedLocation")
+    out     <- assert(invalid, FALSE)
+
+    expect_identical(out, c(
+        "['<unknown>'] 'Path' must be a non-empty character string.",
+        "['<unknown>'] 'Ranges' must be a single `Ln <int>, Col <int> @ Ln <int>, Col <int>` character string, or a sequence of such values."))
+})
+
+test_that("assert.ExportedLocation() throws an error if x is invalid and throw_error is true", {
+    invalid <- structure(1L, class = "ExportedLocation")
+
+    expect_error(assert(invalid))
+    expect_snapshot(assert(invalid), error = TRUE)
+})
+
+test_that("assert.ExportedLocation() detects invalid Path field", {
+    out <- export(loc1, id = "test-id")
+    out$Path <- 1L
+
+    expect_error(assert(out))
+    expect_snapshot(assert(out), error = TRUE)
+})
+
+
+test_that("assert.ExportedLocation() detects invalid Ranges field", {
+    out <- export(loc1, id = "test-id")
+    out$Ranges <- c(
+        "Ln 1, Col 2 @ Ln 3, Col  4",
+        "Ln X, Col 2 @@ Ln 3, Col 4")
+
+    expect_error(assert(out))
+    expect_snapshot(assert(out), error = TRUE)
+})
+
+
+# assert.ExportedText() --------------------------------------------------------
+
+
+test_that("assert.ExportedText() returns a character if x is valid", {
+    out <- assert(export(txt1))
+
+    expect_type(out, "character")
+    expect_length(out, 0L)
+})
+
+test_that("assert.ExportedText() returns a character if x is invalid and throw_error is false", {
+    # By creating an integer of class ExportedText, we
+    # simultaneously check that (1) it is replaced by
+    # an empty list, and (2) all errors are accumulated
+    # and reported.
+    invalid <- structure(1L, class = "ExportedText")
+    out     <- assert(invalid, FALSE)
+
+    expect_identical(out, c(
+        "['<unknown>'] 'Algorithm' must be equal to 'sha1', or 'utf8'.",
+        "['<unknown>'] 'Hash' must be a null, or a non-empty character string.",
+        "['<unknown>'] 'Hash' is defined but not 'Source Text', and/or 'Source Lang'.",
+        "['<unknown>'] 'Source Language' must be a null, or a non-empty character string.",
+        "['<unknown>'] 'Source Text' must be a null, or a non-empty character string.",
+        "['<unknown>'] 'Translations' must be a null, or a mapping of non-empty character strings.",
+        "['<unknown>'] 'Locations' must be a sequence of 'Location' objects."))
+})
+
+test_that("assert.ExportedText() throws an error if x is invalid and throw_error is true", {
+    invalid <- structure(1L, class = "ExportedText")
+
+    expect_error(assert(invalid))
+    expect_snapshot(assert(invalid), error = TRUE)
+})
+
+test_that("assert.ExportedText() detects invalid Algorithm field", {
+    out <- export(txt1, id = "test-id")
+    out$Algorithm <- 1L
+
+    expect_error(assert(out))
+    expect_snapshot(assert(out), error = TRUE)
+})
+
+test_that("assert.ExportedText() detects invalid Hash field", {
+    out1 <- export(txt1, id = "test-id")
+    out2 <- out1
+    out3 <- export(Text$new(), id = "test-id")
+
+    # Hash is missing.
+    out1$Hash <- NULL
+
+    # Hash is not a character string.
+    out2$Hash <- 1L
+
+    # Hash is defined, but not Source Text, and Source Language.
+    out3$Hash <- "256e0d707386d0fcd9abf10ad994000bdaa25812"
+
+    expect_error(assert(out1))
+    expect_error(assert(out2))
+    expect_error(assert(out3))
+    expect_snapshot(assert(out1), error = TRUE)
+    expect_snapshot(assert(out3), error = TRUE)
+})
+
+test_that("assert.ExportedText() detects invalid Source Language field", {
+    out1 <- export(txt1, id = "test-id")
+    out2 <- out1
+
+    # Source Language is missing.
+    out1$`Source Language` <- NULL
+
+    # Source Language is not a character string.
+    out2$`Source Language` <- 1L
+
+    expect_error(assert(out1))
+    expect_error(assert(out2))
+    expect_snapshot(assert(out1), error = TRUE)
+})
+
+test_that("assert.ExportedText() detects invalid Source Text field", {
+    out1 <- export(txt1, id = "test-id")
+    out2 <- out1
+    out3 <- out1
+    out4 <- out1
+
+    # Source Text is missing.
+    out1$`Source Text` <- NULL
+
+    # Source Text is not a character string.
+    out2$`Source Text` <- 1L
+
+    # Source Text is not defined, but Source Language is.
+    # The former is removed, then replaced by a NULL.
+    out3$`Source Text` <- NULL
+    out3 <- structure(
+        c(out3, list(`Source Text` = NULL)),
+        class = "ExportedText")
+
+    # Source Language is not defined, but Source Text is.
+    # The former is removed, then replaced by a NULL.
+    out4$`Source Language` <- NULL
+    out4 <- structure(
+        c(out3, list(`Source Language` = NULL)),
+        class = "ExportedText")
+
+    expect_error(assert(out1))
+    expect_error(assert(out2))
+    expect_error(assert(out3))
+    expect_error(assert(out4))
+    expect_snapshot(assert(out1), error = TRUE)
+    expect_snapshot(assert(out2), error = TRUE)
+})
+
+test_that("assert.ExportedText() detects invalid Translations field", {
+    out1 <- export(txt1, id = "test-id")
+    out2 <- out1
+    out3 <- out1
+    out4 <- out1
+
+    # Translations is missing.
+    out1$Translations <- NULL
+
+    # Translations is not a list.
+    out2$Translations <- 1L
+
+    # Translations is a list, but not named.
+    out3$Translations <- list("a")
+
+    # Translations is a named list, but
+    # does not contain character strings.
+    out4$Translations <- list(a = "a", b = 1L)
+
+    expect_error(assert(out1))
+    expect_error(assert(out2))
+    expect_error(assert(out3))
+    expect_error(assert(out4))
+    expect_snapshot(assert(out1), error = TRUE)
+})
+
+test_that("assert.ExportedText() detects invalid Locations field", {
+    out1 <- export(txt1, id = "test-id")
+    out2 <- out1
+    out3 <- out1
+
+    # Locations is not a list.
+    out1$Locations <- 1L
+
+    # Locations is a list, but contains objects
+    # that are not of class ExportedLocation.
+    out2$Locations <- list("a", loc1, loc2)
+
+    # Translations is a named list of
+    # invalid ExportedLocation objects.
+    out3$Locations <- list(
+        export(loc1, id = "test-id"),
+        export(loc2, id = "test-id"))
+    out3$Locations[[1L]]$Path   <- 1L
+    out3$Locations[[2L]]$Ranges <- 1L
+
+    expect_error(assert(out1))
+    expect_error(assert(out2))
+    expect_error(assert(out3))
+    expect_snapshot(assert(out1), error = TRUE)
+    expect_snapshot(assert(out3), error = TRUE)
+})
+
+
+# assert.ExportedTranslator() --------------------------------------------------
+
+
+test_that("assert.ExportedTranslator() returns a character if x is valid", {
+    out <- assert(export(tr))
+
+    expect_type(out, "character")
+    expect_length(out, 0L)
+})
+
+test_that("assert.ExportedTranslator() returns a character if x is invalid and throw_error is false", {
+    # By creating an integer of class ExportedTranslator,
+    # we simultaneously check that (1) it is replaced by
+    # an empty list, and (2) all errors are accumulated
+    # and reported.
+    invalid <- structure(1L, class = "ExportedTranslator")
+    out     <- assert(invalid, FALSE)
+
+    expect_identical(out, c(
+        "['<unknown>'] 'Identifier' must be a non-empty character string.",
+        "['<unknown>'] 'Algorithm' must be equal to 'sha1', or 'utf8'.",
+        "['<unknown>'] 'Languages' must a mapping of non-empty character strings.",
+        "['<unknown>'] 'Texts' must a sequence of 'Text' objects."))
+})
+
+test_that("assert.ExportedTranslator() throws an error if x is invalid and throw_error is true", {
+    invalid <- structure(1L, class = "ExportedTranslator")
+
+    expect_error(assert(invalid))
+    expect_snapshot(assert(invalid), error = TRUE)
+})
+
+test_that("assert.ExportedTranslator() detects invalid Identifier field", {
+    out <- export(tr)
+    out$Identifier <- 1L
+
+    expect_error(assert(out))
+    expect_snapshot(assert(out), error = TRUE)
+})
+
+test_that("assert.ExportedTranslator() detects invalid Algorithm field", {
+    out <- export(tr)
+    out$Algorithm <- 1L
+
+    expect_error(assert(out))
+    expect_snapshot(assert(out), error = TRUE)
+})
+
+test_that("assert.ExportedTranslator() detects invalid Languages field", {
+    out1 <- export(tr)
+    out2 <- out1
+    out3 <- out1
+
+    # Languages is not a list.
+    out1$Languages <- 1L
+
+    # Languages is a list, but not named.
+    out2$Languages <- list("a")
+
+    # Languages is a named list, but
+    # does not contain character strings.
+    out3$Languages <- list(a = "a", b = 1L)
+
+    expect_error(assert(out1))
+    expect_error(assert(out2))
+    expect_error(assert(out3))
+    expect_snapshot(assert(out1), error = TRUE)
+})
+
+test_that("assert.ExportedTranslator() detects invalid Texts field", {
+    out1 <- export(tr)
+    out2 <- out1
+    out3 <- out1
+
+    # Texts is not a list.
+    out1$Texts <- 1L
+
+    # Texts is a list, but contains objects
+    # that are not of class ExportedText.
+    out2$Texts <- list("a", txt1, txt2)
+
+    # Texts is a named list of
+    # invalid ExportedTexts objects.
+    out3$Texts <- list(
+        export(txt1, id = "test-id"),
+        export(txt2, id = "test-id"))
+    out3$Texts[[1L]]$Hash      <- 1L
+    out3$Texts[[2L]]$Algorithm <- 1L
+
+    expect_error(assert(out1))
+    expect_error(assert(out2))
+    expect_error(assert(out3))
+    expect_snapshot(assert(out1), error = TRUE)
+    expect_snapshot(assert(out3), error = TRUE)
+})
