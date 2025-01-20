@@ -1,0 +1,41 @@
+# Translations
+#
+# - Edit each 'Translation' section below.
+# - Choose UTF-8 whenever you have to select a character encoding.
+# - You may use any text editor.
+# - You may split long sentences with single new lines.
+# - You may include comments.
+#   - What follows an octothorpe (#) is ignored until the next line.
+#   - An escaped octothorpe (\#) is treated as normal text.
+
+:: Identifier
+
+test-translator:translations:es
+
+:: Language Code
+
+es
+
+:: Language
+
+Español
+
+:: Source Language
+
+English
+
+:: Translations: 256e0d7: Source Text
+
+Hello, world!
+
+:: Translations: 256e0d7: Translation
+
+¡Hola Mundo!
+
+:: Translations: 2ac373a: Source Text
+
+Farewell, world!
+
+:: Translations: 2ac373a: Translation
+
+# Insert a translation here.

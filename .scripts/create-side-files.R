@@ -15,7 +15,8 @@
 #'
 #' @author Jean-Mathieu Potvin (<jeanmathieupotvin@@ununoctium.dev>)
 #'
-#' @seealso [The usethis package](https://usethis.r-lib.org/)
+#' @seealso
+#' [The usethis package](https://usethis.r-lib.org/)
 
 
 # Activate Codecov and create .codecov.yml.
@@ -26,10 +27,16 @@ usethis::use_github_action("check-standard")
 usethis::use_github_action("test-coverage")
 usethis::use_github_actions_badge("check-standard", "jeanmathieupotvin/transltr")
 
+# Create files LICENSE, and LICENSE.md.
+usethis::use_mit_license("Jean-Mathieu Potvin")
+
 # Create file README.md.
 usethis::use_readme_md(open = FALSE)
 usethis::use_cran_badge()
-usethis::use_lifecycle_badge("experimental")
+usethis::use_lifecycle_badge("stable")
+
+# Create cran-comments.md.
+usethis::use_cran_comments()
 
 # Create file R/transltr-package.R.
 usethis::use_package_doc(open = FALSE)

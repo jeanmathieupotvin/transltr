@@ -1,60 +1,92 @@
 #' Internal Constants
 #'
-#' @description
-#' These constants are used internally by [`transltr`][transltr]. They ensure
-#' consistency across its features. Their prefix states their underlying type.
+#' Fetch a constant used by [`transltr`][transltr]. Constants ensure
+#' consistency among all features of the package.
 #'
-#' **Users should never interact with them.**
+#' @param which A non-empty and non-[NA][base::NA] character string. The name
+#'   of the constant to fetch. See below for defined values.
 #'
-#' @name constants
-#' @rdname constants
-NULL
-
-#' @format * `.__LGL_DEBUG_FLAG` is a logical value always equal to `FALSE`.
-#'   It is only ever (temporarily) set equal to `TRUE` in unit tests via
-#'   [testthat::with_mocked_bindings()]. It is used to force errors that
-#'   are hard to test with usual methods.
+#' @returns
+#' [constant()] returns the requested constant, or `NULL` if it is unavailable.
+#'
+#' | `which`         | **Shape**      | **Value**                                     |
+#' | --------------- | -------------- | --------------------------------------------- |
+#' | `algorithms`    | `character(2)` | `c("sha1", "utf8")`                           |
+#' | `concat`        | `character(1)` | `" "`                                         |
+#' | `empty`         | `character(1)` | `"<empty>"`                                   |
+#' | `empty-list`    | `character(1)` | `"<empty list>"`                              |
+#' | `null`          | `character(1)` | `"<null>"`                                    |
+#' | `unset`         | `character(1)` | `"<unset>"`                                   |
+#' | `unknown`       | `character(1)` | `"<unknown>"`                                 |
+#' | `untranslated`  | `character(1)` | `"# Insert a translation here."`              |
+#' | `range-sprintf` | `character(1)` | `"Ln %s, Col %s @ Ln %s, Col %s"`             |
+#' | `range-format`  | `character(1)` | `"Ln <int>, Col <int> @ Ln <int>, Col <int>"` |
+#' | `range-pattern` | `character(1)` | `"^Ln[ \t]*([0-9.]+),[ \t]*Col[ \t]*..."`     |
+#'
+#' @section Algorithms returned by `constant("algorithms")`:
+#' These algorithms map a character string to another character string of
+#' hexadecimal characters highly likely to be unique. The latter is typically
+#' much shorter and is used to uniquely identify a source text (and the
+#' underlying source language). Two algorithms are available.
+#'
+#' ## Secure Hash Algorithm 1
+#'
+#' Method `sha1` corresponds to SHA-1 (Secure Hash Algorithm version 1), a
+#' cryptographic hashing function. While it is now superseded by more secure
+#' variants (SHA-256, SHA-512, etc.), it is still useful for non-sensitive
+#' purposes. It is fast, collision-resistant, and may handle very large inputs.
+#' It emits strings of 40 hexadecimal characters.
+#'
+#' ## Cumulative UTF-8 Sum
+#'
+#' `r lifecycle::badge("experimental")`
+#'
+#' **This method is experimental. Use with caution.**
+#'
+#' Method `utf8` is a simple method derived from cumulative sums of UTF-8 code
+#' points (converted to integers). It is slightly faster than method `sha1` for
+#' small inputs and emits hashes with a width porportional to the underlying
+#' input's length. It is used for testing purposes internally.
+#'
+#' @examples
+#' transltr:::constant("algorithms")
+#' transltr:::constant("concat")
+#' transltr:::constant("empty")
+#' transltr:::constant("empty-list")
+#' transltr:::constant("null")
+#' transltr:::constant("unset")
+#' transltr:::constant("unknown")
+#' transltr:::constant("untranslated")
+#' transltr:::constant("range-sprintf")
+#' transltr:::constant("range-format")
+#' transltr:::constant("range-pattern")
+#'
+#' # NULL is returned if which has no corresponding entry.
+#' transltr:::constant("__undefined__")
+#'
 #' @rdname constants
 #' @keywords internal
+constant <- function(which = "") {
+    assert_chr1(which)
+
+    return(
+        switch(which,
+            algorithms      = c("sha1", "utf8"),
+            concat          = " ",
+            empty           = "<empty>",
+            `empty-list`    = "<empty list>",
+            null            = "<null>",
+            unset           = "<unset>",
+            unknown         = "<unknown>",
+            untranslated    = "# Insert a translation here.",
+            `range-sprintf` = "Ln %s, Col %s @ Ln %s, Col %s",
+            `range-format`  = "`Ln <int>, Col <int> @ Ln <int>, Col <int>`",
+            `range-pattern` = "^Ln[ \t]*([0-9.]+),[ \t]*Col[ \t]*([0-9.]+)[ \t]*@[ \t]*Ln[ \t]*([0-9.]+),[ \t]*Col[ \t]*([0-9.]+)$",
+            NULL))
+}
+
+
+# An internal logical value always equal to `FALSE` used to force errors that
+# are hard, or (almost) impossible to test otherwise. It is only temporarily
+# set equal to `TRUE` via [testthat::with_mocked_bindings()].
 .__LGL_DEBUG_FLAG <- FALSE
-
-#' @format * `.__STR_EMPTY_OBJ` is a character string equal to `"<none>"`. It
-#'   standardizes the format of empty objects.
-#' @rdname constants
-#' @keywords internal
-.__STR_EMPTY_OBJ <- "<none>"
-
-#' @format * `.__STR_UNDEFINED` is a character string equal to `"<unset>"`. It
-#'   signals that a field is not yet set, and may change how empty strings are
-#'   formatted.
-#' @rdname constants
-#' @keywords internal
-.__STR_UNDEFINED <- "<unset>"
-
-#' @format * `.__STR_NO_NAME` is a character string equal to `"<nokey>"`. It
-#'   is (sometimes) used when formatting empty names.
-#' @rdname constants
-#' @keywords internal
-.__STR_NO_NAME <- "<nokey>"
-
-#' @format * `.__STR_FORMAL_CONCAT_DEFAULT` is a character string equal to `" "`.
-#'   It matches the value of formal argument `concat` of [translate()].
-#' @rdname constants
-#' @keywords internal
-.__STR_FORMAL_CONCAT_DEFAULT <- " "
-
-#' @format * `.__STR_FORMAL_SOURCE_LANG_DEFAULT` is a character string equal
-#'   to `"en"`. It matches the value of formal argument `source_key` of
-#'   [translate()].
-#' @rdname constants
-#' @keywords internal
-.__STR_FORMAL_SOURCE_LANG_DEFAULT <- "en"
-
-#' @format * `.__CHR_EXCLUDED_NS` is a character vector containing elements
-#'   `"base"`, and `"transltr"`. These are the names of excluded packages (or
-#'   [namespaces][loadNamespace()]) when attempting to determine the scope of
-#'   a [`Translator`][Translator] object. See [translator_set()] and
-#'   [translator_get()] for more information.
-#' @rdname constants
-#' @keywords internal
-.__CHR_EXCLUDED_NS <- c("base", "transltr")

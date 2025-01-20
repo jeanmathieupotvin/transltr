@@ -1,20 +1,33 @@
 #' Get or Set Language
 #'
-#' Get or set the current language of [`transltr`][transltr]. It is registered
-#' as an environment variable named `TRANSLTR_LANGUAGE`.
+#' @description
+#' Get or set the current, and source languages.
 #'
-#' [language_set()] leaves the underlying locale as is. To change an \R
-#' session's locale, use [Sys.setlocale()] or [Sys.setLanguage()] instead.
-#' See below for more information.
+#' They are registered as environment variables named
+#' `TRANSLTR_LANGUAGE`, and `TRANSLTR_SOURCE_LANGUAGE`.
+#'
+#' @details
+#' The language and the source language can always be temporarily changed. See
+#' [translate()] for more information.
+#'
+#' The underlying locale is left as is. To change an \R session's locale,
+#' use [Sys.setlocale()] or [Sys.setLanguage()] instead. See below for more
+#' information.
 #'
 #' @template param-lang
 #'
 #' @returns
-#' [language_set()] returns `NULL` invisibly. It is used for its side-effect
-#' of setting environment variable `TRANSLTR_LANGUAGE`.
+#' [language_set()], and [language_source_set()] return `NULL`, invisibly. They
+#' are used for their side-effect of setting environment variables
+#' `TRANSLTR_LANGUAGE` and `TRANSLTR_SOURCE_LANGUAGE`, respectively.
 #'
-#' [language_get()] returns a character string (possibly empty). It corresponds
-#' to the value of environment variable `TRANSLTR_LANGUAGE`.
+#' [language_get()] returns a character string. It is the current value of
+#' environment variable `TRANSLTR_LANGUAGE`. It is empty if the latter is
+#' unset.
+#'
+#' [language_source_get()] returns a character string. It is the current value
+#' of environment variable `TRANSLTR_SOURCE_LANGUAGE`. It returns `"en"` if the
+#' latter is unset.
 #'
 #' @section Locales versus languages:
 #' A [locale](https://en.wikipedia.org/wiki/Locale_(computer_software)) is a
@@ -39,31 +52,38 @@
 #' the `language` parameter of the package. See Examples.
 #'
 #' @note
-#' An environment variable is used because it can be shared among different
+#' Environment variables are used because they can be shared among different
 #' processes. This matters when using parallel and/or concurrent \R sessions.
 #' It can further be shared among direct and transitive dependencies (other
 #' packages that rely on [`transltr`][transltr]).
 #'
 #' @examples
-#' ## Change the language parameter (globally).
+#' # Change the language parameters (globally).
+#' language_source_set("en")
 #' language_set("fr")
-#' language_get()  ## Outputs "fr".
 #'
-#' ## Change both the language parameter and the locale.
-#' ## Note that you control how languages are named for language_set(),
-#' ## but not for Sys.setLanguage().
+#' language_source_get()  ## Outputs "en"
+#' language_get()         ## Outputs "fr"
+#'
+#' # Change both the language parameter and the locale.
+#' # Note that while users control how languages are named
+#' # for language_set(), they do not for Sys.setLanguage().
 #' language_set("fr")
 #' Sys.setLanguage("fr-CA")
 #'
-#' ## Reset settings.
+#' # Reset settings.
+#' language_source_set(NULL)
 #' language_set(NULL)
 #'
-#' @rdname language-accessors
+#' # Source language has a default value.
+#' language_source_get()  ## Outputs "en"
+#'
+#' @rdname language
 #' @export
 language_set <- function(lang = "en") {
     if (is.null(lang)) {
         if (!Sys.unsetenv("TRANSLTR_LANGUAGE") || .__LGL_DEBUG_FLAG) {
-            stops("failed to unset current language.")
+            stopf("failed to unset current language '%s'.", language_get())
         }
 
         return(invisible())
@@ -78,7 +98,7 @@ language_set <- function(lang = "en") {
     return(invisible())
 }
 
-#' @rdname language-accessors
+#' @rdname language
 #' @export
 language_get <- function() {
     # It does not matter whether the environment variable
@@ -86,4 +106,33 @@ language_get <- function() {
     # Both cases leads to the same error. Therefore, there
     # is no need to distinguish these cases with unset = NA.
     return(Sys.getenv("TRANSLTR_LANGUAGE", unset = "", names = FALSE))
+}
+
+#' @rdname language
+#' @export
+language_source_set <- function(lang = "en") {
+    if (is.null(lang)) {
+        if (!Sys.unsetenv("TRANSLTR_SOURCE_LANGUAGE") || .__LGL_DEBUG_FLAG) {
+            stopf(
+                "failed to unset current source language '%s'.",
+                language_source_get())
+        }
+
+        return(invisible())
+    }
+
+    assert_chr1(lang)
+
+    if (!Sys.setenv(TRANSLTR_SOURCE_LANGUAGE = lang) || .__LGL_DEBUG_FLAG) {
+        stopf("failed to set source language '%s'.", lang)
+    }
+
+    return(invisible())
+}
+
+#' @rdname language
+#' @export
+language_source_get <- function() {
+    x <- Sys.getenv("TRANSLTR_SOURCE_LANGUAGE", unset = "", names = FALSE)
+    return(if (nzchar(x)) x else "en")
 }

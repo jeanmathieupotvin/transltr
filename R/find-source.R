@@ -1,13 +1,13 @@
 #' Find Source Text
 #'
-#' Find, and extract source text that requires translation.
+#' Find and extract source text that requires translation.
 #'
 #' [find_source()] and [find_source_in_files()] look for calls to [translate()]
-#' in \R scripts, and convert them to [`Block`][Block] objects via [as_block()].
+#' in \R scripts and convert them to [`Text`][Text] objects via [as_text()].
 #'
 #' [find_source()] further constructs a [`Translator`][Translator] object from
-#' the set of [`Block`][Block] objects. It can later be exported, and imported
-#' via [write_translations()] and [read_translations()] respectively.
+#' the set of [`Text`][Text] objects. It can later be exported and imported
+#' via [translator_write()] and [translator_read()] respectively.
 #'
 #' ## Methodology
 #'
@@ -15,19 +15,19 @@
 #' operations. [find_source()] and [find_source_in_files()] go through these
 #' steps to extract source text from a single \R script.
 #'
-#'   1. It is read with [read_text()].
-#'   2. It is parsed with [parse()], and underlying tokens are extracted from
+#'   1. It is read with [text_read()].
+#'   2. It is parsed with [parse()] and underlying tokens are extracted from
 #'      parsed expressions with [utils::getParseData()].
 #'   3. Each expression token (`expr`) is converted to language objects with
-#'      [str2lang()]. Parsing errors, and invalid expressions are silently
+#'      [str2lang()]. Parsing errors and invalid expressions are silently
 #'      skipped.
 #'   4. Valid [`call`][call()] objects stemming from step 3 are filtered with
 #'      [is_translate_call()].
 #'   5. Calls to [translate()] stemming from step 4 are coerced to
-#'      [`Block`][Block] objects with [as_block()].
+#'      [`Text`][Text] objects with [as_text()].
 #'
 #' [find_source()] further constructs a [`Translator`][Translator] object from
-#' [`Block`][Block] objects stemming from step 5.
+#' [`Text`][Text] objects stemming from step 5.
 #'
 #' ## Limitations
 #'
@@ -48,30 +48,57 @@
 #'   a mapping of language codes to native language names. See field
 #'   [`Translator$native_languages`][Translator] for more information.
 #'
-#' @param verbose A non-[NA][base::NA] logical value. Should basic information
-#'   on extracted source texts be outputted?
-#'
 #' @template param-encoding
 #'
 #' @template param-strict
 #'
 #' @template param-id
 #'
-#' @template param-hash-algorithm
+#' @template param-algorithm
+#'
+#' @template param-verbose
 #'
 #' @returns
 #' [find_source()] returns an [`R6`][R6::R6] object of class
 #' [`Translator`][Translator].
 #'
-#' [find_source_in_files()] returns a list of [`Block`][Block] objects. It may
+#' [find_source_in_files()] returns a list of [`Text`][Text] objects. It may
 #' contain duplicated elements, depending on the extracted contents.
 #'
 #' @seealso
-#'   [`Translator`][Translator],
-#'   [`Block`][Block],
-#'   [translate()],
-#'   [read_translations()],
-#'   [write_translations()]
+#' [`Translator`][Translator],
+#' [`Text`][Text],
+#' [translate()],
+#' [translator_read()],
+#' [translator_write()]
+#'
+#' @examples
+#' # Create a directory containing dummy R
+#' # scripts for illustration purposes.
+#' temp_dir   <- file.path(tempdir(TRUE), "find-source")
+#' temp_files <- file.path(temp_dir, c("ex-script-1.R", "ex-script-2.R"))
+#' dir.create(temp_dir, showWarnings = FALSE, recursive = TRUE)
+#'
+#' cat(
+#'   "translate('Not strict: Hello, world!')",
+#'   "transltr::translate('Strict: Farewell, world!')",
+#'   sep  = "\n",
+#'   file = temp_files[[1L]])
+#' cat(
+#'   "transltr::translate('Strict: Hello, world!')",
+#'   "translate('Not strict: Farewell, world!')",
+#'   sep  = "\n",
+#'   file = temp_files[[2L]])
+#'
+#' # Extract explicit calls to transltr::translate()
+#' # from source scripts (strict = TRUE).
+#' find_source(temp_dir, strict = TRUE, verbose = TRUE)
+#' find_source_in_files(temp_files, strict = TRUE, verbose = TRUE)
+#'
+#' # Extract calls to any translate() function
+#' # from source scripts (strict = FALSE).
+#' find_source(temp_dir, strict = FALSE, verbose = TRUE)
+#' find_source_in_files(temp_files, strict = FALSE, verbose = TRUE)
 #'
 #' @rdname find-source
 #' @export
@@ -80,9 +107,9 @@ find_source <- function(
     encoding         = "UTF-8",
     strict           = TRUE,
     id               = uuid(),
-    hash_algorithm   = get_hash_algorithms(),
+    algorithm        = constant("algorithms"),
     native_languages = character(),
-    verbose          = FALSE)
+    verbose          = TRUE)
 {
     assert_chr1(path)
     assert_chr(native_languages, TRUE)
@@ -102,143 +129,29 @@ find_source <- function(
         include.dirs = TRUE,
         no..         = TRUE)
 
-    blocks <- find_source_in_files(paths, encoding, strict, hash_algorithm, verbose)
-    trans  <- Translator$new(id, hash_algorithm)
+    texts <- find_source_in_files(paths, encoding, strict, algorithm, verbose)
+    trans <- Translator$new(id, algorithm)
 
     storage.mode(native_languages) <- "list"
     do.call(trans$set_native_languages, native_languages)
-    do.call(trans$set_blocks, blocks)
+    do.call(trans$set_texts, texts)
     return(trans)
 }
 
 #' @rdname find-source
 #' @export
 find_source_in_files <- function(
-    paths          = character(),
-    encoding       = "UTF-8",
-    strict         = TRUE,
-    hash_algorithm = get_hash_algorithms(),
-    verbose        = FALSE)
+    paths     = character(),
+    encoding  = "UTF-8",
+    strict    = TRUE,
+    algorithm = constant("algorithms"),
+    verbose   = TRUE)
 {
-    # encoding is validated by read_text() below.
     assert_chr(paths)
     assert_lgl1(strict)
-    assert_arg(hash_algorithm, TRUE)
+    assert_arg(algorithm, TRUE)
     assert_lgl1(verbose)
 
-    blocks <- lapply(paths, find_source_in_file, encoding, strict, hash_algorithm, verbose)
-    return(unlist(blocks, FALSE))
-}
-
-
-#' Find Source Text in Expression Tokens
-#'
-#' @description
-#' Find, and extract source text that requires translation from a single file,
-#' or from a set of tokenized \R expressions stemming from [parse()].
-#'
-#' These functions are the *building blocks* of [find_source()] and
-#' [find_source_in_files()]. They are not meant to be used by regular users.
-#'
-#' @param path A non-empty and non-[NA][base::NA] character string. A path to
-#'   an \R source script.
-#'
-#' @param .tokens A [`data.frame`][data.frame()] returned by
-#'   [utils::getParseData()]. This can be a subset of the latter, but must
-#'   always contain columns `line1`, `col1`, `line2`, `col2`, and `text`.
-#'
-#' @param .path,.strict,.hash_algorithm Same as `path`, `strict`, and
-#'   `hash_algorithm`, but not validated for maximum efficiency. They
-#'   are checked by an higher-level parent function.
-#'
-#' @param .verbose Same as argument `verbose` of [find_source()], but not
-#'   validated for maximum efficiency. It is checked by an higher-level parent
-#'   function.
-#'
-#' @template param-encoding
-#'
-#' @template param-strict
-#'
-#' @template param-hash-algorithm
-#'
-#' @details
-#' [find_source_in_exprs()] silently skips parsing errors. See [find_source()]
-#' for more information.
-#'
-#' @returns
-#' [find_source_in_file()] and [find_source_in_exprs()] return a list of
-#' [`Block`][Block] objects. It may contain duplicated elements, depending
-#' on the extracted contents.
-#'
-#' [find_source_exprs()] returns the same output as [utils::getParseData()].
-#' However, only `expr` tokens are returned.
-#'
-#' @seealso
-#'   [`Block`][Block],
-#'   [translate()],
-#'   [find_source()]
-#'
-#' @rdname find-source-in-file
-#' @keywords internal
-find_source_in_file <- function(
-    path           = "",
-    encoding       = "UTF-8",
-    strict         = TRUE,
-    hash_algorithm = get_hash_algorithms(),
-    .verbose       = FALSE)
-{
-    tokens <- find_source_exprs(path, encoding)
-    blocks <- find_source_in_exprs(tokens, path, strict, hash_algorithm)
-
-    if (.verbose) {
-        cat(sep = "\n", sprintf(
-            "Extracted %i source text(s) from '%s'.",
-            length(blocks),
-            gsub(getwd(), ".", path)))
-    }
-
-    return(blocks)
-}
-
-#' @rdname find-source-in-file
-#' @keywords internal
-find_source_in_exprs <- function(
-    .tokens         = utils::getParseData(),
-    .path           = "",
-    .strict         = TRUE,
-    .hash_algorithm = get_hash_algorithms())
-{
-    # Parsing errors are skipped silently. This is required whenever
-    # native pipes are used. They introduce placeholders (_) in expr
-    # tokens, a special constant that makes no sense outside of the
-    # full context. Some tokens are sub-exprs and lack the former,
-    # which yields an error. tryCatch() introduces a non-negligible
-    # overhead, but it is the only viable solution.
-    code      <- lapply(.tokens$text, \(x) tryCatch(str2lang(x), error = \(c) NULL))
-    is_call   <- vapply_1l(code, is_translate_call, .strict = .strict)
-    locations <- map(location, moreArgs = list(path = .path),
-        line1 = .tokens[is_call, "line1"],
-        col1  = .tokens[is_call, "col1"],
-        line2 = .tokens[is_call, "line2"],
-        col2  = .tokens[is_call, "col2"])
-
-    return(
-        map(as_block,
-            x        = code[is_call],
-            location = locations,
-            moreArgs = list(
-                strict         = .strict,
-                hash_algorithm = .hash_algorithm,
-                validate       = FALSE)))
-}
-
-#' @rdname find-source-in-file
-#' @keywords internal
-find_source_exprs <- function(path = "", encoding = "UTF-8") {
-    # We use read_text() and parse(text = .) because
-    # the former re-encodes source text to encoding.
-    text   <- read_text(path, encoding)
-    parsed <- parse(text = text, keep.source = TRUE, encoding = encoding)
-    tokens <- utils::getParseData(parsed, TRUE)
-    return(tokens[tokens$token == "expr", ])
+    texts <- lapply(paths, find_source_in_file, encoding, strict, algorithm, verbose)
+    return(unlist(texts, FALSE))
 }

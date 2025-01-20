@@ -14,7 +14,7 @@ location(path = tempfile(), line1 = 1L, col1 = 1L, line2 = 1L, col2 = 1L)
 
 is_location(x)
 
-\method{format}{Location}(x, how = c("long", "short"), ...)
+\method{format}{Location}(x, ...)
 
 \method{print}{Location}(x, ...)
 
@@ -32,12 +32,7 @@ The (inclusive) starting point(s) of what is being referenced.}
 \item{line2, col2}{A non-empty integer vector of non-\link[base:NA]{NA} values.
 The (inclusive) end(s) of what is being referenced.}
 
-\item{x}{Any \R object for \code{\link[=is_location]{is_location()}}. An object of class
-\code{\link{Location}} for S3 methods \code{\link[=format]{format()}} and \code{\link[=print]{print()}}.}
-
-\item{how}{A character string equal to \code{"long"} or \code{"short"}. The latter is
-suitable for embedding \code{\link{Location}} objects in
-\link[=message]{messages}, and \link{conditions}.}
+\item{x}{Any \R object.}
 
 \item{...}{Usage depends on the underlying function.
 \itemize{
@@ -48,14 +43,13 @@ and S3 method \code{\link[=c]{c()}}.
 }}
 }
 \value{
-\code{\link[=location]{location()}} and \code{\link[=c]{c()}} returns a named list of length 5 and of class
-\code{\link{Location}}. It contains the values of \code{path}, \code{line1}, \code{col1},
+\code{\link[=location]{location()}}, and \code{\link[=c]{c()}} return a named list of length 5 and of S3 class
+\code{\link{Location}} containing the values of \code{path}, \code{line1}, \code{col1},
 \code{line2}, and \code{col2}.
 
 \code{\link[=is_location]{is_location()}} returns a logical value.
 
-\code{\link[=format]{format()}} returns a character vector. If \code{how} is equal to \code{"short"}, it
-is of length 1.
+\code{\link[=format]{format()}} returns a character vector.
 
 \code{\link[=print]{print()}} returns argument \code{x} invisibly.
 
@@ -63,9 +57,8 @@ is of length 1.
 objects.
 }
 \description{
-Store, structure, and manipulate source locations. Class
-\code{\link{Location}} is a lighter alternative to \code{\link[=srcfile]{srcfile()}} and
-related functionalities.
+Structure and manipulate source locations. Class \code{\link{Location}} is
+a lighter alternative to \code{\link[=srcfile]{srcfile()}} and other related functionalities.
 }
 \details{
 A \code{\link{Location}} is a set of one or more line/column ranges
@@ -75,7 +68,7 @@ identified by an underlying \code{path}. The latter is generic and can be
 matters is the underlying context.
 
 \code{\link{Location}} objects may refer to multiple distinct ranges for
-the the same origin. This is why arguments \code{line1}, \code{col1}, \code{line2}, and
+the the same origin. This is why arguments \code{line1}, \code{col1}, \code{line2} and
 \code{col2} accept integer vectors (and not only scalar values).
 \subsection{Combining Location Objects}{
 
@@ -89,19 +82,34 @@ It can be viewed as a vectorized version of \code{\link[=c]{c()}}.
 }
 }
 \examples{
-## Create Location objects.
-loc1 <- location("a", 1L, 2L, 3L, 4L)
-loc2 <- location("a", 5L, 6L, 7L, 8L)
-loc3 <- location("c", c(9L, 10L), c(11L, 12L), c(13L, 14L), c(15L, 16L))
+# Create Location objects.
+loc1 <- location("file-a", 1L, 2L, 3L, 4L)
+loc2 <- location("file-a", 5L, 6L, 7L, 8L)
+loc3 <- location("file-c", c(9L, 10L), c(11L, 12L), c(13L, 14L), c(15L, 16L))
 
-## Combine Location objects.
+is_location(loc1)  ## TRUE
+
+print(loc1)
+print(loc2)
+print(loc3)
+
+# Combine Location objects.
+# They must have the same path.
 c(loc1, loc2)
+
+# Otherwise, c() throws an error.
+\dontrun{c(loc1, loc3)}
+
+# Location objects with different paths can be merged.
+# This groups Location objects according to their paths
+# and calls c() on each group. It returns a list.
 merge_locations(loc1, loc2, loc3)
 
-## Using a Location object to reference text in an R
-## character vector stored in a named environment.
+# The path of a Location object can be whatever fits the context.
+# Below is an example that references text in a character vector
+# bound to variable x in the global environment.
 x <- "This is a string and it is held in memory for some purpose."
-location("<environment: R_GlobalEnv: x>", 1L, 11L, 1L, 16L)  ## "string"
+location("<environment: R_GlobalEnv: x>", 1L, 11L, 1L, 16L)
 
 }
 \keyword{internal}

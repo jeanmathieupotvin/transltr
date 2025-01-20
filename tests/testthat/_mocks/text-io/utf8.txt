@@ -1,0 +1,51 @@
+#' Mock text file
+#'
+#' This mock text file is used to test the behavior of [read_text()].
+#'
+#' @usage
+#' ## Expected usage in tests/testthat/test-io-text.R
+#' read_text(get_mock_path("text-io-utf8", "txt"))
+#'
+#' @note
+#' This header is included in the output of [read_text()].
+NULL
+
+Lorem Ipsum
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vulputate
+nunc in dignissim feugiat. Quisque ut ante at diam luctus malesuada. Aliquam
+nec nulla odio. Maecenas felis quam, pretium vitae blandit quis, porttitor eget
+ex. Ut risus nibh, porttitor dignissim justo sed, venenatis hendrerit felis.
+Integer tempor est vel turpis efficitur, a cursus dolor mattis. Interdum et
+malesuada fames ac ante ipsum primis in faucibus. Aenean eu felis quis nisi
+dignissim ullamcorper tincidunt quis odio. Fusce molestie neque et mauris
+aliquam, at facilisis tellus mollis. Donec sagittis venenatis ex, sagittis
+blandit felis tempor at. Nam mattis sit amet mauris varius molestie. Donec
+congue cursus nibh, quis faucibus mauris pharetra non. Cras posuere lobortis
+nibh id pellentesque. Aenean et molestie risus. Ut id ligula in purus rutrum
+hendrerit. Maecenas purus tortor, tempus sed ligula vel, imperdiet ornare lacus.
+
+Integer tellus velit, egestas molestie congue at, ultrices ut lectus. In hac
+habitasse platea dictumst. Integer id maximus felis, nec porta urna. Nullam
+lobortis augue quis massa convallis cursus. Morbi eget elit tincidunt,
+interdum ante quis, interdum metus. Mauris id sapien eget felis semper
+bibendum vel id ipsum. In dui orci, blandit a vulputate tempor, pharetra
+id mi.
+
+Phasellus pharetra elit quis tortor sollicitudin tempor vel a metus. Cras sit
+amet urna commodo, pulvinar ex ut, condimentum nisi. Integer sodales aliquam
+mattis. Proin ullamcorper ut nunc a sollicitudin. Praesent luctus id sapien ut
+laoreet. Vivamus vulputate, erat id bibendum tincidunt, ligula leo convallis
+mi, eget iaculis tortor turpis eget lectus. Sed laoreet nec purus sit amet
+fermentum. Donec sit amet purus ut nisl finibus imperdiet. Nulla euismod, erat
+eget tincidunt commodo, diam tortor feugiat diam, ac posuere ante felis eget
+enim. Ut elementum vehicula ligula. Nullam in maximus lacus.
+
+Proin pretium mi eget porttitor mollis. Suspendisse tempus neque ut magna
+eleifend bibendum. Quisque varius faucibus quam quis egestas. Vestibulum
+ipsum justo, ultricies quis ex a, faucibus convallis sapien. Vestibulum
+dictum dui arcu, id porttitor neque facilisis non. Quisque est dui, vulputate
+sit amet blandit et, congue vel nunc. Sed venenatis condimentum arcu ut iaculis.
+Suspendisse a erat quis justo ornare luctus. Curabitur facilisis vestibulum
+elit, vulputate tempus nibh faucibus id. Donec at lacus convallis, hendrerit
+ipsum ac, mollis ligula.

@@ -4,32 +4,89 @@
 \name{transltr-package}
 \alias{transltr}
 \alias{transltr-package}
-\title{transltr: A General Purpose Translator for R}
+\title{Support Many Languages in R Programs}
 \description{
-An alternative to gettext() and xgettext() that enables support of many languages in any R application. Find, and extract source text that requires translation. Store, structure, and manipulate source texts and translations via R6 classes exposing a user-friendly API. Easily export and import to/from a plain text format that fosters collaboration with other non-technical and external collaborators.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+An object model for source text and translations. Find and extract
+translatable strings. Provide translations and seamlessly retrieve
+them at runtime.
 }
+\section{Introduction}{
+
+\R relies on GNU \href{https://www.gnu.org/software/gettext/}{\code{gettext}} to
+produce multi-lingual messages (if \emph{Native Language Support} is enabled).
+This is well-designed software offering an extensive set of functionalities.
+It is ubiquitous and has withstood the test of time. It is not the objective
+of \code{\link{transltr}} to (fully) replace it.
+
+Package \code{\link{transltr}} provides an alternative in-memory object
+model (and further functions) to easily inspect and manipulate source text
+and translations.
+\itemize{
+\item It does not change any aspect of the underlying locale.
+\item It has its own data serialization formats for I/O purposes. Source text
+and translations can be exported to text formats that are sharable and
+easily modifiable, even by non-technical collaborators.
+\item Its features are extensively documented (even internal ones).
+\item It can always locate and extract translatable strings (litteral character
+vectors passed to \code{\link[=translate]{translate()}}). They are treated as regular \R objects
+(as \code{\link{Text}} objects).
+}
+
+\code{\link[=translate]{translate()}} works everywhere, including in calls to \code{\link[=stop]{stop()}}, \code{\link[=warning]{warning()}},
+and \code{\link[=message]{message()}}.
+}
+
 \section{Getting Started}{
 
-Placeholder for future documentation.
+Write code as you normally would. Whenever a piece of text (a literal 
+character vector) must be available in multiple languages, wrap it with
+\code{\link[=translate]{translate()}}.
+\enumerate{
+\item Once you are ready to translate your project, call \code{\link[=find_source]{find_source()}}.
+This returns a \code{\link{Translator}} object.
+\item Export the \code{\link{Translator}} object with \code{\link[=translator_write]{translator_write()}}.
+Fill in the underlying translation files.
+\item Import translations back into an \R session with \code{\link[=translator_read]{translator_read()}}.
+}
+
+Current language and source language are respectively set with
+\code{\link[=language_set]{language_set()}} and \code{\link[=language_source_get]{language_source_get()}}. By default, the latter is set
+equal to \code{"en"} (English).
 }
 
 \section{Bugs and Feedback}{
 
-You may submit feedback, ideas, and bugs by creating an
+You may submit bugs, request features, and provide feedback by creating an
 \href{https://github.com/jeanmathieupotvin/transltr/issues/new}{issue on GitHub}.
-Your help is appreciated.
+}
+
+\section{Acknowledgements}{
+
+Warm thanks to Jérôme Lavoué, who supported and sponsored the first release
+of this project.
 }
 
 \seealso{
-Useful links:
+The scattered and incomplete documentation of \R's Native Language Support:
 \itemize{
-  \item \url{https://github.com/jeanmathieupotvin/transltr}
-  \item Report bugs at \url{https://github.com/jeanmathieupotvin/transltr/issues/new}
+\item \code{\link[=gettext]{gettext()}},
+\item \code{\link[=Sys.setLanguage]{Sys.setLanguage()}}, \code{\link[=Sys.setlocale]{Sys.setlocale()}}, \code{\link[=Sys.localeconv]{Sys.localeconv()}},
+\item \code{\link[tools:xgettext]{tools::xgettext()}},
+\item \code{\link[tools:xgettext]{tools::xgettext2pot()}}, \code{\link[tools:update_pkg_po]{tools::update_pkg_po()}}, \code{\link[tools:checkPoFiles]{tools::checkPoFiles()}},
+\item \href{https://cran.r-project.org/doc/manuals/r-release/R-ints.html#R-code-1}{Section 3 (Internationalization)}
+of \R Internals,
+\item \href{https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Internationalization-and-Localization}{Section 7 (Internationalization and Localization)}
+of \R Installation and Administration, and
+\item \href{https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Internationalization}{Section 1.8 (Internationalization)} of Writing \R Extensions.
 }
 
+The comprehensive technical documentation of
+\href{https://www.gnu.org/software/gettext/manual/gettext.html}{GNU \code{gettext}}.
 }
 \author{
-\strong{Maintainer}: Jean-Mathieu Potvin \email{jeanmathieupotvin@ununoctium.dev}
+\strong{Maintainer}: Jean-Mathieu Potvin \email{jeanmathieupotvin@ununoctium.dev} [copyright holder]
 
 Other contributors:
 \itemize{

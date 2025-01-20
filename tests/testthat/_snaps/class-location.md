@@ -78,28 +78,14 @@
       Error:
       ! line1', 'col1', 'line2', and 'col2' must all have the same length.
 
-# format() validates how
-
-    Code
-      format(location(), "error")
-    Condition
-      Error:
-      ! 'how' must be equal to 'long', or 'short'.
-
-# .format_short_location() throws an error if multiple ranges must be printed
-
-    Code
-      format(loc2, "short")
-    Condition
-      Error:
-      ! 'line1', 'col1', 'line2', and 'col2' must all have a length equal to 1 in order to use the 'short' format.
-
 # print() works
 
     Code
       print(loc1, "short")
     Output
-      tests/testthat/my-test-file: ln 1, col 2 @ ln 3, col 4
+      <Location>
+       Path: tests/testthat/my-test-file
+       Ranges: Ln 1, Col 2 @ Ln 3, Col 4
 
 ---
 
@@ -107,10 +93,10 @@
       print(loc2, "long")
     Output
       <Location>
-        Path: tests/testthat/my-test-file
-        Ranges: 
-          line  1, column  22 @ line   10, column 1
-          line 11, column 222 @ line 3333, column 4
+       Path: tests/testthat/my-test-file
+       Ranges:
+        Ln  1, Col  22 @ Ln   10, Col 1
+        Ln 11, Col 222 @ Ln 3333, Col 4
 
 # c.Location() validates ...
 
@@ -126,7 +112,7 @@
       c(location("a"), location("b"))
     Condition
       Error:
-      ! all 'path' must be equal in order to combine multiple 'Location' objects.
+      ! all 'path' must be equal in order to combine 'Location' objects.
 
 # merge_locations() validates ...
 
@@ -135,4 +121,28 @@
     Condition
       Error:
       ! values passed to '...' must all be 'Location' objects.
+
+# range_format() validates x
+
+    Code
+      range_format(1L)
+    Condition
+      Error:
+      ! 'x' must be a 'Location' object.
+
+# range_parse() validates strings
+
+    Code
+      range_parse(1L)
+    Condition
+      Error:
+      ! 'ranges' must be a non-empty character vector of non-NA values.
+
+# range_is_parseable() validates strings
+
+    Code
+      range_is_parseable(1L)
+    Condition
+      Error:
+      ! 'ranges' must be a non-empty character vector of non-NA values.
 

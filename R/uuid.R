@@ -27,7 +27,7 @@
 #'
 #' @note
 #' UUIDs are designed to be globally unique (collisions are extremely unlikely)
-#' and are sometimes called GUIDs or *Globally Unique Identifiers*. There are
+#' and are sometimes called GUIDs (*Globally Unique Identifiers*). There are
 #' several UUID versions with slightly different purposes.
 #'
 #' Package [`transltr`][transltr] uses random identifiers (version 4/variant 1,
@@ -36,6 +36,12 @@
 #' @seealso
 #' [RFC4122](https://www.rfc-editor.org/rfc/rfc4122),
 #' [UUIDs explained](https://www.uuidtools.com/uuid-versions-explained)
+#'
+#' @examples
+#' uuid()
+#' uuid_raw()
+#' uuid_is(uuid())      ## TRUE
+#' uuid_is(uuid_raw())  ## FALSE, uuid_raw() does not return a string.
 #'
 #' @keywords internal
 #' @export

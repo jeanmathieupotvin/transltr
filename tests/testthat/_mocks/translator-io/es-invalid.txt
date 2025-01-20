@@ -1,0 +1,33 @@
+# Translations
+#
+# This translations file purposely contains errors for testing purposes. It is
+# used to test whether translator_read() reports these errors accordingly when
+# argument verbose is TRUE.
+
+:: Identifier
+
+test-translator:translations:es
+
+:: Language
+
+Español
+
+:: Source Language
+
+English
+
+:: Translations: 256e0d7: Source Text
+
+Hello, world!
+
+:: Translations: 256e0d7: Translation
+
+¡Hola Mundo!
+
+:: Translations: 2ac373a: Source Text
+
+Farewell, world!
+
+:: Translations: 2ac373a: Translation
+
+# Insert a translation here.

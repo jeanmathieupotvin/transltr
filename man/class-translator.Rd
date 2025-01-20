@@ -8,7 +8,7 @@
 \alias{Translator}
 \title{Source Texts and Translations}
 \usage{
-translator(..., id = uuid(), hash_algorithm = get_hash_algorithms())
+translator(..., id = uuid(), algorithm = constant("algorithms"))
 
 is_translator(x)
 
@@ -19,7 +19,7 @@ is_translator(x)
 \arguments{
 \item{...}{Usage depends on the underlying function.
 \itemize{
-\item Any number of \code{\link{Block}} objects, and/or named character
+\item Any number of \code{\link{Text}} objects and/or named character
 strings for \code{\link[=translator]{translator()}} (in no preferred order).
 \item Further arguments passed to or from other methods for \code{\link[=format]{format()}},
 and \code{\link[=print]{print()}}.
@@ -29,9 +29,9 @@ and \code{\link[=print]{print()}}.
 unique identifier for the \code{\link{Translator}} object. Beware of
 plausible collisions when using user-defined values.}
 
-\item{hash_algorithm}{A character string equal to one of the values returned
-by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}. The algorithm to use when hashing source
-information for identification purposes.}
+\item{algorithm}{A non-empty and non-\link[base:NA]{NA} character string
+equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
+source information for identification purposes.}
 
 \item{x}{Any \R object.}
 }
@@ -39,26 +39,25 @@ information for identification purposes.}
 \code{\link[=translator]{translator()}} returns an \code{\link[R6:R6Class]{R6}} object of class
 \code{\link{Translator}}.
 
-\code{\link[=is_block]{is_block()}} returns a logical value.
+\code{\link[=is_translator]{is_translator()}} returns a logical value.
 
 \code{\link[=format]{format()}} returns a character vector.
 
 \code{\link[=print]{print()}} returns argument \code{x} invisibly.
 }
 \description{
-Store, structure, and manipulate source text\strong{s} and their translations.
+Structure and manipulate the source text of a project and its translations.
 }
 \details{
-A \code{\link{Translator}} object is a collection of many source texts,
-and related translations. It exposes a set of methods that can be used to
-safely manipulate the information it contains. Since \code{\link[=translator]{translator()}} sets
-all required parameters at inception, it can be ignored most of the time.
+A \code{\link{Translator}} object encapsulates the source text of a
+project (or any other \emph{context}) and all related translations. It exposes
+a set of methods that can be used to manipulate this information, but it
+is designed in such a way that its methods can be ignored most of the time.
 
-It is worthwhile to note that internally, \code{\link{Translator}} objects
-are collections of \code{\link{Block}} objects. Blocks are similar to
-Translators, but stores a single source text and their translations. They
-are also somewhat lower-level, and in typical situations, users do not
-directly interact with them.
+Under the hood, \code{\link{Translator}} objects are collections of
+\code{\link{Text}} objects. These do most of the work. They are treated as
+lower-level component and in typical situations, users rarely interact
+with them.
 \subsection{Translating Text}{
 
 Since it can be detected and processed by \code{\link[=find_source]{find_source()}}, it is recommended
@@ -66,57 +65,134 @@ to use \code{\link[=translate]{translate()}} at all times. Method
 \code{\link[=Translator]{Translator$translate()}} is the underlying workhorse function
 called by the former.
 }
+
+\subsection{Exporting and Importing Translators}{
+
+\code{\link{Translator}} objects can be saved and exported with
+\code{\link[=translator_write]{translator_write()}}.
+
+They can be imported back into an \R session with \code{\link[=translator_read]{translator_read()}}.
+}
 }
 \examples{
-## Create a Translator manually.
-translator(
-    id = "test-translator",
-    en = "English",
-    fr = "Français",
-    block("en",
-        location("a", 1L, 2L, 3L, 4L),
-        en = "Hello, world!",
-        fr = "Bonjour, monde!"),
-    block("en",
-        location("b", 5L, 6L, 7L, 8L),
-        en = "Farewell, world!",
-        fr = "Au revoir, monde!"))
+# Set source language.
+language_source_set("en")
 
-
-## ------------------------------------------------
-## Method `Translator$set_blocks`
-## ------------------------------------------------
-
-## Create Block objects.
-blk1 <- block("en",
+# Create a Translator object.
+# This would normally be done automatically
+# by find_source(), or translator_read().
+tr <- translator(
+  id = "test-translator",
+  en = "English",
+  es = "Español",
+  fr = "Français",
+  text(
     location("a", 1L, 2L, 3L, 4L),
     en = "Hello, world!",
-    fr = "Bonjour, monde!")
-blk2 <- block("en",
-    location("b", 5L, 6L, 7L, 8L),
+    fr = "Bonjour, monde!"),
+  text(
+    location("b", 1L, 2L, 3L, 4L),
     en = "Farewell, world!",
-    fr = "Au revoir, monde!")
+    fr = "Au revoir, monde!"))
 
-## Create a new Translator and register them.
-trans <- Translator$new()
-trans$set_blocks(blk1, blk2)
+is_translator(tr)
+
+# Translator objects has a specific format.
+# print() calls format() internally, as expected.
+print(tr)
+
+
+## ------------------------------------------------
+## Method `Translator$new`
+## ------------------------------------------------
+
+# Consider using translator() instead.
+tr <- Translator$new()
+
+## ------------------------------------------------
+## Method `Translator$translate`
+## ------------------------------------------------
+
+tr <- Translator$new()
+tr$set_text(en = "Hello, world!", fr = "Bonjour, monde!")
+
+# Consider using translate() instead.
+tr$translate("Hello, world!", lang = "en")  ## Outputs "Hello, world!"
+tr$translate("Hello, world!", lang = "fr")  ## Outputs "Bonjour, monde!"
+
+## ------------------------------------------------
+## Method `Translator$get_translation`
+## ------------------------------------------------
+
+tr <- Translator$new()
+tr$set_text(en = "Hello, world!")
+
+# Consider using translate() instead.
+tr$get_translation("256e0d7", "en")  ## Outputs "Hello, world!"
+
+## ------------------------------------------------
+## Method `Translator$get_text`
+## ------------------------------------------------
+
+tr <- Translator$new()
+tr$set_text(en = "Hello, world!")
+
+tr$get_translation("256e0d7", "en")  ## Outputs "Hello, world!"
+
+## ------------------------------------------------
+## Method `Translator$set_text`
+## ------------------------------------------------
+
+tr <- Translator$new()
+
+tr$set_text(en = "Hello, world!", location())
+
+## ------------------------------------------------
+## Method `Translator$set_texts`
+## ------------------------------------------------
+
+# Set source language.
+language_source_set("en")
+
+tr <- Translator$new()
+
+# Create Text objects.
+txt1 <- text(
+  location("a", 1L, 2L, 3L, 4L),
+  en = "Hello, world!",
+  fr = "Bonjour, monde!")
+
+txt2 <- text(
+  location("b", 5L, 6L, 7L, 8L),
+  en = "Farewell, world!",
+  fr = "Au revoir, monde!")
+
+tr$set_texts(txt1, txt2)
 
 ## ------------------------------------------------
 ## Method `Translator$set_native_languages`
 ## ------------------------------------------------
 
-trans <- Translator$new()
-trans$set_native_languages(
-    en = "English",
-    fr = "Français",
-    ja = "日本語")
+tr <- Translator$new()
+
+tr$set_native_languages(en = "English", fr = "Français")
+
+# Remove existing entries.
+tr$set_native_languages(fr = NULL)
+
+## ------------------------------------------------
+## Method `Translator$rm_text`
+## ------------------------------------------------
+
+tr <- Translator$new()
+tr$set_text(en = "Hello, world!")
+
+tr$rm_text("256e0d7")
 }
 \seealso{
 \code{\link[=translate]{translate()}},
-\code{\link[=translator_set]{translator_set()}},
-\code{\link[=translator_get]{translator_get()}},
-\code{\link[=read_translations]{read_translations()}},
-\code{\link[=write_translations]{write_translations()}}
+\code{\link[=translator_read]{translator_read()}},
+\code{\link[=translator_write]{translator_write()}}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
@@ -125,31 +201,42 @@ trans$set_native_languages(
 unique identifier for the underlying object. Beware of plausible
 collisions when using user-defined values.}
 
-\item{\code{hash_algorithm}}{A character string equal to one of the values returned
-by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}. The algorithm to use when hashing source
-information for identification purposes.}
+\item{\code{algorithm}}{A non-empty and non-\link[base:NA]{NA} character string
+equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
+source information for identification purposes.}
 
 \item{\code{hashes}}{A character vector of non-empty and non-\link[base:NA]{NA}
 values, or \code{NULL}. The set of all \code{hash} exposed by registered
-\code{\link{Block}} objects. If there is none, \code{hashes} is \code{NULL}.
+\code{\link{Text}} objects. If there is none, \code{hashes} is \code{NULL}.
 This is a \strong{read-only} field. It is automatically updated
-whenever field \code{hash_algorithm} is updated.}
+whenever field \code{algorithm} is updated.}
 
 \item{\code{source_texts}}{A character vector of non-empty and
 non-\link[base:NA]{NA} values, or \code{NULL}. The set of all
-\code{source_text} exposed by registered \code{\link{Block}}
+\code{source_text} exposed by registered \code{\link{Text}}
 objects. If there is none, \code{source_texts} is \code{NULL}.
 This is a \strong{read-only} field.}
 
+\item{\code{source_langs}}{A character vector of non-empty and
+non-\link[base:NA]{NA} values, or \code{NULL}. The set of all
+\code{source_text} exposed by registered \code{\link{Text}}
+objects. This is a \strong{read-only} field.
+\itemize{
+\item If there is none, \code{source_texts} is \code{NULL}.
+\item If there is one unique value, \code{source_texts} has
+a length equal to 1.
+\item Otherwise, a named character vector is returned.
+}}
+
 \item{\code{languages}}{A character vector of non-empty and
 non-\link[base:NA]{NA} values, or \code{NULL}. The set of all
-\code{languages} (codes) exposed by registered \code{\link{Block}}
+\code{languages} (codes) exposed by registered \code{\link{Text}}
 objects. If there is none, \code{languages} is \code{NULL}.
 This is a \strong{read-only} field.}
 
 \item{\code{native_languages}}{A named character vector of non-empty and
-non-\link[base:NA]{NA} values, or \code{NULL}. An optional, but useful map
-of \code{languages} (codes) to native language names. Names are codes,
+non-\link[base:NA]{NA} values, or \code{NULL}. A map (bijection) of
+\code{languages} (codes) to native language names. Names are codes,
 and values are native languages. If there is none,
 \code{native_languages} is \code{NULL}.
 
@@ -171,11 +258,11 @@ more information.}
 \item \href{#method-Translator-new}{\code{Translator$new()}}
 \item \href{#method-Translator-translate}{\code{Translator$translate()}}
 \item \href{#method-Translator-get_translation}{\code{Translator$get_translation()}}
-\item \href{#method-Translator-get_block}{\code{Translator$get_block()}}
-\item \href{#method-Translator-set_block}{\code{Translator$set_block()}}
-\item \href{#method-Translator-set_blocks}{\code{Translator$set_blocks()}}
+\item \href{#method-Translator-get_text}{\code{Translator$get_text()}}
+\item \href{#method-Translator-set_text}{\code{Translator$set_text()}}
+\item \href{#method-Translator-set_texts}{\code{Translator$set_texts()}}
 \item \href{#method-Translator-set_native_languages}{\code{Translator$set_native_languages()}}
-\item \href{#method-Translator-rm_block}{\code{Translator$rm_block()}}
+\item \href{#method-Translator-rm_text}{\code{Translator$rm_text()}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -184,7 +271,7 @@ more information.}
 \subsection{Method \code{new()}}{
 Create a \code{\link{Translator}} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Translator$new(id = uuid(), hash_algorithm = get_hash_algorithms())}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Translator$new(id = uuid(), algorithm = constant("algorithms"))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -194,15 +281,24 @@ Create a \code{\link{Translator}} object.
 unique identifier for the \code{\link{Translator}} object. Beware of
 plausible collisions when using user-defined values.}
 
-\item{\code{hash_algorithm}}{A character string equal to one of the values returned
-by \code{\link[=get_hash_algorithms]{get_hash_algorithms()}}. The algorithm to use when hashing source
-information for identification purposes.}
+\item{\code{algorithm}}{A non-empty and non-\link[base:NA]{NA} character string
+equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
+source information for identification purposes.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
 An \code{\link[R6:R6Class]{R6}} object of class \code{\link{Translator}}.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{# Consider using translator() instead.
+tr <- Translator$new()
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Translator-translate"></a>}}
@@ -211,26 +307,30 @@ An \code{\link[R6:R6Class]{R6}} object of class \code{\link{Translator}}.
 Translate text. Consider using \code{\link[=translate]{translate()}} instead
 of this method.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Translator$translate(..., lang = "", concat = " ", source_lang = "en")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Translator$translate(
+  ...,
+  lang = language_get(),
+  concat = constant("concat"),
+  source_lang = language_source_get()
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{...}}{Any number of literal character vectors. The source text to
-translate. Values can be empty and/or \link[base:NA]{NA}, but can lead to
-unexpected results.}
+translate. Values can be empty and/or \link[base:NA]{NA}, but this may lead
+to unexpected results.}
 
 \item{\code{lang}}{A non-empty and non-\link[base:NA]{NA} character string. The
-requested language.
+underlying language.
 
 A language is usually a code (of two or three letters) for a native
-language name. For example, \code{ja} is a code for \code{日本語} (Japanese). While
-users retain full control over codes, it is best to use language codes
-stemming from well-known schemes such as
+language name. While users retain full control over codes, it is best
+to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/IETF_language_tag}{IETF BCP 47}, or
-\href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
-Doing so maximizes portability and cross-compatibility between packages.}
+\href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}
+to maximize portability and cross-compatibility.}
 
 \item{\code{concat}}{A non-empty and non-\link[base:NA]{NA} character string used to
 concatenate values passed to \code{...}.}
@@ -242,16 +342,34 @@ information.}
 \if{html}{\out{</div>}}
 }
 \subsection{Details}{
-Values passed to \code{...} are first normalized by \code{\link[=text_normalize]{text_normalize()}},
-and the resulting string is hashed by \code{\link[=text_hash]{text_hash()}}. Then, the
-corresponding translation tied to the \code{hash} and \code{lang} pair is
-fetched via method \code{\link[=Translator]{Translator$get_translation()}}.
+Since it can be detected by \code{\link[=find_source]{find_source()}}, \code{\link[=translate]{translate()}} is the
+preferred interface to this method.
+
+Values passed to \code{...} are first \link[=normalize]{normalized},
+and then \link[=hash]{hashed}. The translation that corresponds to
+the resulting hash and \code{lang} pair is fetched via method
+\code{\link[=Translator]{Translator$get_translation()}}. Argument \code{lang} will
+not be validated if the resulting hash has no corresponding
+\code{\link{Text}} object.
 }
 
 \subsection{Returns}{
-A character string, or \code{NULL}. The corresponding translation
-in the requested language, or \code{NULL} if none is available.
+A character string, or \code{NULL} if the underlying translation
+is unavailable.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{tr <- Translator$new()
+tr$set_text(en = "Hello, world!", fr = "Bonjour, monde!")
+
+# Consider using translate() instead.
+tr$translate("Hello, world!", lang = "en")  ## Outputs "Hello, world!"
+tr$translate("Hello, world!", lang = "fr")  ## Outputs "Bonjour, monde!"
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Translator-get_translation"></a>}}
@@ -267,18 +385,17 @@ Extract a translation, or source texts.
 \describe{
 \item{\code{hash}}{A non-empty and non-\link[base:NA]{NA} character string. The
 unique identifier of the requested source text, or its underlying
-\code{\link{Block}} object.}
+\code{\link{Text}} object.}
 
 \item{\code{lang}}{A non-empty and non-\link[base:NA]{NA} character string. The
-requested language.
+underlying language.
 
 A language is usually a code (of two or three letters) for a native
-language name. For example, \code{ja} is a code for \code{日本語} (Japanese). While
-users retain full control over codes, it is best to use language codes
-stemming from well-known schemes such as
+language name. While users retain full control over codes, it is best
+to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/IETF_language_tag}{IETF BCP 47}, or
-\href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
-Doing so maximizes portability and cross-compatibility between packages.}
+\href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}
+to maximize portability and cross-compatibility.}
 }
 \if{html}{\out{</div>}}
 }
@@ -287,14 +404,26 @@ A character string. \code{NULL} is returned if the requested
 translation is not available (either \code{hash} or \code{lang} is not
 registered).
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{tr <- Translator$new()
+tr$set_text(en = "Hello, world!")
+
+# Consider using translate() instead.
+tr$get_translation("256e0d7", "en")  ## Outputs "Hello, world!"
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Translator-get_block"></a>}}
-\if{latex}{\out{\hypertarget{method-Translator-get_block}{}}}
-\subsection{Method \code{get_block()}}{
-Extract a \code{\link{Block}} object.
+\if{html}{\out{<a id="method-Translator-get_text"></a>}}
+\if{latex}{\out{\hypertarget{method-Translator-get_text}{}}}
+\subsection{Method \code{get_text()}}{
+Extract a \code{\link{Text}} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Translator$get_block(hash = "")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Translator$get_text(hash = "")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -302,57 +431,78 @@ Extract a \code{\link{Block}} object.
 \describe{
 \item{\code{hash}}{A non-empty and non-\link[base:NA]{NA} character string. The
 unique identifier of the requested source text, or its underlying
-\code{\link{Block}} object.}
+\code{\link{Text}} object.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{\link{Block}} object, or \code{NULL}.
+A \code{\link{Text}} object, or \code{NULL}.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{tr <- Translator$new()
+tr$set_text(en = "Hello, world!")
+
+tr$get_translation("256e0d7", "en")  ## Outputs "Hello, world!"
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Translator-set_block"></a>}}
-\if{latex}{\out{\hypertarget{method-Translator-set_block}{}}}
-\subsection{Method \code{set_block()}}{
-Simultaneously create and register a \code{\link{Block}}
+\if{html}{\out{<a id="method-Translator-set_text"></a>}}
+\if{latex}{\out{\hypertarget{method-Translator-set_text}{}}}
+\subsection{Method \code{set_text()}}{
+Simultaneously create and register a \code{\link{Text}}
 object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Translator$set_block(source_lang = "", ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Translator$set_text(..., source_lang = language_source_get())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{source_lang}}{Passed as is to \code{\link[=block]{block()}}.}
+\item{\code{...}}{Passed as is to \code{\link[=text]{text()}}.}
 
-\item{\code{...}}{Passed as is to \code{\link[=block]{block()}}.}
+\item{\code{source_lang}}{Passed as is to \code{\link[=text]{text()}}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
 A \code{NULL}, invisibly.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{tr <- Translator$new()
+
+tr$set_text(en = "Hello, world!", location())
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Translator-set_blocks"></a>}}
-\if{latex}{\out{\hypertarget{method-Translator-set_blocks}{}}}
-\subsection{Method \code{set_blocks()}}{
-Register one or more \code{\link{Block}} objects.
+\if{html}{\out{<a id="method-Translator-set_texts"></a>}}
+\if{latex}{\out{\hypertarget{method-Translator-set_texts}{}}}
+\subsection{Method \code{set_texts()}}{
+Register one or more \code{\link{Text}} objects.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Translator$set_blocks(...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Translator$set_texts(...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{Any number of \code{\link{Block}} objects.}
+\item{\code{...}}{Any number of \code{\link{Text}} objects.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Details}{
-This method calls \code{\link[=merge_blocks]{merge_blocks()}} to merge all
+This method calls \code{\link[=merge_texts]{merge_texts()}} to merge all
 values passed to \code{...} together with previously registered
-\code{\link{Block}} objects. The underlying registered source
+\code{\link{Text}} objects. The underlying registered source
 texts, translations, and \code{\link{Location}} objects
 won't be duplicated.
 }
@@ -362,19 +512,23 @@ A \code{NULL}, invisibly.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{## Create Block objects.
-blk1 <- block("en",
-    location("a", 1L, 2L, 3L, 4L),
-    en = "Hello, world!",
-    fr = "Bonjour, monde!")
-blk2 <- block("en",
-    location("b", 5L, 6L, 7L, 8L),
-    en = "Farewell, world!",
-    fr = "Au revoir, monde!")
+\preformatted{# Set source language.
+language_source_set("en")
 
-## Create a new Translator and register them.
-trans <- Translator$new()
-trans$set_blocks(blk1, blk2)
+tr <- Translator$new()
+
+# Create Text objects.
+txt1 <- text(
+  location("a", 1L, 2L, 3L, 4L),
+  en = "Hello, world!",
+  fr = "Bonjour, monde!")
+
+txt2 <- text(
+  location("b", 5L, 6L, 7L, 8L),
+  en = "Farewell, world!",
+  fr = "Au revoir, monde!")
+
+tr$set_texts(txt1, txt2)
 }
 \if{html}{\out{</div>}}
 
@@ -394,7 +548,7 @@ Map a language code to a native language name.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{...}}{Any number of named, non-empty, and non-\link[base:NA]{NA}
-character strings. Names are codes, and values are native
+character strings. Names are codes and values are native
 languages. See field \code{native_languages} for more information.}
 }
 \if{html}{\out{</div>}}
@@ -404,11 +558,12 @@ A \code{NULL}, invisibly.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{trans <- Translator$new()
-trans$set_native_languages(
-    en = "English",
-    fr = "Français",
-    ja = "日本語")
+\preformatted{tr <- Translator$new()
+
+tr$set_native_languages(en = "English", fr = "Français")
+
+# Remove existing entries.
+tr$set_native_languages(fr = NULL)
 }
 \if{html}{\out{</div>}}
 
@@ -416,24 +571,35 @@ trans$set_native_languages(
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Translator-rm_block"></a>}}
-\if{latex}{\out{\hypertarget{method-Translator-rm_block}{}}}
-\subsection{Method \code{rm_block()}}{
+\if{html}{\out{<a id="method-Translator-rm_text"></a>}}
+\if{latex}{\out{\hypertarget{method-Translator-rm_text}{}}}
+\subsection{Method \code{rm_text()}}{
 Remove a registered location.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Translator$rm_block(hash = "")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Translator$rm_text(hash = "")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{hash}}{A non-empty and non-\link[base:NA]{NA} character string
-identifying the \code{\link{Block}} object to be removed.}
+identifying the \code{\link{Text}} object to be removed.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
 A \code{NULL}, invisibly.
 }
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{tr <- Translator$new()
+tr$set_text(en = "Hello, world!")
+
+tr$rm_text("256e0d7")
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 }

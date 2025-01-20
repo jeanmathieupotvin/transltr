@@ -4,7 +4,8 @@
 #'
 #' @author Jean-Mathieu Potvin (<jeanmathieupotvin@@ununoctium.dev>)
 #'
-#' @seealso [The usethis package](https://usethis.r-lib.org/)
+#' @seealso
+#' [The usethis package](https://usethis.r-lib.org/)
 
 
 usethis::use_description(
@@ -12,19 +13,19 @@ usethis::use_description(
     check_name = TRUE,
     fields     = list(
         Package     = "transltr",
-        Title       = "A framework to support many languages in any R application",
-        Version     = "0.0.1.9003",
+        Title       = "Support Many Languages in R Programs",
+        Version     = "0.0.1",
         Language    = "en",
         Encoding    = "UTF-8",
         Roxygen     = "list(markdown = TRUE, r6 = TRUE)",
         URL         = "https://github.com/jeanmathieupotvin/transltr",
-        BugReports  = "https://github.com/jeanmathieupotvin/transltr/issues/new",
+        BugReports  = "https://github.com/jeanmathieupotvin/transltr/issues",
         `Authors@R` = 'c(
             utils::person(
                 given   = "Jean-Mathieu",
                 family  = "Potvin",
                 email   = "jeanmathieupotvin@ununoctium.dev",
-                role    = c("aut", "cre")),
+                role    = c("aut", "cre", "cph")),
             utils::person(
                 given   = "Jérôme",
                 family  = "Lavoué",
@@ -32,21 +33,15 @@ usethis::use_description(
                 role    = c("ctb", "fnd", "rev"),
                 comment = c(ORCID = "0000-0003-4950-5475")))',
         Description = "
-            An alternative to gettext() and xgettext() that enables support of
-            many languages in any R application. Find, and extract source text
-            that requires translation. Store, structure, and manipulate source
-            texts and translations via R6 classes exposing a user-friendly API.
-            Easily export and import to/from a plain text format that fosters
-            collaboration with other non-technical and external collaborators."))
-
-usethis::use_mit_license("Jean-Mathieu Potvin")
+            An object model for source text and translations. Find and extract
+            translatable strings. Provide translations and seamlessly retrieve
+            them at runtime."))
 
 usethis::use_testthat(parallel = FALSE)
 usethis::use_package("digest")
 usethis::use_package("R6")
 usethis::use_package("utils")
 usethis::use_package("yaml")
-
 usethis::use_package("covr",           "Suggests")
 usethis::use_package("devtools",       "Suggests")
 usethis::use_package("lifecycle",      "Suggests")

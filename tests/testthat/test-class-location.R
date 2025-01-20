@@ -5,6 +5,10 @@ path <- "tests/testthat/my-test-file"
 loc1 <- location(path, 1L, 2L, 3L, 4L)
 loc2 <- location(path, c(1L, 11L), c(22L, 222L), c(10L, 3333L), c(1L, 4L))
 
+ranges <- c(
+    "Ln  1, Col  22 @ Ln   10, Col 1",
+    "Ln 11, Col 222 @ Ln 3333, Col 4")
+
 
 # location() -------------------------------------------------------------------
 
@@ -88,32 +92,9 @@ test_that("is_location() returns a logical", {
 
 
 test_that("format() returns a character", {
-    expect_type(format(location(), "long"),  "character")
-    expect_type(format(location(), "short"), "character")
-    expect_length(format(location(), "long"),  3L)
-    expect_length(format(location(), "short"), 1L)
-})
-
-test_that("format() validates how", {
-    expect_error(format(location(), "error"))
-    expect_snapshot(format(location(), "error"), error = TRUE)
-})
-
-test_that(".format_short_location() throws an error if multiple ranges must be printed", {
-    expect_error(format(loc2, "short"))
-    expect_snapshot(format(loc2, "short"), error = TRUE)
-})
-
-test_that(".format_short_location() returns a character string", {
-    expect_identical(
-        format(location(path), "short"),
-        "tests/testthat/my-test-file: ln 1, col 1 @ ln 1, col 1")
-})
-
-test_that(".format_long_location() returns a character", {
     # This test block is a little bit
     # fragile, but hardcoding expected
-    # values is much more simpler.
+    # values is simpler.
     fmt_loc1 <- format(loc1)
     fmt_loc2 <- format(loc2)
 
@@ -123,14 +104,14 @@ test_that(".format_long_location() returns a character", {
     expect_length(fmt_loc2, 5L)
     expect_identical(fmt_loc1, c(
         "<Location>",
-        "  Path: tests/testthat/my-test-file",
-        "  Ranges: line 1, column 2 @ line 3, column 4"))
+        " Path: tests/testthat/my-test-file",
+        " Ranges: Ln 1, Col 2 @ Ln 3, Col 4"))
     expect_identical(fmt_loc2, c(
         "<Location>",
-        "  Path: tests/testthat/my-test-file",
-        "  Ranges: ",
-        "    line  1, column  22 @ line   10, column 1",
-        "    line 11, column 222 @ line 3333, column 4"))
+        " Path: tests/testthat/my-test-file",
+        " Ranges:",
+        "  Ln  1, Col  22 @ Ln   10, Col 1",
+        "  Ln 11, Col 222 @ Ln 3333, Col 4"))
 })
 
 
@@ -208,4 +189,107 @@ test_that("merge_locations() combines Location objects having different paths", 
     expect_identical(out[[1L]], location("a", c(1L, 2L), c(1L, 2L), c(1L, 2L), c(1L, 2L)))
     expect_identical(out[[2L]], location("b", c(3L, 4L), c(3L, 4L), c(3L, 4L), c(3L, 4L)))
     expect_identical(out[[3L]], location("c", 5L, 5L, 5L, 5L))
+})
+
+
+# range_format() ---------------------------------------------------------------
+
+
+test_that("range_format() returns a character", {
+    out1 <- range_format(loc1)
+    out2 <- range_format(loc2)
+
+    expect_type(out1, "character")
+    expect_type(out2, "character")
+    expect_length(out1, 1L)
+    expect_length(out2, 2L)
+})
+
+test_that("range_format() validates x", {
+    expect_error(range_format(1L))
+    expect_snapshot(range_format(1L), error = TRUE)
+})
+
+test_that("range_format() creates ranges according to the expected format", {
+    expect_identical(range_format(loc1), "Ln 1, Col 2 @ Ln 3, Col 4")
+    expect_identical(range_format(loc2), c(
+        "Ln  1, Col  22 @ Ln   10, Col 1",
+        "Ln 11, Col 222 @ Ln 3333, Col 4"))
+})
+
+
+# range_parse() ----------------------------------------------------------------
+
+
+test_that("range_parse() returns a list of integers", {
+    out <- range_parse(ranges)
+
+    expect_type(out, "list")
+    expect_length(out, 2L)
+    expect_true(all(vapply_1l(out, is.integer)))
+})
+
+test_that("range_parse() validates strings", {
+    expect_error(range_parse(1L))
+    expect_snapshot(range_parse(1L), error = TRUE)
+})
+
+test_that("range_parse() suppresses warnings", {
+    expect_no_warning(range_parse("Line 1, Column 2 @ Line 3, Column 4"))
+})
+
+test_that("range_parse() parses strings appropriately", {
+    out <- range_parse(ranges)
+
+    expect_identical(out[[1L]], c(1L, 22L, 10L, 1L))
+    expect_identical(out[[2L]], c(11L, 222L, 3333L, 4L))
+
+    expect_identical(
+        range_parse("Ln 1, Col 2 @ Ln 3, Col 4")[[1L]],
+        c(1L, 2L, 3L, 4L))
+    expect_identical(
+        range_parse("Ln  1, Col   2 @ Ln    3, Col    4")[[1L]],
+        c(1L, 2L, 3L, 4L))
+    expect_identical(
+        range_parse("Ln 1.0, Col 2.34 @ Ln 3.14, Col 4.3")[[1L]],
+        c(1L, 2L, 3L, 4L))
+
+    expect_identical(
+        range_parse("Line 1, Column 2 @ Line 3, Column 4")[[1L]],
+        rep.int(NA_integer_, 4L))
+    expect_identical(
+        range_parse("Ln 1, Col 2 @ Ln 3, Col")[[1L]],
+        rep.int(NA_integer_, 4L))
+    expect_identical(
+        range_parse("Ln X, Col 2 @ Ln 3, Col 4")[[1L]],
+        rep.int(NA_integer_, 4L))
+    expect_identical(
+        range_parse("Ln X, Col 2 @@ Ln 3, Col 4")[[1L]],
+        rep.int(NA_integer_, 4L))
+})
+
+
+# range_is_parseable() ---------------------------------------------------------
+
+
+test_that("range_is_parseable() returns an logical", {
+    out <- range_is_parseable(ranges)
+
+    expect_type(out, "logical")
+    expect_length(out, 2L)
+})
+
+test_that("range_is_parseable() validates strings", {
+    expect_error(range_is_parseable(1L))
+    expect_snapshot(range_is_parseable(1L), error = TRUE)
+})
+
+test_that("range_is_parseable() checks that strings can be parsed", {
+    expect_true(range_is_parseable("Ln 1, Col 2 @ Ln 3, Col 4"))
+    expect_true(range_is_parseable("Ln  1, Col   2 @ Ln    3, Col    4"))
+    expect_true(range_is_parseable("Ln 1.0, Col 2.34 @ Ln 3.14, Col 4.3"))
+    expect_false(range_is_parseable("Line 1, Column 2 @ Line 3, Column 4"))
+    expect_false(range_is_parseable("Ln 1, Col 2 @ Ln 3, Col"))
+    expect_false(range_is_parseable("Ln X, Col 2 @ Ln 3, Col 4"))
+    expect_false(range_is_parseable("Ln X, Col 2 @@ Ln 3, Col 4"))
 })

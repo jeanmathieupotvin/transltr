@@ -1,0 +1,22 @@
+#' Mock text file in foreign encoding
+#'
+#' This mock text file is used to test whether [read_text()] re-encodes
+#' text input to `UTF-8` properly. It contains five Hiragana (japanese)
+#' characters (a, i, u, e, o) and has a `EUC-JP` encoding. The latter is
+#' convenient because it is ASCII-safe. Therefore, this header will never
+#' generate an error and can be part of the file itself.
+#'
+#' @usage
+#' ## Expected usage in tests/testthat/test-io-text.R
+#' read_text(get_mock_path("text-io-eucjp", "txt"))
+#'
+#' @note
+#' This header is included in the output of [read_text()]. Since it only
+#' contains ASCII characters, it will always have a marked encoding equal
+#' to `"unknown"` in R. This is because ASCII is pretty much universal and
+#' cross-compatible with (almost) all known character encodings. As such,
+#' it is as much `UTF-8` as it is `EUC-JP`.
+#'
+NULL
+
+あいうえお
