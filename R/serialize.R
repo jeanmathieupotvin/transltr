@@ -741,70 +741,59 @@ import.ExportedLocation <- function(x, ...) {
 #' @keywords internal
 #' @export
 import.ExportedTranslations <- function(x, tr = NULL, ...) {
-    # FIXME: this will likely require an assert() method.
-    x[["Translations"]] <- lapply(x[["Translations"]], \(subsection) {
-        placeholder <- constant("empty")
+    empty        <- constant("empty")
+    untranslated <- constant("untranslated")
 
-        # Try extracting child elements. If either is NULL,
-        # set them equal to a placeholder. This happens if
-        # a section is totally missing.
-        source_text <- subsection[["Source Text"]] %??% placeholder
-        translation <- subsection[["Translation"]] %??% placeholder
-
-        # If either is an empty string, replace them
-        # by the empty constant. A field may be empty
-        # when a section is lacking contents.
-        source_text <- if (nzchar(source_text)) source_text else placeholder
-        translation <- if (nzchar(translation)) translation else placeholder
-
-        # If the underlying translation field is equal
-        # to the default untranslated constant, replace
-        # it by the empty constant. The untranslated
-        # constant is added by export_translations().
-        translation <- if (identical(translation, constant("untranslated"))) {
-            placeholder
-        } else {
-            translation
+    # Set untranslated source texts
+    # (empty Translation sections)
+    # equal to constant empty.
+    trans <- rapply(x[["Translations"]], how = "replace", f = \(txt) {
+        if (!nzchar(txt) || txt == untranslated) {
+            return(empty)
         }
 
-        return(
-            list(
-                `Source Text` = normalize(source_text),
-                Translation   = normalize(translation)))
+        return(normalize(txt))
     })
 
-    # Translator and Text objects are environments. They
-    # have reference semantics and are updated in place.
+    # Avoid custom fields (possibly added by users) to
+    # be included in the ExportedTranslations object.
+    out <- structure(
+        list(
+            Identifier        = x[["Identifier"]],
+            `Language Code`   = x[["Language Code"]],
+            Language          = x[["Language"]],
+            `Source Language` = x[["Source Language"]],
+            Translations      = trans),
+        class = "ExportedTranslations",
+        tag = "Translations")
+
     if (!is.null(tr)) {
         if (!is_translator(tr)) {
             stops("'tr' must be a 'Translator' object.")
         }
-        if (!identical(x[["Identifier"]], tr$id)) {
-            stopf(
-                "'Identifier' ('%s') does not match the 'Translator' object's identifier ('%s').",
-                x[["Identifier"]], tr$id)
-        }
 
         lang <- x[["Language Code"]]
-        do.call(tr$set_native_languages, structure(x["Language"], names = lang))
 
-        # Unavailable (empty) translations are skipped
-        # silently and not registered. lapply() is used
-        # to preserve names, which are required below
-        # (names correspond to reduced hashes).
-        trans  <- lapply(x[["Translations"]], `[[`, i = "Translation")
-        trans  <- trans[!vapply_1l(trans, identical, constant("empty"))]
-        hashes <- names(trans)
+        if (!match(lang, names(tr$native_languages), 0L)) {
+            do.call(
+                tr$set_native_languages,
+                structure(x["Language"], names = lang))
+        }
 
-        # Register translations (by reference).
-        map(hashes, trans, fun = \(hash, trans) {
+        # Empty translations are skipped silently.
+        # vapply() is used to keep names (reduced
+        # hashes) required below.
+        texts <- vapply(trans, `[[`, NA_character_, i = "Translation")
+        texts <- texts[texts != empty]
+
+        map(hash = names(texts), text = texts, fun = \(hash, text) {
             if (!is.null(txt <- tr$get_text(hash))) {
-                txt$set_translation(lang, trans)
+                txt$set_translation(lang, text)
             }
         })
     }
 
-    return(x)
+    return(out)
 }
 
 #' @rdname serialize

@@ -885,7 +885,75 @@ test_that("deserialize() throws an error when string is an invalid yaml object",
 # import.ExportedTranslations() ------------------------------------------------
 
 
-# Here.
+test_that("import.ExportedTranslations() returns an object of S3 class ExportedTranslations", {
+    trans <- export_translations(tr, "fr")
+    out   <- import(trans)
+
+    expect_s3_class(out, "ExportedTranslations")
+    expect_identical(out, trans)
+})
+
+test_that("import.ExportedTranslations() replaces empty translations with a constant", {
+    # Language el has no available translation.
+    trans1 <- export_translations(tr, "el")
+    trans2 <- trans1
+    trans2$Translations$`256e0d7`$Translation <- ""
+    trans2$Translations$`2ac373a`$Translation <- ""
+    out1 <- import(trans1)
+    out2 <- import(trans2)
+
+    expect_identical(out1$Translations$`256e0d7`$Translation, constant("empty"))
+    expect_identical(out1$Translations$`2ac373a`$Translation, constant("empty"))
+    expect_identical(out2$Translations$`256e0d7`$Translation, constant("empty"))
+    expect_identical(out2$Translations$`2ac373a`$Translation, constant("empty"))
+})
+
+test_that("import.ExportedTranslations() normalizes translations", {
+    trans <- export_translations(tr, "el")
+    trans$Translations$`256e0d7`$Translation <- "
+        Hello,
+        world!"
+    trans$Translations$`2ac373a`$Translation <- "
+        Farewell,
+        world!"
+    out <- import(trans)
+
+    expect_identical(out$Translations$`256e0d7`$Translation, "Hello, world!")
+    expect_identical(out$Translations$`2ac373a`$Translation, "Farewell, world!")
+})
+
+test_that("import.ExportedTranslations() validates tr if it is not null", {
+    import(export_translations(tr, "fr"), tr)
+
+    expect_error(import(export_translations(tr, "fr"), 1L))
+    expect_snapshot(import(export_translations(tr, "fr"), 1L), error = TRUE)
+})
+
+test_that("import.ExportedTranslations() registers language if tr is not null and it is not registered", {
+    trans <- export_translations(tr, "fr")
+    tr2   <- Translator$new()
+    tr3   <- Translator$new()
+    tr3$set_native_languages(fr = "French")
+    import(trans, tr2)
+    import(trans, tr3)
+
+    expect_identical(tr2$native_languages, c(fr = tr2$native_languages[["fr"]]))
+    expect_identical(tr3$native_languages, c(fr = tr3$native_languages[["fr"]]))
+})
+
+test_that("import.ExportedTranslations() registers translations", {
+    # Translations are only registered if they
+    # correspond to an existing source text.
+    lang  <- "fr"
+    trans <- export_translations(tr, lang)
+    tr2   <- Translator$new()
+    tr2$set_text(en = "Hello, world!")
+    tr2$set_text(en = "Farewell, world!")
+    import(trans, tr2)
+
+    expect_identical(tr2$get_translation("256e0d7", lang), "Bonjour, monde!")
+    expect_identical(tr2$get_translation("2ac373a", lang), "Au revoir, monde!")
+})
 
 
 # deserialize_translations() ---------------------------------------------------

@@ -512,3 +512,11 @@
       Error:
       ! while unserializing object: scanner error: while scanning a simple key at line 2, column 1 could not find expected ':' at line 3, column 1.
 
+# import.ExportedTranslations() validates tr if it is not null
+
+    Code
+      import(export_translations(tr, "fr"), 1L)
+    Condition
+      Error:
+      ! 'tr' must be a 'Translator' object.
+
