@@ -3,6 +3,7 @@
 S3method(as_text,call)
 S3method(assert,ExportedLocation)
 S3method(assert,ExportedText)
+S3method(assert,ExportedTranslations)
 S3method(assert,ExportedTranslator)
 S3method(assert,default)
 S3method(c,Location)

@@ -17,6 +17,7 @@
 \alias{assert.ExportedTranslator}
 \alias{assert.ExportedText}
 \alias{assert.ExportedLocation}
+\alias{assert.ExportedTranslations}
 \alias{import}
 \alias{import.ExportedTranslator}
 \alias{import.ExportedText}
@@ -49,6 +50,8 @@ export(x, ...)
 \method{assert}{ExportedText}(x, throw_error = TRUE, ...)
 
 \method{assert}{ExportedLocation}(x, throw_error = TRUE, ...)
+
+\method{assert}{ExportedTranslations}(x, throw_error = TRUE, ...)
 
 import(x, ...)
 
@@ -141,10 +144,10 @@ translations if a \code{\link{Translator}} object is passed to \code{tr}.
 unsupported objects.
 
 \code{\link[=assert.ExportedTranslator]{assert.ExportedTranslator()}},
-\code{\link[=assert.ExportedText]{assert.ExportedText()}}, and
-\code{\link[=assert.ExportedLocation]{assert.ExportedLocation()}},
-return a character vector, possibly empty. If \code{throw_error} is \code{TRUE}, an
-error is thrown if an object is invalid.
+\code{\link[=assert.ExportedText]{assert.ExportedText()}},
+\code{\link[=assert.ExportedLocation]{assert.ExportedLocation()}}, and
+\code{\link[=assert.ExportedTranslations]{assert.ExportedTranslations()}} return a character vector, possibly empty.
+If \code{throw_error} is \code{TRUE}, an error is thrown if an object is invalid.
 
 \code{\link[=format_errors]{format_errors()}} returns a character vector, and outputs its contents as
 an error if \code{throw_error} is \code{TRUE}.
@@ -344,6 +347,7 @@ transltr:::deserialize_translations(transltr:::serialize_translations(tr, "es"))
 transltr:::assert(transltr:::export(loc))
 transltr:::assert(transltr:::export(txt))
 transltr:::assert(transltr:::export(tr))
+transltr:::assert(transltr:::export_translations(tr, "fr"))
 
 # assert() accumulates errors before throwing them.
 # Below an ExportedTranslator object is created, and errors
@@ -357,11 +361,6 @@ tr_invalid$Texts[[2L]]$Locations[[1L]]$Path <- 1i
 tr_invalid$Texts[[2L]]$Locations[[1L]]$Ranges <- "Ln 1, Col 2 @ Ln 3"
 
 \dontrun{transltr:::assert(tr_invalid)}
-
-# assert() does not have a method for ExportedTranslations
-# objects. It dispatches to assert.default() which considers
-# the former as being always valid.
-transltr:::assert(transltr:::export_translations(tr, "fr"))
 
 # import() is the conceptual inverse of export().
 transltr:::import(transltr:::export(loc))

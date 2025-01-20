@@ -690,6 +690,96 @@ test_that("assert.ExportedTranslator() detects invalid Texts field", {
 })
 
 
+# assert.ExportedTranslations() ------------------------------------------------
+
+
+test_that("assert.ExportedTranslations() returns a character if x is valid", {
+    out <- assert(export_translations(tr, "fr"))
+
+    expect_type(out, "character")
+    expect_length(out, 0L)
+})
+
+test_that("assert.ExportedTranslations() returns a character if x is invalid and throw_error is false", {
+    # By creating an integer of class ExportedTranslations,
+    # we simultaneously check that (1) it is replaced by an
+    # empty list, and (2) all errors are accumulated and
+    # reported.
+    invalid <- structure(1L, class = "ExportedTranslations")
+    out     <- assert(invalid, FALSE)
+
+    expect_identical(out, c(
+        "['<unknown>'] 'Identifier' must be a non-empty character string.",
+        "['<unknown>'] 'Language Code' must be a non-empty character string.",
+        "['<unknown>'] 'Language' must be a non-empty character string.",
+        "['<unknown>'] 'Source Language' must be a non-empty character string.",
+        "['<unknown>'] 'Translations' must be a sequence of 'Source Text', and 'Translation' sections."))
+})
+
+test_that("assert.ExportedTranslations() throws an error if x is invalid and throw_error is true", {
+    invalid <- structure(1L, class = "ExportedTranslations")
+
+    expect_error(assert(invalid))
+    expect_snapshot(assert(invalid), error = TRUE)
+})
+
+test_that("assert.ExportedTranslations() detects invalid Identifier field", {
+    out <- export_translations(tr, "fr")
+    out$Identifier <- 1L
+
+    expect_error(assert(out))
+    expect_snapshot(assert(out), error = TRUE)
+})
+
+test_that("assert.ExportedTranslations() detects invalid Language Code field", {
+    out <- export_translations(tr, "fr")
+    out$`Language Code` <- 1L
+
+    expect_error(assert(out))
+    expect_snapshot(assert(out), error = TRUE)
+})
+
+test_that("assert.ExportedTranslations() detects invalid Language field", {
+    out <- export_translations(tr, "fr")
+    out$Language <- 1L
+
+    expect_error(assert(out))
+    expect_snapshot(assert(out), error = TRUE)
+})
+
+test_that("assert.ExportedTranslations() detects invalid Source Language field", {
+    out <- export_translations(tr, "fr")
+    out$`Source Language` <- 1L
+
+    expect_error(assert(out))
+    expect_snapshot(assert(out), error = TRUE)
+})
+
+test_that("assert.ExportedTranslations() detects invalid Translations field", {
+    out1 <- export_translations(tr, "fr")
+    out2 <- out1
+    out3 <- out1
+
+    # Translations is not a list.
+    out1$Translations <- 1L
+
+    # Translations is a list, but not named.
+    out2$Translations <- list(list(`Source Text` = "a", Translation = "a"))
+
+    # Translations is a named list, but contains
+    # Source Text (sub-child) elements that are
+    # not character strings.
+    out3$Translations <- list(a = list(`Source Text` = 1L, Translation = "a"))
+
+    expect_error(assert(out1))
+    expect_error(assert(out2))
+    expect_error(assert(out3))
+    expect_snapshot(assert(out1), error = TRUE)
+    expect_snapshot(assert(out2), error = TRUE)
+    expect_snapshot(assert(out3), error = TRUE)
+})
+
+
 # import() ---------------------------------------------------------------------
 
 

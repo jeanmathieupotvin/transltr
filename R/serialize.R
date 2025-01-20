@@ -123,10 +123,10 @@
 #' unsupported objects.
 #'
 #' [assert.ExportedTranslator()],
-#' [assert.ExportedText()], and
-#' [assert.ExportedLocation()],
-#' return a character vector, possibly empty. If `throw_error` is `TRUE`, an
-#' error is thrown if an object is invalid.
+#' [assert.ExportedText()],
+#' [assert.ExportedLocation()], and
+#' [assert.ExportedTranslations()] return a character vector, possibly empty.
+#' If `throw_error` is `TRUE`, an error is thrown if an object is invalid.
 #'
 #' [format_errors()] returns a character vector, and outputs its contents as
 #' an error if `throw_error` is `TRUE`.
@@ -276,6 +276,7 @@
 #' transltr:::assert(transltr:::export(loc))
 #' transltr:::assert(transltr:::export(txt))
 #' transltr:::assert(transltr:::export(tr))
+#' transltr:::assert(transltr:::export_translations(tr, "fr"))
 #'
 #' # assert() accumulates errors before throwing them.
 #' # Below an ExportedTranslator object is created, and errors
@@ -289,11 +290,6 @@
 #' tr_invalid$Texts[[2L]]$Locations[[1L]]$Ranges <- "Ln 1, Col 2 @ Ln 3"
 #'
 #' \dontrun{transltr:::assert(tr_invalid)}
-#'
-#' # assert() does not have a method for ExportedTranslations
-#' # objects. It dispatches to assert.default() which considers
-#' # the former as being always valid.
-#' transltr:::assert(transltr:::export_translations(tr, "fr"))
 #'
 #' # import() is the conceptual inverse of export().
 #' transltr:::import(transltr:::export(loc))
@@ -361,7 +357,7 @@ deserialize <- function(string = "") {
 #' @keywords internal
 deserialize_translations <- function(string = "", tr = NULL) {
     obj <- structure(flat_deserialize(string), class = "ExportedTranslations")
-    return(import(obj, tr))
+    return(import(obj, tr = tr))
 }
 
 #' @rdname serialize
@@ -616,6 +612,59 @@ assert.ExportedLocation <- function(x, throw_error = TRUE, ...) {
 
     if (length(errors)) {
         return(format_errors(errors, x[["Identifier"]], throw_error))
+    }
+
+    return(character())
+}
+
+#' @rdname serialize
+#' @keywords internal
+#' @export
+assert.ExportedTranslations <- function(x, throw_error = TRUE, ...) {
+    # This prevents any out-of-bound
+    # errors that may stem from `[[`.
+    if (!is.list(x)) {
+        x <- list()
+    }
+
+    id          <- x[["Identifier"]]
+    lang        <- x[["Language Code"]]
+    native_lang <- x[["Language"]]
+    source_lang <- x[["Source Language"]]
+    trans       <- x[["Translations"]]
+
+    # Accumulate error messages.
+    errors <- c(
+        # Validate Identifier.
+        if (!is_chr1(id)) {
+            "'Identifier' must be a non-empty character string."
+        },
+        # Validate Language Code.
+        if (!is_chr1(lang)) {
+            "'Language Code' must be a non-empty character string."
+        },
+        # Validate Language.
+        if (!is_chr1(native_lang)) {
+            "'Language' must be a non-empty character string."
+        },
+        # Validate Source Language.
+        if (!is_chr1(source_lang)) {
+            "'Source Language' must be a non-empty character string."
+        },
+        # Validate Translations.
+        if (!is_list(trans) || !is_named(trans)) {
+            "'Translations' must be a sequence of 'Source Text', and 'Translation' sections."
+        },
+        if (!all(vapply_1l(trans, \(x) !match("Source Text", names(x), 0L) || is_chr1(x[["Source Text"]])))) {
+            "'Source Text' sections must be character strings. They can also be empty, or missing."
+        },
+        if (!all(vapply_1l(trans, \(x) match("Translation", names(x), 0L) && is_chr1(x[["Translation"]], TRUE)))) {
+            "'Translation' sections must be character strings. They can also be empty, but not missing."
+        }
+    )
+
+    if (length(errors)) {
+        return(format_errors(errors, id, throw_error))
     }
 
     return(character())

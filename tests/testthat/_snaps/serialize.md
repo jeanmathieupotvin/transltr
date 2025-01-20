@@ -407,6 +407,77 @@
        - ['test-id'] 'Hash' must be a null, or a non-empty character string.
        - ['test-id'] 'Algorithm' must be equal to 'sha1', or 'utf8'.
 
+# assert.ExportedTranslations() throws an error if x is invalid and throw_error is true
+
+    Code
+      assert(invalid)
+    Condition
+      Error:
+      ! 
+       - 'Identifier' must be a non-empty character string.
+       - 'Language Code' must be a non-empty character string.
+       - 'Language' must be a non-empty character string.
+       - 'Source Language' must be a non-empty character string.
+       - 'Translations' must be a sequence of 'Source Text', and 'Translation' sections.
+
+# assert.ExportedTranslations() detects invalid Identifier field
+
+    Code
+      assert(out)
+    Condition
+      Error:
+      ! 'Identifier' must be a non-empty character string.
+
+# assert.ExportedTranslations() detects invalid Language Code field
+
+    Code
+      assert(out)
+    Condition
+      Error:
+      ! 'Language Code' must be a non-empty character string.
+
+# assert.ExportedTranslations() detects invalid Language field
+
+    Code
+      assert(out)
+    Condition
+      Error:
+      ! 'Language' must be a non-empty character string.
+
+# assert.ExportedTranslations() detects invalid Source Language field
+
+    Code
+      assert(out)
+    Condition
+      Error:
+      ! 'Source Language' must be a non-empty character string.
+
+# assert.ExportedTranslations() detects invalid Translations field
+
+    Code
+      assert(out1)
+    Condition
+      Error:
+      ! 
+       - 'Translations' must be a sequence of 'Source Text', and 'Translation' sections.
+       - 'Translation' sections must be character strings. They can also be empty, but not missing.
+
+---
+
+    Code
+      assert(out2)
+    Condition
+      Error:
+      ! 'Translations' must be a sequence of 'Source Text', and 'Translation' sections.
+
+---
+
+    Code
+      assert(out3)
+    Condition
+      Error:
+      ! 'Source Text' sections must be character strings. They can also be empty, or missing.
+
 # import.default() works
 
     Code
