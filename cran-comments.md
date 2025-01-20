@@ -40,6 +40,6 @@ Status: OK
 
 # Comments
 
-* This is a new release.
+* This is a first release.
 * PDF manual contains some necessary non-ASCII characters such as `ç`, `ñ`,
   and `¡`. They did not generate error when building the manual.
