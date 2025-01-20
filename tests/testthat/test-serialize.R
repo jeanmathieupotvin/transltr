@@ -372,7 +372,7 @@ test_that("format_errors() formats errors as expected", {
     expect_identical(format_errors(errors, "test-id", FALSE), expected)
 
     # throw_error is TRUE.
-    expect_error(format_errors(errors, "test-id"), "in object 'test-id':\n")
+    expect_error(format_errors(errors, "test-id"))
     expect_snapshot(format_errors(errors, "test-id"), error = TRUE)
 })
 
@@ -885,7 +885,7 @@ test_that("deserialize() throws an error when string is an invalid yaml object",
 # import.ExportedTranslations() ------------------------------------------------
 
 
-# FIXME: evaluate whether an assert() method is required first.
+# Here.
 
 
 # deserialize_translations() ---------------------------------------------------

@@ -165,20 +165,19 @@ translator_read <- function(
     if (translations) {
         lapply(transl_files, \(path) {
             if (verbose) {
-                cat("Reading translations from '", path, "'... ", sep = "")
+                cat(sprintf("Reading translations from '%s'.", path), sep = "\n")
             }
 
             tryCatch({
                 # tr is updated by reference via import().
                 lang <- translations_read(path, encoding, tr)[["Language Code"]]
-                if (verbose) cat("OK ['", lang, "'].\n", sep = "")
             },
             error = \(err) {
                 # Do not throw an error if something goes wrong
                 # when verbose is TRUE. Report the error as a
                 # console output and move on to the next file.
                 if (verbose) {
-                    cat("NOT OK.\n", " Error: ", err$message, "\n", sep = "")
+                    cat("Error(s): ", err$message, "\n", sep = "")
                     return(invisible())
                 }
 

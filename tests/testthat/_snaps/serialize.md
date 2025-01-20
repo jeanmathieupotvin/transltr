@@ -217,7 +217,7 @@
       format_errors(errors, "test-id")
     Condition
       Error:
-      ! in object 'test-id':
+      ! 
        - 'Hash' must be a null, or a non-empty character string.
        - 'Hash' is defined but not 'Source Text', and/or 'Source Lang'.
 
@@ -227,7 +227,7 @@
       assert(invalid)
     Condition
       Error:
-      ! in object '<unknown>':
+      ! 
        - 'Path' must be a non-empty character string.
        - 'Ranges' must be a single `Ln <int>, Col <int> @ Ln <int>, Col <int>` character string, or a sequence of such values.
 
@@ -237,8 +237,7 @@
       assert(out)
     Condition
       Error:
-      ! in object 'test-id':
-       - 'Path' must be a non-empty character string.
+      ! 'Path' must be a non-empty character string.
 
 # assert.ExportedLocation() detects invalid Ranges field
 
@@ -246,8 +245,7 @@
       assert(out)
     Condition
       Error:
-      ! in object 'test-id':
-       - 'Ranges' must be a single `Ln <int>, Col <int> @ Ln <int>, Col <int>` character string, or a sequence of such values.
+      ! 'Ranges' must be a single `Ln <int>, Col <int> @ Ln <int>, Col <int>` character string, or a sequence of such values.
 
 # assert.ExportedText() throws an error if x is invalid and throw_error is true
 
@@ -255,7 +253,7 @@
       assert(invalid)
     Condition
       Error:
-      ! in object '<unknown>':
+      ! 
        - 'Algorithm' must be equal to 'sha1', or 'utf8'.
        - 'Hash' must be a null, or a non-empty character string.
        - 'Source Language' must be a null, or a non-empty character string.
@@ -269,8 +267,7 @@
       assert(out)
     Condition
       Error:
-      ! in object 'test-id':
-       - 'Algorithm' must be equal to 'sha1', or 'utf8'.
+      ! 'Algorithm' must be equal to 'sha1', or 'utf8'.
 
 # assert.ExportedText() detects invalid Hash field
 
@@ -278,8 +275,7 @@
       assert(out1)
     Condition
       Error:
-      ! in object 'test-id':
-       - 'Hash' must be a null, or a non-empty character string.
+      ! 'Hash' must be a null, or a non-empty character string.
 
 ---
 
@@ -287,8 +283,7 @@
       assert(out3)
     Condition
       Error:
-      ! in object 'test-id':
-       - 'Hash' is defined but not 'Source Text', and/or 'Source Lang'.
+      ! 'Hash' is defined but not 'Source Text', and/or 'Source Lang'.
 
 # assert.ExportedText() detects invalid Source Language field
 
@@ -296,7 +291,7 @@
       assert(out1)
     Condition
       Error:
-      ! in object 'test-id':
+      ! 
        - 'Hash' is defined but not 'Source Text', and/or 'Source Lang'.
        - 'Source Language' must be a null, or a non-empty character string.
        - 'Source Language' is defined but not 'Source Text', or vice-versa.
@@ -307,7 +302,7 @@
       assert(out1)
     Condition
       Error:
-      ! in object 'test-id':
+      ! 
        - 'Hash' is defined but not 'Source Text', and/or 'Source Lang'.
        - 'Source Text' must be a null, or a non-empty character string.
        - 'Source Language' is defined but not 'Source Text', or vice-versa.
@@ -318,8 +313,7 @@
       assert(out2)
     Condition
       Error:
-      ! in object 'test-id':
-       - 'Source Text' must be a null, or a non-empty character string.
+      ! 'Source Text' must be a null, or a non-empty character string.
 
 # assert.ExportedText() detects invalid Translations field
 
@@ -327,8 +321,7 @@
       assert(out1)
     Condition
       Error:
-      ! in object 'test-id':
-       - 'Translations' must be a null, or a mapping of non-empty character strings.
+      ! 'Translations' must be a null, or a mapping of non-empty character strings.
 
 # assert.ExportedText() detects invalid Locations field
 
@@ -336,8 +329,7 @@
       assert(out1)
     Condition
       Error:
-      ! in object 'test-id':
-       - 'Locations' must be a sequence of 'Location' objects.
+      ! 'Locations' must be a sequence of 'Location' objects.
 
 ---
 
@@ -345,7 +337,7 @@
       assert(out3)
     Condition
       Error:
-      ! in object 'test-id':
+      ! 
        - ['test-id'] 'Path' must be a non-empty character string.
        - ['test-id'] 'Ranges' must be a single `Ln <int>, Col <int> @ Ln <int>, Col <int>` character string, or a sequence of such values.
 
@@ -355,7 +347,7 @@
       assert(invalid)
     Condition
       Error:
-      ! in object '<unknown>':
+      ! 
        - 'Identifier' must be a non-empty character string.
        - 'Algorithm' must be equal to 'sha1', or 'utf8'.
        - 'Languages' must a mapping of non-empty character strings.
@@ -367,8 +359,7 @@
       assert(out)
     Condition
       Error:
-      ! in object '1':
-       - 'Identifier' must be a non-empty character string.
+      ! 'Identifier' must be a non-empty character string.
 
 # assert.ExportedTranslator() detects invalid Algorithm field
 
@@ -376,8 +367,7 @@
       assert(out)
     Condition
       Error:
-      ! in object 'test-translator':
-       - 'Algorithm' must be equal to 'sha1', or 'utf8'.
+      ! 'Algorithm' must be equal to 'sha1', or 'utf8'.
 
 # assert.ExportedTranslator() detects invalid Languages field
 
@@ -385,8 +375,7 @@
       assert(out1)
     Condition
       Error:
-      ! in object 'test-translator':
-       - 'Languages' must a mapping of non-empty character strings.
+      ! 'Languages' must a mapping of non-empty character strings.
 
 # assert.ExportedTranslator() detects invalid Texts field
 
@@ -394,8 +383,7 @@
       assert(out1)
     Condition
       Error:
-      ! in object 'test-translator':
-       - 'Texts' must a sequence of 'Text' objects.
+      ! 'Texts' must a sequence of 'Text' objects.
 
 ---
 
@@ -403,7 +391,7 @@
       assert(out3)
     Condition
       Error:
-      ! in object 'test-translator':
+      ! 
        - ['test-id'] 'Hash' must be a null, or a non-empty character string.
        - ['test-id'] 'Algorithm' must be equal to 'sha1', or 'utf8'.
 

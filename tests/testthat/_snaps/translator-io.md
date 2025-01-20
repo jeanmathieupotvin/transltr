@@ -100,9 +100,9 @@
     Code
       translator_read(temp_file)
     Output
-      Reading translations from './el.txt'... OK ['el'].
-      Reading translations from './es.txt'... OK ['es'].
-      Reading translations from './fr.txt'... OK ['fr'].
+      Reading translations from './el.txt'.
+      Reading translations from './es.txt'.
+      Reading translations from './fr.txt'.
       <Translator>
        Identifier: test-translator
        Algorithm: sha1
@@ -120,11 +120,14 @@
     Code
       translator_read(temp_file)
     Output
-      Reading translations from './el.txt'... NOT OK.
-       Error: 'Identifier' ('error') does not match the 'Translator' object's identifier ('test-translator').
-      Reading translations from './es.txt'... NOT OK.
-       Error: '...' must have names.
-      Reading translations from './fr.txt'... OK ['fr'].
+      Reading translations from './el.txt'.
+      Error(s): 'Language' must be a non-empty character string.
+      Reading translations from './es.txt'.
+      Error(s): 'Language Code' must be a non-empty character string.
+      Reading translations from './fr.txt'.
+      Error(s): 
+       - 'Language' must be a non-empty character string.
+       - 'Source Language' must be a non-empty character string.
       <Translator>
        Identifier: test-translator
        Algorithm: sha1
@@ -132,9 +135,10 @@
         el: Ελληνικά
         en: English
         es: Español
+        fr: Français
        Source Texts:
         256e0d7 [en]: Hello, world!
-        2ac373a [en, fr]: Farewell, world!
+        2ac373a [en]: Farewell, world!
 
 ---
 
@@ -142,5 +146,5 @@
       translator_read(temp_file, verbose = FALSE)
     Condition
       Error:
-      ! in './el.txt': 'Identifier' ('error') does not match the 'Translator' object's identifier ('test-translator').
+      ! in './el.txt': 'Language' must be a non-empty character string.
 

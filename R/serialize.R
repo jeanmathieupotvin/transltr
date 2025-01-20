@@ -826,15 +826,22 @@ format_errors <- function(
     assert_chr(errors)
     assert_lgl1(throw_error)
 
+    if (throw_error) {
+        if (length(errors) == 1L) {
+            stops(errors)
+        }
+
+        # This puts each elements of errors on its own line.
+        # The format is as follow.
+        # Error:
+        #  - Error 1.
+        #  - Error 2.
+        #  - ...
+        stops("\n", paste0(" - ", errors, collapse = "\n"))
+    }
+
     # This guarantees id will be
     # valid in almost all cases.
     id <- as.character(id %??% constant("unknown"))
-
-    if (throw_error) {
-        stops(
-            sprintf("in object '%s':\n", id),
-            paste0(" - ", errors, collapse = "\n"))
-    }
-
     return(sprintf("['%s'] %s", id, errors))
 }
