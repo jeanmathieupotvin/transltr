@@ -2,7 +2,7 @@
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/transltr)](https://CRAN.R-project.org/package=transltr)
-[![Lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![Codecov](https://codecov.io/gh/jeanmathieupotvin/transltr/branch/main/graph/badge.svg?token=ODYHDNR8IB)](https://app.codecov.io/gh/jeanmathieupotvin/transltr)
 [![check-standard](https://github.com/jeanmathieupotvin/transltr/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/jeanmathieupotvin/transltr/actions/workflows/check-standard.yaml)
 <!-- badges: end -->
@@ -44,6 +44,10 @@ Install the package from your preferred
 ```r
 install.packages("transltr")
 ```
+
+While an extensive set of unit tests fully covers the current version of
+`transltr`, some features could be modified in the future. Treat it as a
+beta version until version `1.0.0` is released.
 
 ## Getting Started
 

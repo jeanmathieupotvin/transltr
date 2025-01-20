@@ -33,7 +33,7 @@ usethis::use_mit_license("Jean-Mathieu Potvin")
 # Create file README.md.
 usethis::use_readme_md(open = FALSE)
 usethis::use_cran_badge()
-usethis::use_lifecycle_badge("experimental")
+usethis::use_lifecycle_badge("stable")
 
 # Create cran-comments.md.
 usethis::use_cran_comments()

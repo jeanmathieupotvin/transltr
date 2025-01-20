@@ -16,5 +16,5 @@
 ^STATISTICS\.md$
 ^cran-comments\.md$
 
-^inst/transltr$
+^inst$
 ^man-roxygen$
