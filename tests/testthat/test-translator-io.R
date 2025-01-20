@@ -85,13 +85,24 @@ test_that("translations_paths() does not include source language", {
 })
 
 test_that("translations_paths() returns expected file paths", {
-    withr::local_options(
-        transltr.default.path = file.path(tempdir(), "_translator.yml"))
+    # normalizePath() is required on Windows because
+    # dirname(), and file.path() respectively uses \\
+    # and / as the file separator. This must be fixed
+    # for testing purposes.
+    temp_file <- normalizePath(
+        file.path(tempdir(), "_translator.yml"),
+        winslash = "/",
+        mustWork = FALSE)
+
+    withr::local_options(transltr.default.path = temp_file)
 
     expect_identical(
         translations_paths(tr),
         structure(
-            file.path(tempdir(), c("el.txt", "es.txt", "fr.txt")),
+            normalizePath(
+                file.path(tempdir(), c("el.txt", "es.txt", "fr.txt")),
+                winslash = "/",
+                mustWork = FALSE),
             names = c("el", "es", "fr")))
 })
 
@@ -137,6 +148,11 @@ test_that("translator_write() throws an error if path exists and overwrite is fa
 })
 
 test_that("translator_write() throws an error if parent directories cannot be created", {
+    # Sys.chmod() is incompatible with Windows,
+    # but is required for testing purposes. See
+    # doc for more information.
+    skip_on_os("windows")
+
     # Create a directory with permissions 444.
     # 444 = read-only for owner / group / other.
     # It can still be deleted afterwards.

@@ -33,6 +33,11 @@ test_that("text_read() returns a character vector", {
 })
 
 test_that("text_read() validates path", {
+    # Sys.chmod() is incompatible with Windows,
+    # but is required for testing purposes. See
+    # doc for more information.
+    skip_on_os("windows")
+
     temp_dir  <- withr::local_tempdir(pattern  = "a-test-directory")
     temp_file <- withr::local_tempfile(pattern = "a-non-readable-file")
 
@@ -89,6 +94,11 @@ test_that("text_write() validates x", {
 })
 
 test_that("text_write() validates path", {
+    # Sys.chmod() is incompatible with Windows,
+    # but is required for testing purposes. See
+    # doc for more information.
+    skip_on_os("windows")
+
     temp_dir  <- withr::local_tempdir(pattern  = "a-test-directory")
     temp_file <- withr::local_tempfile(pattern = "a-non-writable-file")
 
