@@ -128,7 +128,7 @@
     Output
       :: Identifier
       
-      test-translator
+      test-translator:translations:el
       
       :: Language Code
       
@@ -165,7 +165,7 @@
     Output
       :: Identifier
       
-      test-translator
+      test-translator:translations:fr
       
       :: Language Code
       

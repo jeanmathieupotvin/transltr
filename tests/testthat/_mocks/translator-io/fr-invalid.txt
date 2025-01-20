@@ -6,7 +6,7 @@
 
 :: Identifier
 
-test-translator
+test-translator:translations:fr
 
 :: Language Code
 

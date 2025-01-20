@@ -384,7 +384,7 @@ export_translations <- function(tr = translator(), lang = "") {
     })
 
     out <- list(
-        Identifier        = tr$id,
+        Identifier        = sprintf("%s:translations:%s", tr$id, lang),
         `Language Code`   = lang,
         Language          = native_languages[[lang]],
         `Source Language` = native_languages[[source_lang]],

@@ -251,7 +251,7 @@ test_that("export_translations() returns an object of S3 class ExportedTranslati
         "Source Language",
         "Translations"))
 
-    expect_identical(out$Identifier, tr$id)
+    expect_identical(out$Identifier, paste(tr$id, "translations", lang, sep = ":"))
     expect_identical(out$`Language Code`, lang)
     expect_identical(out$Language, tr$native_languages[[lang]])
     expect_identical(out$`Source Language`, tr$native_languages[[tr$source_langs]])

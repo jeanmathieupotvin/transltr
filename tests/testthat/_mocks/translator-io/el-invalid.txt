@@ -6,7 +6,7 @@
 
 :: Identifier
 
-error
+test-translator:translations:el
 
 :: Language Code
 

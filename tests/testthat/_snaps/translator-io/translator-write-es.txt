@@ -10,7 +10,7 @@
 
 :: Identifier
 
-test-translator
+test-translator:translations:es
 
 :: Language Code
 
