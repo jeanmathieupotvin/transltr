@@ -1,0 +1,5 @@
+.scripts
+man-roxygen
+R
+tests
+.Rprofile
