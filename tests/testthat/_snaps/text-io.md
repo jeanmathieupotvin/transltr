@@ -41,12 +41,12 @@
 ---
 
     Code
-      # Temporary directory changes whenever tests are ran. It is
-      # substituted with a constant value for snapshotting purposes.
+      # Input temporary directory is random. It is replaced
+      # by a constant for in this snapshot for reproducibility.
       text_write("Hello, world!", temp_dir)
     Condition
       Error:
-      ! 'path' '/tmp/Rtmp/directory' is a directory, or is not writable.
+      ! 'path' 'a-test-directory' is a directory, or is not writable.
 
 # text_write() validates encoding
 

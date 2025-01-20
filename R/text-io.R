@@ -39,10 +39,10 @@ text_read <- function(path = "", encoding = "UTF-8") {
     assert_chr1(encoding)
 
     # Not super useful, but a little safer.
-    path <- normalizePath(path, mustWork = FALSE)
+    path_norm <- normalizePath(path, mustWork = FALSE)
 
-    if (!utils::file_test("-f", path) ||
-        !utils::file_test("-r", path)) {
+    if (!utils::file_test("-f", path_norm) ||
+        !utils::file_test("-r", path_norm)) {
         stopf(
             "'path' '%s' does not exist, is a directory, or is not readable.",
             path)
@@ -50,7 +50,7 @@ text_read <- function(path = "", encoding = "UTF-8") {
 
     # This connection re-encodes input
     # to UTF-8 from supplied encoding.
-    con <- file(path, "r", encoding = encoding)
+    con <- file(path_norm, "r", encoding = encoding)
     on.exit(close(con, "r"))
 
     # Setting encoding to UTF-8 explicitly marks
@@ -68,14 +68,14 @@ text_write <- function(x = character(), path = "", encoding = "UTF-8") {
     assert_chr1(encoding)
 
     # Not super useful, but a little safer.
-    path <- normalizePath(path, mustWork = FALSE)
+    path_norm <- normalizePath(path, mustWork = FALSE)
 
-    if (utils::file_test("-d", path) || (
-        utils::file_test("-f", path) && !utils::file_test("-w", path))) {
+    if (utils::file_test("-d", path_norm) || (
+        utils::file_test("-f", path_norm) && !utils::file_test("-w", path_norm))) {
         stopf("'path' '%s' is a directory, or is not writable.", path)
     }
 
-    con <- file(path, "wb", encoding = encoding)
+    con <- file(path_norm, "wb", encoding = encoding)
     on.exit(close(con, "wb"))
 
     # Character elements are explicitly re-encoded to UTF-8

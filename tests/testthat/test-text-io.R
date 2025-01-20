@@ -103,12 +103,12 @@ test_that("text_write() validates path", {
     expect_error(text_write("Hello, world!", temp_file))
     expect_snapshot(text_write("Hello, world!", 1L),       error = TRUE)
     expect_snapshot({
-            "Temporary directory changes whenever tests are ran. It is"
-            "substituted with a constant value for snapshotting purposes."
+            "Input temporary directory is random. It is replaced"
+            "by a constant for in this snapshot for reproducibility."
             text_write("Hello, world!", temp_dir)
         },
         error     = TRUE,
-        transform = \(x) gsub("'/tmp/(.*?)'", "'/tmp/Rtmp/directory'", x))
+        transform = \(x) gsub("'path' '(.*?)'", "'path' 'a-test-directory'", x))
 })
 
 test_that("text_write() validates encoding", {
