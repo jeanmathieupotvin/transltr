@@ -6,9 +6,9 @@ tests/testthat/test-serialize.R|235|87|646
 tests/testthat/test-class-text.R|108|36|425
 tests/testthat/_snaps/serialize.md|124|0|398
 tests/testthat/test-assert.R|161|43|396
-R/serialize.R|69|424|343
+R/serialize.R|69|424|347
 tests/testthat/test-class-translator.R|87|29|329
-tests/testthat/test-translator-io.R|79|41|254
+tests/testthat/test-translator-io.R|81|48|264
 R/class-text.R|55|283|245
 tests/testthat/_snaps/class-text.md|64|0|232
 R/assert.R|53|217|224
@@ -28,7 +28,7 @@ tests/testthat/test-language.R|36|16|101
 R/flat.R|30|179|100
 R/class-location.R|21|151|99
 tests/testthat/test-find-source.R|20|6|96
-tests/testthat/test-text-io.R|31|22|94
+tests/testthat/test-text-io.R|33|28|96
 tests/testthat/_snaps/flat.md|29|0|71
 tests/testthat/test-find-source-in-exprs.R|23|10|67
 R/utils-format-vector.R|10|154|61
@@ -104,4 +104,4 @@ man-roxygen/param-throw-error.R|0|3|0
 man-roxygen/param-validate.R|0|2|0
 man-roxygen/param-verbose.R|0|2|0
 --------|--------|--------|--------
-SUM:|2034|3436|7084
+SUM:|2038|3449|7100

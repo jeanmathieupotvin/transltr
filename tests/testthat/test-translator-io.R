@@ -87,8 +87,8 @@ test_that("translations_paths() does not include source language", {
 test_that("translations_paths() returns expected file paths", {
     # normalizePath() is required on Windows because
     # dirname(), and file.path() respectively uses \\
-    # and / as the file separator. This must be fixed
-    # for testing purposes.
+    # and / as the file separator. This inconsistency
+    # must be fixed for testing purposes.
     temp_file <- normalizePath(
         file.path(tempdir(), "_translator.yml"),
         winslash = "/",
