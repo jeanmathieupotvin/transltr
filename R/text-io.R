@@ -21,17 +21,6 @@
 #' [writeLines()],
 #' [iconv()]
 #'
-#' @examples
-#' lines <- c(
-#'   "Hello, world!",
-#'   "These are lines to be written and read afterwards.",
-#'   "Bye!")
-#'
-#' temp_file <- tempfile()
-#'
-#' transltr:::text_write(lines, temp_file)
-#' transltr:::text_read(temp_file)
-#'
 #' @rdname text-io
 #' @keywords internal
 text_read <- function(path = "", encoding = "UTF-8") {

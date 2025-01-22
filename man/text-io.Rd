@@ -31,18 +31,6 @@ given by \code{encoding}.}
 \code{\link[base:writeLines]{base::writeLines()}}. They further validate their arguments, normalize
 file paths and re-encode inputs to \code{UTF-8} before reading and writing.
 }
-\examples{
-lines <- c(
-  "Hello, world!",
-  "These are lines to be written and read afterwards.",
-  "Bye!")
-
-temp_file <- tempfile()
-
-transltr:::text_write(lines, temp_file)
-transltr:::text_read(temp_file)
-
-}
 \seealso{
 \code{\link[=readLines]{readLines()}},
 \code{\link[=writeLines]{writeLines()}},

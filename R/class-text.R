@@ -102,12 +102,9 @@
 #' print(txt3)
 #'
 #' # Combine Texts objects.
-#' # They must have the same hash
-#' # (same souce_text, source_lang, and algorithm).
+#' # c() throws an error if they do not have the same
+#' # hash (same souce_text, source_lang, and algorithm).
 #' c(txt1, txt2)
-#'
-#' # Otherwise, c() throws an error.
-#' \dontrun{c(txt1, txt33)}
 #'
 #' # Text objects with different hashes can be merged.
 #' # This groups Text objects according to their hashes

@@ -26,22 +26,6 @@
 #'
 #' @returns A logical value.
 #'
-#' @examples
-#' # Typical ways to write source calls.
-#' transltr:::is_translate_call(str2lang('translate()'), strict = FALSE)  ## TRUE
-#' transltr:::is_translate_call(str2lang('transltr::translate()'))  ## TRUE
-#' transltr:::is_translate_call(str2lang('translate()'))  ## FALSE
-#'
-#' # Quotes and backticks are also valid.
-#' transltr:::is_translate_call(str2lang('"translate"()'), strict = FALSE)  ## TRUE
-#' transltr:::is_translate_call(str2lang('"translate"()'))  ## FALSE
-#'
-#' transltr:::is_translate_call(str2lang('`translate`()'), strict = FALSE)  ## TRUE
-#' transltr:::is_translate_call(str2lang('`translate`()'))  ## FALSE
-#'
-#' transltr:::is_translate_call(str2lang('"transltr"::`translate`()'))  ## TRUE
-#' transltr:::is_translate_call(str2lang('`transltr`::"translate"()'))  ## TRUE
-#'
 #' @rdname translate-is-call
 #' @keywords internal
 is_translate_call <- function(x, strict = TRUE) {

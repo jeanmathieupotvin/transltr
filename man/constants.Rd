@@ -58,21 +58,4 @@ input's length. It is used for testing purposes internally.
 }
 }
 
-\examples{
-transltr:::constant("algorithms")
-transltr:::constant("concat")
-transltr:::constant("empty")
-transltr:::constant("empty-list")
-transltr:::constant("null")
-transltr:::constant("unset")
-transltr:::constant("unknown")
-transltr:::constant("untranslated")
-transltr:::constant("range-sprintf")
-transltr:::constant("range-format")
-transltr:::constant("range-pattern")
-
-# NULL is returned if which has no corresponding entry.
-transltr:::constant("__undefined__")
-
-}
 \keyword{internal}

@@ -38,28 +38,6 @@
 #' [translate()],
 #' [find_source()]
 #'
-#' @examples
-#' # Create a dummy R script for illustration purposes.
-#' temp_file <- tempfile()
-#'
-#' cat(
-#'   "translate('Not strict: Hello, world!')",
-#'   "transltr::translate('Strict: Farewell, world!')",
-#'   sep  = "\n",
-#'   file = temp_file)
-#'
-#' # Extract calls to transltr::translate() from dummy script.
-#' transltr:::find_source_in_file(temp_file, strict = TRUE,  verbose = TRUE)
-#' transltr:::find_source_in_file(temp_file, strict = FALSE, verbose = TRUE)
-#'
-#' # You may also read the dummy script, parse it, extract calls
-#' # to translate() from it and coerce them as Text objects.
-#' # find_source_exprs() is (mostly) just a semantic wrapper for
-#' # utils::getParseData(parse(temp_file)).
-#' exprs <- transltr:::find_source_exprs(temp_file)
-#' transltr:::find_source_in_exprs(exprs, path = temp_file, strict = TRUE)
-#' transltr:::find_source_in_exprs(exprs, path = temp_file, strict = FALSE)
-#'
 #' @rdname find-source-in-file
 #' @keywords internal
 find_source_in_file <- function(

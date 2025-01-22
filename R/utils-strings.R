@@ -30,18 +30,6 @@
 #'
 #' [str_trim()] returns a character vector having the same length as `x`.
 #'
-#' @examples
-#' transltr:::str_to(c(1L, 2L, 3L))            ## Outputs "1, 2, or 3"
-#' transltr:::str_to(letters, TRUE)            ## Outputs "'a', 'b', 'c', ..., or 'z'"
-#' transltr:::str_to(letters, TRUE, ", and ")  ## Outputs "'a', 'b', 'c', ..., and 'z'"
-#'
-#' x <- strrep("a", 200L)
-#'
-#' # x is reduced to a width of 80 characters (by default). This includes 3
-#' # characters for the '...' suffix added and therefore, x is reduced to 77
-#' # chars. The same logic is applied  for any width strictly greater than 2.
-#' transltr:::str_trim(x)
-#'
 #' @rdname utils-strings
 #' @family utility functions
 #' @keywords internal

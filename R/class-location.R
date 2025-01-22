@@ -67,11 +67,8 @@
 #' print(loc3)
 #'
 #' # Combine Location objects.
-#' # They must have the same path.
+#' # c() throws an error if they do not have the same path.
 #' c(loc1, loc2)
-#'
-#' # Otherwise, c() throws an error.
-#' \dontrun{c(loc1, loc3)}
 #'
 #' # Location objects with different paths can be merged.
 #' # This groups Location objects according to their paths
@@ -213,17 +210,6 @@ merge_locations <- function(...) {
 #'
 #' [range_is_parseable()] returns a logical vector having the same length as
 #' `ranges`.
-#'
-#' @examples
-#' # Create a Location object.
-#' loc <- location("file-c", c(9L, 10L), c(11L, 12L), c(13L, 14L), c(15L, 16L))
-#'
-#' # Create ranges like format.Location() does.
-#' ranges <- transltr:::range_format(loc)
-#'
-#' # Check whether ranges can be parsed (to integer vectors), and parse them.
-#' transltr:::range_is_parseable(ranges)
-#' transltr:::range_parse(ranges)
 #'
 #' @seealso
 #' [`Location`][Location],

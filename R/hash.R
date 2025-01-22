@@ -27,11 +27,6 @@
 #' [normalize()],
 #' [constant()]
 #'
-#' @examples
-#' transltr:::hash("en", "Hello, world!", "sha1")     ## Outputs a string
-#' transltr:::hash("en", "Hello, world!", "utf8")     ## Outputs a string
-#' transltr:::hash("en", "Hello, world!", "_error_")  ## Outputs NULL
-#'
 #' @keywords internal
 hash <- function(lang = "", text = "", algorithm = "") {
     x <- sprintf("%s:%s", lang, text)

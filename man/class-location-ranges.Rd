@@ -35,18 +35,6 @@ Create, parse, and validate source ranges.
 Ranges are \verb{Ln <int>, Col <int> @ Ln <int>, Col <int>} strings created on-the-fly from
 \code{\link{Location}} objects for outputting purposes.
 }
-\examples{
-# Create a Location object.
-loc <- location("file-c", c(9L, 10L), c(11L, 12L), c(13L, 14L), c(15L, 16L))
-
-# Create ranges like format.Location() does.
-ranges <- transltr:::range_format(loc)
-
-# Check whether ranges can be parsed (to integer vectors), and parse them.
-transltr:::range_is_parseable(ranges)
-transltr:::range_parse(ranges)
-
-}
 \seealso{
 \code{\link{Location}},
 \code{\link{ExportedLocation}},

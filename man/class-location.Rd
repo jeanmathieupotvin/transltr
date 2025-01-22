@@ -94,11 +94,8 @@ print(loc2)
 print(loc3)
 
 # Combine Location objects.
-# They must have the same path.
+# c() throws an error if they do not have the same path.
 c(loc1, loc2)
-
-# Otherwise, c() throws an error.
-\dontrun{c(loc1, loc3)}
 
 # Location objects with different paths can be merged.
 # This groups Location objects according to their paths

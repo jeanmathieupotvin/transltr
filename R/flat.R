@@ -64,50 +64,6 @@
 #' invisibly. It is used for its side-effect of printing an illustration of
 #' the format (with useful information).
 #'
-#' @examples
-#' # Print an example of a FLAT object.
-#' transltr:::flat_example()
-#'
-#' x <- list(
-#'   FirstName = "John",
-#'   LastName  = "Doe",
-#'   Address   = list(
-#'     StreetAddress = "123 Main Street",
-#'     City          = "Montreal",
-#'     Province      = "Quebec",
-#'     PostalCode    = "H0H 0H0"),
-#'   Notes = c(
-#'     "Send mail to",
-#'     "address above."))
-#'
-#' # Serialize x into a FLAT object.
-#' string <- transltr:::flat_serialize(x)
-#' cat(transltr:::flat_serialize(x), "\n")
-#'
-#' # Atomic vectors are not reconstituted. Use lists to ensure
-#' # flat_deserialize() returns an object having the same shape.
-#' xdeserialized <- transltr:::flat_deserialize(string)
-#' identical(x, xdeserialized)            ## FALSE
-#' identical(x[-4L], xdeserialized[-4L])  ## TRUE
-#'
-#' # flat_tag() extracts names from lists (recursively).
-#' # Unlike unlist(), users control how these names are created.
-#' transltr:::flat_tag(x)
-#'
-#' # flat_format() is a helper function to ease the
-#' # serialization process. See Details for more information.
-#' expected <- list(
-#'   a = "NULL",
-#'   b = transltr:::constant("empty-list"),
-#'   c = "1\n2")
-#'
-#' current <- transltr:::flat_format(list(a = NULL, b = list(), c = c(1L, 2L)))
-#' identical(current, expected)
-#'
-#' # An empty list is serialized to an empty string by convention.
-#' transltr:::flat_serialize(list())  ## Outputs ""
-#' transltr:::flat_deserialize("")    ## Outputs list()
-#'
 #' @rdname flat
 #' @keywords internal
 flat_serialize <- function(x = list(), tag_sep = ": ", tag_empty = "") {
