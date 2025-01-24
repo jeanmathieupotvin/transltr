@@ -37,6 +37,10 @@ usethis::use_description(
             translatable strings. Provide translations and seamlessly retrieve
             them at runtime."))
 
+# R >= 4.1.0 is required for pipe operator |> and function shorhand \(...).
+# R >= 4.2.0 is required for native UTF-8 support on Windows.
+use_package("R", type = "Depends", min_version = "4.2")
+
 usethis::use_testthat(parallel = FALSE)
 usethis::use_package("digest")
 usethis::use_package("R6")

@@ -4,7 +4,9 @@ This version is not yet live on CRAN.
 
 ## Breaking Changes
 
-Nothing to report.
+* R `>= 4.2.0` is now required. This is necessary to leverage native `UTF-8`
+  support on Windows. R `>= 4.1.0` is also required to use function shorthand
+  `\(...)` and the native pipe operator `|>`.
 
 ## New Features
 

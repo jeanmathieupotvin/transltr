@@ -20,6 +20,14 @@ Encoding: UTF-8
 Language: en
 Roxygen: list(markdown = TRUE, r6 = TRUE)
 RoxygenNote: 7.3.2
+Config/testthat/edition: 3
+Depends:
+    R (>= 4.2)
+Imports:
+    digest,
+    R6,
+    utils,
+    yaml
 Suggests:
     covr,
     devtools,
@@ -28,12 +36,6 @@ Suggests:
     testthat (>= 3.0.0),
     usethis,
     withr
-Config/testthat/edition: 3
-Imports:
-    digest,
-    R6,
-    utils,
-    yaml
 Collate:
     'assert.R'
     'class-location.R'
