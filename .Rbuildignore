@@ -18,3 +18,4 @@
 
 ^inst$
 ^man-roxygen$
+^CRAN-SUBMISSION$
