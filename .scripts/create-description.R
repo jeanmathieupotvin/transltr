@@ -14,7 +14,7 @@ usethis::use_description(
     fields     = list(
         Package     = "transltr",
         Title       = "Support Many Languages in R Programs",
-        Version     = "0.0.1",
+        Version     = "0.1.0",
         Language    = "en",
         Encoding    = "UTF-8",
         Roxygen     = "list(markdown = TRUE, r6 = TRUE)",

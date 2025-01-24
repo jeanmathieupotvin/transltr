@@ -1,6 +1,6 @@
 Package: transltr
 Title: Support Many Languages in R Programs
-Version: 0.0.1
+Version: 0.1.0
 Authors@R: c(
     person("Jean-Mathieu", "Potvin",
         role  = c("aut", "cre", "cph"),
