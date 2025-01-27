@@ -29,6 +29,7 @@ if (interactive()) {
         require(devtools)
         require(lifecycle)
         require(microbenchmark)
+        require(pkgdown)
         require(testthat)
         require(usethis)
         require(withr)
@@ -72,6 +73,14 @@ if (interactive()) {
 
             View(out, "R Profiler Results")
             return(invisible(out))
+        }
+
+        # Build pkgdown website.
+        .ww <- \() {
+            return(
+                pkgdown::build_site(
+                    examples = FALSE,
+                    preview  = FALSE))
         }
 
         # Clear global environment.

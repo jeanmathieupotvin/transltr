@@ -4,7 +4,7 @@
 \name{transltr-package}
 \alias{transltr}
 \alias{transltr-package}
-\title{Support Many Languages in R Programs}
+\title{Support Many Languages in R}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 

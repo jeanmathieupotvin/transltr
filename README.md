@@ -1,4 +1,4 @@
-# Support Many Languages in R Programs
+# Support Many Languages in R
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/transltr)](https://CRAN.R-project.org/package=transltr)

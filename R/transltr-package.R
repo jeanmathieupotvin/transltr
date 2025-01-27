@@ -1,4 +1,4 @@
-#' Support Many Languages in R Programs
+#' Support Many Languages in R
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`

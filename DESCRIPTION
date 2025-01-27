@@ -1,6 +1,6 @@
 Package: transltr
-Title: Support Many Languages in R Programs
-Version: 0.0.1
+Title: Support Many Languages in R
+Version: 0.1.0
 Authors@R: c(
     person("Jean-Mathieu", "Potvin",
         role  = c("aut", "cre", "cph"),
@@ -14,26 +14,29 @@ Description: An object model for source text and translations. Find and extract
     translatable strings. Provide translations and seamlessly retrieve them at
     runtime.
 License: MIT + file LICENSE
-URL: https://github.com/jeanmathieupotvin/transltr
+URL: https://transltr.ununoctium.dev
 BugReports: https://github.com/jeanmathieupotvin/transltr/issues
 Encoding: UTF-8
 Language: en
 Roxygen: list(markdown = TRUE, r6 = TRUE)
 RoxygenNote: 7.3.2
-Suggests:
-    covr,
-    devtools,
-    lifecycle,
-    microbenchmark,
-    testthat (>= 3.0.0),
-    usethis,
-    withr
 Config/testthat/edition: 3
+Depends:
+    R (>= 4.2)
 Imports:
     digest,
     R6,
     utils,
     yaml
+Suggests:
+    covr,
+    devtools,
+    lifecycle,
+    microbenchmark,
+    pkgdown,
+    testthat (>= 3.0.0),
+    usethis,
+    withr
 Collate:
     'assert.R'
     'class-location.R'

@@ -40,3 +40,6 @@ usethis::use_cran_comments()
 
 # Create file R/transltr-package.R.
 usethis::use_package_doc(open = FALSE)
+
+# Create _pkgdown.yml.
+usethis::use_pkgdown()

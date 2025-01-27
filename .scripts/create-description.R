@@ -13,8 +13,8 @@ usethis::use_description(
     check_name = TRUE,
     fields     = list(
         Package     = "transltr",
-        Title       = "Support Many Languages in R Programs",
-        Version     = "0.0.1",
+        Title       = "Support Many Languages in R",
+        Version     = "0.1.0",
         Language    = "en",
         Encoding    = "UTF-8",
         Roxygen     = "list(markdown = TRUE, r6 = TRUE)",
@@ -36,6 +36,10 @@ usethis::use_description(
             An object model for source text and translations. Find and extract
             translatable strings. Provide translations and seamlessly retrieve
             them at runtime."))
+
+# R >= 4.1.0 is required for pipe operator |> and function shorhand \(...).
+# R >= 4.2.0 is required for native UTF-8 support on Windows.
+use_package("R", type = "Depends", min_version = "4.2")
 
 usethis::use_testthat(parallel = FALSE)
 usethis::use_package("digest")
