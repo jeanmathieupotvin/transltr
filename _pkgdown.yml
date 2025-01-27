@@ -25,6 +25,11 @@ repo:
 
 # Format Home page (index).
 home:
+  links:
+  - text: CRAN Checks
+    href: https://cran.r-project.org/web/checks/check_results_transltr.html
+  - text: Latest Codecov Report
+    href: https://app.codecov.io/gh/jeanmathieupotvin/transltr
   sidebar:
     structure: [dev, links, authors, license, citation]
 
