@@ -13,7 +13,7 @@ usethis::use_description(
     check_name = TRUE,
     fields     = list(
         Package     = "transltr",
-        Title       = "Support Many Languages in R Programs",
+        Title       = "Support Many Languages in R",
         Version     = "0.1.0",
         Language    = "en",
         Encoding    = "UTF-8",

@@ -18,7 +18,8 @@ Nothing to report.
 
 ## Notes
 
-Nothing to report.
+* The official title of the package (as it appears in `DESCRIPTION`) is now
+  *Support Many Languages in R*.
 
 ## Translations
 
