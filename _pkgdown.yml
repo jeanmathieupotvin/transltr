@@ -1,0 +1,36 @@
+# Deploy website for latest release.
+development:
+  mode: release
+
+# Create file inst/pkgdown.yml.
+deploy:
+  install_metadata: true
+
+# Where to store assets in project's directory.
+destination: docs/
+
+# Where the website is deployed.
+url: https://transltr.ununoctium.dev
+
+# How to format the website.
+# See https://bootswatch.com/minty/ for the current theme.
+template:
+  bootstrap: 5
+  bootswatch: minty
+  light-switch: true
+
+# Default branch.
+repo:
+  branch: main
+
+# Format Home page (index).
+home:
+  sidebar:
+    structure: [dev, links, authors, license, citation]
+
+# Format News pages.
+news:
+  one_page: false
+
+# Format Reference Index.
+# FIXME: to be determined.

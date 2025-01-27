@@ -20,6 +20,7 @@ Nothing to report.
 
 * The official title of the package (as it appears in `DESCRIPTION`) is now
   *Support Many Languages in R*.
+* The package now has a `pkgdown` website. See <https://transltr.ununoctium.dev>.
 
 ## Translations
 

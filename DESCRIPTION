@@ -14,7 +14,7 @@ Description: An object model for source text and translations. Find and extract
     translatable strings. Provide translations and seamlessly retrieve them at
     runtime.
 License: MIT + file LICENSE
-URL: https://github.com/jeanmathieupotvin/transltr
+URL: https://transltr.ununoctium.dev
 BugReports: https://github.com/jeanmathieupotvin/transltr/issues
 Encoding: UTF-8
 Language: en
@@ -33,6 +33,7 @@ Suggests:
     devtools,
     lifecycle,
     microbenchmark,
+    pkgdown,
     testthat (>= 3.0.0),
     usethis,
     withr
