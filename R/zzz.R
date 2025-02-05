@@ -1,9 +1,13 @@
 .onLoad <- function(libname, pkgname) {
     options(
         # Default path to the main Exported Translator file.
-        transltr.default.path = file.path("inst", "transltr", "_translator.yml"))
-}
+    if (is.null(getOption("transltr.verbose", NULL))) {
+        # Should functions report basic information by default?
+        options(transltr.verbose = TRUE)
+    }
 
+    return(invisible())
+}
 
 # Suppress R CMD check note.
 #' @importFrom R6 R6Class

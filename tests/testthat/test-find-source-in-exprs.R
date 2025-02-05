@@ -1,3 +1,5 @@
+withr::local_options(transltr.verbose = FALSE)
+
 path_mock1 <- get_mock_path(file.path("find-source", "r-script1"))
 path_mock2 <- get_mock_path(file.path("find-source", "r-script2"))
 
@@ -75,7 +77,7 @@ test_that("find_source_in_exprs() uses source locations returned by the parser",
     # Locations were determined manually by
     # inspecting mock script rscript-1.
     texts_mock <- find_source_in_exprs(tokens_mock1, path_mock1, FALSE)
-    locations   <- unlist(lapply(texts_mock, `[[`, i = "locations"), FALSE, FALSE)
+    locations  <- unlist(lapply(texts_mock, `[[`, i = "locations"), FALSE, FALSE)
 
     expect_identical(locations, list(
         location(path_mock1, 21L, 23L, 21L, 57L),

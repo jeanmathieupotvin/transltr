@@ -45,7 +45,7 @@ find_source_in_file <- function(
     encoding  = "UTF-8",
     strict    = TRUE,
     algorithm = constant("algorithms"),
-    verbose   = FALSE)
+    verbose   = getOption("transltr.verbose", FALSE))
 {
     tokens <- find_source_exprs(path, encoding)
     texts  <- find_source_in_exprs(tokens, path, strict, algorithm)

@@ -118,7 +118,7 @@
 # translator_read() reports errors
 
     Code
-      translator_read(temp_file)
+      translator_read(temp_file, verbose = TRUE)
     Output
       Reading translations from './el.txt'.
       Error(s): 'Language' must be a non-empty character string.

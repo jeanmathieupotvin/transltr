@@ -1,5 +1,6 @@
 language_source_set("en")
 withr::defer(language_source_set(NULL))
+withr::local_options(transltr.verbose = FALSE)
 
 tr <- translator(
     id = "test-translator",
@@ -141,7 +142,7 @@ test_that("translator_write() validates translations", {
 test_that("translator_write() throws an error if path exists and overwrite is false", {
     temp_file <- withr::local_tempfile(pattern = "_translator_", fileext = ".yml")
     withr::defer(file.remove(translations_paths(tr, dirname(temp_file))))
-    translator_write(tr, temp_file, verbose = FALSE)
+    translator_write(tr, temp_file)
 
     expect_error(translator_write(tr, temp_file, FALSE))
     expect_snapshot(translator_write(tr, temp_file, FALSE), error = TRUE)
@@ -171,7 +172,7 @@ test_that("translator_write() throws an error if parent directories cannot be cr
 test_that("translator_write() includes comments", {
     temp_file <- withr::local_tempfile(pattern = "_translator_", fileext = ".yml")
     withr::defer(file.remove(translations_paths(tr, dirname(temp_file))))
-    translator_write(tr, temp_file, verbose = FALSE)
+    translator_write(tr, temp_file)
     text <- text_read(temp_file)
 
     expect_identical(
@@ -182,7 +183,7 @@ test_that("translator_write() includes comments", {
 test_that("translator_write() serializes tr", {
     temp_file <- withr::local_tempfile(pattern = "_translator_", fileext = ".yml")
     withr::defer(file.remove(translations_paths(tr, dirname(temp_file))))
-    translator_write(tr, temp_file, verbose = FALSE)
+    translator_write(tr, temp_file)
 
     expect_snapshot_file(
         temp_file,
@@ -194,7 +195,7 @@ test_that("translator_write() serializes translations", {
     temp_file <- withr::local_tempfile(pattern = "_translator_", fileext = ".yml")
     withr::defer(file.remove(translations_files))
     translations_files <- translations_paths(tr, dirname(temp_file))
-    translator_write(tr, temp_file, verbose = FALSE)
+    translator_write(tr, temp_file)
 
     expect_snapshot_file(translations_files[["el"]], "translator-write-el.txt")
     expect_snapshot_file(translations_files[["es"]], "translator-write-es.txt")
@@ -202,6 +203,8 @@ test_that("translator_write() serializes translations", {
 })
 
 test_that("translator_write() outputs basic information if verbose is true", {
+    withr::local_options(transltr.verbose = TRUE)
+
     # dirname() returns "." when a single filename is
     # passed to it (with no other reference). This is
     # used below to ensure snapshotted outputs remain
@@ -235,9 +238,9 @@ test_that("translator_read() returns an R6 object of class Translator", {
             pattern = "_translator_",
             fileext = ".yml"))
     withr::defer(file.remove(translations_paths(tr)))
-    translator_write(tr, verbose = FALSE)
+    translator_write(tr)
 
-    expect_s3_class(translator_read(verbose = FALSE), "Translator")
+    expect_s3_class(translator_read(), "Translator")
 })
 
 test_that("translator_read() validates verbose", {
@@ -256,8 +259,8 @@ test_that("translator_read() reads all related translations files", {
             pattern = "_translator_",
             fileext = ".yml"))
     withr::defer(file.remove(translations_paths(tr)))
-    translator_write(tr, verbose = FALSE)
-    tr2 <- translator_read(verbose = FALSE)
+    translator_write(tr)
+    tr2 <- translator_read()
 
     expect_identical(tr$native_languages, tr2$native_languages)
     expect_identical(tr$hashes, tr2$hashes)
@@ -270,6 +273,8 @@ test_that("translator_read() reads all related translations files", {
 })
 
 test_that("translator_read() outputs basic information if verbose is true", {
+    withr::local_options(transltr.verbose = TRUE)
+
     # dirname() returns "." when a single filename is
     # passed to it (with no other reference). This is
     # used below to ensure snapshotted outputs remain
@@ -302,7 +307,7 @@ test_that("translator_read() reports errors", {
     temp_file <- "_translator.yml"
 
     # Step 2: export the Translator object and its translations.
-    translator_write(tr, temp_file, verbose = FALSE)
+    translator_write(tr, temp_file)
 
     # Step 3: overwrite translations files with invalid files.
     file.copy(
@@ -311,9 +316,11 @@ test_that("translator_read() reports errors", {
         overwrite = TRUE)
 
     # Step 4: check how errors are reported.
-    expect_output(translator_read(temp_file))
-    expect_snapshot(translator_read(temp_file))
+    # When verbose is TRUE, errors are reported as console outputs.
+    expect_output(translator_read(temp_file, verbose = TRUE))
+    expect_snapshot(translator_read(temp_file, verbose = TRUE))
 
+    # When verbose is FALSE, errors are reported as such.
     expect_error(translator_read(temp_file, verbose = FALSE))
     expect_snapshot(translator_read(temp_file, verbose = FALSE), error = TRUE)
 })
@@ -323,7 +330,7 @@ test_that("translator_read() does not read translations files if translations is
         transltr.default.path = withr::local_tempfile(
             pattern = "_translator_",
             fileext = ".yml"))
-    translator_write(tr, verbose = FALSE)
+    translator_write(tr)
 
     # There should be no output.
     expect_silent(translator_read(translations = FALSE))

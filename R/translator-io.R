@@ -148,7 +148,7 @@
 translator_read <- function(
     path         = getOption("transltr.default.path"),
     encoding     = "UTF-8",
-    verbose      = TRUE,
+    verbose      = getOption("transltr.verbose", TRUE),
     translations = TRUE)
 {
     assert_lgl1(verbose)
@@ -201,7 +201,7 @@ translator_write <- function(
     tr           = translator(),
     path         = getOption("transltr.default.path"),
     overwrite    = FALSE,
-    verbose      = TRUE,
+    verbose      = getOption("transltr.verbose", TRUE),
     translations = TRUE)
 {
     assert_chr1(path)

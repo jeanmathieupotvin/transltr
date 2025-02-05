@@ -1,3 +1,5 @@
+withr::local_options(transltr.verbose = FALSE)
+
 path_mock1    <- get_mock_path(file.path("find-source", "r-script1"))
 path_mock2    <- get_mock_path(file.path("find-source", "r-script2"))
 path_mock_dir <- dirname(path_mock1)
@@ -14,7 +16,6 @@ texts_mock2 <- find_source_in_exprs(tokens_mock2, path_mock2)
 
 test_that("find_source() returns an R6 object of class Translator", {
     out <- find_source(path_mock_dir,
-        verbose   = FALSE,
         id        = "test-find-source",
         algorithm = "utf8",
         native_languages = c(
@@ -79,7 +80,7 @@ test_that("find_source() ignores files not having file extensions R or Rprofile"
     # file with no extension. Therefore, it should
     # be skipped, and x/y should not be registered
     # in the output.
-    out <- find_source(path_mock_dir, verbose = FALSE)
+    out <- find_source(path_mock_dir)
 
     expect_true(all(is.na(match(c("x", "y"), out$source_texts))))
 })
@@ -90,8 +91,8 @@ test_that("find_source() ignores files not having file extensions R or Rprofile"
 
 test_that("find_source_in_files() returns a list of Text objects", {
     paths <- c(path_mock1, path_mock2)
-    texts_mode_strict     <- find_source_in_files(paths, verbose = FALSE)
-    texts_mode_not_strict <- find_source_in_files(paths, strict = FALSE, verbose = FALSE)
+    texts_mode_strict     <- find_source_in_files(paths)
+    texts_mode_not_strict <- find_source_in_files(paths, strict = FALSE)
 
     expect_type(texts_mode_strict,     "list")
     expect_type(texts_mode_not_strict, "list")
