@@ -95,7 +95,7 @@ test_that("translations_paths() returns expected file paths", {
         winslash = "/",
         mustWork = FALSE)
 
-    withr::local_options(transltr.default.path = temp_file)
+    withr::local_options(transltr.path = temp_file)
 
     expect_identical(
         translations_paths(tr),
@@ -234,7 +234,7 @@ test_that("translator_write() does not write translations files if translations 
 
 test_that("translator_read() returns an R6 object of class Translator", {
     withr::local_options(
-        transltr.default.path = withr::local_tempfile(
+        transltr.path = withr::local_tempfile(
             pattern = "_translator_",
             fileext = ".yml"))
     withr::defer(file.remove(translations_paths(tr)))
@@ -255,7 +255,7 @@ test_that("translator_read() validates translations", {
 
 test_that("translator_read() reads all related translations files", {
     withr::local_options(
-        transltr.default.path = withr::local_tempfile(
+        transltr.path = withr::local_tempfile(
             pattern = "_translator_",
             fileext = ".yml"))
     withr::defer(file.remove(translations_paths(tr)))
@@ -327,7 +327,7 @@ test_that("translator_read() reports errors", {
 
 test_that("translator_read() does not read translations files if translations is false", {
     withr::local_options(
-        transltr.default.path = withr::local_tempfile(
+        transltr.path = withr::local_tempfile(
             pattern = "_translator_",
             fileext = ".yml"))
     translator_write(tr)

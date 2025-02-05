@@ -26,7 +26,7 @@
 #' There are two requirements.
 #'
 #'   * All files must be stored in the same directory. By default, this is set
-#'     equal to `inst/transltr/` (see `getOption("transltr.default.path")`).
+#'     equal to `inst/transltr/` (see `getOption("transltr.path")`).
 #'   * Filenames of translations files are standardized and must correspond to
 #'     languages (language codes, see `lang`).
 #'
@@ -146,7 +146,7 @@
 #' @rdname translator-io
 #' @export
 translator_read <- function(
-    path         = getOption("transltr.default.path"),
+    path         = getOption("transltr.path"),
     encoding     = "UTF-8",
     verbose      = getOption("transltr.verbose", TRUE),
     translations = TRUE)
@@ -199,7 +199,7 @@ translator_read <- function(
 #' @export
 translator_write <- function(
     tr           = translator(),
-    path         = getOption("transltr.default.path"),
+    path         = getOption("transltr.path"),
     overwrite    = FALSE,
     verbose      = getOption("transltr.verbose", TRUE),
     translations = TRUE)
@@ -276,7 +276,7 @@ translations_write <- function(tr = translator(), path = "", lang = "") {
 #' @export
 translations_paths <- function(
     tr         = translator(),
-    parent_dir = dirname(getOption("transltr.default.path")))
+    parent_dir = dirname(getOption("transltr.path")))
 {
     assert_chr1(parent_dir)
 
