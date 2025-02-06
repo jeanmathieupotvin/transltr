@@ -290,8 +290,8 @@ export_translations <- function(tr = translator(), lang = "") {
     translations <- lapply(lapply(tr$hashes, tr$get_text), \(txt) {
         return(
             list(
-                `Source Text` = txt$source_text,
-                Translation   = txt$get_translation(lang) %??% untranslated))
+                `Source Text` = str_wrap(txt$source_text),
+                Translation   = str_wrap(txt$get_translation(lang) %??% untranslated)))
     })
 
     out <- list(
@@ -331,22 +331,29 @@ export.Translator <- function(x, ...) {
 #' @keywords internal
 #' @export
 export.Text <- function(x, id = uuid(), set_translations = FALSE, ...) {
+    # Widths takes into account indentation and ensure
+    # lines of serialized Translator objects are never
+    # longer than 80 characters.
     assert_chr1(id)
     assert_lgl1(set_translations)
 
-    source_is_set <- x$source_lang != constant("unset")
-    translations  <- if (set_translations) {
+    src_is_set   <- x$source_lang != constant("unset")
+    translations <- if (set_translations) {
+        # Source text is removed from translations
+        # and is treated independently.
         langs <- names(x$translations)
-        trans <- x$translations[langs[-match(x$source_lang, langs, 0L)]]
-        lapply(trans, strwrap, width = 80L)
+        lapply(
+            x$translations[langs[-match(x$source_lang, langs, 0L)]],
+            str_wrap,
+            width = 72L)
     }
 
     out <- list(
         Identifier        = id,
         Algorithm         = x$algorithm,
-        Hash              = if (source_is_set) x$hash,
-        `Source Language` = if (source_is_set) x$source_lang,
-        `Source Text`     = if (source_is_set) strwrap(x$source_text, 80L),
+        Hash              = if (src_is_set) x$hash,
+        `Source Language` = if (src_is_set) x$source_lang,
+        `Source Text`     = if (src_is_set) str_wrap(x$source_text, width = 74L),
         Translations      = translations,
         Locations         = map(
             export,
