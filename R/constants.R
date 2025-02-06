@@ -12,7 +12,6 @@
 #' | `which`         | **Shape**      | **Value**                                     |
 #' | --------------- | -------------- | --------------------------------------------- |
 #' | `algorithms`    | `character(2)` | `c("sha1", "utf8")`                           |
-#' | `concat`        | `character(1)` | `" "`                                         |
 #' | `empty`         | `character(1)` | `"<empty>"`                                   |
 #' | `empty-list`    | `character(1)` | `"<empty list>"`                              |
 #' | `null`          | `character(1)` | `"<null>"`                                    |
@@ -56,7 +55,6 @@ constant <- function(which = "") {
     return(
         switch(which,
             algorithms      = c("sha1", "utf8"),
-            concat          = " ",
             empty           = "<empty>",
             `empty-list`    = "<empty list>",
             null            = "<null>",

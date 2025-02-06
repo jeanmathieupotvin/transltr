@@ -8,7 +8,6 @@ translate(
   ...,
   lang = language_get(),
   tr = translator(),
-  concat = constant("concat"),
   source_lang = language_source_get()
 )
 }
@@ -28,9 +27,6 @@ to use language codes stemming from well-known schemes such as
 to maximize portability and cross-compatibility.}
 
 \item{tr}{A \code{\link{Translator}} object.}
-
-\item{concat}{A non-empty and non-\link[base:NA]{NA} character string used to
-concatenate values passed to \code{...}.}
 
 \item{source_lang}{A non-empty and non-\link[base:NA]{NA} character string. The
 language of the (untranslated) source text. See argument \code{lang} for more

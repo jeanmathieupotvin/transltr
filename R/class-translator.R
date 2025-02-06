@@ -391,8 +391,6 @@ Translator <- R6::R6Class("Translator",
         #'
         #' @template param-lang
         #'
-        #' @template param-concat
-        #'
         #' @template param-source-lang-no-example
         #'
         #' @return A character string, or `NULL` if the underlying translation
@@ -408,14 +406,13 @@ Translator <- R6::R6Class("Translator",
         translate = \(
             ...,
             lang        = language_get(),
-            concat      = constant("concat"),
             source_lang = language_source_get())
         {
             # hash() validates source_lang, but it is also
             # validated here to throw a coherent error message.
             assert_chr1(source_lang)
-            text <- normalize(..., concat = concat)
-            hash <- hash(source_lang, text, self$algorithm)
+            text  <- normalize(...)
+            hash  <- hash(source_lang, text, self$algorithm)
             return(self$get_translation(hash, lang))
         },
 

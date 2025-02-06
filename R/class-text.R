@@ -267,15 +267,17 @@ as_text.call <- function(x,
 
     # First element of a call is the
     # name of the underlying function.
-    args        <- as.list(match.call(translate, x, expand.dots = FALSE))[-1L]
-    dots        <- unlist(args$`...`, use.names = FALSE)
-    concat      <- args$concat      %??% constant("concat")
-    source_lang <- args$source_lang %??% language_source_get()
+    args <- as.list(match.call(translate, x, expand.dots = FALSE))[-1L]
 
     txt <- Text$new(algorithm)
     txt$set_locations(location)
-    txt$set_translation(source_lang, normalize(dots, concat = concat))
-    txt$source_lang <- source_lang
+
+    if (!is.null(dots <- unlist(args$`...`))) {
+        source_lang <- args$source_lang %??% language_source_get()
+        txt$set_translation(source_lang, normalize(dots))
+        txt$source_lang <- source_lang
+    }
+
     return(txt)
 }
 

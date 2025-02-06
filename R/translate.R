@@ -10,8 +10,6 @@
 #'
 #' @template param-lang
 #'
-#' @template param-concat
-#'
 #' @template param-source-lang-no-example
 #'
 #' @returns
@@ -52,7 +50,6 @@ translate <- function(
     ...,
     lang        = language_get(),
     tr          = translator(),
-    concat      = constant("concat"),
     source_lang = language_source_get())
 {
     if (!is_translator(tr)) {
@@ -62,6 +59,5 @@ translate <- function(
     return(
         tr$translate(...,
             lang        = lang,
-            concat      = concat,
             source_lang = source_lang))
 }

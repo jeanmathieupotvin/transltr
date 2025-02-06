@@ -4,7 +4,6 @@ test_that("it returns null for unkown constant names", {
 
 test_that("it returns expected values", {
     expect_identical(constant("algorithms"), c("sha1", "utf8"))
-    expect_identical(constant("concat"), " ")
     expect_identical(constant("null"), "<null>")
     expect_identical(constant("empty"), "<empty>")
     expect_identical(constant("unset"), "<unset>")

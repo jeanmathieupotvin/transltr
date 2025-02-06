@@ -197,8 +197,7 @@ test_that("$initialize() works", {
 })
 
 test_that("$translate() returns a character string if translation is available", {
-    # By design, this also checks that
-    # inputs are hashed accordingly.
+    # By design, this also checks that inputs are hashed accordingly.
     expect_identical(tr1$translate("Hello, world!",    lang = "en"), "Hello, world!")
     expect_identical(tr1$translate("Hello, world!",    lang = "fr"), "Bonjour, monde!")
     expect_identical(tr2$translate("Hello, world!",    lang = "el"), "Γεια σου, Κόσμος!")

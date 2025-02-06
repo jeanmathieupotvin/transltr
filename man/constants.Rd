@@ -14,7 +14,6 @@ of the constant to fetch. See below for defined values.}
 \code{\link[=constant]{constant()}} returns the requested constant, or \code{NULL} if it is unavailable.\tabular{lll}{
    \code{which} \tab \strong{Shape} \tab \strong{Value} \cr
    \code{algorithms} \tab \code{character(2)} \tab \code{c("sha1", "utf8")} \cr
-   \code{concat} \tab \code{character(1)} \tab \code{" "} \cr
    \code{empty} \tab \code{character(1)} \tab \code{"<empty>"} \cr
    \code{empty-list} \tab \code{character(1)} \tab \code{"<empty list>"} \cr
    \code{null} \tab \code{character(1)} \tab \code{"<null>"} \cr

@@ -510,7 +510,7 @@ test_that("as_text() works", {
 
 test_that("as_text.call() returns a Text object", {
     txt <- as_text(
-        call("translate", "Hello,", "world!"),
+        call("translate", "Hello, ", "world!"),
         location  = location("test"),
         algorithm = "utf8")
 
@@ -546,17 +546,11 @@ test_that("as_text.call() extracts ... from x", {
     # The second call is used to test that named
     # arguments passed to ... are tolerated.
     translate_call1 <- call("translate", "Hello, ", "world!")
-    translate_call2 <- call("translate", a = "Hello", b = ", world!",
-        concat      = "",
+    translate_call2 <- call("translate",
+        a = "Hello",
+        b = ", world!",
         source_lang = "test")
 
-    expect_identical(as_text(translate_call1)$source_text, "Hello, world!")
-    expect_identical(as_text(translate_call2)$source_text, "Hello, world!")
-})
-
-test_that("as_text.call() extracts concat from x or sets it if not found", {
-    translate_call1 <- call("translate", "Hello", ", world!", concat = "")
-    translate_call2 <- call("translate", "Hello,", "world!")
     expect_identical(as_text(translate_call1)$source_text, "Hello, world!")
     expect_identical(as_text(translate_call2)$source_text, "Hello, world!")
 })
@@ -566,4 +560,10 @@ test_that("as_text.call() extracts source_lang from x or sets it if not found", 
     translate_call2 <- call("translate", "Hello,", "world!")
     expect_identical(as_text(translate_call1)$source_lang, "test")
     expect_identical(as_text(translate_call2)$source_lang, "en")
+})
+
+test_that("as_text.call() sets source fields only if ... is not empty", {
+    txt <- as_text(translate_call)
+    expect_null(txt$source_text)
+    expect_identical(txt$source_lang, constant("unset"))
 })
