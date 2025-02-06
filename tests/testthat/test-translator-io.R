@@ -23,7 +23,7 @@ tr <- translator(
 comments_translator_file <- c(
     "# Translator",
     "#",
-    "# - You may edit fields Identifier, and Languages.",
+    "# - You may edit fields Identifier and Languages.",
     "# - Do not edit other fields by hand. Edit source scripts instead.",
     "%YAML 1.1")
 
@@ -34,6 +34,7 @@ comments_translations_file <- c(
     "# - Choose UTF-8 whenever you have to select a character encoding.",
     "# - You may use any text editor.",
     "# - You may split long sentences with single new lines.",
+    "# - You may separate paragraphs by leaving a blank line between them.",
     "# - You may include comments.",
     "#   - What follows an octothorpe (#) is ignored until the next line.",
     "#   - An escaped octothorpe (\\#) is treated as normal text.")

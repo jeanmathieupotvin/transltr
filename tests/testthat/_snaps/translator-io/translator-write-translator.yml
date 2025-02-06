@@ -1,6 +1,6 @@
 # Translator
 #
-# - You may edit fields Identifier, and Languages.
+# - You may edit fields Identifier and Languages.
 # - Do not edit other fields by hand. Edit source scripts instead.
 %YAML 1.1
 ---
