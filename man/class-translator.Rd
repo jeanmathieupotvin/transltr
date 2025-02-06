@@ -343,14 +343,29 @@ information.}
 }
 \subsection{Details}{
 Since it can be detected by \code{\link[=find_source]{find_source()}}, \code{\link[=translate]{translate()}} is the
-preferred interface to this method.
+preferred interface to this method. You may create such a function
+that wraps this method.
+\subsection{Text Normalization:}{
 
-Values passed to \code{...} are first \link[=normalize]{normalized},
-and then \link[=hash]{hashed}. The translation that corresponds to
-the resulting hash and \code{lang} pair is fetched via method
-\code{\link[=Translator]{Translator$get_translation()}}. Argument \code{lang} will
-not be validated if the resulting hash has no corresponding
-\code{\link{Text}} object.
+#' \code{\link{transltr}} always normalizes character vectors.
+Elements passed to \code{...} are transformed and assembled into a single
+character string to ensure their consistency. Both single-line and
+multi-line strings are supported.
+
+Character vectors go through these five steps.
+\enumerate{
+\item Whitespaces (tabs, newlines, and repeated spaces) characters are
+replaced by a single space.
+\item Leading and trailing empty strings are discarded.
+\item Empty strings inserted within non-empty elements of \code{...} are
+interpreted as paragraph separators. They are replaced by two
+newline characters (\verb{\\n\\n}).
+\item All resulting elements (including paragraph separators) are coerced
+into a single character string.
+\item Any remaining leading and trailing whitespaces are stripped from the
+character string.
+}
+}
 }
 
 \subsection{Returns}{

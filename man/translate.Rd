@@ -42,12 +42,28 @@ A character string, or \code{NULL} if the underlying translation is unavailable.
 \description{
 Translate source text.
 }
-\details{
-It is strongly recommended to always include the namespace when using
-\code{\link[=translate]{translate()}}, i.e. \code{transltr::translate()}. Doing so ensures that there
-will be no ambiguity at runtime. See argument \code{strict} of \code{\link[=find_source]{find_source()}}
-for additional information.
+\section{Text Normalization}{
+
+\code{\link{transltr}} always normalizes character vectors. Elements passed
+to \code{...} are transformed and assembled into a single character string to
+ensure their consistency. Both single-line and multi-line strings are
+supported.
+
+Character vectors go through these five steps.
+\enumerate{
+\item Whitespaces (tabs, newlines, and repeated spaces) characters are
+replaced by a single space.
+\item Leading and trailing empty strings are discarded.
+\item Empty strings inserted within non-empty elements of \code{...} are
+interpreted as paragraph separators. They are replaced by two
+newline characters (\verb{\\n\\n}).
+\item All resulting elements (including paragraph separators) are coerced
+into a single character string.
+\item Any remaining leading and trailing whitespaces are stripped from the
+character string.
 }
+}
+
 \examples{
 # Set source language.
 language_source_set("en")

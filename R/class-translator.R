@@ -358,17 +358,35 @@ Translator <- R6::R6Class("Translator",
         #'
         #' @details
         #' Since it can be detected by [find_source()], [translate()] is the
-        #' preferred interface to this method.
+        #' preferred interface to this method. You may create such a function
+        #' that wraps this method.
         #'
-        #' Values passed to `...` are first [normalized][normalize()],
-        #' and then [hashed][hash()]. The translation that corresponds to
-        #' the resulting hash and `lang` pair is fetched via method
-        #' [`Translator$get_translation()`][Translator]. Argument `lang` will
-        #' not be validated if the resulting hash has no corresponding
-        #' [`Text`][Text] object.
+        #  NOTE: What follows below is copied and pasted from roxygen2 template
+        #  section-text-normalization. This is because @section cannot be used
+        #  within the documentation of an R6 method.
+        #'
+        #' ## Text Normalization:
+        #'
+        #' #' [`transltr`][transltr] always normalizes character vectors.
+        #' Elements passed to `...` are transformed and assembled into a single
+        #' character string to ensure their consistency. Both single-line and
+        #' multi-line strings are supported.
+        #'
+        #' Character vectors go through these five steps.
+        #'
+        #'   1. Whitespaces (tabs, newlines, and repeated spaces) characters are
+        #'      replaced by a single space.
+        #'   2. Leading and trailing empty strings are discarded.
+        #'   3. Empty strings inserted within non-empty elements of `...` are
+        #'      interpreted as paragraph separators. They are replaced by two
+        #'      newline characters (`\n\n`).
+        #'   4. All resulting elements (including paragraph separators) are coerced
+        #'      into a single character string.
+        #'   5. Any remaining leading and trailing whitespaces are stripped from the
+        #'      character string.
         #'
         #  NOTE: Package roxygen2 reuses templates whenever within an R6 class.
-        #
+        #'
         #' @template param-dots-source-text
         #'
         #' @template param-lang

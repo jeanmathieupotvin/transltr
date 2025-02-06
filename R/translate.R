@@ -2,11 +2,7 @@
 #'
 #' Translate source text.
 #'
-#' @details
-#' It is strongly recommended to always include the namespace when using
-#' [translate()], i.e. `transltr::translate()`. Doing so ensures that there
-#' will be no ambiguity at runtime. See argument `strict` of [find_source()]
-#' for additional information.
+#' @template section-text-normalization
 #'
 #' @param tr A [`Translator`][Translator] object.
 #'
