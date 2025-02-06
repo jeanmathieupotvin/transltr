@@ -4,6 +4,8 @@
 \alias{str_to}
 \alias{str_to.default}
 \alias{str_trim}
+\alias{str_wrap}
+\alias{str_unwrap}
 \title{Character String Utilities}
 \usage{
 str_to(x, ...)
@@ -11,9 +13,13 @@ str_to(x, ...)
 \method{str_to}{default}(x, quote_values = FALSE, last_sep = ", or ", ...)
 
 str_trim(x = character(), width = 80L)
+
+str_wrap(x = character(), width = 80L)
+
+str_unwrap(x = character())
 }
 \arguments{
-\item{x}{Any \R object for \code{\link[=str_to]{str_to()}}. A character vector for \code{\link[=str_trim]{str_trim()}}.}
+\item{x}{Any \R object for \code{\link[=str_to]{str_to()}}. A character vector otherwise.}
 
 \item{...}{Further arguments passed to, or from other methods.}
 
@@ -24,13 +30,14 @@ str_trim(x = character(), width = 80L)
 separating the last element from the penultimate one.}
 
 \item{width}{A non-\link[base:NA]{NA} integer value. The target width for
-individual elements of \code{x}. It takes 3 more characters into account
-for the \code{...} suffix.}
+individual elements of \code{x}. \code{\link[=str_trim]{str_trim()}} takes 3 more characters into
+account for the suffix it inserts (\code{...}).}
 }
 \value{
-\code{\link[=str_to]{str_to()}} returns a character string.
+\code{\link[=str_to]{str_to()}} and \code{\link[=str_wrap]{str_wrap()}} return a character string.
 
-\code{\link[=str_trim]{str_trim()}} returns a character vector having the same length as \code{x}.
+\code{\link[=str_trim]{str_trim()}} and \code{\link[=str_unwrap]{str_unwrap()}} return a character vector having
+the same length as \code{x}.
 }
 \description{
 \code{\link[=str_to]{str_to()}} converts an \R object to a character string. It is a slightly
@@ -38,10 +45,17 @@ more flexible alternative to \code{\link[base:toString]{base::toString()}}.
 
 \code{\link[=str_trim]{str_trim()}} wraps \code{\link[base:strtrim]{base::strtrim()}} and further adds a \code{...} suffix to
 each trimmed element.
+
+\code{\link[=str_wrap]{str_wrap()}} wraps \code{\link[base:strwrap]{base::strwrap()}} and ensures a character string is
+returned. \code{\link[=str_unwrap]{str_unwrap()}} is the inverse operation.
 }
 \details{
 \code{\link[=str_to]{str_to()}} concatenates all elements with \code{", "}, except for the last
 one. See argument \code{last_sep}.
+
+\code{\link[=str_wrap]{str_wrap()}} and \code{\link[=str_unwrap]{str_unwrap()}} respectively inserts and removes newline
+characters from elements of \code{x}. They both preserve paragraph separators
+(\code{"\\n\\n"}).
 }
 \seealso{
 Other utility functions: 
