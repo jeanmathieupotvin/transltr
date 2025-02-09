@@ -1,35 +1,50 @@
 #' Normalize Text
 #'
 #' @description
-#' [normalize()] constructs a string from single-line and multi-line strings
-#' passed to `...` All elements are (implicitly) coerced to character values
-#' in the process.
+#' Construct a standardized string from values passed to `...`
+#'
+#' @template param-dots-source-text
 #'
 #' @template section-text-normalization
-#'
-#' @param ... Any number of character vectors.
 #'
 #' @returns
 #' A character string, possibly empty.
 #'
 #' @keywords internal
 normalize <- function(...) {
-    dots <- c(...)
+    PARAGRAPH_SEP       <- "\n\n"
+    PARAGRAPH_SEP_REGEX <- "\n{2,}"
 
-    # Replace spaces, tabs, and
-    # newlines by a single space.
-    strings <- gsub("[ \t\n]+", " ", dots)
-
-    # Ignore leading and trailing empty strings.
-    is_nz_pos <- which(nzchar(strings))
-    strings   <- strings[seq.int(min(is_nz_pos), max(is_nz_pos))]
-
-    # Empty strings inserted within other (non-empty)
-    # strings are interpreted as a paragraph separator.
-    # The latter is defined as two line breaks.
-    strings[!nzchar(strings)] <- "\n\n"
-
-    # Ensure a character string is returned.
-    # Strip leading and trailing whitespaces from it.
-    return(gsub("^[ \t\n]+|[ \t\n]+$", "", paste0(strings, collapse = "")))
+    return(
+        # Each vector passed to ... represents a paragraph.
+        c(...) |>
+        # Step 1. Concatenate all elements into a single
+        # string. Discard NA values and empty strings.
+        stringi::stri_flatten(
+            collapse   = PARAGRAPH_SEP,
+            na_empty   = TRUE,
+            omit_empty = TRUE) |>
+        # Step 2. Split string into a character vector. Each
+        # element is a paragraph. Any string of two or more
+        # newlines is interpreted as a paragraph separator.
+        # This ensures that paragraphs are preserved.
+        stringi::stri_split_regex(PARAGRAPH_SEP_REGEX) |>
+        _[[1L]] |>
+        # Step 3. Replace one or more whitespaces by a space.
+        stringi::stri_replace_all_charclass(
+            # NOTE: See this Wikipedia page for Unicode
+            # property Wspace and what it contains:
+            # https://en.wikipedia.org/wiki/Whitespace_character#Unicode.
+            pattern     = "\\p{Wspace}",
+            replacement = " ",
+            merge       = TRUE) |>
+        # Step 4. Remove all trailing and leading spaces.
+        stringi::stri_trim_both() |>
+        # Step 5. Concatenate all paragraphs together
+        # using the standard paragraph separator.
+        stringi::stri_flatten(
+            collapse   = PARAGRAPH_SEP,
+            na_empty   = TRUE,
+            omit_empty = TRUE)
+    )
 }

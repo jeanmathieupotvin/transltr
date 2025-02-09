@@ -8,15 +8,13 @@
 #' each trimmed element.
 #'
 #' [str_wrap()] wraps [base::strwrap()] and ensures a character string is
-#' returned. [str_unwrap()] is the inverse operation.
+#' returned.
 #'
 #' @details
 #' [str_to()] concatenates all elements with `", "`, except for the last
 #' one. See argument `last_sep`.
 #'
-#' [str_wrap()] and [str_unwrap()] respectively inserts and removes newline
-#' characters from elements of `x`. They both preserve paragraph separators
-#' (`"\n\n"`).
+#' [str_wrap()] preserves existing paragraph separators (`"\n\n"`).
 #'
 #' @param x Any \R object for [str_to()]. A character vector otherwise.
 #'
@@ -35,8 +33,7 @@
 #' @returns
 #' [str_to()] and [str_wrap()] return a character string.
 #'
-#' [str_trim()] and [str_unwrap()] return a character vector having
-#' the same length as `x`.
+#' [str_trim()] returns a character vector having the same length as `x`.
 #'
 #' @rdname utils-strings
 #' @family utility functions
@@ -91,11 +88,4 @@ str_wrap <- function(x = character(), width = 80L) {
     assert_int1(width)
     assert_between(width, 1L)
     return(paste0(strwrap(x, width), collapse = "\n"))
-}
-
-#' @rdname utils-strings
-#' @keywords internal
-str_unwrap <- function(x = character()) {
-    assert_chr(x, TRUE)
-    return(gsub("(?<!\n)\n(?!\n)", " ", x, perl = TRUE))
 }

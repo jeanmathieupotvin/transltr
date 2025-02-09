@@ -18,24 +18,13 @@ txt3 <- text(
         Lorem Ipsum is simply dummy text of the printing and typesetting
         industry. Lorem Ipsum has been the industry's standard dummy text
         ever since the 1500s, when an unknown printer took a galley of type
-        and scrambled it to make a type specimen book. It has survived not
-        only five centuries, but also the leap into electronic typesetting,
-        remaining essentially unchanged. It was popularised in the 1960s with
-        the release of Letraset sheets containing Lorem Ipsum passages, and
-        more recently with desktop publishing software like Aldus PageMaker
-        including versions of Lorem Ipsum."),
+        and scrambled it to make a type specimen book."),
     fr = normalize("
         Le Lorem Ipsum est simplement du faux texte employé dans la
         composition et la mise en page avant impression. Le Lorem Ipsum
         est le faux texte standard de l'imprimerie depuis les années 1500,
         quand un imprimeur anonyme assembla ensemble des morceaux de texte
-        pour réaliser un livre spécimen de polices de texte. Il n'a pas
-        fait que survivre cinq siècles, mais s'est aussi adapté à la
-        bureautique informatique, sans que son contenu n'en soit modifié.
-        Il a été popularisé dans les années 1960 grâce à la vente de
-        feuilles Letraset contenant des passages du Lorem Ipsum, et, plus
-        récemment, par son inclusion dans des applications de mise en page
-        de texte, comme Aldus PageMaker."))
+        pour réaliser un livre spécimen de polices de texte."))
 
 tr <- translator(
     id = "test-translator",
@@ -149,47 +138,28 @@ test_that("export.Text() only sets Hash, Source Language, and Source Text if sou
     expect_null(out$`Source Text`)
 })
 
-test_that("export.Text() wraps source text and translations", {
+test_that("export.Text() wraps source texts and translations", {
     out <- export(txt3, set_translations = TRUE)
 
-    expect_type(out$`Source Text`, "character")
-    expect_length(out$`Source Text`, 1L)
-    expect_type(out$`Translations`$fr, "character")
-    expect_length(out$`Translations`$fr, 1L)
-})
-
-test_that("export_translations() wraps source texts and translations", {
-    out <- export(txt3, set_translations = TRUE)
-
-    expected_source_text <- paste(sep = "\n",
+    wrapped_source_text <- paste(sep = "\n",
         "Lorem Ipsum is simply dummy text of the printing and typesetting",
         "industry. Lorem Ipsum has been the industry's standard dummy text ever",
         "since the 1500s, when an unknown printer took a galley of type and",
-        "scrambled it to make a type specimen book. It has survived not only five",
-        "centuries, but also the leap into electronic typesetting, remaining",
-        "essentially unchanged. It was popularised in the 1960s with the release",
-        "of Letraset sheets containing Lorem Ipsum passages, and more recently",
-        "with desktop publishing software like Aldus PageMaker including versions",
-        "of Lorem Ipsum.")
-    expected_translation <- paste(sep = "\n",
+        "scrambled it to make a type specimen book.")
+    wrapped_translation <- paste(sep = "\n",
         "Le Lorem Ipsum est simplement du faux texte employé dans la composition",
         "et la mise en page avant impression. Le Lorem Ipsum est le faux texte",
         "standard de l'imprimerie depuis les années 1500, quand un imprimeur",
         "anonyme assembla ensemble des morceaux de texte pour réaliser un livre",
-        "spécimen de polices de texte. Il n'a pas fait que survivre cinq",
-        "siècles, mais s'est aussi adapté à la bureautique informatique, sans",
-        "que son contenu n'en soit modifié. Il a été popularisé dans les années",
-        "1960 grâce à la vente de feuilles Letraset contenant des passages du",
-        "Lorem Ipsum, et, plus récemment, par son inclusion dans des",
-        "applications de mise en page de texte, comme Aldus PageMaker.")
+        "spécimen de polices de texte.")
 
     # This is not super useful, but widths are also
     # checked to ensure they are below defined limits.
     expect_true(all(nchar(strsplit(out$`Source Text`,   "\n")[[1L]]) <= 74L))
     expect_true(all(nchar(strsplit(out$Translations$fr, "\n")[[1L]]) <= 72L))
 
-    expect_identical(out$`Source Text`,   expected_source_text)
-    expect_identical(out$Translations$fr, expected_translation)
+    expect_identical(out$`Source Text`,   wrapped_source_text)
+    expect_identical(out$Translations$fr, wrapped_translation)
 })
 
 
@@ -261,6 +231,15 @@ test_that("serialize() serializes objects as expected", {
     expect_snapshot(cat(serialize(loc1, id = "test-id")))
     expect_snapshot(cat(serialize(txt1, id = "test-id")))
     expect_snapshot(cat(serialize(tr)))
+})
+
+test_that("serialize() wraps long source text and translations", {
+    tr <- translator(
+        id = "test-translator",
+        en = "English",
+        fr = "Français",
+        txt3)
+    expect_snapshot(cat(serialize(tr, set_translations = TRUE)))
 })
 
 
@@ -336,31 +315,32 @@ test_that("export_translations() sets each translation equal to constant 'untran
 })
 
 test_that("export_translations() wraps source texts and translations", {
-    tr  <- translator(en = "English", fr = "Français", txt3)
-    out <- export_translations(tr, "fr")
+    tr   <- translator(en = "English", fr = "Français", txt3)
+    out  <- export_translations(tr, "fr")
+    hash <- names(tr$hashes)
 
-    expected_source_text <- paste(sep = "\n",
+    source_text <- out$Translations[[hash]]$`Source Text`
+    translation <- out$Translations[[hash]]$Translation
+
+    wrapped_source_text <- paste(sep = "\n",
         "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
         "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
         "when an unknown printer took a galley of type and scrambled it to make a type",
-        "specimen book. It has survived not only five centuries, but also the leap into",
-        "electronic typesetting, remaining essentially unchanged. It was popularised in",
-        "the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,",
-        "and more recently with desktop publishing software like Aldus PageMaker",
-        "including versions of Lorem Ipsum.")
-    expected_translation <- paste(sep = "\n",
+        "specimen book.")
+    wrapped_translation <- paste(sep = "\n",
         "Le Lorem Ipsum est simplement du faux texte employé dans la composition et la",
         "mise en page avant impression. Le Lorem Ipsum est le faux texte standard de",
         "l'imprimerie depuis les années 1500, quand un imprimeur anonyme assembla",
         "ensemble des morceaux de texte pour réaliser un livre spécimen de polices de",
-        "texte. Il n'a pas fait que survivre cinq siècles, mais s'est aussi adapté à la",
-        "bureautique informatique, sans que son contenu n'en soit modifié. Il a été",
-        "popularisé dans les années 1960 grâce à la vente de feuilles Letraset contenant",
-        "des passages du Lorem Ipsum, et, plus récemment, par son inclusion dans des",
-        "applications de mise en page de texte, comme Aldus PageMaker.")
+        "texte.")
 
-    expect_identical(out$Translations$ce06fb7$`Source Text`, expected_source_text)
-    expect_identical(out$Translations$ce06fb7$Translation,   expected_translation)
+    # This is not super useful, but widths are also
+    # checked to ensure they are below defined limits.
+    expect_true(all(nchar(strsplit(source_text, "\n")[[1L]]) <= 80L))
+    expect_true(all(nchar(strsplit(translation, "\n")[[1L]]) <= 80L))
+
+    expect_identical(source_text, wrapped_source_text)
+    expect_identical(translation, wrapped_translation)
 })
 
 
@@ -385,6 +365,17 @@ test_that("serialize() uses expected flat formatting options", {
 
 test_that("serialize_translations() serializes translations as expected", {
     expect_snapshot(cat(serialize_translations(tr, "el"), "\n"))
+    expect_snapshot(cat(serialize_translations(tr, "fr"), "\n"))
+})
+
+test_that("serialize_translations() wraps long source texts and translations", {
+    tr  <- translator(
+        id = "test-translator",
+        en = "English",
+        fr = "Français",
+        txt3)
+    out <- export_translations(tr, "fr")
+
     expect_snapshot(cat(serialize_translations(tr, "fr"), "\n"))
 })
 
@@ -894,6 +885,26 @@ test_that("import.ExportedText() returns an object of R6 class Text", {
     expect_s3_class(out, "Text")
     expect_identical(out, txt1)
 })
+
+test_that("import.Text() unwraps source texts and translations", {
+    out <- import(export(txt3, set_translations = TRUE))
+
+    str_source_text <- paste(sep = " ",
+        "Lorem Ipsum is simply dummy text of the printing and typesetting",
+        "industry. Lorem Ipsum has been the industry's standard dummy text ever",
+        "since the 1500s, when an unknown printer took a galley of type and",
+        "scrambled it to make a type specimen book.")
+    str_translation <- paste(sep = " ",
+        "Le Lorem Ipsum est simplement du faux texte employé dans la composition",
+        "et la mise en page avant impression. Le Lorem Ipsum est le faux texte",
+        "standard de l'imprimerie depuis les années 1500, quand un imprimeur",
+        "anonyme assembla ensemble des morceaux de texte pour réaliser un livre",
+        "spécimen de polices de texte.")
+
+    expect_identical(out$source_text, str_source_text)
+    expect_identical(out$get_translation("fr"), str_translation)
+})
+
 
 test_that("import.ExportedText() only set source_lang and source_text if they are not null", {
     txt <- Text$new()

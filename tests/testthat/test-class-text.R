@@ -510,7 +510,7 @@ test_that("as_text() works", {
 
 test_that("as_text.call() returns a Text object", {
     txt <- as_text(
-        call("translate", "Hello, ", "world!"),
+        call("translate", "Hello, world!"),
         location  = location("test"),
         algorithm = "utf8")
 
@@ -543,16 +543,9 @@ test_that("as_text.call() validates validate", {
 })
 
 test_that("as_text.call() extracts ... from x", {
-    # The second call is used to test that named
-    # arguments passed to ... are tolerated.
-    translate_call1 <- call("translate", "Hello, ", "world!")
-    translate_call2 <- call("translate",
-        a = "Hello",
-        b = ", world!",
-        source_lang = "test")
+    translate_call1 <- call("translate", "Hello,", "world!")
 
-    expect_identical(as_text(translate_call1)$source_text, "Hello, world!")
-    expect_identical(as_text(translate_call2)$source_text, "Hello, world!")
+    expect_identical(as_text(translate_call1)$source_text, "Hello,\n\nworld!")
 })
 
 test_that("as_text.call() extracts source_lang from x or sets it if not found", {

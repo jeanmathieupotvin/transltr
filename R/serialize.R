@@ -613,11 +613,11 @@ import.ExportedTranslator <- function(x, ...) {
 import.ExportedText  <- function(x, ...) {
     txt <- Text$new(x[["Algorithm"]])
 
+    do.call(txt$set_locations,    lapply(x[["Locations"]], import, ...))
+    do.call(txt$set_translations, lapply(x[["Translations"]], normalize))
+
     source_lang <- x[["Source Language"]]
     source_text <- x[["Source Text"]]
-
-    do.call(txt$set_locations, lapply(x[["Locations"]], import, ...))
-    do.call(txt$set_translations, x[["Translations"]] %??% list())
 
     if (!is.null(source_lang) && !is.null(source_text)) {
         txt$set_translation(source_lang, normalize(source_text))
@@ -661,15 +661,15 @@ import.ExportedLocation <- function(x, ...) {
 import.ExportedTranslations <- function(x, tr = NULL, ...) {
     empty        <- constant("empty")
     untranslated <- constant("untranslated")
-
-    # Set untranslated source texts
-    # (empty Translation sections)
-    # equal to constant empty.
-    trans <- rapply(x[["Translations"]], how = "replace", f = \(txt) {
+    translations <- rapply(x[["Translations"]], how = "replace", f = \(txt) {
+        # Set untranslated or empty
+        # sections equal to constant
+        # empty.
         if (!nzchar(txt) || txt == untranslated) {
             return(empty)
         }
 
+        # Other, normalize the input.
         return(normalize(txt))
     })
 
@@ -681,7 +681,7 @@ import.ExportedTranslations <- function(x, tr = NULL, ...) {
             `Language Code`   = x[["Language Code"]],
             Language          = x[["Language"]],
             `Source Language` = x[["Source Language"]],
-            Translations      = trans),
+            Translations      = translations),
         class = "ExportedTranslations",
         tag = "Translations")
 
@@ -701,7 +701,7 @@ import.ExportedTranslations <- function(x, tr = NULL, ...) {
         # Empty translations are skipped silently.
         # vapply() is used to keep names (reduced
         # hashes) required below.
-        texts <- vapply(trans, `[[`, NA_character_, i = "Translation")
+        texts <- vapply(translations, `[[`, NA_character_, i = "Translation")
         texts <- texts[texts != empty]
 
         map(hash = names(texts), text = texts, fun = \(hash, text) {

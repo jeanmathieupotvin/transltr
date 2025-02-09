@@ -12,9 +12,14 @@ translate(
 )
 }
 \arguments{
-\item{...}{Any number of literal character vectors. The source text to
-translate. Values can be empty and/or \link[base:NA]{NA}, but this may lead
-to unexpected results.}
+\item{...}{Any number of vectors containing \link{atomic} elements. Each vector
+is normalized as a paragraph.
+\itemize{
+\item Elements are coerced to character values.
+\item \link[base:NA]{NA} values and empty strings are discarded.
+\item Multi-line strings are supported and encouraged. Blank lines are
+interpreted (two or more newline characters) as paragraph separators.
+}}
 
 \item{lang}{A non-empty and non-\link[base:NA]{NA} character string. The
 underlying language.
@@ -38,28 +43,19 @@ A character string, or \code{NULL} if the underlying translation is unavailable.
 \description{
 Translate source text.
 }
-\section{Text Normalization}{
-
-\code{\link{transltr}} always normalizes character vectors. Elements passed
-to \code{...} are transformed and assembled into a single character string to
-ensure their consistency. Both single-line and multi-line strings are
-supported.
-
-Character vectors go through these five steps.
+\details{
+Input text can written in a variety of ways using single-line and multi-line
+strings. Values passed to \code{...} are normalized (to ensure their consistency)
+and collapsed to a single character string using the standard paragraph
+separator. The latter is defined as two newline characters (\code{"\\n\\n"}).
 \enumerate{
+\item \link[base:NA]{NA} values and empty strings are discarded before reducing
+the elements to a character string.
 \item Whitespaces (tabs, newlines, and repeated spaces) characters are
-replaced by a single space.
-\item Leading and trailing empty strings are discarded.
-\item Empty strings inserted within non-empty elements of \code{...} are
-interpreted as paragraph separators. They are replaced by two
-newline characters (\verb{\\n\\n}).
-\item All resulting elements (including paragraph separators) are coerced
-into a single character string.
-\item Any remaining leading and trailing whitespaces are stripped from the
-character string.
+replaced by a single space. Paragraph separators are preserved.
+\item Leading or trailing whitespaces are stripped.
 }
 }
-
 \examples{
 # Set source language.
 language_source_set("en")

@@ -5,7 +5,6 @@
 \alias{str_to.default}
 \alias{str_trim}
 \alias{str_wrap}
-\alias{str_unwrap}
 \title{Character String Utilities}
 \usage{
 str_to(x, ...)
@@ -15,8 +14,6 @@ str_to(x, ...)
 str_trim(x = character(), width = 80L)
 
 str_wrap(x = character(), width = 80L)
-
-str_unwrap(x = character())
 }
 \arguments{
 \item{x}{Any \R object for \code{\link[=str_to]{str_to()}}. A character vector otherwise.}
@@ -36,8 +33,7 @@ account for the suffix it inserts (\code{...}).}
 \value{
 \code{\link[=str_to]{str_to()}} and \code{\link[=str_wrap]{str_wrap()}} return a character string.
 
-\code{\link[=str_trim]{str_trim()}} and \code{\link[=str_unwrap]{str_unwrap()}} return a character vector having
-the same length as \code{x}.
+\code{\link[=str_trim]{str_trim()}} returns a character vector having the same length as \code{x}.
 }
 \description{
 \code{\link[=str_to]{str_to()}} converts an \R object to a character string. It is a slightly
@@ -47,15 +43,13 @@ more flexible alternative to \code{\link[base:toString]{base::toString()}}.
 each trimmed element.
 
 \code{\link[=str_wrap]{str_wrap()}} wraps \code{\link[base:strwrap]{base::strwrap()}} and ensures a character string is
-returned. \code{\link[=str_unwrap]{str_unwrap()}} is the inverse operation.
+returned.
 }
 \details{
 \code{\link[=str_to]{str_to()}} concatenates all elements with \code{", "}, except for the last
 one. See argument \code{last_sep}.
 
-\code{\link[=str_wrap]{str_wrap()}} and \code{\link[=str_unwrap]{str_unwrap()}} respectively inserts and removes newline
-characters from elements of \code{x}. They both preserve paragraph separators
-(\code{"\\n\\n"}).
+\code{\link[=str_wrap]{str_wrap()}} preserves existing paragraph separators (\code{"\\n\\n"}).
 }
 \seealso{
 Other utility functions: 

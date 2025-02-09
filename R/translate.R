@@ -2,8 +2,6 @@
 #'
 #' Translate source text.
 #'
-#' @template section-text-normalization
-#'
 #' @param tr A [`Translator`][Translator] object.
 #'
 #' @template param-dots-source-text
@@ -11,6 +9,8 @@
 #' @template param-lang
 #'
 #' @template param-source-lang-no-example
+#'
+#' @template section-text-normalization
 #'
 #' @returns
 #' A character string, or `NULL` if the underlying translation is unavailable.
@@ -56,8 +56,5 @@ translate <- function(
         stops("'tr' must be a 'Translator' object.")
     }
 
-    return(
-        tr$translate(...,
-            lang        = lang,
-            source_lang = source_lang))
+    return(tr$translate(..., lang = lang, source_lang = source_lang))
 }

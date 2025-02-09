@@ -54,25 +54,14 @@ project (or any other \emph{context}) and all related translations. It exposes
 a set of methods that can be used to manipulate this information, but it
 is designed in such a way that its methods can be ignored most of the time.
 
+\code{\link{Translator}} objects can be saved and exported with
+\code{\link[=translator_write]{translator_write()}}. They can be imported back into an \R session
+with \code{\link[=translator_read]{translator_read()}}.
+
 Under the hood, \code{\link{Translator}} objects are collections of
 \code{\link{Text}} objects. These do most of the work. They are treated as
 lower-level component and in typical situations, users rarely interact
 with them.
-\subsection{Translating Text}{
-
-Since it can be detected and processed by \code{\link[=find_source]{find_source()}}, it is recommended
-to use \code{\link[=translate]{translate()}} at all times. Method
-\code{\link[=Translator]{Translator$translate()}} is the underlying workhorse function
-called by the former.
-}
-
-\subsection{Exporting and Importing Translators}{
-
-\code{\link{Translator}} objects can be saved and exported with
-\code{\link[=translator_write]{translator_write()}}.
-
-They can be imported back into an \R session with \code{\link[=translator_read]{translator_read()}}.
-}
 }
 \examples{
 # Set source language.
@@ -304,8 +293,7 @@ tr <- Translator$new()
 \if{html}{\out{<a id="method-Translator-translate"></a>}}
 \if{latex}{\out{\hypertarget{method-Translator-translate}{}}}
 \subsection{Method \code{translate()}}{
-Translate text. Consider using \code{\link[=translate]{translate()}} instead
-of this method.
+Translate text.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Translator$translate(
   ...,
@@ -317,9 +305,14 @@ of this method.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{Any number of literal character vectors. The source text to
-translate. Values can be empty and/or \link[base:NA]{NA}, but this may lead
-to unexpected results.}
+\item{\code{...}}{Any number of vectors containing \link{atomic} elements. Each vector
+is normalized as a paragraph.
+\itemize{
+\item Elements are coerced to character values.
+\item \link[base:NA]{NA} values and empty strings are discarded.
+\item Multi-line strings are supported and encouraged. Blank lines are
+interpreted (two or more newline characters) as paragraph separators.
+}}
 
 \item{\code{lang}}{A non-empty and non-\link[base:NA]{NA} character string. The
 underlying language.
@@ -338,29 +331,16 @@ information.}
 \if{html}{\out{</div>}}
 }
 \subsection{Details}{
-Since it can be detected by \code{\link[=find_source]{find_source()}}, \code{\link[=translate]{translate()}} is the
-preferred interface to this method. You may create such a function
-that wraps this method.
-\subsection{Text Normalization:}{
-
-#' \code{\link{transltr}} always normalizes character vectors.
-Elements passed to \code{...} are transformed and assembled into a single
-character string to ensure their consistency. Both single-line and
-multi-line strings are supported.
-
-Character vectors go through these five steps.
+Input text can written in a variety of ways using single-line and multi-line
+strings. Values passed to \code{...} are normalized (to ensure their consistency)
+and collapsed to a single character string using the standard paragraph
+separator. The latter is defined as two newline characters (\code{"\\n\\n"}).
 \enumerate{
+\item \link[base:NA]{NA} values and empty strings are discarded before reducing
+the elements to a character string.
 \item Whitespaces (tabs, newlines, and repeated spaces) characters are
-replaced by a single space.
-\item Leading and trailing empty strings are discarded.
-\item Empty strings inserted within non-empty elements of \code{...} are
-interpreted as paragraph separators. They are replaced by two
-newline characters (\verb{\\n\\n}).
-\item All resulting elements (including paragraph separators) are coerced
-into a single character string.
-\item Any remaining leading and trailing whitespaces are stripped from the
-character string.
-}
+replaced by a single space. Paragraph separators are preserved.
+\item Leading or trailing whitespaces are stripped.
 }
 }
 

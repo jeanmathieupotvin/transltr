@@ -106,32 +106,3 @@ test_that("str_wrap() wraps lines", {
         str_wrap(v2, width = 20L),
         "A very short line\nA line that\ncontains 34\ncharacters\nAnother line that\ncontains 40\ncharacters")
 })
-
-
-# str_unwrap() -----------------------------------------------------------------
-
-
-test_that("str_unwrap() returns a character", {
-    expect_type(str_unwrap(), "character")
-    expect_length(str_unwrap(), 0L)
-})
-
-test_that("str_unwrap() validates x", {
-    expect_error(str_unwrap(1L))
-    expect_snapshot(str_unwrap(1L), error = TRUE)
-})
-
-test_that("str_unwrap() unwraps lines", {
-    expect_identical(
-        str_unwrap("A very short line\nA line that\ncontains 34\ncharacters\nAnother line that\ncontains 40\ncharacters"),
-        "A very short line A line that contains 34 characters Another line that contains 40 characters")
-})
-
-test_that("str_unwrap() skips sequences of repeated newlines", {
-    expect_identical(
-        str_unwrap("Paragraph 1.\nContents.\n\nParagraph 2.\nContents."),
-        "Paragraph 1. Contents.\n\nParagraph 2. Contents.")
-    expect_identical(
-        str_unwrap("Paragraph 1.\nContents.\n\n\nParagraph 2.\nContents."),
-        "Paragraph 1. Contents.\n\n\nParagraph 2. Contents.")
-})

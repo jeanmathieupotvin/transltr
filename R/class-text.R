@@ -268,8 +268,7 @@ as_text.call <- function(x,
     # First element of a call is the
     # name of the underlying function.
     args <- as.list(match.call(translate, x, expand.dots = FALSE))[-1L]
-
-    txt <- Text$new(algorithm)
+    txt  <- Text$new(algorithm)
     txt$set_locations(location)
 
     if (!is.null(dots <- unlist(args$`...`))) {
