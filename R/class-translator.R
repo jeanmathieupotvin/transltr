@@ -7,24 +7,14 @@
 #' a set of methods that can be used to manipulate this information, but it
 #' is designed in such a way that its methods can be ignored most of the time.
 #'
+#' [`Translator`][Translator] objects can be saved and exported with
+#' [translator_write()]. They can be imported back into an \R session
+#' with [translator_read()].
+#'
 #' Under the hood, [`Translator`][Translator] objects are collections of
 #' [`Text`][Text] objects. These do most of the work. They are treated as
 #' lower-level component and in typical situations, users rarely interact
 #' with them.
-#'
-#' ## Translating Text
-#'
-#' Since it can be detected and processed by [find_source()], it is recommended
-#' to use [translate()] at all times. Method
-#' [`Translator$translate()`][Translator] is the underlying workhorse function
-#' called by the former.
-#'
-#' ## Exporting and Importing Translators
-#'
-#' [`Translator`][Translator] objects can be saved and exported with
-#' [translator_write()].
-#'
-#' They can be imported back into an \R session with [translator_read()].
 #'
 #' @param ... Usage depends on the underlying function.
 #'

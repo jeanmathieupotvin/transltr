@@ -11,7 +11,7 @@ find_source_in_file(
   encoding = "UTF-8",
   strict = TRUE,
   algorithm = constant("algorithms"),
-  verbose = FALSE
+  verbose = getOption("transltr.verbose", FALSE)
 )
 
 find_source_in_exprs(

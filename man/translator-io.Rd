@@ -9,17 +9,17 @@
 \title{Read and Write Translations}
 \usage{
 translator_read(
-  path = getOption("transltr.default.path"),
+  path = getOption("transltr.path"),
   encoding = "UTF-8",
-  verbose = TRUE,
+  verbose = getOption("transltr.verbose", TRUE),
   translations = TRUE
 )
 
 translator_write(
   tr = translator(),
-  path = getOption("transltr.default.path"),
+  path = getOption("transltr.path"),
   overwrite = FALSE,
-  verbose = TRUE,
+  verbose = getOption("transltr.verbose", TRUE),
   translations = TRUE
 )
 
@@ -29,7 +29,7 @@ translations_write(tr = translator(), path = "", lang = "")
 
 translations_paths(
   tr = translator(),
-  parent_dir = dirname(getOption("transltr.default.path"))
+  parent_dir = dirname(getOption("transltr.path"))
 )
 }
 \arguments{
@@ -126,7 +126,7 @@ and registers successfully imported translations.
 There are two requirements.
 \itemize{
 \item All files must be stored in the same directory. By default, this is set
-equal to \verb{inst/transltr/} (see \code{getOption("transltr.default.path")}).
+equal to \verb{inst/transltr/} (see \code{getOption("transltr.path")}).
 \item Filenames of translations files are standardized and must correspond to
 languages (language codes, see \code{lang}).
 }

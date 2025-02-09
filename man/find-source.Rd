@@ -12,7 +12,7 @@ find_source(
   id = uuid(),
   algorithm = constant("algorithms"),
   native_languages = character(),
-  verbose = TRUE
+  verbose = getOption("transltr.verbose", TRUE)
 )
 
 find_source_in_files(
@@ -20,7 +20,7 @@ find_source_in_files(
   encoding = "UTF-8",
   strict = TRUE,
   algorithm = constant("algorithms"),
-  verbose = TRUE
+  verbose = getOption("transltr.verbose", TRUE)
 )
 }
 \arguments{
