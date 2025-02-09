@@ -259,7 +259,8 @@ translations_write <- function(tr = translator(), path = "", lang = "") {
     comments <- c(
         "# Translations",
         "#",
-        "# - Edit each 'Translation' section below.",
+        "# - Edit each 'Translation' subsection below.",
+        "# - Do not edit 'Source Text' subsections.",
         "# - Choose UTF-8 whenever you have to select a character encoding.",
         "# - You may use any text editor.",
         "# - You may split long sentences with single new lines.",

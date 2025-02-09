@@ -159,7 +159,7 @@
        Languages:
         en: English
         fr: Français
-       Source Texts:
+       Source Text:
         256e0d7 [en, fr]: Hello, world!
         2ac373a [en, fr]: Farewell, world!
 
