@@ -46,7 +46,7 @@
       Translations: ~
       Locations:
         - !<Location>
-          Identifier: test-id:a
+          Identifier: test-id:location-1
           Path: a
           Ranges: Ln 1, Col 2 @ Ln 3, Col 4
 
@@ -73,7 +73,7 @@
           Translations: ~
           Locations:
             - !<Location>
-              Identifier: 256e0d7:a
+              Identifier: 256e0d7:location-1
               Path: a
               Ranges: Ln 1, Col 2 @ Ln 3, Col 4
         - !<Text>
@@ -85,7 +85,7 @@
           Translations: ~
           Locations:
             - !<Location>
-              Identifier: 2ac373a:b
+              Identifier: 2ac373a:location-1
               Path: b
               Ranges: Ln 5, Col 6 @ Ln 7, Col 8
 
