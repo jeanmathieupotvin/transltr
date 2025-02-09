@@ -60,11 +60,3 @@
       Error:
       ! 'width' must be a non-NA numeric value in the range [1, Inf).
 
-# str_unwrap() validates x
-
-    Code
-      str_unwrap(1L)
-    Condition
-      Error:
-      ! 'x' must be a character vector of non-NA values.
-
