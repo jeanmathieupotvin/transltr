@@ -359,6 +359,17 @@ test_that("format() sets names of locations equal to base names", {
     expect_snapshot(print(txt))
 })
 
+test_that("format() escapes newlines", {
+    txt <- text(
+        en = "Hello,\n\nworld!",
+        el = "Γεια σου,\n\nΚόσμος!")
+    out <- format(txt)
+
+    expect_match(out[[6L]], r"{\\n\\n}")  ## el
+    expect_match(out[[7L]], r"{\\n\\n}")  ## en
+    expect_snapshot(print(txt))
+})
+
 
 # print.Text() -----------------------------------------------------------------
 

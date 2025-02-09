@@ -116,19 +116,24 @@ format.Translator <- function(x, ...) {
     # <reduced-hash> [<lang>, ...]: <source-text>.
     # Long lines are truncated by format_vector().
     if (!is.null(source_texts <- x$source_texts)) {
+        # Escape newlines to preserve format.
+        source_texts <- structure(
+            stringi::stri_replace_all_regex(x$source_texts, "\n", r"{\\n}"),
+            names = names(source_texts))
+
         langs <- lapply(x$hashes, \(h) {
             str_to(x$get_text(h)$languages, last_sep = ", ")
         })
 
-        # Names of source_texts are reduced hashes.
+        # Names are used as labels by format_vector().
         names(source_texts) <- sprintf("%s [%s]", names(source_texts), langs)
     }
 
     xlist <- list(
-        Identifier     = x$id,
-        Algorithm      = x$algorithm,
-        Languages      = x$native_languages,
-        `Source Texts` = source_texts)
+        Identifier    = x$id,
+        Algorithm     = x$algorithm,
+        Languages     = x$native_languages,
+        `Source Text` = source_texts)
 
     return(c("<Translator>", format_vector(xlist, level = 1L)))
 }

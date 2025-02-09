@@ -414,7 +414,7 @@ test_that("format() returns a character", {
         " Languages:",
         "  en: English",
         "  fr: Français",
-        " Source Texts:",
+        " Source Text:",
         "  256e0d7 [en, fr]: Hello, world!",
         "  2ac373a [en, fr]: Farewell, world!"))
 
@@ -425,7 +425,16 @@ test_that("format() returns a character", {
         " Identifier: test-translator",
         " Algorithm: sha1",
         " Languages: <null>",
-        " Source Texts: <null>"))
+        " Source Text: <null>"))
+})
+
+test_that("format() escapes newlines", {
+    tr <- Translator$new(id = "test-translator")
+    tr$set_text(en = "Hello,\n\nworld!")
+    out <- format(tr)
+
+    expect_match(out[[6L]], r"{\\n\\n}")
+    expect_snapshot(print(tr))
 })
 
 

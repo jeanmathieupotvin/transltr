@@ -145,8 +145,20 @@
        Algorithm: sha1
        Languages:
         en: English
-       Source Texts:
+       Source Text:
         256e0d7 [en, fr]: Hello, world!
+
+# format() escapes newlines
+
+    Code
+      print(tr)
+    Output
+      <Translator>
+       Identifier: test-translator
+       Algorithm: sha1
+       Languages: <null>
+       Source Text:
+        b3f088a [en]: Hello,\n\nworld!
 
 # print() works
 

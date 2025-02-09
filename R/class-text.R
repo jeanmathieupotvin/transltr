@@ -161,12 +161,18 @@ format.Text <- function(x, ...) {
     if (length(locations <- lapply(x$locations, format))) {
         names(locations) <- basename(names(locations))
     }
+    if (length(translations <- x$translations)) {
+        # Escape newlines to preserve format.
+        translations <- structure(
+            stringi::stri_replace_all_regex(translations, "\n", "\\\\n"),
+            names = names(translations))
+    }
 
     xlist <- list(
         Hash          = x$hash,
         `Source Lang` = x$source_lang,
         Algorithm     = x$algorithm,
-        Translations  = x$translations,
+        Translations  = translations,
         Locations     = locations)
 
     return(c("<Text>", format_vector(xlist, level = 1L)))

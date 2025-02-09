@@ -195,6 +195,20 @@
           Path: /absolute/path/to/source/script/d
           Ranges: Ln 5, Col 6 @ Ln 7, Col 8
 
+# format() escapes newlines
+
+    Code
+      print(txt)
+    Output
+      <Text>
+       Hash: b3f088a87ffeeccce4cf1ccc64e34419fd736ae2
+       Source Lang: en
+       Algorithm: sha1
+       Translations:
+        el: Γεια σου,\n\nΚόσμος!
+        en: Hello,\n\nworld!
+       Locations: <empty> [list]
+
 # print() works
 
     Code
