@@ -26,6 +26,7 @@ Depends:
 Imports:
     digest,
     R6,
+    stringi,
     utils,
     yaml
 Suggests:
