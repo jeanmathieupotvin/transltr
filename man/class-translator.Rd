@@ -6,7 +6,7 @@
 \alias{format.Translator}
 \alias{print.Translator}
 \alias{Translator}
-\title{Source Texts and Translations}
+\title{Source Text and Translations}
 \usage{
 translator(..., id = uuid(), algorithm = constant("algorithms"))
 
@@ -25,13 +25,13 @@ strings for \code{\link[=translator]{translator()}} (in no preferred order).
 and \code{\link[=print]{print()}}.
 }}
 
-\item{id}{A non-empty and non-\link[base:NA]{NA} character string. A globally
-unique identifier for the \code{\link{Translator}} object. Beware of
-plausible collisions when using user-defined values.}
+\item{id}{A non-empty and non-NA character string. A globally unique
+identifier for the \code{\link{Translator}} object. Beware of collisions
+when using user-defined values.}
 
-\item{algorithm}{A non-empty and non-\link[base:NA]{NA} character string
-equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
-source information for identification purposes.}
+\item{algorithm}{A non-empty and non-NA character string equal to \code{"sha1"},
+or \code{"utf8"}. The algorithm to use when hashing source information for
+identification purposes.}
 
 \item{x}{Any \R object.}
 }
@@ -186,48 +186,42 @@ tr$rm_text("256e0d7")
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{id}}{A non-empty and non-\link[base:NA]{NA} character string. A globally
-unique identifier for the underlying object. Beware of plausible
-collisions when using user-defined values.}
+\item{\code{id}}{A non-empty and non-NA character string. A globally unique
+identifier for the underlying object. Beware of plausible collisions
+when using user-defined values.}
 
-\item{\code{algorithm}}{A non-empty and non-\link[base:NA]{NA} character string
-equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
-source information for identification purposes.}
+\item{\code{algorithm}}{A non-empty and non-NA character string equal to \code{"sha1"},
+or \code{"utf8"}. The algorithm to use when hashing source information for
+identification purposes.}
 
-\item{\code{hashes}}{A character vector of non-empty and non-\link[base:NA]{NA}
-values, or \code{NULL}. The set of all \code{hash} exposed by registered
-\code{\link{Text}} objects. If there is none, \code{hashes} is \code{NULL}.
-This is a \strong{read-only} field. It is automatically updated
-whenever field \code{algorithm} is updated.}
+\item{\code{hashes}}{A character vector of non-empty and non-NA values, or
+\code{NULL}. The set of all \code{hash} exposed by registered \code{\link{Text}}
+objects. If there is none, \code{hashes} is \code{NULL}. This is a
+\strong{read-only} field updated whenever field \code{algorithm} is updated.}
 
-\item{\code{source_texts}}{A character vector of non-empty and
-non-\link[base:NA]{NA} values, or \code{NULL}. The set of all
-\code{source_text} exposed by registered \code{\link{Text}}
-objects. If there is none, \code{source_texts} is \code{NULL}.
-This is a \strong{read-only} field.}
+\item{\code{source_texts}}{A character vector of non-empty and non-NA
+values, or \code{NULL}. The set of all registered source texts. If
+there is none, \code{source_texts} is \code{NULL}. This is a \strong{read-only}
+field.}
 
-\item{\code{source_langs}}{A character vector of non-empty and
-non-\link[base:NA]{NA} values, or \code{NULL}. The set of all
-\code{source_text} exposed by registered \code{\link{Text}}
-objects. This is a \strong{read-only} field.
+\item{\code{source_langs}}{A character vector of non-empty and non-NA
+values, or \code{NULL}. The set of all registered source languages.
+This is a \strong{read-only} field.
 \itemize{
-\item If there is none, \code{source_texts} is \code{NULL}.
-\item If there is one unique value, \code{source_texts} has
-a length equal to 1.
-\item Otherwise, a named character vector is returned.
+\item If there is none, \code{source_langs} is \code{NULL}.
+\item If there is one unique value, \code{source_langs} is an unnamed
+character string.
+\item Otherwise, it is a named character vector.
 }}
 
-\item{\code{languages}}{A character vector of non-empty and
-non-\link[base:NA]{NA} values, or \code{NULL}. The set of all
-\code{languages} (codes) exposed by registered \code{\link{Text}}
-objects. If there is none, \code{languages} is \code{NULL}.
-This is a \strong{read-only} field.}
+\item{\code{languages}}{A character vector of non-empty and non-NA values,
+or \code{NULL}. The set of all registered \code{languages} (codes). If there
+is none, \code{languages} is \code{NULL}. This is a \strong{read-only} field.}
 
 \item{\code{native_languages}}{A named character vector of non-empty and
-non-\link[base:NA]{NA} values, or \code{NULL}. A map (bijection) of
-\code{languages} (codes) to native language names. Names are codes,
-and values are native languages. If there is none,
-\code{native_languages} is \code{NULL}.
+non-NA values, or \code{NULL}. A map (bijection) of \code{languages} (codes)
+to native language names. Names are codes and values are native
+languages. If there is none, \code{native_languages} is \code{NULL}.
 
 While users retain full control over \code{native_languages}, it is
 best to use well-known schemes such as
@@ -266,13 +260,13 @@ Create a \code{\link{Translator}} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{A non-empty and non-\link[base:NA]{NA} character string. A globally
-unique identifier for the \code{\link{Translator}} object. Beware of
-plausible collisions when using user-defined values.}
+\item{\code{id}}{A non-empty and non-NA character string. A globally unique
+identifier for the \code{\link{Translator}} object. Beware of collisions
+when using user-defined values.}
 
-\item{\code{algorithm}}{A non-empty and non-\link[base:NA]{NA} character string
-equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
-source information for identification purposes.}
+\item{\code{algorithm}}{A non-empty and non-NA character string equal to \code{"sha1"},
+or \code{"utf8"}. The algorithm to use when hashing source information for
+identification purposes.}
 }
 \if{html}{\out{</div>}}
 }
@@ -293,7 +287,7 @@ tr <- Translator$new()
 \if{html}{\out{<a id="method-Translator-translate"></a>}}
 \if{latex}{\out{\hypertarget{method-Translator-translate}{}}}
 \subsection{Method \code{translate()}}{
-Translate text.
+Translate source text.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Translator$translate(
   ...,
@@ -309,13 +303,12 @@ Translate text.
 is normalized as a paragraph.
 \itemize{
 \item Elements are coerced to character values.
-\item \link[base:NA]{NA} values and empty strings are discarded.
+\item NA values and empty strings are discarded.
 \item Multi-line strings are supported and encouraged. Blank lines are
 interpreted (two or more newline characters) as paragraph separators.
 }}
 
-\item{\code{lang}}{A non-empty and non-\link[base:NA]{NA} character string. The
-underlying language.
+\item{\code{lang}}{A non-empty and non-NA character string. The underlying language.
 
 A language is usually a code (of two or three letters) for a native
 language name. While users retain full control over codes, it is best
@@ -324,9 +317,8 @@ to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}
 to maximize portability and cross-compatibility.}
 
-\item{\code{source_lang}}{A non-empty and non-\link[base:NA]{NA} character string. The
-language of the (untranslated) source text. See argument \code{lang} for more
-information.}
+\item{\code{source_lang}}{A non-empty and non-NA character string. The language of
+the source text. See argument \code{lang} for more information.}
 }
 \if{html}{\out{</div>}}
 }
@@ -336,8 +328,8 @@ strings. Values passed to \code{...} are normalized (to ensure their consistency
 and collapsed to a single character string using the standard paragraph
 separator. The latter is defined as two newline characters (\code{"\\n\\n"}).
 \enumerate{
-\item \link[base:NA]{NA} values and empty strings are discarded before reducing
-the elements to a character string.
+\item NA values and empty strings are discarded before reducing \code{...}
+to a character string.
 \item Whitespaces (tabs, newlines, and repeated spaces) characters are
 replaced by a single space. Paragraph separators are preserved.
 \item Leading or trailing whitespaces are stripped.
@@ -366,7 +358,7 @@ tr$translate("Hello, world!", lang = "fr")  ## Outputs "Bonjour, monde!"
 \if{html}{\out{<a id="method-Translator-get_translation"></a>}}
 \if{latex}{\out{\hypertarget{method-Translator-get_translation}{}}}
 \subsection{Method \code{get_translation()}}{
-Extract a translation, or source texts.
+Extract a translation or a source text.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Translator$get_translation(hash = "", lang = "")}\if{html}{\out{</div>}}
 }
@@ -374,12 +366,10 @@ Extract a translation, or source texts.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{hash}}{A non-empty and non-\link[base:NA]{NA} character string. The
-unique identifier of the requested source text, or its underlying
-\code{\link{Text}} object.}
+\item{\code{hash}}{A non-empty and non-NA character string. The unique identifier
+of the requested source text.}
 
-\item{\code{lang}}{A non-empty and non-\link[base:NA]{NA} character string. The
-underlying language.
+\item{\code{lang}}{A non-empty and non-NA character string. The underlying language.
 
 A language is usually a code (of two or three letters) for a native
 language name. While users retain full control over codes, it is best
@@ -412,7 +402,7 @@ tr$get_translation("256e0d7", "en")  ## Outputs "Hello, world!"
 \if{html}{\out{<a id="method-Translator-get_text"></a>}}
 \if{latex}{\out{\hypertarget{method-Translator-get_text}{}}}
 \subsection{Method \code{get_text()}}{
-Extract a \code{\link{Text}} object.
+Extract a source text and its translations.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Translator$get_text(hash = "")}\if{html}{\out{</div>}}
 }
@@ -420,9 +410,8 @@ Extract a \code{\link{Text}} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{hash}}{A non-empty and non-\link[base:NA]{NA} character string. The
-unique identifier of the requested source text, or its underlying
-\code{\link{Text}} object.}
+\item{\code{hash}}{A non-empty and non-NA character string. The unique identifier
+of the requested source text.}
 }
 \if{html}{\out{</div>}}
 }
@@ -445,8 +434,7 @@ tr$get_translation("256e0d7", "en")  ## Outputs "Hello, world!"
 \if{html}{\out{<a id="method-Translator-set_text"></a>}}
 \if{latex}{\out{\hypertarget{method-Translator-set_text}{}}}
 \subsection{Method \code{set_text()}}{
-Simultaneously create and register a \code{\link{Text}}
-object.
+Register a source text.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Translator$set_text(..., source_lang = language_source_get())}\if{html}{\out{</div>}}
 }
@@ -478,7 +466,7 @@ tr$set_text(en = "Hello, world!", location())
 \if{html}{\out{<a id="method-Translator-set_texts"></a>}}
 \if{latex}{\out{\hypertarget{method-Translator-set_texts}{}}}
 \subsection{Method \code{set_texts()}}{
-Register one or more \code{\link{Text}} objects.
+Register one or more source texts.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Translator$set_texts(...)}\if{html}{\out{</div>}}
 }
@@ -491,11 +479,11 @@ Register one or more \code{\link{Text}} objects.
 \if{html}{\out{</div>}}
 }
 \subsection{Details}{
-This method calls \code{\link[=merge_texts]{merge_texts()}} to merge all
-values passed to \code{...} together with previously registered
-\code{\link{Text}} objects. The underlying registered source
-texts, translations, and \code{\link{Location}} objects
-won't be duplicated.
+This method calls \code{\link[=merge_texts]{merge_texts()}} to merge all values
+passed to \code{...} together with previously registered
+\code{\link{Text}} objects. The underlying registered source texts,
+translations, and \code{\link{Location}} objects won't be
+duplicated.
 }
 
 \subsection{Returns}{
@@ -538,9 +526,9 @@ Map a language code to a native language name.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{Any number of named, non-empty, and non-\link[base:NA]{NA}
-character strings. Names are codes and values are native
-languages. See field \code{native_languages} for more information.}
+\item{\code{...}}{Any number of named, non-empty, and non-NA character
+strings. Names are codes and values are native languages. See
+field \code{native_languages} for more information.}
 }
 \if{html}{\out{</div>}}
 }
@@ -565,7 +553,7 @@ tr$set_native_languages(fr = NULL)
 \if{html}{\out{<a id="method-Translator-rm_text"></a>}}
 \if{latex}{\out{\hypertarget{method-Translator-rm_text}{}}}
 \subsection{Method \code{rm_text()}}{
-Remove a registered location.
+Remove a registered source text.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Translator$rm_text(hash = "")}\if{html}{\out{</div>}}
 }
@@ -573,8 +561,8 @@ Remove a registered location.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{hash}}{A non-empty and non-\link[base:NA]{NA} character string
-identifying the \code{\link{Text}} object to be removed.}
+\item{\code{hash}}{A non-empty and non-NA character string identifying the
+source text to remove.}
 }
 \if{html}{\out{</div>}}
 }

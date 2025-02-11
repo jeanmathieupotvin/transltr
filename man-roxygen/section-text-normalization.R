@@ -7,8 +7,8 @@
 #' and collapsed to a single character string using the standard paragraph
 #' separator. The latter is defined as two newline characters (`"\n\n"`).
 #'
-#'   1. [NA][base::NA] values and empty strings are discarded before reducing
-#'      the elements to a character string.
+#'   1. NA values and empty strings are discarded before reducing `...` to a
+#'      character string.
 #'   2. Whitespaces (tabs, newlines, and repeated spaces) characters are
 #'      replaced by a single space. Paragraph separators are preserved.
 #'   3. Leading or trailing whitespaces are stripped.

@@ -2,6 +2,6 @@
 #'   is normalized as a paragraph.
 #'
 #'   * Elements are coerced to character values.
-#'   * [NA][base::NA] values and empty strings are discarded.
+#'   * NA values and empty strings are discarded.
 #'   * Multi-line strings are supported and encouraged. Blank lines are
 #'     interpreted (two or more newline characters) as paragraph separators.

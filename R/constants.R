@@ -3,8 +3,8 @@
 #' Fetch a constant used by [`transltr`][transltr]. Constants ensure
 #' consistency among all features of the package.
 #'
-#' @param which A non-empty and non-[NA][base::NA] character string. The name
-#'   of the constant to fetch. See below for defined values.
+#' @param which A non-empty and non-NA character string. The name of the
+#'   constant to fetch. See below for defined values.
 #'
 #' @returns
 #' [constant()] returns the requested constant, or `NULL` if it is unavailable.

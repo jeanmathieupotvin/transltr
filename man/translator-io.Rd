@@ -33,8 +33,8 @@ translations_paths(
 )
 }
 \arguments{
-\item{path}{A non-empty and non-\link[base:NA]{NA} character string. A path to
-a file to read from, or write to.
+\item{path}{A non-empty and non-NA character string. A path to a file to
+read from, or write to.
 \itemize{
 \item This file must be a Translator file for \code{\link[=translator_read]{translator_read()}}.
 \item This file must be a translations file for \code{\link[=translations_read]{translations_read()}}.
@@ -44,16 +44,15 @@ See Details for more information. \code{\link[=translator_write]{translator_writ
 creates the parent directories of \code{path} (recursively) if they do not
 exist.}
 
-\item{encoding}{A non-empty and non-\link[base:NA]{NA} character string. The
-underlying source character encoding. In almost all cases, this should
-be UTF-8. Other encodings are internally re-encoded to UTF-8 for
-portability.}
+\item{encoding}{A non-empty and non-NA character string. The source character
+encoding. In almost all cases, this should be UTF-8. Other encodings are
+internally re-encoded to UTF-8 for portability.}
 
-\item{verbose}{A non-\link[base:NA]{NA} logical value. Should progress
-information be reported?}
+\item{verbose}{A non-NA logical value. Should progress information be
+reported?}
 
-\item{translations}{A non-\link[base:NA]{NA} logical value. Should translations
-files also be read, or written along with \code{path} (the Translator file)?}
+\item{translations}{A non-NA logical value. Should translations files also
+be read, or written along with \code{path} (the Translator file)?}
 
 \item{tr}{A \code{\link{Translator}} object.
 
@@ -62,12 +61,11 @@ This argument is \code{NULL} by default for \code{\link[=translations_read]{tran
 will read translations and further register them (as long as they
 correspond to an existing source text).}
 
-\item{overwrite}{A non-\link[base:NA]{NA} logical value. Should existing
-files be overwritten? If such files are detected and \code{overwrite} is
-set equal to \code{TRUE}, an error is thrown.}
+\item{overwrite}{A non-NA logical value. Should existing files be
+overwritten? If such files are detected and \code{overwrite} is set equal
+to \code{TRUE}, an error is thrown.}
 
-\item{lang}{A non-empty and non-\link[base:NA]{NA} character string. The
-underlying language.
+\item{lang}{A non-empty and non-NA character string. The underlying language.
 
 A language is usually a code (of two or three letters) for a native
 language name. While users retain full control over codes, it is best
@@ -76,8 +74,8 @@ to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}
 to maximize portability and cross-compatibility.}
 
-\item{parent_dir}{A non-empty and non-\link[base:NA]{NA} character string. A
-path to a parent directory.}
+\item{parent_dir}{A non-empty and non-NA character string. A path to a
+parent directory.}
 }
 \value{
 \code{\link[=translator_read]{translator_read()}} returns an \code{\link[R6:R6Class]{R6}} object of class

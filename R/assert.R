@@ -17,8 +17,7 @@
 #' This reduces code repetition and number of required unit tests. See
 #' Examples below.
 #'
-#' By convention, [NA][base::NA] values are **always** disallowed. Package
-#' [`transltr`][transltr] never uses them for consistency.
+#' By convention, NA values are **always** disallowed.
 #'
 #' [assert_arg()] is a partial refactoring of [base::match.arg()]. It relies
 #' on [assert_match()] internally and does not have an equivalent `is_arg()`
@@ -30,33 +29,30 @@
 #'
 #' @param x Any \R object.
 #'
-#' @param x_name A non-empty and non-[NA][base::NA] character string. The
-#'   underlying name of `x`.
+#' @param x_name A non-empty and non-NA character string. The name of `x`.
 #'
-#' @param min A non-[NA][base::NA] numeric lower bound. It can be infinite.
+#' @param min A non-NA numeric lower bound. It can be infinite.
 #'
-#' @param max A non-[NA][base::NA] numeric upper bound. It can be infinite.
+#' @param max A non-NA numeric upper bound. It can be infinite.
 #'
 #' @param choices A non-empty [vector][base::vector] of valid candidates.
 #'
-#' @param allow_empty A non-[NA][base::NA] logical value. Should vectors of
-#'   length 0 be considered as valid values?
+#' @param allow_empty A non-NA logical value. Should vectors of length 0 be
+#'   considered as valid values?
 #'
-#' @param allow_empty_string A non-[NA][base::NA] logical value. Should empty
-#'   character strings be considered as valid values?
+#' @param allow_empty_string A non-NA logical value. Should empty character
+#'   strings be considered as valid values?
 #'
-#' @param allow_empty_names A non-[NA][base::NA] logical value. Should empty
-#'   character strings be considered as valid names? This is different from
-#'   having no names at all.
+#' @param allow_empty_names A non-NA logical value. Should empty character
+#'   strings be considered as valid names? This is different from having no
+#'   names at all.
 #'
-#' @param allow_na_names A non-[NA][base::NA] logical value. Should
-#'   [NA][base::NA] values be considered as valid names?
+#' @param allow_na_names A non-NA logical value. Should NA values be considered
+#'   as valid names?
 #'
-#' @param allow_partial A non-[NA][base::NA] logical value. Should `x` be
-#'   partially matched? If so, [base::pmatch()] is used.
+#' @param allow_partial A non-NA logical value. Should `x` be partially matched?
 #'
-#' @param quote_values A non-[NA][base::NA] logical value. Should `choices`
-#'   be quoted? This argument is passed to [str_to()].
+#' @param quote_values A non-NA logical value. Passed as is to [str_to()].
 #'
 #' @template param-throw-error
 #'

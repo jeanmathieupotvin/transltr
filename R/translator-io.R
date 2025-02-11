@@ -45,8 +45,8 @@
 #' a set of translations sharing the same target language. This format attempts
 #' to be as simple as possible for non-technical collaborators.
 #'
-#' @param path A non-empty and non-[NA][base::NA] character string. A path to
-#'   a file to read from, or write to.
+#' @param path A non-empty and non-NA character string. A path to a file to
+#'   read from, or write to.
 #'
 #'   * This file must be a Translator file for [translator_read()].
 #'   * This file must be a translations file for [translations_read()].
@@ -62,15 +62,15 @@
 #'   will read translations and further register them (as long as they
 #'   correspond to an existing source text).
 #'
-#' @param overwrite A non-[NA][base::NA] logical value. Should existing
-#'   files be overwritten? If such files are detected and `overwrite` is
-#'   set equal to `TRUE`, an error is thrown.
+#' @param overwrite A non-NA logical value. Should existing files be
+#'   overwritten? If such files are detected and `overwrite` is set equal
+#'   to `TRUE`, an error is thrown.
 #'
-#' @param translations A non-[NA][base::NA] logical value. Should translations
-#'   files also be read, or written along with `path` (the Translator file)?
+#' @param translations A non-NA logical value. Should translations files also
+#'   be read, or written along with `path` (the Translator file)?
 #'
-#' @param parent_dir A non-empty and non-[NA][base::NA] character string. A
-#'   path to a parent directory.
+#' @param parent_dir A non-empty and non-NA character string. A path to a
+#'   parent directory.
 #'
 #' @template param-encoding
 #'

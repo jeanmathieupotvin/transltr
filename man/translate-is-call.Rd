@@ -9,9 +9,8 @@ is_translate_call(x, strict = TRUE)
 \arguments{
 \item{x}{Any \R object.}
 
-\item{strict}{A non-\link[base:NA]{NA} logical value. Must the \code{transltr}
-namespace be explicitly stated (with operator \code{::}) in the call? See
-Details.}
+\item{strict}{A non-NA logical value. Must the \code{transltr} namespace be
+explicitly stated (with operator \code{::}) in the call? See Details.}
 }
 \value{
 A logical value.

@@ -23,14 +23,13 @@ is_location(x)
 merge_locations(...)
 }
 \arguments{
-\item{path}{A non-empty and non-\link[base:NA]{NA} character string. The origin
-of the range(s).}
+\item{path}{A non-empty and non-NA character string. The origin of the ranges.}
 
-\item{line1, col1}{A non-empty integer vector of non-\link[base:NA]{NA} values.
-The (inclusive) starting point(s) of what is being referenced.}
+\item{line1, col1}{A non-empty integer vector of non-NA values. The
+(inclusive) starting point(s) of what is being referenced.}
 
-\item{line2, col2}{A non-empty integer vector of non-\link[base:NA]{NA} values.
-The (inclusive) end(s) of what is being referenced.}
+\item{line2, col2}{A non-empty integer vector of non-NA values. The
+(inclusive) end(s) of what is being referenced.}
 
 \item{x}{Any \R object.}
 

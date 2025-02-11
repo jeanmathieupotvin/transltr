@@ -1,4 +1,4 @@
-#' Source Texts and Translations
+#' Source Text and Translations
 #'
 #' Structure and manipulate the source text of a project and its translations.
 #'
@@ -217,11 +217,10 @@ Translator <- R6::R6Class("Translator",
             return(private$.algorithm)
         },
 
-        #' @field hashes A character vector of non-empty and non-[NA][base::NA]
-        #'   values, or `NULL`. The set of all `hash` exposed by registered
-        #'   [`Text`][Text] objects. If there is none, `hashes` is `NULL`.
-        #'   This is a **read-only** field. It is automatically updated
-        #'   whenever field `algorithm` is updated.
+        #' @field hashes A character vector of non-empty and non-NA values, or
+        #'   `NULL`. The set of all `hash` exposed by registered [`Text`][Text]
+        #'   objects. If there is none, `hashes` is `NULL`. This is a
+        #'   **read-only** field updated whenever field `algorithm` is updated.
         hashes = \(value) {
             if (!missing(value)) {
                 stops(
@@ -234,11 +233,10 @@ Translator <- R6::R6Class("Translator",
             return(unlist(hashes))
         },
 
-        #' @field source_texts A character vector of non-empty and
-        #'   non-[NA][base::NA] values, or `NULL`. The set of all
-        #'   `source_text` exposed by registered [`Text`][Text]
-        #'   objects. If there is none, `source_texts` is `NULL`.
-        #'   This is a **read-only** field.
+        #' @field source_texts A character vector of non-empty and non-NA
+        #'   values, or `NULL`. The set of all registered source texts. If
+        #'   there is none, `source_texts` is `NULL`. This is a **read-only**
+        #'   field.
         source_texts = \(value) {
             if (!missing(value)) {
                 stops(
@@ -256,14 +254,14 @@ Translator <- R6::R6Class("Translator",
             return(texts)
         },
 
-        #' @field source_langs A character vector of non-empty and
-        #'   non-[NA][base::NA] values, or `NULL`. The set of all
-        #'   `source_text` exposed by registered [`Text`][Text]
-        #'   objects. This is a **read-only** field.
-        #'   * If there is none, `source_texts` is `NULL`.
-        #'   * If there is one unique value, `source_texts` has
-        #'     a length equal to 1.
-        #'   * Otherwise, a named character vector is returned.
+        #' @field source_langs A character vector of non-empty and non-NA
+        #'   values, or `NULL`. The set of all registered source languages.
+        #'   This is a **read-only** field.
+        #'
+        #'   * If there is none, `source_langs` is `NULL`.
+        #'   * If there is one unique value, `source_langs` is an unnamed
+        #'     character string.
+        #'   * Otherwise, it is a named character vector.
         source_langs = \(value) {
             if (!missing(value)) {
                 stops(
@@ -286,11 +284,9 @@ Translator <- R6::R6Class("Translator",
             return(langs[[1L]])
         },
 
-        #' @field languages A character vector of non-empty and
-        #'   non-[NA][base::NA] values, or `NULL`. The set of all
-        #'   `languages` (codes) exposed by registered [`Text`][Text]
-        #'   objects. If there is none, `languages` is `NULL`.
-        #'   This is a **read-only** field.
+        #' @field languages A character vector of non-empty and non-NA values,
+        #'   or `NULL`. The set of all registered `languages` (codes). If there
+        #'   is none, `languages` is `NULL`. This is a **read-only** field.
         languages = \(value) {
             if (!missing(value)) {
                 stops(
@@ -303,10 +299,9 @@ Translator <- R6::R6Class("Translator",
         },
 
         #' @field native_languages A named character vector of non-empty and
-        #'   non-[NA][base::NA] values, or `NULL`. A map (bijection) of
-        #'   `languages` (codes) to native language names. Names are codes,
-        #'   and values are native languages. If there is none,
-        #'   `native_languages` is `NULL`.
+        #'   non-NA values, or `NULL`. A map (bijection) of `languages` (codes)
+        #'   to native language names. Names are codes and values are native
+        #'   languages. If there is none, `native_languages` is `NULL`.
         #'
         #'   While users retain full control over `native_languages`, it is
         #'   best to use well-known schemes such as
@@ -349,7 +344,7 @@ Translator <- R6::R6Class("Translator",
             return(self)
         },
 
-        #' @description Translate text.
+        #' @description Translate source text.
         #'
         #  NOTE: Package roxygen2 reuses templates whenever within an R6 class.
         #'
@@ -369,8 +364,8 @@ Translator <- R6::R6Class("Translator",
         #' and collapsed to a single character string using the standard paragraph
         #' separator. The latter is defined as two newline characters (`"\n\n"`).
         #'
-        #'   1. [NA][base::NA] values and empty strings are discarded before reducing
-        #'      the elements to a character string.
+        #'   1. NA values and empty strings are discarded before reducing `...`
+        #'      to a character string.
         #'   2. Whitespaces (tabs, newlines, and repeated spaces) characters are
         #'      replaced by a single space. Paragraph separators are preserved.
         #'   3. Leading or trailing whitespaces are stripped.
@@ -390,15 +385,13 @@ Translator <- R6::R6Class("Translator",
             lang        = language_get(),
             source_lang = language_source_get())
         {
-            # hash() validates source_lang, but it is also
-            # validated here to throw a coherent error message.
             assert_chr1(source_lang)
-            text  <- normalize(...)
-            hash  <- hash(source_lang, text, self$algorithm)
+            text <- normalize(...)
+            hash <- hash(source_lang, text, self$algorithm)
             return(self$get_translation(hash, lang))
         },
 
-        #' @description Extract a translation, or source texts.
+        #' @description Extract a translation or a source text.
         #'
         #' @template param-hash
         #'
@@ -420,7 +413,7 @@ Translator <- R6::R6Class("Translator",
             return(txt$get_translation(lang))
         },
 
-        #' @description Extract a [`Text`][Text] object.
+        #' @description Extract a source text and its translations.
         #'
         #' @return A [`Text`][Text] object, or `NULL`.
         #'
@@ -434,8 +427,7 @@ Translator <- R6::R6Class("Translator",
             return(private$.texts[[private$.hash_expand(hash)]])
         },
 
-        #' @description Simultaneously create and register a [`Text`][Text]
-        #'   object.
+        #' @description Register a source text.
         #'
         #' @param ... Passed as is to [text()].
         #'
@@ -456,15 +448,15 @@ Translator <- R6::R6Class("Translator",
             return(invisible())
         },
 
-        #' @description Register one or more [`Text`][Text] objects.
+        #' @description Register one or more source texts.
         #'
         #' @param ... Any number of [`Text`][Text] objects.
         #'
-        #' @details This method calls [merge_texts()] to merge all
-        #'   values passed to `...` together with previously registered
-        #'   [`Text`][Text] objects. The underlying registered source
-        #'   texts, translations, and [`Location`][Location] objects
-        #'   won't be duplicated.
+        #' @details This method calls [merge_texts()] to merge all values
+        #'   passed to `...` together with previously registered
+        #'   [`Text`][Text] objects. The underlying registered source texts,
+        #'   translations, and [`Location`][Location] objects won't be
+        #'   duplicated.
         #'
         #' @return A `NULL`, invisibly.
         #'
@@ -505,9 +497,9 @@ Translator <- R6::R6Class("Translator",
 
         #' @description Map a language code to a native language name.
         #'
-        #' @param ... Any number of named, non-empty, and non-[NA][base::NA]
-        #'   character strings. Names are codes and values are native
-        #'   languages. See field `native_languages` for more information.
+        #' @param ... Any number of named, non-empty, and non-NA character
+        #'   strings. Names are codes and values are native languages. See
+        #'   field `native_languages` for more information.
         #'
         #' @return A `NULL`, invisibly.
         #'
@@ -533,10 +525,10 @@ Translator <- R6::R6Class("Translator",
             return(invisible())
         },
 
-        #' @description Remove a registered location.
+        #' @description Remove a registered source text.
         #'
-        #' @param hash A non-empty and non-[NA][base::NA] character string
-        #'   identifying the [`Text`][Text] object to be removed.
+        #' @param hash A non-empty and non-NA character string identifying the
+        #'   source text to remove.
         #'
         #' @return A `NULL`, invisibly.
         #'

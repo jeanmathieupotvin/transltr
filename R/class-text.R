@@ -301,10 +301,10 @@ Text <- R6::R6Class("Text",
         .locations    = NULL                # See $locations
     ),
     active = list(
-        #' @field hash A non-empty and non-[NA][base::NA] character string. A
-        #'   reproducible hash generated from `source_lang` and `source_text`,
-        #'   and by using the algorithm specified by `algorithm`. It is used
-        #'   as a unique identifier for the underlying [`Text`][Text] object.
+        #' @field hash A non-empty and non-NA character string. A reproducible
+        #'   hash generated from `source_lang` and `source_text`, and by using
+        #'   the algorithm specified by `algorithm`. It is used as a unique
+        #'   identifier for the underlying [`Text`][Text] object.
         #'
         #'   This is a **read-only** field. It is automatically updated
         #'   whenever fields `source_lang` and/or `algorithm` are updated.
@@ -453,8 +453,8 @@ Text <- R6::R6Class("Text",
         #' @details This method is also used to register `source_lang` and
         #'  `source_text` **before** setting them as such. See Examples below.
         #'
-        #' @param text A non-empty and non-[NA][base::NA] character string. A
-        #'   translation, or a source text.
+        #' @param text A non-empty and non-NA character string. A translation,
+        #'   or the source text.
         #'
         #' @return A `NULL`, invisibly.
         #'
@@ -473,8 +473,8 @@ Text <- R6::R6Class("Text",
         #' @description Register one or more translations, and/or the source
         #'   text.
         #'
-        #' @param ... Any number of named, non-empty, and non-[NA][base::NA]
-        #'   character strings.
+        #' @param ... Any number of named, non-empty, and non-NA character
+        #'   strings.
         #'
         #' @details This method can be viewed as a vectorized version of
         #'   method `set_translation()`.
@@ -529,8 +529,8 @@ Text <- R6::R6Class("Text",
 
         #' @description Remove a registered translation.
         #'
-        #' @param lang A non-empty and non-[NA][base::NA] character string
-        #'   identifying a translation to be removed.
+        #' @param lang A non-empty and non-NA character string identifying a
+        #'   translation to be removed.
         #'
         #' @details You cannot remove `lang` when it is registered as the
         #'   current `source_lang`. You must update `source_lang` before
@@ -564,8 +564,8 @@ Text <- R6::R6Class("Text",
 
         #' @description Remove a registered location.
         #'
-        #' @param path A non-empty and non-[NA][base::NA] character string
-        #'   identifying a [`Location`][Location] object to be removed.
+        #' @param path A non-empty and non-NA character string identifying a
+        #'   [`Location`][Location] object to be removed.
         #'
         #' @return A `NULL`, invisibly.
         #'

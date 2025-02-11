@@ -1,5 +1,4 @@
-#' @param lang A non-empty and non-[NA][base::NA] character string. The
-#'   underlying language.
+#' @param lang A non-empty and non-NA character string. The underlying language.
 #'
 #'   A language is usually a code (of two or three letters) for a native
 #'   language name. While users retain full control over codes, it is best

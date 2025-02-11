@@ -69,20 +69,20 @@
 #'   is passed to these functions, they will import translations and further
 #'   register them (as long as they correspond to an existing source text).
 #'
-#' @param string A non-empty and non-[NA][base::NA] character string. Contents
+#' @param string A non-empty and non-NA character string. Contents
 #'   to deserialize.
 #'
-#' @param id A non-empty and non-[NA][base::NA] character string. A unique
-#'   identifier for the underlying object. It is used for validation purposes.
+#' @param id A non-empty and non-NA character string. A unique identifier for
+#'   the underlying object. It is used for validation purposes.
 #'
-#' @param set_translations A non-[NA][base::NA] logical value. Should
-#'   translations be included in the resulting [`ExportedText`][export()]
-#'   object? If `FALSE`, field `Translations` is set equal to `NULL`.
+#' @param set_translations A non-NA logical value. Should translations be
+#'   included in the resulting [`ExportedText`][export()] object? If `FALSE`,
+#'   field `Translations` is set equal to `NULL`.
 #'
 #' @param ... Further arguments passed to, or from other methods.
 #'
-#' @param errors A non-empty character vector of non-[NA][base::NA] values.
-#'   Error message(s) describing why object(s) are invalid.
+#' @param errors A non-empty character vector of non-NA values. Error
+#'   message(s) describing why object(s) are invalid.
 #'
 #' @template param-lang
 #'
@@ -180,10 +180,8 @@
 #'   \item{`Translations`}{A named list containing further named lists. Each
 #'     sublist contains two values:
 #'     \describe{
-#'       \item{`Source Text`}{A non-empty and non-[NA][base::NA] character
-#'         string.}
-#'       \item{`Translation`}{A non-empty and non-[NA][base::NA] character
-#'         string.}
+#'       \item{`Source Text`}{A non-empty and non-NA character string.}
+#'       \item{`Translation`}{A non-empty and non-NA character string.}
 #'     }
 #'     See [`Text$translations`][Text] for more information.}
 #' }

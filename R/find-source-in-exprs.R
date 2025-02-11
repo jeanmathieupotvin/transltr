@@ -6,8 +6,8 @@
 #'
 #' **Some arguments listed below are not explicitly validated for efficiency.**
 #'
-#' @param path A non-empty and non-[NA][base::NA] character string. A path to
-#'   an \R source script.
+#' @param path A non-empty and non-NA character string. A path to an \R source
+#'   script.
 #'
 #' @param tokens A [`data.frame`][data.frame()] returned by
 #'   [utils::getParseData()]. It must always minimally contain

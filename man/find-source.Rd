@@ -24,38 +24,36 @@ find_source_in_files(
 )
 }
 \arguments{
-\item{path}{A non-empty and non-\link[base:NA]{NA} character string. A path to
-a directory containing \R source scripts. All subdirectories are searched.
-Files that do not have a \code{.R}, or \code{.Rprofile} extension are skipped.}
+\item{path}{A non-empty and non-NA character string. A path to a directory
+containing \R source scripts. All subdirectories are searched. Files that
+do not have a \code{.R}, or \code{.Rprofile} extension are skipped.}
 
-\item{encoding}{A non-empty and non-\link[base:NA]{NA} character string. The
-underlying source character encoding. In almost all cases, this should
-be UTF-8. Other encodings are internally re-encoded to UTF-8 for
-portability.}
+\item{encoding}{A non-empty and non-NA character string. The source character
+encoding. In almost all cases, this should be UTF-8. Other encodings are
+internally re-encoded to UTF-8 for portability.}
 
-\item{strict}{A non-\link[base:NA]{NA} logical value. Should only
-\emph{explicit calls}, i.e. \code{transltr::translate()}, be extracted? If \code{FALSE},
-calls to \emph{any} such function are extracted regardless of the underlying
-namespace, i.e. \code{translate()}.}
+\item{strict}{A non-NA logical value. Should only \emph{explicit calls}, i.e.
+\code{transltr::translate()}, be extracted? If \code{FALSE}, calls to \emph{any} such
+function are extracted, i.e. \code{translate()}.}
 
-\item{id}{A non-empty and non-\link[base:NA]{NA} character string. A globally
-unique identifier for the \code{\link{Translator}} object. Beware of
-plausible collisions when using user-defined values.}
+\item{id}{A non-empty and non-NA character string. A globally unique
+identifier for the \code{\link{Translator}} object. Beware of collisions
+when using user-defined values.}
 
-\item{algorithm}{A non-empty and non-\link[base:NA]{NA} character string
-equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
-source information for identification purposes.}
+\item{algorithm}{A non-empty and non-NA character string equal to \code{"sha1"},
+or \code{"utf8"}. The algorithm to use when hashing source information for
+identification purposes.}
 
-\item{native_languages}{A named character vector of non-empty and
-non-\link[base:NA]{NA} values. It can be empty. It is used to to construct
-a mapping of language codes to native language names. See field
+\item{native_languages}{A named character vector of non-empty and non-NA
+values. It can be empty. It is used to to construct a mapping of language
+codes to native language names. See field
 \code{\link[=Translator]{Translator$native_languages}} for more information.}
 
-\item{verbose}{A non-\link[base:NA]{NA} logical value. Should progress
-information be reported?}
+\item{verbose}{A non-NA logical value. Should progress information be
+reported?}
 
-\item{paths}{A character vector of non-empty and non-\link[base:NA]{NA} values.
-A set of paths to \R source scripts that must be searched.}
+\item{paths}{A character vector of non-empty and non-NA values. A set of
+paths to \R source scripts that must be searched.}
 }
 \value{
 \code{\link[=find_source]{find_source()}} returns an \code{\link[R6:R6Class]{R6}} object of class

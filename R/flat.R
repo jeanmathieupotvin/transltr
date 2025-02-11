@@ -38,16 +38,15 @@
 #'
 #' @param x A list. It can be empty.
 #'
-#' @param tag_sep A non-empty and non-[NA][base::NA] character string. The
-#'   separator to use when creating tags from names (recursively) extracted
-#'   from `x`.
+#' @param tag_sep A non-empty and non-NA character string. The separator to use
+#'   when creating tags from names (recursively) extracted from `x`.
 #'
-#' @param tag_empty A non-[NA][base::NA] character string. The value to use
-#'   as a substitute for empty names. Positional indices are automatically
-#'   appended to it to ensure tags are always unique.
+#' @param tag_empty A non-NA character string. The value to use as a substitute
+#'   for empty names. Positional indices are automatically appended to it to
+#'   ensure tags are always unique.
 #'
-#' @param string A non-[NA][base::NA] character string. It can be empty.
-#'   Contents to deserialize.
+#' @param string A non-NA character string. It can be empty. Contents to
+#'   deserialize.
 #'
 #' @returns
 #' [flat_serialize()] returns a character string, possibly empty.

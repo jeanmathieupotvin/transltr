@@ -16,8 +16,7 @@ language_source_set(lang = "en")
 language_source_get()
 }
 \arguments{
-\item{lang}{A non-empty and non-\link[base:NA]{NA} character string. The
-underlying language.
+\item{lang}{A non-empty and non-NA character string. The underlying language.
 
 A language is usually a code (of two or three letters) for a native
 language name. While users retain full control over codes, it is best

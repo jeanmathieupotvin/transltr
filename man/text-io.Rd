@@ -10,13 +10,12 @@ text_read(path = "", encoding = "UTF-8")
 text_write(x = character(), path = "", encoding = "UTF-8")
 }
 \arguments{
-\item{path}{A non-empty and non-\link[base:NA]{NA} character string. A path to
-a file to read text from, or write text to.}
+\item{path}{A non-empty and non-NA character string. A path to a file to
+read text from, or write text to.}
 
-\item{encoding}{A non-empty and non-\link[base:NA]{NA} character string. The
-underlying source character encoding. In almost all cases, this should
-be UTF-8. Other encodings are internally re-encoded to UTF-8 for
-portability.}
+\item{encoding}{A non-empty and non-NA character string. The source character
+encoding. In almost all cases, this should be UTF-8. Other encodings are
+internally re-encoded to UTF-8 for portability.}
 
 \item{x}{A character vector. Lines of text to write. Its current encoding is
 given by \code{encoding}.}

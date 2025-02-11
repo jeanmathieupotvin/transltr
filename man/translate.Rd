@@ -16,13 +16,12 @@ translate(
 is normalized as a paragraph.
 \itemize{
 \item Elements are coerced to character values.
-\item \link[base:NA]{NA} values and empty strings are discarded.
+\item NA values and empty strings are discarded.
 \item Multi-line strings are supported and encouraged. Blank lines are
 interpreted (two or more newline characters) as paragraph separators.
 }}
 
-\item{lang}{A non-empty and non-\link[base:NA]{NA} character string. The
-underlying language.
+\item{lang}{A non-empty and non-NA character string. The underlying language.
 
 A language is usually a code (of two or three letters) for a native
 language name. While users retain full control over codes, it is best
@@ -33,9 +32,8 @@ to maximize portability and cross-compatibility.}
 
 \item{tr}{A \code{\link{Translator}} object.}
 
-\item{source_lang}{A non-empty and non-\link[base:NA]{NA} character string. The
-language of the (untranslated) source text. See argument \code{lang} for more
-information.}
+\item{source_lang}{A non-empty and non-NA character string. The language of
+the source text. See argument \code{lang} for more information.}
 }
 \value{
 A character string, or \code{NULL} if the underlying translation is unavailable.
@@ -49,8 +47,8 @@ strings. Values passed to \code{...} are normalized (to ensure their consistency
 and collapsed to a single character string using the standard paragraph
 separator. The latter is defined as two newline characters (\code{"\\n\\n"}).
 \enumerate{
-\item \link[base:NA]{NA} values and empty strings are discarded before reducing
-the elements to a character string.
+\item NA values and empty strings are discarded before reducing \code{...} to a
+character string.
 \item Whitespaces (tabs, newlines, and repeated spaces) characters are
 replaced by a single space. Paragraph separators are preserved.
 \item Leading or trailing whitespaces are stripped.

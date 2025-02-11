@@ -24,25 +24,23 @@ find_source_in_exprs(
 find_source_exprs(path = "", encoding = "UTF-8")
 }
 \arguments{
-\item{path}{A non-empty and non-\link[base:NA]{NA} character string. A path to
-an \R source script.}
+\item{path}{A non-empty and non-NA character string. A path to an \R source
+script.}
 
-\item{encoding}{A non-empty and non-\link[base:NA]{NA} character string. The
-underlying source character encoding. In almost all cases, this should
-be UTF-8. Other encodings are internally re-encoded to UTF-8 for
-portability.}
+\item{encoding}{A non-empty and non-NA character string. The source character
+encoding. In almost all cases, this should be UTF-8. Other encodings are
+internally re-encoded to UTF-8 for portability.}
 
-\item{strict}{A non-\link[base:NA]{NA} logical value. Should only
-\emph{explicit calls}, i.e. \code{transltr::translate()}, be extracted? If \code{FALSE},
-calls to \emph{any} such function are extracted regardless of the underlying
-namespace, i.e. \code{translate()}.}
+\item{strict}{A non-NA logical value. Should only \emph{explicit calls}, i.e.
+\code{transltr::translate()}, be extracted? If \code{FALSE}, calls to \emph{any} such
+function are extracted, i.e. \code{translate()}.}
 
-\item{algorithm}{A non-empty and non-\link[base:NA]{NA} character string
-equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
-source information for identification purposes.}
+\item{algorithm}{A non-empty and non-NA character string equal to \code{"sha1"},
+or \code{"utf8"}. The algorithm to use when hashing source information for
+identification purposes.}
 
-\item{verbose}{A non-\link[base:NA]{NA} logical value. Should progress
-information be reported?}
+\item{verbose}{A non-NA logical value. Should progress information be
+reported?}
 
 \item{tokens}{A \code{\link[=data.frame]{data.frame}} returned by
 \code{\link[utils:getParseData]{utils::getParseData()}}. It must always minimally contain

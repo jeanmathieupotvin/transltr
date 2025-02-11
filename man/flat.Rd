@@ -21,16 +21,15 @@ flat_example()
 \arguments{
 \item{x}{A list. It can be empty.}
 
-\item{tag_sep}{A non-empty and non-\link[base:NA]{NA} character string. The
-separator to use when creating tags from names (recursively) extracted
-from \code{x}.}
+\item{tag_sep}{A non-empty and non-NA character string. The separator to use
+when creating tags from names (recursively) extracted from \code{x}.}
 
-\item{tag_empty}{A non-\link[base:NA]{NA} character string. The value to use
-as a substitute for empty names. Positional indices are automatically
-appended to it to ensure tags are always unique.}
+\item{tag_empty}{A non-NA character string. The value to use as a substitute
+for empty names. Positional indices are automatically appended to it to
+ensure tags are always unique.}
 
-\item{string}{A non-\link[base:NA]{NA} character string. It can be empty.
-Contents to deserialize.}
+\item{string}{A non-NA character string. It can be empty. Contents to
+deserialize.}
 }
 \value{
 \code{\link[=flat_serialize]{flat_serialize()}} returns a character string, possibly empty.

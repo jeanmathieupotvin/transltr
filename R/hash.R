@@ -11,7 +11,7 @@
 #' Values passed to these arguments are concatenated with a colon character for
 #' hashing purposes.
 #'
-#' @param text A non-[NA][base::NA] character string. It can be empty.
+#' @param text A non-NA character string. It can be empty.
 #'
 #' @template param-lang
 #'

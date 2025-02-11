@@ -20,9 +20,8 @@
 #'
 #' @param x Any \R object.
 #'
-#' @param strict A non-[NA][base::NA] logical value. Must the `transltr`
-#'   namespace be explicitly stated (with operator `::`) in the call? See
-#'   Details.
+#' @param strict A non-NA logical value. Must the `transltr` namespace be
+#'   explicitly stated (with operator `::`) in the call? See Details.
 #'
 #' @returns A logical value.
 #'

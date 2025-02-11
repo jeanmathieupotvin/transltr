@@ -18,17 +18,16 @@
 #'
 #' @param x Any \R object for [str_to()]. A character vector otherwise.
 #'
-#' @param quote_values A non-[NA][base::NA] logical value. Should elements of
-#'   `x` be quoted?
+#' @param quote_values A non-NA logical value. Should elements of `x` be quoted?
 #'
-#' @param last_sep A non-empty and non-[NA][base::NA] character string
-#'   separating the last element from the penultimate one.
+#' @param last_sep A non-empty and non-NA character string separating the last
+#'   and penultimate elements.
 #'
 #' @param ... Further arguments passed to, or from other methods.
 #'
-#' @param width A non-[NA][base::NA] integer value. The target width for
-#'   individual elements of `x`. [str_trim()] takes 3 more characters into
-#'   account for the suffix it inserts (`...`).
+#' @param width A non-NA integer value. The target width for individual
+#'   elements of `x`. [str_trim()] takes 3 more characters into account for the
+#'   suffix it inserts (`...`).
 #'
 #' @returns
 #' [str_to()] and [str_wrap()] return a character string.

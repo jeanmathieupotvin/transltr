@@ -23,14 +23,13 @@
 #' number of [`Location`][Location] objects having possibly different paths.
 #' It can be viewed as a vectorized version of [c()].
 #'
-#' @param path A non-empty and non-[NA][base::NA] character string. The origin
-#'   of the range(s).
+#' @param path A non-empty and non-NA character string. The origin of the ranges.
 #'
-#' @param line1,col1 A non-empty integer vector of non-[NA][base::NA] values.
-#'   The (inclusive) starting point(s) of what is being referenced.
+#' @param line1,col1 A non-empty integer vector of non-NA values. The
+#'   (inclusive) starting point(s) of what is being referenced.
 #'
-#' @param line2,col2 A non-empty integer vector of non-[NA][base::NA] values.
-#'   The (inclusive) end(s) of what is being referenced.
+#' @param line2,col2 A non-empty integer vector of non-NA values. The
+#'   (inclusive) end(s) of what is being referenced.
 #'
 #' @param x Any \R object.
 #'
@@ -198,15 +197,15 @@ merge_locations <- function(...) {
 #'
 #' @param x A [`Location`][Location] object.
 #'
-#' @param ranges A character vector of non-[NA][base::NA] and non-empty values.
+#' @param ranges A character vector of non-NA and non-empty values.
 #'   The ranges to extract pairs of indices (line, column) from.
 #'
 #' @returns
 #' [range_format()] returns a character vector. It assumes that `x` is valid.
 #'
 #' [range_parse()] returns a list having the same length as `ranges`. Each
-#' element is an integer vectors containing 4 non-[NA][base::NA] values (unless
-#' the underlying range is invalid).
+#' element is an integer vectors containing 4 non-NA values (unless the
+#' underlying range is invalid).
 #'
 #' [range_is_parseable()] returns a logical vector having the same length as
 #' `ranges`.

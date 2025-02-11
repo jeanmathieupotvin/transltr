@@ -108,37 +108,34 @@ assert(x, ...)
 \arguments{
 \item{x}{Any \R object.}
 
-\item{allow_empty}{A non-\link[base:NA]{NA} logical value. Should vectors of
-length 0 be considered as valid values?}
+\item{allow_empty}{A non-NA logical value. Should vectors of length 0 be
+considered as valid values?}
 
-\item{allow_empty_string}{A non-\link[base:NA]{NA} logical value. Should empty
-character strings be considered as valid values?}
+\item{allow_empty_string}{A non-NA logical value. Should empty character
+strings be considered as valid values?}
 
-\item{min}{A non-\link[base:NA]{NA} numeric lower bound. It can be infinite.}
+\item{min}{A non-NA numeric lower bound. It can be infinite.}
 
-\item{max}{A non-\link[base:NA]{NA} numeric upper bound. It can be infinite.}
+\item{max}{A non-NA numeric upper bound. It can be infinite.}
 
-\item{allow_empty_names}{A non-\link[base:NA]{NA} logical value. Should empty
-character strings be considered as valid names? This is different from
-having no names at all.}
+\item{allow_empty_names}{A non-NA logical value. Should empty character
+strings be considered as valid names? This is different from having no
+names at all.}
 
-\item{allow_na_names}{A non-\link[base:NA]{NA} logical value. Should
-\link[base:NA]{NA} values be considered as valid names?}
+\item{allow_na_names}{A non-NA logical value. Should NA values be considered
+as valid names?}
 
 \item{choices}{A non-empty \link[base:vector]{vector} of valid candidates.}
 
-\item{allow_partial}{A non-\link[base:NA]{NA} logical value. Should \code{x} be
-partially matched? If so, \code{\link[base:pmatch]{base::pmatch()}} is used.}
+\item{allow_partial}{A non-NA logical value. Should \code{x} be partially matched?}
 
-\item{throw_error}{A non-\link[base:NA]{NA} logical value. Should an error be
-thrown? If so, \code{\link[=stops]{stops()}} is called. Otherwise, error messages are returned
-as a character vector (possibly empty).}
+\item{throw_error}{A non-NA logical value. Should an error be thrown? If so,
+\code{\link[=stops]{stops()}} is called. Otherwise, error messages are returned as a character
+vector (possibly empty).}
 
-\item{x_name}{A non-empty and non-\link[base:NA]{NA} character string. The
-underlying name of \code{x}.}
+\item{x_name}{A non-empty and non-NA character string. The name of \code{x}.}
 
-\item{quote_values}{A non-\link[base:NA]{NA} logical value. Should \code{choices}
-be quoted? This argument is passed to \code{\link[=str_to]{str_to()}}.}
+\item{quote_values}{A non-NA logical value. Passed as is to \code{\link[=str_to]{str_to()}}.}
 }
 \value{
 \code{\link[=is_int]{is_int()}},
@@ -185,8 +182,7 @@ functions encapsulate usual guard clause into simple semantic functions.
 This reduces code repetition and number of required unit tests. See
 Examples below.
 
-By convention, \link[base:NA]{NA} values are \strong{always} disallowed. Package
-\code{\link{transltr}} never uses them for consistency.
+By convention, NA values are \strong{always} disallowed.
 
 \code{\link[=assert_arg]{assert_arg()}} is a partial refactoring of \code{\link[base:match.arg]{base::match.arg()}}. It relies
 on \code{\link[=assert_match]{assert_match()}} internally and does not have an equivalent \code{is_arg()}

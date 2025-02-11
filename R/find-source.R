@@ -36,16 +36,16 @@
 #' `...` of [translate()] that depends on any state at runtime. There are
 #' plans to lift this limitation in the future.
 #'
-#' @param path A non-empty and non-[NA][base::NA] character string. A path to
-#'   a directory containing \R source scripts. All subdirectories are searched.
-#'   Files that do not have a `.R`, or `.Rprofile` extension are skipped.
+#' @param path A non-empty and non-NA character string. A path to a directory
+#'   containing \R source scripts. All subdirectories are searched. Files that
+#'   do not have a `.R`, or `.Rprofile` extension are skipped.
 #'
-#' @param paths A character vector of non-empty and non-[NA][base::NA] values.
-#'   A set of paths to \R source scripts that must be searched.
+#' @param paths A character vector of non-empty and non-NA values. A set of
+#'   paths to \R source scripts that must be searched.
 #'
-#' @param native_languages A named character vector of non-empty and
-#'   non-[NA][base::NA] values. It can be empty. It is used to to construct
-#'   a mapping of language codes to native language names. See field
+#' @param native_languages A named character vector of non-empty and non-NA
+#'   values. It can be empty. It is used to to construct a mapping of language
+#'   codes to native language names. See field
 #'   [`Translator$native_languages`][Translator] for more information.
 #'
 #' @template param-encoding

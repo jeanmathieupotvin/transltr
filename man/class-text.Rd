@@ -50,8 +50,8 @@ method \code{\link[=c]{c()}}.
 \code{\link[=print]{print()}}, and \code{\link[=as_text]{as_text()}}.
 }}
 
-\item{source_lang}{A non-empty and non-\link[base:NA]{NA} character string. The
-language of the (untranslated) source text.
+\item{source_lang}{A non-empty and non-NA character string. The language of
+the source text.
 
 A language is usually a code (of two or three letters) for a native
 language name. While users retain full control over codes, it is best
@@ -60,21 +60,20 @@ to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
 Doing so maximizes portability and cross-compatibility between packages.}
 
-\item{algorithm}{A non-empty and non-\link[base:NA]{NA} character string
-equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
-source information for identification purposes.}
+\item{algorithm}{A non-empty and non-NA character string equal to \code{"sha1"},
+or \code{"utf8"}. The algorithm to use when hashing source information for
+identification purposes.}
 
 \item{x}{Any \R object.}
 
-\item{strict}{A non-\link[base:NA]{NA} logical value. Should only
-\emph{explicit calls}, i.e. \code{transltr::translate()}, be extracted? If \code{FALSE},
-calls to \emph{any} such function are extracted regardless of the underlying
-namespace, i.e. \code{translate()}.}
+\item{strict}{A non-NA logical value. Should only \emph{explicit calls}, i.e.
+\code{transltr::translate()}, be extracted? If \code{FALSE}, calls to \emph{any} such
+function are extracted, i.e. \code{translate()}.}
 
 \item{location}{A \code{\link{Location}} object.}
 
-\item{validate}{A non-\link[base:NA]{NA} logical value. Should the arguments be
-validated before being used? This argument should be left as is.}
+\item{validate}{A non-NA logical value. Should the arguments be validated
+before being used? This argument should be left as is.}
 }
 \value{
 \code{\link[=text]{text()}}, \code{\link[=c]{c()}}, and \code{\link[=as_text]{as_text()}} return an \code{\link[R6:R6Class]{R6}} object of
@@ -250,20 +249,20 @@ txt$rm_location("a")
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{hash}}{A non-empty and non-\link[base:NA]{NA} character string. A
-reproducible hash generated from \code{source_lang} and \code{source_text},
-and by using the algorithm specified by \code{algorithm}. It is used
-as a unique identifier for the underlying \code{\link{Text}} object.
+\item{\code{hash}}{A non-empty and non-NA character string. A reproducible
+hash generated from \code{source_lang} and \code{source_text}, and by using
+the algorithm specified by \code{algorithm}. It is used as a unique
+identifier for the underlying \code{\link{Text}} object.
 
 This is a \strong{read-only} field. It is automatically updated
 whenever fields \code{source_lang} and/or \code{algorithm} are updated.}
 
-\item{\code{algorithm}}{A non-empty and non-\link[base:NA]{NA} character string
-equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
-source information for identification purposes.}
+\item{\code{algorithm}}{A non-empty and non-NA character string equal to \code{"sha1"},
+or \code{"utf8"}. The algorithm to use when hashing source information for
+identification purposes.}
 
-\item{\code{source_lang}}{A non-empty and non-\link[base:NA]{NA} character string. The
-language of the (untranslated) source text.
+\item{\code{source_lang}}{A non-empty and non-NA character string. The language of
+the (untranslated) source text.
 
 A language is usually a code (of two or three letters) for a native
 language name. While users retain full control over codes, it is best
@@ -272,7 +271,7 @@ to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
 Doing so maximizes portability and cross-compatibility between packages.}
 
-\item{\code{source_text}}{A non-empty and non-\link[base:NA]{NA} character string. The
+\item{\code{source_text}}{A non-empty and non-NA character string. The
 (untranslated) source text. This is a \strong{read-only} field.}
 
 \item{\code{languages}}{A character vector. Registered language
@@ -315,9 +314,9 @@ Create a \code{\link{Text}} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{algorithm}}{A non-empty and non-\link[base:NA]{NA} character string
-equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
-source information for identification purposes.}
+\item{\code{algorithm}}{A non-empty and non-NA character string equal to \code{"sha1"},
+or \code{"utf8"}. The algorithm to use when hashing source information for
+identification purposes.}
 }
 \if{html}{\out{</div>}}
 }
@@ -346,8 +345,7 @@ Extract a translation, or the source text.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{lang}}{A non-empty and non-\link[base:NA]{NA} character string. The
-underlying language.
+\item{\code{lang}}{A non-empty and non-NA character string. The underlying language.
 
 A language is usually a code (of two or three letters) for a native
 language name. While users retain full control over codes, it is best
@@ -387,8 +385,7 @@ Register a translation, or the source text.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{lang}}{A non-empty and non-\link[base:NA]{NA} character string. The
-underlying language.
+\item{\code{lang}}{A non-empty and non-NA character string. The underlying language.
 
 A language is usually a code (of two or three letters) for a native
 language name. While users retain full control over codes, it is best
@@ -397,8 +394,8 @@ to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}
 to maximize portability and cross-compatibility.}
 
-\item{\code{text}}{A non-empty and non-\link[base:NA]{NA} character string. A
-translation, or a source text.}
+\item{\code{text}}{A non-empty and non-NA character string. A translation,
+or the source text.}
 }
 \if{html}{\out{</div>}}
 }
@@ -435,8 +432,8 @@ text.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{Any number of named, non-empty, and non-\link[base:NA]{NA}
-character strings.}
+\item{\code{...}}{Any number of named, non-empty, and non-NA character
+strings.}
 }
 \if{html}{\out{</div>}}
 }
@@ -509,8 +506,8 @@ Remove a registered translation.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{lang}}{A non-empty and non-\link[base:NA]{NA} character string
-identifying a translation to be removed.}
+\item{\code{lang}}{A non-empty and non-NA character string identifying a
+translation to be removed.}
 }
 \if{html}{\out{</div>}}
 }
@@ -550,8 +547,8 @@ Remove a registered location.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{path}}{A non-empty and non-\link[base:NA]{NA} character string
-identifying a \code{\link{Location}} object to be removed.}
+\item{\code{path}}{A non-empty and non-NA character string identifying a
+\code{\link{Location}} object to be removed.}
 }
 \if{html}{\out{</div>}}
 }

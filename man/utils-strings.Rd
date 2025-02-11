@@ -20,15 +20,14 @@ str_wrap(x = character(), width = 80L)
 
 \item{...}{Further arguments passed to, or from other methods.}
 
-\item{quote_values}{A non-\link[base:NA]{NA} logical value. Should elements of
-\code{x} be quoted?}
+\item{quote_values}{A non-NA logical value. Should elements of \code{x} be quoted?}
 
-\item{last_sep}{A non-empty and non-\link[base:NA]{NA} character string
-separating the last element from the penultimate one.}
+\item{last_sep}{A non-empty and non-NA character string separating the last
+and penultimate elements.}
 
-\item{width}{A non-\link[base:NA]{NA} integer value. The target width for
-individual elements of \code{x}. \code{\link[=str_trim]{str_trim()}} takes 3 more characters into
-account for the suffix it inserts (\code{...}).}
+\item{width}{A non-NA integer value. The target width for individual
+elements of \code{x}. \code{\link[=str_trim]{str_trim()}} takes 3 more characters into account for the
+suffix it inserts (\code{...}).}
 }
 \value{
 \code{\link[=str_to]{str_to()}} and \code{\link[=str_wrap]{str_wrap()}} return a character string.

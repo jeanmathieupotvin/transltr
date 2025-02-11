@@ -15,15 +15,15 @@ range_is_parseable(ranges = character())
 \arguments{
 \item{x}{A \code{\link{Location}} object.}
 
-\item{ranges}{A character vector of non-\link[base:NA]{NA} and non-empty values.
+\item{ranges}{A character vector of non-NA and non-empty values.
 The ranges to extract pairs of indices (line, column) from.}
 }
 \value{
 \code{\link[=range_format]{range_format()}} returns a character vector. It assumes that \code{x} is valid.
 
 \code{\link[=range_parse]{range_parse()}} returns a list having the same length as \code{ranges}. Each
-element is an integer vectors containing 4 non-\link[base:NA]{NA} values (unless
-the underlying range is invalid).
+element is an integer vectors containing 4 non-NA values (unless the
+underlying range is invalid).
 
 \code{\link[=range_is_parseable]{range_is_parseable()}} returns a logical vector having the same length as
 \code{ranges}.

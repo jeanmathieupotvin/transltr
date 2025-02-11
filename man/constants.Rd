@@ -7,8 +7,8 @@
 constant(which = "")
 }
 \arguments{
-\item{which}{A non-empty and non-\link[base:NA]{NA} character string. The name
-of the constant to fetch. See below for defined values.}
+\item{which}{A non-empty and non-NA character string. The name of the
+constant to fetch. See below for defined values.}
 }
 \value{
 \code{\link[=constant]{constant()}} returns the requested constant, or \code{NULL} if it is unavailable.\tabular{lll}{
