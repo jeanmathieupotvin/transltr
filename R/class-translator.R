@@ -140,10 +140,11 @@ Translator <- R6::R6Class("Translator",
     lock_objects = TRUE,
     cloneable    = FALSE,
     private      = list(
-        .id           = .__STR_UNSET,  # See $id
-        .algorithm    = .__STR_UNSET,  # See $algorithm
-        .native_langs = NULL,          # See $native_languages, $initialize -> new.env()
-        .texts        = NULL,          # See $intialize -> new.env()
+        .id            = .__STR_UNSET,  # See $id
+        .algorithm     = .__STR_UNSET,  # See $algorithm
+        .native_langs  = NULL,          # See $native_languages, $initialize -> new.env()
+        .texts         = NULL,          # See $intialize -> new.env()
+        .default_value = NULL,
 
         # @description Compress a hash.
         #
@@ -307,9 +308,8 @@ Translator <- R6::R6Class("Translator",
         #'   [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes).
         #'   Doing so maximizes portability and cross-compatibility between packages.
         #'
-        #'   Update this field with method
-        #'   [`Translator$set_native_languages()`][Translator]. See below for
-        #'   more information.
+        #'   Update this field with method [`$set_native_languages()`][Translator].
+        #'   See below for more information.
         native_languages = \(value) {
             if (!missing(value)) {
                 stops("use 'set_native_languages()' to update 'native_languages'.")
@@ -357,10 +357,11 @@ Translator <- R6::R6Class("Translator",
         #  within the documentation of an R6 method.
         #'
         #' @details
-        #' Input text can written in a variety of ways using single-line and multi-line
-        #' strings. Values passed to `...` are normalized (to ensure their consistency)
-        #' and collapsed to a single character string using the standard paragraph
-        #' separator. The latter is defined as two newline characters (`"\n\n"`).
+        #' Input text can written in a variety of ways using single-line and
+        #' multi-line strings. Values passed to `...` are normalized (to ensure
+        #' their consistency) and collapsed to a single character string using
+        #' the standard paragraph separator. The latter is defined as two
+        #' newline characters (`"\n\n"`).
         #'
         #'   1. NA values and empty strings are discarded before reducing `...`
         #'      to a character string.
@@ -405,10 +406,10 @@ Translator <- R6::R6Class("Translator",
         #' tr$get_translation("256e0d7", "en")  ## Outputs "Hello, world!"
         get_translation = \(hash = "", lang = "") {
             if (is.null(txt <- self$get_text(hash))) {
-                return(NULL)
+                return(private$.default_value)
             }
 
-            return(txt$get_translation(lang))
+            return(txt$get_translation(lang) %??% private$.default_value)
         },
 
         #' @description Extract a source text and its translations.
@@ -481,7 +482,7 @@ Translator <- R6::R6Class("Translator",
                 return(invisible())
             }
 
-            args  <- c(
+            args <- c(
                 as.list(private$.texts),
                 list(...),
                 algorithm = self$algorithm)
@@ -490,6 +491,32 @@ Translator <- R6::R6Class("Translator",
             names(texts) <- vapply_1c(texts, `[[`, i = "hash")
 
             list2env(texts, private$.texts)
+            return(invisible())
+        },
+
+        #' @description Remove a registered source text.
+        #'
+        #' @param hash A non-empty and non-NA character string identifying the
+        #'   source text to remove.
+        #'
+        #' @return A `NULL`, invisibly.
+        #'
+        #' @examples
+        #' tr <- Translator$new()
+        #' tr$set_text(en = "Hello, world!")
+        #'
+        #' tr$rm_text("256e0d7")
+        rm_text = \(hash = "") {
+            if (!length(private$.texts)) {
+                stops("there are no registered 'Text' objects to remove.")
+            }
+
+            assert_chr1(hash)
+            assert_match(hash,
+                private$.hash_reduce(self$hashes),
+                quote_values = TRUE)
+
+            rm(list = private$.hash_expand(hash), envir = private$.texts)
             return(invisible())
         },
 
@@ -523,29 +550,27 @@ Translator <- R6::R6Class("Translator",
             return(invisible())
         },
 
-        #' @description Remove a registered source text.
+        #' @description Register a default value to return when there is no
+        #'   corresponding translations for the requested language.
         #'
-        #' @param hash A non-empty and non-NA character string identifying the
-        #'   source text to remove.
+        #' @param value A `NULL` or a non-NA character string. It can be empty.
+        #'   The former is returned by default.
+        #'
+        #' @details This modifies what methods [`$translate()`][Translator] and
+        #'   [`$get_translation()`][Translator] returns when there is no entry
+        #'   for argument `lang`.
         #'
         #' @return A `NULL`, invisibly.
         #'
         #' @examples
         #' tr <- Translator$new()
-        #' tr$set_text(en = "Hello, world!")
-        #'
-        #' tr$rm_text("256e0d7")
-        rm_text = \(hash = "") {
-            if (!length(private$.texts)) {
-                stops("there are no registered 'Text' objects to remove.")
+        #' tr$set_default_value("<unavailable>")
+        set_default_value = function(value = NULL) {
+            if (!is.null(value)) {
+                assert_chr1(value, TRUE)
+                private$.default_value <- value
             }
 
-            assert_chr1(hash)
-            assert_match(hash,
-                private$.hash_reduce(self$hashes),
-                quote_values = TRUE)
-
-            rm(list = private$.hash_expand(hash), envir = private$.texts)
             return(invisible())
         }
     )

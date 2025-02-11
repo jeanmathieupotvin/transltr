@@ -159,6 +159,15 @@ txt2 <- text(
 tr$set_texts(txt1, txt2)
 
 ## ------------------------------------------------
+## Method `Translator$rm_text`
+## ------------------------------------------------
+
+tr <- Translator$new()
+tr$set_text(en = "Hello, world!")
+
+tr$rm_text("256e0d7")
+
+## ------------------------------------------------
 ## Method `Translator$set_native_languages`
 ## ------------------------------------------------
 
@@ -170,13 +179,11 @@ tr$set_native_languages(en = "English", fr = "Français")
 tr$set_native_languages(fr = NULL)
 
 ## ------------------------------------------------
-## Method `Translator$rm_text`
+## Method `Translator$set_default_value`
 ## ------------------------------------------------
 
 tr <- Translator$new()
-tr$set_text(en = "Hello, world!")
-
-tr$rm_text("256e0d7")
+tr$set_default_value("<unavailable>")
 }
 \seealso{
 \code{\link[=translate]{translate()}},
@@ -229,9 +236,8 @@ best to use well-known schemes such as
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
 Doing so maximizes portability and cross-compatibility between packages.
 
-Update this field with method
-\code{\link[=Translator]{Translator$set_native_languages()}}. See below for
-more information.}
+Update this field with method \code{\link[=Translator]{$set_native_languages()}}.
+See below for more information.}
 }
 \if{html}{\out{</div>}}
 }
@@ -244,8 +250,9 @@ more information.}
 \item \href{#method-Translator-get_text}{\code{Translator$get_text()}}
 \item \href{#method-Translator-set_text}{\code{Translator$set_text()}}
 \item \href{#method-Translator-set_texts}{\code{Translator$set_texts()}}
-\item \href{#method-Translator-set_native_languages}{\code{Translator$set_native_languages()}}
 \item \href{#method-Translator-rm_text}{\code{Translator$rm_text()}}
+\item \href{#method-Translator-set_native_languages}{\code{Translator$set_native_languages()}}
+\item \href{#method-Translator-set_default_value}{\code{Translator$set_default_value()}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -323,10 +330,11 @@ the source text. See argument \code{lang} for more information.}
 \if{html}{\out{</div>}}
 }
 \subsection{Details}{
-Input text can written in a variety of ways using single-line and multi-line
-strings. Values passed to \code{...} are normalized (to ensure their consistency)
-and collapsed to a single character string using the standard paragraph
-separator. The latter is defined as two newline characters (\code{"\\n\\n"}).
+Input text can written in a variety of ways using single-line and
+multi-line strings. Values passed to \code{...} are normalized (to ensure
+their consistency) and collapsed to a single character string using
+the standard paragraph separator. The latter is defined as two
+newline characters (\code{"\\n\\n"}).
 \enumerate{
 \item NA values and empty strings are discarded before reducing \code{...}
 to a character string.
@@ -515,6 +523,38 @@ tr$set_texts(txt1, txt2)
 
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Translator-rm_text"></a>}}
+\if{latex}{\out{\hypertarget{method-Translator-rm_text}{}}}
+\subsection{Method \code{rm_text()}}{
+Remove a registered source text.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Translator$rm_text(hash = "")}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{hash}}{A non-empty and non-NA character string identifying the
+source text to remove.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A \code{NULL}, invisibly.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{tr <- Translator$new()
+tr$set_text(en = "Hello, world!")
+
+tr$rm_text("256e0d7")
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Translator-set_native_languages"></a>}}
 \if{latex}{\out{\hypertarget{method-Translator-set_native_languages}{}}}
 \subsection{Method \code{set_native_languages()}}{
@@ -550,31 +590,36 @@ tr$set_native_languages(fr = NULL)
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Translator-rm_text"></a>}}
-\if{latex}{\out{\hypertarget{method-Translator-rm_text}{}}}
-\subsection{Method \code{rm_text()}}{
-Remove a registered source text.
+\if{html}{\out{<a id="method-Translator-set_default_value"></a>}}
+\if{latex}{\out{\hypertarget{method-Translator-set_default_value}{}}}
+\subsection{Method \code{set_default_value()}}{
+Register a default value to return when there is no
+corresponding translations for the requested language.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Translator$rm_text(hash = "")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Translator$set_default_value(value = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{hash}}{A non-empty and non-NA character string identifying the
-source text to remove.}
+\item{\code{value}}{A \code{NULL} or a non-NA character string. It can be empty.
+The former is returned by default.}
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Details}{
+This modifies what methods \code{\link[=Translator]{$translate()}} and
+\code{\link[=Translator]{$get_translation()}} returns when there is no entry
+for argument \code{lang}.
+}
+
 \subsection{Returns}{
 A \code{NULL}, invisibly.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{tr <- Translator$new()
-tr$set_text(en = "Hello, world!")
-
-tr$rm_text("256e0d7")
+tr$set_default_value("<unavailable>")
 }
 \if{html}{\out{</div>}}
 

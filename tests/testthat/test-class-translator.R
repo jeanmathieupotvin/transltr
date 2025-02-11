@@ -281,6 +281,31 @@ test_that("$set_texts() validates ...", {
     })
 })
 
+test_that("$rm_text() returns null invisibly", {
+    tr <- test_translator()
+    expect_null(tr$rm_text("256e0d7"))
+    expect_invisible(tr$rm_text("2ac373a"))
+})
+
+test_that("$rm_text() throws an error if there are no Text objects to remove", {
+    expect_error(Translator$new()$rm_text("error"))
+    expect_snapshot(Translator$new()$rm_text("error"), error = TRUE)
+})
+
+test_that("$rm_text() validates hash", {
+    expect_error(tr1$rm_text(1L))
+    expect_error(tr1$rm_text("error"))
+    expect_snapshot(tr1$rm_text(1L),      error = TRUE)
+    expect_snapshot(tr1$rm_text("error"), error = TRUE)
+})
+
+test_that("$rm_text() removes Text objects as expected", {
+    tr <- test_translator()
+    tr$rm_text("256e0d7")
+    expect_length(tr$hashes, 1L)
+    expect_identical(tr$hashes, c(`2ac373a` = "2ac373aa699a6712cdaddbead28031d537de29bc"))
+})
+
 test_that("$set_native_languages() returns null invisibly", {
     tr <- Translator$new()
 
@@ -321,29 +346,26 @@ test_that("$set_native_languages() validates ...", {
     expect_snapshot(tr1$set_native_languages("English"), error = TRUE)
 })
 
-test_that("$rm_text() returns null invisibly", {
-    tr <- test_translator()
-    expect_null(tr$rm_text("256e0d7"))
-    expect_invisible(tr$rm_text("2ac373a"))
+test_that("$set_default_value() returns null invisibly", {
+    tr <- Translator$new()
+
+    expect_null(tr$set_default_value())
+    expect_invisible(tr$set_default_value())
 })
 
-test_that("$rm_text() throws an error if there are no Text objects to remove", {
-    expect_error(Translator$new()$rm_text("error"))
-    expect_snapshot(Translator$new()$rm_text("error"), error = TRUE)
+test_that("$set_default_value() validates value if not null", {
+    tr <- Translator$new()
+
+    expect_error(tr$set_default_value(1L))
+    expect_snapshot(tr$set_default_value(1L), error = TRUE)
 })
 
-test_that("$rm_text() validates hash", {
-    expect_error(tr1$rm_text(1L))
-    expect_error(tr1$rm_text("error"))
-    expect_snapshot(tr1$rm_text(1L),      error = TRUE)
-    expect_snapshot(tr1$rm_text("error"), error = TRUE)
-})
+test_that("$set_default_value() registers default value", {
+    tr <- Translator$new()
+    tr$set_default_value("test-value")
 
-test_that("$rm_text() removes Text objects as expected", {
-    tr <- test_translator()
-    tr$rm_text("256e0d7")
-    expect_length(tr$hashes, 1L)
-    expect_identical(tr$hashes, c(`2ac373a` = "2ac373aa699a6712cdaddbead28031d537de29bc"))
+    expect_identical(tr$translate("Unavailable text."),       "test-value")
+    expect_identical(tr$get_translation("Unavailable text."), "test-value")
 })
 
 
