@@ -1,3 +1,6 @@
+.__STR_UNTRANSLATED <- "# Insert a translation here."
+
+
 #' Serialize Objects
 #'
 #' @description
@@ -744,5 +747,3 @@ format_errors <- function(
     id <- as.character(id %??% "<unknown>")
     return(sprintf("['%s'] %s", id, errors))
 }
-
-.__STR_UNTRANSLATED <- "# Insert a translation here."

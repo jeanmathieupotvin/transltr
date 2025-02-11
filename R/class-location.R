@@ -1,3 +1,10 @@
+.__STR_RANGE_USR_FMT <- "`Ln <int>, Col <int> @ Ln <int>, Col <int>`"
+.__STR_RANGE_REGEX   <- paste(
+    "^Ln[ \t]*([0-9.]+),[ \t]*Col[ \t]*([0-9.]+)",
+    "[ \t]*@[ \t]*",
+    "Ln[ \t]*([0-9.]+),[ \t]*Col[ \t]*([0-9.]+)$")
+
+
 #' Source Locations
 #'
 #' Structure and manipulate source locations. Class [`Location`][Location] is
@@ -254,9 +261,3 @@ range_is_parseable <- function(ranges = character()) {
     assert_chr(ranges)
     return(grepl(.__STR_RANGE_REGEX, ranges))
 }
-
-.__STR_RANGE_USR_FMT <- "`Ln <int>, Col <int> @ Ln <int>, Col <int>`"
-.__STR_RANGE_REGEX   <- paste(
-    "^Ln[ \t]*([0-9.]+),[ \t]*Col[ \t]*([0-9.]+)",
-    "[ \t]*@[ \t]*",
-    "Ln[ \t]*([0-9.]+),[ \t]*Col[ \t]*([0-9.]+)$")

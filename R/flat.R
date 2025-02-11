@@ -1,3 +1,6 @@
+.__STR_EMPTY_LIST <- "<empty list>"
+
+
 #' Serialize Objects to Flat Strings
 #'
 #' Serialize \R objects into textual sequences of unindented (*flat*) and
@@ -263,5 +266,3 @@ flat_example <- function() {
     cat(comments, "\n", obj_flat, "\n", sep = "")
     return(invisible(obj_flat))
 }
-
-.__STR_EMPTY_LIST <- "<empty list>"
