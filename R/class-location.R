@@ -192,7 +192,7 @@ merge_locations <- function(...) {
 #'
 #' Create, parse, and validate source ranges.
 #'
-#' Ranges are `r constant("range-format")` strings created on-the-fly from
+#' Ranges are `r .__STR_RANGE_USR_FMT` strings created on-the-fly from
 #' [`Location`][Location] objects for outputting purposes.
 #'
 #' @param x A [`Location`][Location] object.
@@ -222,7 +222,7 @@ range_format <- function(x = location()) {
     }
 
     chars <- lapply(x[-1L], encodeString, width = NULL, justify = "right")
-    return(do.call(sprintf, c(constant("range-sprintf"), chars)))
+    return(do.call(sprintf, c("Ln %s, Col %s @ Ln %s, Col %s", chars)))
 }
 
 #' @rdname class-location-ranges
@@ -230,7 +230,7 @@ range_format <- function(x = location()) {
 range_parse <- function(ranges = character()) {
     assert_chr(ranges)
 
-    matches <- gregexpr(constant("range-pattern"), ranges, perl = TRUE)
+    matches <- gregexpr(.__STR_RANGE_REGEX, ranges, perl = TRUE)
     starts  <- sapply(matches, attr, "capture.start")
     widths  <- sapply(matches, attr, "capture.length")
     ends    <- starts + widths - 1L
@@ -252,5 +252,11 @@ range_parse <- function(ranges = character()) {
 #' @keywords internal
 range_is_parseable <- function(ranges = character()) {
     assert_chr(ranges)
-    return(grepl(constant("range-pattern"), ranges))
+    return(grepl(.__STR_RANGE_REGEX, ranges))
 }
+
+.__STR_RANGE_USR_FMT <- "`Ln <int>, Col <int> @ Ln <int>, Col <int>`"
+.__STR_RANGE_REGEX   <- paste(
+    "^Ln[ \t]*([0-9.]+),[ \t]*Col[ \t]*([0-9.]+)",
+    "[ \t]*@[ \t]*",
+    "Ln[ \t]*([0-9.]+),[ \t]*Col[ \t]*([0-9.]+)$")

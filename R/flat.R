@@ -34,7 +34,8 @@
 #'
 #'   * converts `NULL` to the `"NULL"` character string,
 #'   * converts other elements to character strings using [format()] and
-#'   * replaces empty lists by a `"<empty-list>"` constant treated as a placeholder.
+#'   * replaces empty lists by a `r .__STR_EMPTY_LIST` constant treated as
+#'     a placeholder.
 #'
 #' @param x A list. It can be empty.
 #'
@@ -134,7 +135,7 @@ flat_deserialize <- function(string = "", tag_sep = ": ") {
         lvls     <- tags_lvls[[ti]]
         lvls_len <- length(lvls)
         lvls_ind <- seq_along(lvls)
-        value    <- if (identical(values[[ti]], constant("empty-list"))) {
+        value    <- if (identical(values[[ti]], .__STR_EMPTY_LIST)) {
             list()
         } else {
             values[[ti]]
@@ -223,7 +224,7 @@ flat_format <- function(x = list()) {
     assert_list(x, TRUE)
 
     if (!length(x)) {
-        return(constant("empty-list"))
+        return(.__STR_EMPTY_LIST)
     }
 
     out <- lapply(x, \(el) {
@@ -262,3 +263,5 @@ flat_example <- function() {
     cat(comments, "\n", obj_flat, "\n", sep = "")
     return(invisible(obj_flat))
 }
+
+.__STR_EMPTY_LIST <- "<empty list>"

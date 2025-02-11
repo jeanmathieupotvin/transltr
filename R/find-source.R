@@ -107,7 +107,7 @@ find_source <- function(
     encoding         = "UTF-8",
     strict           = TRUE,
     id               = uuid(),
-    algorithm        = constant("algorithms"),
+    algorithm        = algorithms(),
     native_languages = character(),
     verbose          = getOption("transltr.verbose", TRUE))
 {
@@ -144,7 +144,7 @@ find_source_in_files <- function(
     paths     = character(),
     encoding  = "UTF-8",
     strict    = TRUE,
-    algorithm = constant("algorithms"),
+    algorithm = algorithms(),
     verbose   = getOption("transltr.verbose", TRUE))
 {
     assert_chr(paths)

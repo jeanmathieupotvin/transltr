@@ -58,8 +58,8 @@ format_vector <- function(
     level      = 0L,
     indent     = 1L,
     fill_names = FALSE,
-    null       = constant("null"),
-    empty      = constant("empty"),
+    null       = "<null>",
+    empty      = "<empty>",
     validate   = TRUE)
 {
     assert_lgl1(validate)

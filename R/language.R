@@ -44,7 +44,7 @@
 #' current language (what *users* see) from the back-end's locale (what
 #' *developers* see). A UI may be displayed in a certain language while keeping
 #' logs and \R internal [messages][message()], [warnings][warning()], and
-#' [errors][stop()] as is (untranslated).
+#' [errors][stop()] as is.
 #'
 #' Consequently, the language setting of [`transltr`][transltr] is purposely
 #' kept separate from the underlying locale and removes the complexity of

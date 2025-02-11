@@ -75,3 +75,7 @@
 #'
 #' @keywords internal
 "_PACKAGE"
+
+# Suppress R CMD check note.
+#' @importFrom R6 R6Class
+NULL

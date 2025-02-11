@@ -41,6 +41,6 @@ hashing purposes.
 \code{\link{Translator}},
 \code{\link{Text}},
 \code{\link[=normalize]{normalize()}},
-\code{\link[=constant]{constant()}}
+\code{\link[=algorithms]{algorithms()}}
 }
 \keyword{internal}

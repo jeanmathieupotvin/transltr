@@ -44,7 +44,7 @@ find_source_in_file <- function(
     path      = "",
     encoding  = "UTF-8",
     strict    = TRUE,
-    algorithm = constant("algorithms"),
+    algorithm = algorithms(),
     verbose   = getOption("transltr.verbose", FALSE))
 {
     tokens <- find_source_exprs(path, encoding)
@@ -66,7 +66,7 @@ find_source_in_exprs <- function(
     tokens    = utils::getParseData(),
     path      = "",
     strict    = TRUE,
-    algorithm = constant("algorithms"))
+    algorithm = algorithms())
 {
     # Parsing errors are skipped silently. This is required whenever
     # native pipes are used. They introduce placeholders (_) in expr

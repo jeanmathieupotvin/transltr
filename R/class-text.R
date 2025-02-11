@@ -119,15 +119,13 @@
 #' translate_loc  <- location("example in class-text", 2L, 32L, 2L, 68L)
 #' as_text(translate_call, location = translate_loc)
 #'
-#' @include constants.R
-#'
 #' @rdname class-text
 #' @keywords internal
 #' @export
 text <- function(
     ...,
     source_lang = language_source_get(),
-    algorithm   = constant("algorithms"))
+    algorithm   = algorithms())
 {
     assert_chr1(source_lang)
 
@@ -202,7 +200,7 @@ c.Text <- function(...) {
     if (!all(hashes[[1L]] == hashes[-1L])) {
         stops("all 'hash' must be equal in order to combine 'Text' objects.")
     }
-    if (hashes[[1L]] == constant("unset")) {
+    if (hashes[[1L]] == .__STR_UNSET) {
         stops("all 'Text' objects have no source language set.")
     }
 
@@ -224,7 +222,7 @@ c.Text <- function(...) {
 #' @rdname class-text
 #' @keywords internal
 #' @export
-merge_texts <- function(..., algorithm = constant("algorithms")) {
+merge_texts <- function(..., algorithm = algorithms()) {
     if (!all(vapply_1l(texts <- list(...), is_text))) {
         stops("values passed to '...' must all be 'Text' objects.")
     }
@@ -236,7 +234,7 @@ merge_texts <- function(..., algorithm = constant("algorithms")) {
     # and source language. These Texts cannot be
     # merged and must be ignored.
     hashes <- vapply_1c(texts, `[[`, i = "hash")
-    is_set <- hashes != constant("unset")
+    is_set <- hashes != .__STR_UNSET
     groups <- unname(split(texts[is_set], hashes[is_set]))
 
     return(lapply(groups, \(group) do.call(c, group)))
@@ -254,7 +252,7 @@ as_text <- function(x, ...) {
 as_text.call <- function(x,
     strict    = FALSE,
     location  = transltr::location(),
-    algorithm = constant("algorithms"),
+    algorithm = algorithms(),
     validate  = TRUE,
     ...)
 {
@@ -294,11 +292,11 @@ Text <- R6::R6Class("Text",
     lock_objects = TRUE,
     cloneable    = FALSE,
     private      = list(
-        .hash         = constant("unset"),  # See $hash
-        .algorithm    = constant("unset"),  # See $algorithm
-        .source_lang  = constant("unset"),  # See $source_lang
-        .translations = NULL,               # See $translations
-        .locations    = NULL                # See $locations
+        .hash         = .__STR_UNSET,  # See $hash
+        .algorithm    = .__STR_UNSET,  # See $algorithm
+        .source_lang  = .__STR_UNSET,  # See $source_lang
+        .translations = NULL,          # See $translations
+        .locations    = NULL           # See $locations
     ),
     active = list(
         #' @field hash A non-empty and non-NA character string. A reproducible
@@ -321,7 +319,7 @@ Text <- R6::R6Class("Text",
         #' @template field-algorithm
         algorithm = \(value) {
             if (!missing(value)) {
-                assert_algorithm <- \(algorithm = constant("algorithms")) {
+                assert_algorithm <- \(algorithm = algorithms()) {
                     assert_arg(algorithm, TRUE)
                     return(algorithm)
                 }
@@ -420,7 +418,7 @@ Text <- R6::R6Class("Text",
         #' @examples
         #' # Consider using text() instead.
         #' txt <- Text$new()
-        initialize = \(algorithm = constant("algorithms")) {
+        initialize = \(algorithm = algorithms()) {
             private$.translations <- new.env(parent = emptyenv())
             private$.locations    <- new.env(parent = emptyenv())
 

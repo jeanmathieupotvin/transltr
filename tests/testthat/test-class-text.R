@@ -569,5 +569,5 @@ test_that("as_text.call() extracts source_lang from x or sets it if not found", 
 test_that("as_text.call() sets source fields only if ... is not empty", {
     txt <- as_text(translate_call)
     expect_null(txt$source_text)
-    expect_identical(txt$source_lang, constant("unset"))
+    expect_identical(txt$source_lang, .__STR_UNSET)
 })

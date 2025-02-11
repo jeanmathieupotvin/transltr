@@ -12,11 +12,7 @@
 \alias{Text}
 \title{Source Text}
 \usage{
-text(
-  ...,
-  source_lang = language_source_get(),
-  algorithm = constant("algorithms")
-)
+text(..., source_lang = language_source_get(), algorithm = algorithms())
 
 is_text(x)
 
@@ -26,7 +22,7 @@ is_text(x)
 
 \method{c}{Text}(...)
 
-merge_texts(..., algorithm = constant("algorithms"))
+merge_texts(..., algorithm = algorithms())
 
 as_text(x, ...)
 
@@ -34,7 +30,7 @@ as_text(x, ...)
   x,
   strict = FALSE,
   location = transltr::location(),
-  algorithm = constant("algorithms"),
+  algorithm = algorithms(),
   validate = TRUE,
   ...
 )
@@ -262,7 +258,7 @@ or \code{"utf8"}. The algorithm to use when hashing source information for
 identification purposes.}
 
 \item{\code{source_lang}}{A non-empty and non-NA character string. The language of
-the (untranslated) source text.
+the source text.
 
 A language is usually a code (of two or three letters) for a native
 language name. While users retain full control over codes, it is best
@@ -271,8 +267,8 @@ to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
 Doing so maximizes portability and cross-compatibility between packages.}
 
-\item{\code{source_text}}{A non-empty and non-NA character string. The
-(untranslated) source text. This is a \strong{read-only} field.}
+\item{\code{source_text}}{A non-empty and non-NA character string. The source text.
+This is a \strong{read-only} field.}
 
 \item{\code{languages}}{A character vector. Registered language
 codes. This is a \strong{read-only} field. Use methods below
@@ -308,7 +304,7 @@ to update it.}
 \subsection{Method \code{new()}}{
 Create a \code{\link{Text}} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Text$new(algorithm = constant("algorithms"))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Text$new(algorithm = algorithms())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

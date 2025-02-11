@@ -307,11 +307,11 @@ test_that("export_translations() validates tr", {
     expect_snapshot(export_translations(tr, "fr"), error = TRUE)
 })
 
-test_that("export_translations() sets each translation equal to constant 'untranslated' if required", {
+test_that("export_translations() sets unavailable translations", {
     out <- export_translations(tr, "el")
 
-    expect_identical(out$Translations$`256e0d7`$Translation, constant("untranslated"))
-    expect_identical(out$Translations$`2ac373a`$Translation, constant("untranslated"))
+    expect_identical(out$Translations$`256e0d7`$Translation, .__STR_UNTRANSLATED)
+    expect_identical(out$Translations$`2ac373a`$Translation, .__STR_UNTRANSLATED)
 })
 
 test_that("export_translations() wraps source texts and translations", {
@@ -965,7 +965,7 @@ test_that("import.ExportedTranslations() returns an object of S3 class ExportedT
     expect_identical(out, trans)
 })
 
-test_that("import.ExportedTranslations() replaces empty translations with a constant", {
+test_that("import.ExportedTranslations() sets empty translations", {
     # Language el has no available translation.
     trans1 <- export_translations(tr, "el")
     trans2 <- trans1
@@ -974,10 +974,10 @@ test_that("import.ExportedTranslations() replaces empty translations with a cons
     out1 <- import(trans1)
     out2 <- import(trans2)
 
-    expect_identical(out1$Translations$`256e0d7`$Translation, constant("empty"))
-    expect_identical(out1$Translations$`2ac373a`$Translation, constant("empty"))
-    expect_identical(out2$Translations$`256e0d7`$Translation, constant("empty"))
-    expect_identical(out2$Translations$`2ac373a`$Translation, constant("empty"))
+    expect_identical(out1$Translations$`256e0d7`$Translation, "<empty>")
+    expect_identical(out1$Translations$`2ac373a`$Translation, "<empty>")
+    expect_identical(out2$Translations$`256e0d7`$Translation, "<empty>")
+    expect_identical(out2$Translations$`2ac373a`$Translation, "<empty>")
 })
 
 test_that("import.ExportedTranslations() normalizes translations", {

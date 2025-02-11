@@ -74,7 +74,7 @@ Moreover, it makes sense for some applications and/or programs such as
 current language (what \emph{users} see) from the back-end's locale (what
 \emph{developers} see). A UI may be displayed in a certain language while keeping
 logs and \R internal \link[=message]{messages}, \link[=warning]{warnings}, and
-\link[=stop]{errors} as is (untranslated).
+\link[=stop]{errors} as is.
 
 Consequently, the language setting of \code{\link{transltr}} is purposely
 kept separate from the underlying locale and removes the complexity of

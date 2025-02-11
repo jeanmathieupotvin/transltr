@@ -39,9 +39,9 @@ Suggests:
     usethis,
     withr
 Collate:
+    'aaa.R'
     'assert.R'
     'class-location.R'
-    'constants.R'
     'class-text.R'
     'class-translator.R'
     'find-source-in-exprs.R'

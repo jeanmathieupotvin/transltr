@@ -10,7 +10,7 @@ find_source_in_file(
   path = "",
   encoding = "UTF-8",
   strict = TRUE,
-  algorithm = constant("algorithms"),
+  algorithm = algorithms(),
   verbose = getOption("transltr.verbose", FALSE)
 )
 
@@ -18,7 +18,7 @@ find_source_in_exprs(
   tokens = utils::getParseData(),
   path = "",
   strict = TRUE,
-  algorithm = constant("algorithms")
+  algorithm = algorithms()
 )
 
 find_source_exprs(path = "", encoding = "UTF-8")

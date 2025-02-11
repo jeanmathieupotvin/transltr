@@ -275,11 +275,7 @@ See \code{\link[=Text]{Text$translations}} for more information.}
 }
 
 Unavailable translations are automatically replaced by a placeholder that
-depends on the \emph{context}:
-\itemize{
-\item \code{\link[=constant]{constant("untranslated")}} for \code{\link[=export]{export()}}, and
-\item \code{\link[=constant]{constant("empty")}} for \code{\link[=import]{import()}}.
-}
+depends on whether they are exported or imported.
 }
 }
 

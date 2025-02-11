@@ -71,11 +71,9 @@
 #' # print() calls format() internally, as expected.
 #' print(tr)
 #'
-#' @include constants.R
-#'
 #' @rdname class-translator
 #' @export
-translator <- function(..., id = uuid(), algorithm = constant("algorithms")) {
+translator <- function(..., id = uuid(), algorithm = algorithms()) {
     trans <- Translator$new(id, algorithm)
     dots  <- list(...)
 
@@ -142,10 +140,10 @@ Translator <- R6::R6Class("Translator",
     lock_objects = TRUE,
     cloneable    = FALSE,
     private      = list(
-        .id           = constant("unset"),  # See $id
-        .algorithm    = constant("unset"),  # See $algorithm
-        .native_langs = NULL,               # See $native_languages, $initialize -> new.env()
-        .texts        = NULL,               # See $intialize -> new.env()
+        .id           = .__STR_UNSET,  # See $id
+        .algorithm    = .__STR_UNSET,  # See $algorithm
+        .native_langs = NULL,          # See $native_languages, $initialize -> new.env()
+        .texts        = NULL,          # See $intialize -> new.env()
 
         # @description Compress a hash.
         #
@@ -195,7 +193,7 @@ Translator <- R6::R6Class("Translator",
         #' @template field-algorithm
         algorithm = \(value) {
             if (!missing(value)) {
-                assert_algorithm <- \(algorithm = constant("algorithms")) {
+                assert_algorithm <- \(algorithm = algorithms()) {
                     assert_arg(algorithm, TRUE)
                     return(algorithm)
                 }
@@ -335,7 +333,7 @@ Translator <- R6::R6Class("Translator",
         #' @examples
         #' # Consider using translator() instead.
         #' tr <- Translator$new()
-        initialize = \(id = uuid(), algorithm = constant("algorithms")) {
+        initialize = \(id = uuid(), algorithm = algorithms()) {
             private$.native_langs <- new.env(parent = emptyenv())
             private$.texts        <- new.env(parent = emptyenv())
 

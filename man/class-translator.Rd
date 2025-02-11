@@ -8,7 +8,7 @@
 \alias{Translator}
 \title{Source Text and Translations}
 \usage{
-translator(..., id = uuid(), algorithm = constant("algorithms"))
+translator(..., id = uuid(), algorithm = algorithms())
 
 is_translator(x)
 
@@ -254,7 +254,7 @@ more information.}
 \subsection{Method \code{new()}}{
 Create a \code{\link{Translator}} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Translator$new(id = uuid(), algorithm = constant("algorithms"))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Translator$new(id = uuid(), algorithm = algorithms())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
