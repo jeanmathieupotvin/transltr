@@ -49,10 +49,6 @@
 #'
 #' @template param-algorithm
 #'
-#' @template param-strict
-#'
-#' @template param-validate
-#'
 #' @returns
 #' [text()], [c()], and [as_text()] return an [`R6`][R6::R6] object of
 #' class [`Text`][Text].

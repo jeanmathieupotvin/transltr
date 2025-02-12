@@ -41,7 +41,8 @@
 #'   The [type][typeof()] of the underlying empty object is added to `empty`
 #'   for convenience. See Examples below.
 #'
-#' @template param-validate
+#' @param validate A non-NA logical value. Should the arguments be validated
+#'   before being used? This argument should be left as is.
 #'
 #' @returns
 #' A character vector, possibly trimmed by [str_trim()].
