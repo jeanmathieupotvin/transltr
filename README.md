@@ -53,8 +53,30 @@ Write code as you normally would. Whenever a piece of text (literal character
 vectors) should be available in multiple languages, pass it to method
 `Translator$translate()`. You may also use your own function.
 
+```r
+tr <- transltr::translator()
+
+# Write code.
+cat(tr$translate("Hello, world!"), "\n")
+cat(tr$translate("Farewell, world!"), "\n")
+
+# Custom functions can also be used.
+cat(internationalize("Hello, world!"), "\n")
+cat(internationalize("Farewell, world!"), "\n")
+```
+
 1. Once you are ready to work on translating your project, call `find_source()`.
    This returns a `Translator` object.
+
+    ```r
+    # Extract source text and create a new Translator object.
+    find_source()
+
+    # Use arg interface if a custom function was used.
+    # You may also pass an existing Translator object.
+    find_source(tr = tr, interface = quote(internationalize))
+    find_source(tr = tr, interface = quote(pkg::internationalize))
+    ```
 
 2. Export the `Translator` object with `translator_write()`. Fill in the
    underlying translation files.
