@@ -90,23 +90,6 @@
       Error:
       ! values passed to '...' must all be 'Text' objects.
 
-# $set_native_languages() validates ...
-
-    Code
-      tr1$set_native_languages(1L)
-    Condition
-      Error:
-      ! values passed to '...' must all be character strings or 'NULL'.
-      Use 'NULL' to remove entries.
-
----
-
-    Code
-      tr1$set_native_languages("English")
-    Condition
-      Error:
-      ! '...' must have names.
-
 # $rm_text() throws an error if there are no Text objects to remove
 
     Code
@@ -130,6 +113,31 @@
     Condition
       Error:
       ! 'hash' must be equal to '256e0d7', or '2ac373a'.
+
+# $set_native_languages() validates ...
+
+    Code
+      tr1$set_native_languages(1L)
+    Condition
+      Error:
+      ! values passed to '...' must all be character strings or 'NULL'.
+      Use 'NULL' to remove entries.
+
+---
+
+    Code
+      tr1$set_native_languages("English")
+    Condition
+      Error:
+      ! '...' must have names.
+
+# $set_default_value() validates value if not null
+
+    Code
+      tr$set_default_value(1L)
+    Condition
+      Error:
+      ! 'value' must be a non-NA character of length 1.
 
 # translator() throws a warning if a language does not have a corresponding native language
 

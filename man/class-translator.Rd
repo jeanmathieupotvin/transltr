@@ -49,19 +49,15 @@ identification purposes.}
 Structure and manipulate the source text of a project and its translations.
 }
 \details{
-A \code{\link{Translator}} object encapsulates the source text of a
-project (or any other \emph{context}) and all related translations. It exposes
-a set of methods that can be used to manipulate this information, but it
-is designed in such a way that its methods can be ignored most of the time.
+A \code{\link{Translator}} object encapsulates the source text of a project
+(or any other \emph{context}) and all related translations. Under the hood,
+\code{\link{Translator}} objects are collections of \code{\link{Text}} objects.
+These do most of the work. They are treated as lower-level component and in
+typical situations, users rarely interact with them.
 
 \code{\link{Translator}} objects can be saved and exported with
 \code{\link[=translator_write]{translator_write()}}. They can be imported back into an \R session
 with \code{\link[=translator_read]{translator_read()}}.
-
-Under the hood, \code{\link{Translator}} objects are collections of
-\code{\link{Text}} objects. These do most of the work. They are treated as
-lower-level component and in typical situations, users rarely interact
-with them.
 }
 \examples{
 # Set source language.
@@ -324,29 +320,20 @@ to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}
 to maximize portability and cross-compatibility.}
 
-\item{\code{source_lang}}{A non-empty and non-NA character string. The language of
-the source text. See argument \code{lang} for more information.}
+\item{\code{source_lang}}{A non-empty and non-NA character string. The
+language of the source text. See argument \code{lang} for more
+information.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Details}{
-Input text can written in a variety of ways using single-line and
-multi-line strings. Values passed to \code{...} are normalized (to ensure
-their consistency) and collapsed to a single character string using
-the standard paragraph separator. The latter is defined as two
-newline characters (\code{"\\n\\n"}).
-\enumerate{
-\item NA values and empty strings are discarded before reducing \code{...}
-to a character string.
-\item Whitespaces (tabs, newlines, and repeated spaces) characters are
-replaced by a single space. Paragraph separators are preserved.
-\item Leading or trailing whitespaces are stripped.
-}
+See \code{\link[=normalize]{normalize()}} for further details on how \code{...} is normalized.
 }
 
 \subsection{Returns}{
-A character string, or \code{NULL} if the underlying translation
-is unavailable.
+A character string. If there is no corresponding translation,
+the value passed to method \code{\link[=Translator]{$set_default_value()}} is
+returned. \code{NULL} is returned by default.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -389,9 +376,9 @@ to maximize portability and cross-compatibility.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A character string. \code{NULL} is returned if the requested
-translation is not available (either \code{hash} or \code{lang} is not
-registered).
+A character string. If there is no corresponding translation,
+the value passed to method \code{\link[=Translator]{$set_default_value()}} is
+returned. \code{NULL} is returned by default.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -609,8 +596,8 @@ The former is returned by default.}
 }
 \subsection{Details}{
 This modifies what methods \code{\link[=Translator]{$translate()}} and
-\code{\link[=Translator]{$get_translation()}} returns when there is no entry
-for argument \code{lang}.
+\code{\link[=Translator]{$get_translation()}} returns when there is no
+translation for \code{lang}.
 }
 
 \subsection{Returns}{

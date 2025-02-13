@@ -2,19 +2,15 @@
 #'
 #' Structure and manipulate the source text of a project and its translations.
 #'
-#' A [`Translator`][Translator] object encapsulates the source text of a
-#' project (or any other *context*) and all related translations. It exposes
-#' a set of methods that can be used to manipulate this information, but it
-#' is designed in such a way that its methods can be ignored most of the time.
+#' A [`Translator`][Translator] object encapsulates the source text of a project
+#' (or any other *context*) and all related translations. Under the hood,
+#' [`Translator`][Translator] objects are collections of [`Text`][Text] objects.
+#' These do most of the work. They are treated as lower-level component and in
+#' typical situations, users rarely interact with them.
 #'
 #' [`Translator`][Translator] objects can be saved and exported with
 #' [translator_write()]. They can be imported back into an \R session
 #' with [translator_read()].
-#'
-#' Under the hood, [`Translator`][Translator] objects are collections of
-#' [`Text`][Text] objects. These do most of the work. They are treated as
-#' lower-level component and in typical situations, users rarely interact
-#' with them.
 #'
 #' @param ... Usage depends on the underlying function.
 #'
@@ -345,32 +341,21 @@ Translator <- R6::R6Class("Translator",
         #' @description Translate source text.
         #'
         #  NOTE: Package roxygen2 reuses templates whenever within an R6 class.
+        #
+        #' @param source_lang A non-empty and non-NA character string. The
+        #'   language of the source text. See argument `lang` for more
+        #'   information.
         #'
         #' @template param-dots-source-text
         #'
         #' @template param-lang
         #'
-        #' @template param-source-lang-no-example
-        #'
-        #  NOTE: What follows below is copied and pasted from roxygen2 template
-        #  section-text-normalization. This is because @section cannot be used
-        #  within the documentation of an R6 method.
-        #'
         #' @details
-        #' Input text can written in a variety of ways using single-line and
-        #' multi-line strings. Values passed to `...` are normalized (to ensure
-        #' their consistency) and collapsed to a single character string using
-        #' the standard paragraph separator. The latter is defined as two
-        #' newline characters (`"\n\n"`).
+        #' See [normalize()] for further details on how `...` is normalized.
         #'
-        #'   1. NA values and empty strings are discarded before reducing `...`
-        #'      to a character string.
-        #'   2. Whitespaces (tabs, newlines, and repeated spaces) characters are
-        #'      replaced by a single space. Paragraph separators are preserved.
-        #'   3. Leading or trailing whitespaces are stripped.
-        #'
-        #' @return A character string, or `NULL` if the underlying translation
-        #'   is unavailable.
+        #' @return A character string. If there is no corresponding translation,
+        #'   the value passed to method [`$set_default_value()`][Translator] is
+        #'   returned. `NULL` is returned by default.
         #'
         #' @examples
         #' tr <- Translator$new()
@@ -394,9 +379,9 @@ Translator <- R6::R6Class("Translator",
         #'
         #' @template param-hash
         #'
-        #' @return A character string. `NULL` is returned if the requested
-        #'   translation is not available (either `hash` or `lang` is not
-        #'   registered).
+        #' @return A character string. If there is no corresponding translation,
+        #'   the value passed to method [`$set_default_value()`][Translator] is
+        #'   returned. `NULL` is returned by default.
         #'
         #' @examples
         #' tr <- Translator$new()
@@ -557,8 +542,8 @@ Translator <- R6::R6Class("Translator",
         #'   The former is returned by default.
         #'
         #' @details This modifies what methods [`$translate()`][Translator] and
-        #'   [`$get_translation()`][Translator] returns when there is no entry
-        #'   for argument `lang`.
+        #'   [`$get_translation()`][Translator] returns when there is no
+        #'   translation for `lang`.
         #'
         #' @return A `NULL`, invisibly.
         #'
