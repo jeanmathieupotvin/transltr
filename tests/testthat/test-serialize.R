@@ -91,7 +91,7 @@ test_that("export.Text() returns an object of S3 class ExportedText", {
     expect_identical(out$`Source Language`, txt1$source_lang)
     expect_identical(out$`Source Text`, txt1$source_text)
     expect_null(out$Translations)
-    expect_identical(out$Locations, list(export(loc1, id = "test-id:location-1")))
+    expect_identical(out$Locations, list(export(loc1, id = "test-id:l1")))
 })
 
 test_that("export.Text() validates id", {

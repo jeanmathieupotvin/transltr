@@ -355,7 +355,7 @@ export.Text <- function(x, id = uuid(), set_translations = FALSE, ...) {
         Locations         = map(
             export,
             x    = x$locations,
-            id   = sprintf("%s:location-%i", id, seq_along(x$locations)),
+            id   = sprintf("%s:l%i", id, seq_along(x$locations)),
             more = list(...)))
 
     return(structure(out, class = "ExportedText", tag = "Text"))
