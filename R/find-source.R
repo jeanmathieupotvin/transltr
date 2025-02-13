@@ -158,7 +158,7 @@ find_source <- function(
 {
     assert_chr1(path)
 
-    if (!utils::file_test("-d", path <- normalizePath(path, mustWork = FALSE))) {
+    if (!utils::file_test("-d", normalizePath(path, mustWork = FALSE))) {
         stops("'path' does not exist or is not a directory.")
     }
     if (!is_translator(tr)) {
