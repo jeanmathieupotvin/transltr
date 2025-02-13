@@ -29,12 +29,10 @@ easily modifiable, even by non-technical collaborators.
 
 &#x2705; Its features are extensively documented (even internal ones).
 
-&#x2705; It can always locate and extract translatable strings (litteral
-character vectors passed to `translate()`). They are treated as regular R
-objects.
+&#x2705; It can always locate and extract translatable strings (no matter
+where they are in the source code).
 
-`translate()` works everywhere, including in calls to `stop()`, `warning()`,
-and `message()`.
+&#x2705; Translatable source text is treated as a regular R object.
 
 ## Installation
 
@@ -51,8 +49,9 @@ beta version until version `1.0.0` is released.
 
 ## Getting Started
 
-Write code as you normally would. Whenever a piece of text (a literal character
-vector) must be available in multiple languages, wrap it with `translate()`.
+Write code as you normally would. Whenever a piece of text (literal character
+vectors) should be available in multiple languages, pass it to method
+`Translator$translate()`. You may also use your own function.
 
 1. Once you are ready to work on translating your project, call `find_source()`.
    This returns a `Translator` object.

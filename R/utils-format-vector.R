@@ -107,10 +107,10 @@ format_vector <- function(
         # Print element in a (more) semantic way.
         i_x <- if (is.null(i_x)) {
             # Print NULL (and empty pairlists)
-            # as a litteral character string.
+            # as a literal character string.
             null
         } else if (!length(i_x)) {
-            # Print other empty objects as litteral
+            # Print other empty objects as literal
             # character strings that state their
             # emptiness and their type.
             sprintf("%s [%s]", empty, typeof(i_x))

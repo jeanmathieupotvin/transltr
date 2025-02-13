@@ -36,7 +36,7 @@
 #' [print()] returns argument `x` invisibly.
 #'
 #' @seealso
-#' [translate()],
+#' [find_source()],
 #' [translator_read()],
 #' [translator_write()]
 #'
@@ -360,8 +360,6 @@ Translator <- R6::R6Class("Translator",
         #' @examples
         #' tr <- Translator$new()
         #' tr$set_text(en = "Hello, world!", fr = "Bonjour, monde!")
-        #'
-        #' # Consider using translate() instead.
         #' tr$translate("Hello, world!", lang = "en")  ## Outputs "Hello, world!"
         #' tr$translate("Hello, world!", lang = "fr")  ## Outputs "Bonjour, monde!"
         translate = \(

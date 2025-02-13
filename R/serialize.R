@@ -658,8 +658,7 @@ import.ExportedLocation <- function(x, ...) {
 #' @export
 import.ExportedTranslations <- function(x, tr = NULL, ...) {
     translations <- rapply(x[["Translations"]], how = "replace", f = \(txt) {
-        # Set untranslated or empty sections
-        # equal to constant empty.
+        # Set untranslated or empty sections equal to constant empty.
         if (!nzchar(txt) || txt == .__STR_UNTRANSLATED) {
             return("<empty>")
         }

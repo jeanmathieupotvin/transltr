@@ -100,8 +100,6 @@ tr <- Translator$new()
 
 tr <- Translator$new()
 tr$set_text(en = "Hello, world!", fr = "Bonjour, monde!")
-
-# Consider using translate() instead.
 tr$translate("Hello, world!", lang = "en")  ## Outputs "Hello, world!"
 tr$translate("Hello, world!", lang = "fr")  ## Outputs "Bonjour, monde!"
 
@@ -182,7 +180,7 @@ tr <- Translator$new()
 tr$set_default_value("<unavailable>")
 }
 \seealso{
-\code{\link[=translate]{translate()}},
+\code{\link[=find_source]{find_source()}},
 \code{\link[=translator_read]{translator_read()}},
 \code{\link[=translator_write]{translator_write()}}
 }
@@ -339,8 +337,6 @@ returned. \code{NULL} is returned by default.
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{tr <- Translator$new()
 tr$set_text(en = "Hello, world!", fr = "Bonjour, monde!")
-
-# Consider using translate() instead.
 tr$translate("Hello, world!", lang = "en")  ## Outputs "Hello, world!"
 tr$translate("Hello, world!", lang = "fr")  ## Outputs "Bonjour, monde!"
 }
