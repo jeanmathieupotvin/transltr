@@ -1,12 +1,12 @@
 #' Source Text
 #'
-#' Structure a source text and its translations.
+#' Structure source text and its translations.
 #'
-#' A [`Text`][Text] object is a piece of text that is extracted from \R source
-#' scripts.
+#' A [`Text`][Text] object is a piece of source text that is extracted from \R
+#' source scripts.
 #'
 #'   * It (typically) has one or more [`Locations`][Location] within a project.
-#'   * It is complemented by any number of translations and further attributes.
+#'   * It has zero or more translations.
 #'
 #' The [`Text`][Text] class structures this information and exposes a set of
 #' methods to manipulate it.
@@ -36,6 +36,7 @@
 #' @param x Any \R object.
 #'
 #' @param ... Usage depends on the underlying function.
+#'
 #'   * Any number of [`Location`][Location] objects and/or named character
 #'     strings for [text()] (in no preferred order).
 #'   * Any number of [`Text`][Text] objects for [merge_texts()] and S3
@@ -43,7 +44,7 @@
 #'   * Further arguments passed to or from other methods for [format()],
 #'     [print()], and [as_text()].
 #'
-#' @param location A [`Location`][Location] object.
+#' @param loc A [`Location`][Location] object.
 #'
 #' @template param-source-lang
 #'
@@ -109,11 +110,11 @@
 #'
 #' # Objects can be coerced to a Text object with as_text(). Below is an
 #' # example for call objects. This is for illustration purposes only,
-#' # and the latter should not be used. It is worthwhile to note that this
-#' # method is used internally by find_source(). Use this function instead.
-#' translate_call <- str2lang("transltr::translate('Hello, world!')")
-#' translate_loc  <- location("example in class-text", 2L, 32L, 2L, 68L)
-#' as_text(translate_call, location = translate_loc)
+#' # and the latter should not be used. This method is used internally by
+#' # find_source().
+#' cl  <- str2lang("translate('Hello, world!')")
+#' loc <- location("example in class-text", 2L, 32L, 2L, 68L)
+#' as_text(cl, loc)
 #'
 #' @rdname class-text
 #' @keywords internal
@@ -244,35 +245,28 @@ as_text <- function(x, ...) {
 }
 
 #' @rdname class-text
+#' @keywords internal
 #' @export
 as_text.call <- function(x,
-    strict    = FALSE,
-    location  = transltr::location(),
+    loc       = location(),
     algorithm = algorithms(),
-    validate  = TRUE,
     ...)
 {
-    assert_lgl1(validate)
-
-    if (validate) {
-        assert_lgl1(strict)
-
-        if (!is_translate_call(x, strict)) {
-            stops("'x' must be a 'call' object to 'transltr::translate()'.")
-        }
-        if (!is_location(location)) {
-            stops("'location' must be a 'Location' object.")
-        }
+    if (!is_location(loc)) {
+        stops("'loc' must be a 'Location' object.")
     }
 
-    # First element of a call is the
-    # name of the underlying function.
-    args <- as.list(match.call(translate, x, expand.dots = FALSE))[-1L]
-    txt  <- Text$new(algorithm)
-    txt$set_locations(location)
+    x <- match.call(
+        call        = x,
+        definition  = Translator$public_methods$translate,
+        expand.dots = FALSE)
 
-    if (!is.null(dots <- unlist(args$`...`))) {
-        source_lang <- args$source_lang %??% language_source_get()
+    dots <- x$`...`
+    txt  <- Text$new(algorithm)
+    txt$set_locations(loc)
+
+    if (!is.null(dots)) {
+        source_lang <- x$source_lang %??% language_source_get()
         txt$set_translation(source_lang, normalize(dots))
         txt$source_lang <- source_lang
     }

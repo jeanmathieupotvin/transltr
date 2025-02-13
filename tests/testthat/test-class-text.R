@@ -522,7 +522,7 @@ test_that("as_text() works", {
 test_that("as_text.call() returns a Text object", {
     txt <- as_text(
         call("translate", "Hello, world!"),
-        location  = location("test"),
+        loc       = location("test"),
         algorithm = "utf8")
 
     expect_s3_class(txt, "Text")
@@ -533,24 +533,9 @@ test_that("as_text.call() returns a Text object", {
     expect_identical(txt$locations, list(test = location("test")))
 })
 
-test_that("as_text.call() validates x", {
-    expect_error(as_text(call("text")))
-    expect_snapshot(as_text(call("text")), error = TRUE)
-})
-
-test_that("as_text.call() validates strict", {
-    expect_error(as_text(translate_call, strict = 1L))
-    expect_snapshot(as_text(translate_call, strict = 1L), error = TRUE)
-})
-
-test_that("as_text.call() validates location", {
-    expect_error(as_text(translate_call, location = 1L))
-    expect_snapshot(as_text(translate_call, location = 1L), error = TRUE)
-})
-
-test_that("as_text.call() validates validate", {
-    expect_error(as_text(translate_call, validate = 1L))
-    expect_snapshot(as_text(translate_call, validate = 1L), error = TRUE)
+test_that("as_text.call() validates loc", {
+    expect_error(as_text(translate_call, loc = 1L))
+    expect_snapshot(as_text(translate_call, loc = 1L), error = TRUE)
 })
 
 test_that("as_text.call() extracts ... from x", {
