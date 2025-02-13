@@ -381,7 +381,11 @@ Text <- R6::R6Class("Text",
                     "Update them by setting, or removing translations.")
             }
 
-            return(unlist(as.list(private$.translations, sorted = TRUE)))
+            return(
+                unlist(
+                    as.list(private$.translations,
+                        all.names = TRUE,
+                        sorted    = TRUE)))
         },
 
         #' @field locations A list of [`Location`][Location] objects giving
@@ -395,7 +399,7 @@ Text <- R6::R6Class("Text",
                     "Update them by setting, or removing 'Location' objects.")
             }
 
-            return(as.list(private$.locations, sorted = TRUE))
+            return(as.list(private$.locations, all.names = TRUE, sorted = TRUE))
         }
     ),
     public = list(
