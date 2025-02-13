@@ -4,7 +4,6 @@
     "[ \t]*@[ \t]*",
     "Ln[ \t]*([0-9.]+),[ \t]*Col[ \t]*([0-9.]+)$")
 
-
 #' Source Locations
 #'
 #' Structure and manipulate source locations. Class [`Location`][Location] is
@@ -193,7 +192,6 @@ merge_locations <- function(...) {
     groups <- unname(split(locs, vapply_1c(locs, `[[`, i = "path")))
     return(lapply(groups, \(group) do.call(c, group)))
 }
-
 
 #' Source Ranges
 #'

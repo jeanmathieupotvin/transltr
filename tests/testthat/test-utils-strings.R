@@ -4,18 +4,14 @@ v2 <- c(
     "A line that contains 34 characters",
     "Another line that contains 40 characters")
 
-
 # str_to() ---------------------------------------------------------------------
-
 
 test_that("str_to() works", {
     expect_type(str_to(1L), "character")
     expect_length(str_to(1L), 1L)
 })
 
-
 # str_to.default() -------------------------------------------------------------
-
 
 test_that("str_to.default() returns a character", {
     test_out <- str_to(v1)
@@ -41,9 +37,7 @@ test_that("str_to.default() treats scalar values as expected", {
     expect_identical(str_to(integer(1L)), "0")
 })
 
-
 # str_trim() -------------------------------------------------------------------
-
 
 test_that("str_trim() returns a character", {
     expect_type(str_trim(), "character")
@@ -73,9 +67,7 @@ test_that("str_trim() trims strings as expected", {
         "Another line that..."))
 })
 
-
 # str_wrap() -------------------------------------------------------------------
-
 
 test_that("str_wrap() returns a character string", {
     expect_type(str_wrap(), "character")

@@ -1,6 +1,5 @@
 .__STR_UNTRANSLATED <- "# Insert a translation here."
 
-
 #' Serialize Objects
 #'
 #' @description

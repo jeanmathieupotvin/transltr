@@ -17,9 +17,7 @@ wrap_assert_arg_alt <- function(my_x = c(1L, 2L)) {
     return(my_x)
 }
 
-
 # is_int() ---------------------------------------------------------------------
-
 
 test_that("is_int() returns a logical", {
     expect_true(is_int(1L))
@@ -36,9 +34,7 @@ test_that("is_int() disallows NAs", {
     expect_false(is_int(NA_integer_))
 })
 
-
 # is_chr() ---------------------------------------------------------------------
-
 
 test_that("is_chr() returns a logical", {
     expect_true(is_chr(""))
@@ -55,9 +51,7 @@ test_that("is_chr() disallows NAs", {
     expect_false(is_chr(NA_character_))
 })
 
-
 # is_lgl1() --------------------------------------------------------------------
-
 
 test_that("is_lgl1() returns a logical", {
     expect_true(is_lgl1(TRUE))
@@ -74,9 +68,7 @@ test_that("is_lgl1() disallows NAs", {
     expect_false(is_lgl1(NA))
 })
 
-
 # is_int1() --------------------------------------------------------------------
-
 
 test_that("is_int1() returns a logical", {
     expect_true(is_int1(1L))
@@ -92,9 +84,7 @@ test_that("is_int1() disallows NAs", {
     expect_false(is_int1(NA_integer_))
 })
 
-
 # is_chr1() --------------------------------------------------------------------
-
 
 test_that("is_chr1() returns a logical", {
     expect_true(is_chr1("1"))
@@ -115,9 +105,7 @@ test_that("is_chr1() disallows NAs", {
     expect_false(is_chr1(NA_character_))
 })
 
-
 # is_list() --------------------------------------------------------------------
-
 
 test_that("is_list() returns a logical", {
     expect_true(is_list(list(1L)))
@@ -129,9 +117,7 @@ test_that("is_list() disallows empty lists by default", {
     expect_true(is_list(list(), allow_empty = TRUE))
 })
 
-
 # is_between() ----------------------------------------------------------------
-
 
 test_that("is_between() returns a logical", {
     expect_true(is_between(1.0))
@@ -163,9 +149,7 @@ test_that("is_between() enforces upper bound (max)", {
     expect_false(is_between(1L,  max = 0L))
 })
 
-
 # is_named() -------------------------------------------------------------------
-
 
 test_that("is_named() returns a logical", {
     expect_true(is_named(list(a = 1L)))
@@ -195,9 +179,7 @@ test_that("is_named() disallows NA names by default", {
     expect_true(is_named(a_list, allow_na_names = TRUE))
 })
 
-
 # is_match() -------------------------------------------------------------------
-
 
 test_that("is_match() returns a logical", {
     expect_true(is_match(1L,  c(1L, 2L)))
@@ -217,9 +199,7 @@ test_that("is_match() exactly matches x by default", {
     expect_true(is_match("a",  c("aa", "bb"), allow_partial = TRUE))
 })
 
-
 # assert_int() -----------------------------------------------------------------
-
 
 test_that("assert_int() returns an empty character if x is valid", {
     expect_identical(assert_int(1L), character())
@@ -250,9 +230,7 @@ test_that("assert_int() sets argument's name", {
     expect_match(assert_int(my_x, throw_error = FALSE, x_name = "x"), "^'x'")
 })
 
-
 # assert_chr() -----------------------------------------------------------------
-
 
 test_that("assert_chr() returns an empty character if x is valid", {
     expect_identical(assert_chr("a"), character())
@@ -281,9 +259,7 @@ test_that("assert_chr() sets argument's name", {
     expect_match(assert_chr(my_x, throw_error = FALSE, x_name = "x"), "^'x'")
 })
 
-
 # assert_lgl1() ----------------------------------------------------------------
-
 
 test_that("assert_lgl1() returns an empty character if x is valid", {
     expect_identical(assert_lgl1(TRUE), character())
@@ -314,9 +290,7 @@ test_that("assert_lgl1() sets argument's name", {
     expect_match(assert_lgl1(my_x, throw_error = FALSE, x_name = "x"), "^'x'")
 })
 
-
 # assert_int1() ----------------------------------------------------------------
-
 
 test_that("assert_int1() returns an empty character if x is valid", {
     expect_identical(assert_int1(1L), character())
@@ -347,9 +321,7 @@ test_that("assert_int1() sets argument's name", {
     expect_match(assert_int1(my_x, throw_error = FALSE, x_name = "x"), "^'x'")
 })
 
-
 # assert_chr1() ----------------------------------------------------------------
-
 
 test_that("assert_chr1() returns an empty character if x is valid", {
     expect_identical(assert_chr1("a"), character())
@@ -378,9 +350,7 @@ test_that("assert_chr1() sets argument's name", {
     expect_match(assert_chr1(my_x, throw_error = FALSE, x_name = "x"), "^'x'")
 })
 
-
 # assert_list() ----------------------------------------------------------------
-
 
 test_that("assert_list() returns an empty character if x is valid", {
     expect_identical(assert_list(list(1L)), character())
@@ -409,9 +379,7 @@ test_that("assert_list() sets argument's name", {
     expect_match(assert_list(my_x, throw_error = FALSE, x_name = "x"), "^'x'")
 })
 
-
 # assert_between() -------------------------------------------------------------
-
 
 test_that("assert_between() returns an empty character if x is valid", {
     expect_identical(assert_between(1L), character())
@@ -448,9 +416,7 @@ test_that("assert_between() sets argument's name", {
     expect_match(assert_between(my_x, min = 2L, throw_error = FALSE, x_name = "x"), "^'x'")
 })
 
-
 # assert_named() ---------------------------------------------------------------
-
 
 test_that("assert_named() returns an empty character if x is valid", {
     expect_identical(assert_named(list()), character())
@@ -494,9 +460,7 @@ test_that("assert_named() sets argument's name", {
     expect_match(assert_named(my_x, throw_error = FALSE, x_name = "x"), "^'x'")
 })
 
-
 # assert_match() ---------------------------------------------------------------
-
 
 test_that("assert_match() returns an empty character if x is valid", {
     expect_identical(assert_match(1L, c(1L, 2L)), character())
@@ -539,9 +503,7 @@ test_that("assert_match() sets argument's name", {
     expect_match(assert_match(my_x, c(1L, 2L), throw_error = FALSE, x_name = "x"), "^'x'")
 })
 
-
 # assert_arg() -----------------------------------------------------------------
-
 
 test_that("assert_arg() returns an empty character if x is valid", {
     expect_identical(wrap_assert_arg(1L), character())
@@ -585,9 +547,7 @@ test_that("assert_arg() assigns default value in parent env if x is missing", {
     expect_identical(wrap_assert_arg_alt(), 1L)
 })
 
-
 # assert() ---------------------------------------------------------------------
-
 
 test_that("assert() works", {
     # assert(1L) is different from assert_int1(1L).

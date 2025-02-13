@@ -1,6 +1,5 @@
 # stops() ----------------------------------------------------------------------
 
-
 test_that("stops() does not return the call as part of the error message", {
     expect_error(stops())
     expect_snapshot(error = TRUE, {
@@ -9,9 +8,7 @@ test_that("stops() does not return the call as part of the error message", {
     })
 })
 
-
 # stopf() ----------------------------------------------------------------------
-
 
 test_that("stopf() works", {
     expect_error(stopf())

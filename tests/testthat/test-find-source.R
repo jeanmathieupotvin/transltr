@@ -10,9 +10,7 @@ tokens_mock2 <- find_source_exprs(path_mock2)
 texts_mock1 <- find_source_in_exprs(tokens_mock1, path_mock1)
 texts_mock2 <- find_source_in_exprs(tokens_mock2, path_mock2)
 
-
 # find_source() ----------------------------------------------------------------
-
 
 test_that("find_source() returns an R6 object of class Translator", {
     tr  <- translator(id = "test-find-source", algorithm = "utf8")
@@ -58,9 +56,7 @@ test_that("find_source() ignores files not having file extensions R or Rprofile"
     expect_true(all(is.na(match(c("x", "y"), out$source_texts))))
 })
 
-
 # find_source_in_files() -------------------------------------------------------
-
 
 test_that("find_source_in_files() returns a list of Text objects", {
     paths <- c(path_mock1, path_mock2)

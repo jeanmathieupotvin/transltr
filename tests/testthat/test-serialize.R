@@ -35,9 +35,7 @@ tr <- translator(
     txt1,
     txt2)
 
-
 # export() ---------------------------------------------------------------------
-
 
 test_that("export() works", {
     expect_s3_class(export(location()),       "ExportedLocation")
@@ -45,9 +43,7 @@ test_that("export() works", {
     expect_s3_class(export(Translator$new()), "ExportedTranslator")
 })
 
-
 # export.Location() ------------------------------------------------------------
-
 
 test_that("export.Location() returns an object of S3 class ExportedLocation", {
     out <- export(loc1, id = "test-id")
@@ -69,9 +65,7 @@ test_that("export.Location() validates id", {
     expect_snapshot(export(loc1, 1L), error = TRUE)
 })
 
-
 # export.Text() ----------------------------------------------------------------
-
 
 test_that("export.Text() returns an object of S3 class ExportedText", {
     out    <- export(txt1, id = "test-id")
@@ -162,9 +156,7 @@ test_that("export.Text() wraps source texts and translations", {
     expect_identical(out$Translations$fr, wrapped_translation)
 })
 
-
 # export.Translator() ----------------------------------------------------------
-
 
 test_that("export.Translator() returns an object of S3 class ExportedTranslator", {
     out    <- export(tr)
@@ -184,9 +176,7 @@ test_that("export.Translator() returns an object of S3 class ExportedTranslator"
         export(txt2, names(hashes)[hashes == txt2$hash])))
 })
 
-
 # serialize() ------------------------------------------------------------------
-
 
 test_that("serialize() returns a character string", {
     out <- serialize(loc1)
@@ -242,9 +232,7 @@ test_that("serialize() wraps long source text and translations", {
     expect_snapshot(cat(serialize(tr, set_translations = TRUE)))
 })
 
-
 # export_translations() --------------------------------------------------------
-
 
 test_that("export_translations() returns an object of S3 class ExportedTranslations", {
     lang   <- "fr"
@@ -343,9 +331,7 @@ test_that("export_translations() wraps source texts and translations", {
     expect_identical(translation, wrapped_translation)
 })
 
-
 # serialize_translations() -----------------------------------------------------
-
 
 test_that("serialize_translations() returns a character string", {
     out <- serialize_translations(tr, "fr")
@@ -379,9 +365,7 @@ test_that("serialize_translations() wraps long source texts and translations", {
     expect_snapshot(cat(serialize_translations(tr, "fr"), "\n"))
 })
 
-
 # format_errors() --------------------------------------------------------------
-
 
 test_that("format_errors() returns a character if throw_error is false", {
     out <- format_errors("", throw_error = FALSE)
@@ -428,9 +412,7 @@ test_that("format_errors() formats errors as expected", {
     expect_snapshot(format_errors(errors, "test-id"), error = TRUE)
 })
 
-
 # assert.ExportedLocation() ----------------------------------------------------
-
 
 test_that("assert.ExportedLocation() returns a character if x is valid", {
     out <- assert(export(loc1))
@@ -467,7 +449,6 @@ test_that("assert.ExportedLocation() detects invalid Path field", {
     expect_snapshot(assert(out), error = TRUE)
 })
 
-
 test_that("assert.ExportedLocation() detects invalid Ranges field", {
     out <- export(loc1, id = "test-id")
     out$Ranges <- c(
@@ -478,9 +459,7 @@ test_that("assert.ExportedLocation() detects invalid Ranges field", {
     expect_snapshot(assert(out), error = TRUE)
 })
 
-
 # assert.ExportedText() --------------------------------------------------------
-
 
 test_that("assert.ExportedText() returns a character if x is valid", {
     out <- assert(export(txt1))
@@ -644,9 +623,7 @@ test_that("assert.ExportedText() detects invalid Locations field", {
     expect_snapshot(assert(out3), error = TRUE)
 })
 
-
 # assert.ExportedTranslator() --------------------------------------------------
-
 
 test_that("assert.ExportedTranslator() returns a character if x is valid", {
     out <- assert(export(tr))
@@ -741,9 +718,7 @@ test_that("assert.ExportedTranslator() detects invalid Texts field", {
     expect_snapshot(assert(out3), error = TRUE)
 })
 
-
 # assert.ExportedTranslations() ------------------------------------------------
-
 
 test_that("assert.ExportedTranslations() returns a character if x is valid", {
     out <- assert(export_translations(tr, "fr"))
@@ -831,9 +806,7 @@ test_that("assert.ExportedTranslations() detects invalid Translations field", {
     expect_snapshot(assert(out3), error = TRUE)
 })
 
-
 # import() ---------------------------------------------------------------------
-
 
 test_that("import() works", {
     expect_s3_class(import(export(location())),       "Location")
@@ -849,18 +822,14 @@ test_that("import() calls assert() before dispatching", {
     expect_error(import(invalid))
 })
 
-
 # import.default() -------------------------------------------------------------
-
 
 test_that("import.default() works", {
     expect_error(import(1L))
     expect_snapshot(import(1L), error = TRUE)
 })
 
-
 # import.ExportedLocation() ----------------------------------------------------
-
 
 test_that("import.ExportedLocation() returns an object of R6 class Location", {
     out <- import(export(loc1))
@@ -875,9 +844,7 @@ test_that("import.ExportedLocation() handles multiple ranges", {
     expect_identical(import(export(loc)), loc)
 })
 
-
 # import.ExportedText() --------------------------------------------------------
-
 
 test_that("import.ExportedText() returns an object of R6 class Text", {
     out <- import(export(txt1, set_translations = TRUE))
@@ -905,7 +872,6 @@ test_that("import.Text() unwraps source texts and translations", {
     expect_identical(out$get_translation("fr"), str_translation)
 })
 
-
 test_that("import.ExportedText() only set source_lang and source_text if they are not null", {
     txt <- Text$new()
     import(export(txt, set_translations = TRUE))
@@ -921,9 +887,7 @@ test_that("import.ExportedText() throws a warning if hash is invalid", {
     expect_snapshot(import(etxt1))
 })
 
-
 # import.ExportedTranslator() --------------------------------------------------
-
 
 test_that("import.ExportedTranslator() returns an object of R6 class Translator", {
     out <- import(export(tr, set_translations = TRUE))
@@ -932,9 +896,7 @@ test_that("import.ExportedTranslator() returns an object of R6 class Translator"
     expect_identical(out, tr)
 })
 
-
 # deserialize() ----------------------------------------------------------------
-
 
 test_that("deserialize() returns an object of R6 class Location, Text, or Translator", {
     # deserialize() returns the output of import().
@@ -953,9 +915,7 @@ test_that("deserialize() throws an error when string is an invalid yaml object",
     expect_snapshot(deserialize("a: 1\nb 2\n"), error = TRUE)
 })
 
-
 # import.ExportedTranslations() ------------------------------------------------
-
 
 test_that("import.ExportedTranslations() returns an object of S3 class ExportedTranslations", {
     trans <- export_translations(tr, "fr")
@@ -1027,9 +987,7 @@ test_that("import.ExportedTranslations() registers translations", {
     expect_identical(tr2$get_translation("2ac373a", lang), "Au revoir, monde!")
 })
 
-
 # deserialize_translations() ---------------------------------------------------
-
 
 test_that("deserialize_translations() returns an object of S3 class ExportedTranslations", {
     # deserialize_translations() returns the output

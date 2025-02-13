@@ -40,9 +40,7 @@ comments_translations_file <- c(
     "#   - What follows an octothorpe (#) is ignored until the next line.",
     "#   - An escaped octothorpe (\\#) is treated as normal text.")
 
-
 # translations_paths() ---------------------------------------------------------
-
 
 test_that("translations_paths() returns a named character", {
     # translations_paths() exclude the source language
@@ -109,9 +107,7 @@ test_that("translations_paths() returns expected file paths", {
             names = c("el", "es", "fr")))
 })
 
-
 # translator_write() -----------------------------------------------------------
-
 
 test_that("translator_write() returns null invisibly", {
     temp_file <- withr::local_tempfile(pattern = "_translator_", fileext = ".yml")
@@ -230,9 +226,7 @@ test_that("translator_write() does not write translations files if translations 
     expect_true(all(!file.exists(translations_files)))
 })
 
-
 # translator_read() ------------------------------------------------------------
-
 
 test_that("translator_read() returns an R6 object of class Translator", {
     withr::local_options(
@@ -341,9 +335,7 @@ test_that("translator_read() does not read translations files if translations is
     expect_identical(translator_read(translations = FALSE)$languages, "en")
 })
 
-
 # translations_write() ---------------------------------------------------------
-
 
 test_that("translations_write() returns null invisibly", {
     temp_file <- withr::local_tempfile(pattern = "el_", fileext = ".txt")
@@ -369,9 +361,7 @@ test_that("translations_write() serializes translations", {
     expect_snapshot_file(temp_file, "translations-write-el.txt")
 })
 
-
 # translations_read() ----------------------------------------------------------
-
 
 test_that("translations_read() returns a S3 object of class ExportedTranslations", {
     temp_file <- withr::local_tempfile(pattern = "el_", fileext = ".txt")

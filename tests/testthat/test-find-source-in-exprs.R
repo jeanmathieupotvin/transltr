@@ -9,9 +9,7 @@ tokens_mock2 <- find_source_exprs(path_mock2)
 texts_mock1 <- find_source_in_exprs(tokens_mock1, path_mock1)
 texts_mock2 <- find_source_in_exprs(tokens_mock2, path_mock2, interface = quote(translate))
 
-
 # find_source_in_file() --------------------------------------------------------
-
 
 test_that("find_source_in_file() works", {
     # This function is just a semantic wrapper for
@@ -32,9 +30,7 @@ test_that("find_source_in_file() outputs basic information if verbose is true", 
     expect_output(find_source_in_file(path_mock1, verbose = TRUE), "Extracted 4 source text")
 })
 
-
 # find_source_in_exprs() -------------------------------------------------------
-
 
 test_that("find_source_in_exprs() returns a list of Text objects", {
     expect_type(texts_mock1, "list")
@@ -85,9 +81,7 @@ test_that("find_source_in_exprs() uses source locations returned by the parser",
         location(path_mock1, 41L, 22L, 41L, 65L)))
 })
 
-
 # find_source_exprs() ----------------------------------------------------------
-
 
 test_that("find_source_exprs() returns a data.frame of expr tokens", {
     required_fields <- c("line1", "col1", "line2", "col2", "text")
@@ -100,9 +94,7 @@ test_that("find_source_exprs() returns a data.frame of expr tokens", {
     expect_true(all(tokens_mock2$token == "expr"))
 })
 
-
 # is_source() ------------------------------------------------------------------
-
 
 test_that("is_source() returns a logical", {
     expect_true(is_source(str2lang('tr$translate("test")')))
@@ -126,23 +118,27 @@ test_that("is_source() looks for calls to $translate() if interface is null", {
 })
 
 test_that("is_source() looks for calls to interface if it is a name", {
-    expect_true(is_source(str2lang('translate("test")'),     quote(translate)))
-    expect_false(is_source(str2lang('tr$translate("test")'), quote(translate)))
+    intf <- quote(translate)
+
+    expect_true(is_source(str2lang('translate("test")'),     intf))
+    expect_false(is_source(str2lang('tr$translate("test")'), intf))
 
     # Check that quotes and backticks are handled appropriately.
-    expect_true(is_source(str2lang('"translate"("test")'), quote(translate)))
-    expect_true(is_source(str2lang('`translate`("test")'), quote(translate)))
+    expect_true(is_source(str2lang('"translate"("test")'), intf))
+    expect_true(is_source(str2lang('`translate`("test")'), intf))
 })
 
 test_that("is_source() looks for calls to interface if it is a call", {
-    expect_true(is_source(str2lang('transltr::translate("test")'), quote(transltr::translate)))
-    expect_false(is_source(str2lang('tr$translate("test")'),       quote(transltr::translate)))
+    intf <- quote(transltr::translate)
+
+    expect_true(is_source(str2lang('transltr::translate("test")'), intf))
+    expect_false(is_source(str2lang('tr$translate("test")'),       intf))
 
     # Check that quotes and backticks are handled appropriately.
-    expect_true(is_source(str2lang('transltr::"translate"("test")'),   quote(transltr::translate)))
-    expect_true(is_source(str2lang('"transltr"::translate("test")'),   quote(transltr::translate)))
-    expect_true(is_source(str2lang('transltr::`translate`("test")'),   quote(transltr::translate)))
-    expect_true(is_source(str2lang('`transltr`::translate("test")'),   quote(transltr::translate)))
-    expect_true(is_source(str2lang('"transltr"::`translate`("test")'), quote(transltr::translate)))
-    expect_true(is_source(str2lang('`transltr`::"translate"("test")'), quote(transltr::translate)))
+    expect_true(is_source(str2lang('transltr::"translate"("test")'),   intf))
+    expect_true(is_source(str2lang('"transltr"::translate("test")'),   intf))
+    expect_true(is_source(str2lang('transltr::`translate`("test")'),   intf))
+    expect_true(is_source(str2lang('`transltr`::translate("test")'),   intf))
+    expect_true(is_source(str2lang('"transltr"::`translate`("test")'), intf))
+    expect_true(is_source(str2lang('`transltr`::"translate"("test")'), intf))
 })

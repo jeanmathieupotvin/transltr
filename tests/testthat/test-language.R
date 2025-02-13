@@ -3,9 +3,7 @@ withr::defer({
     language_source_set(NULL)
 })
 
-
 # language_set() ---------------------------------------------------------------
-
 
 test_that("language_set() returns null invisibly", {
     expect_null(language_set())
@@ -62,9 +60,7 @@ test_that("language_set() throws an error if it fails to unset env variable", {
     })
 })
 
-
 # language_get() ---------------------------------------------------------------
-
 
 test_that("language_get() returns a character string", {
     withr::with_envvar(list(TRANSLTR_LANGUAGE = "test"), {
@@ -78,9 +74,7 @@ test_that("language_get() returns a character string", {
     })
 })
 
-
 # language_source_set() --------------------------------------------------------
-
 
 test_that("language_source_set() returns null invisibly", {
     expect_null(language_source_set())
@@ -136,9 +130,7 @@ test_that("language_source_set() throws an error if it fails to unset env variab
     })
 })
 
-
 # language_source_get() --------------------------------------------------------
-
 
 test_that("language_source_get() returns a character string", {
     withr::with_envvar(list(TRANSLTR_SOURCE_LANGUAGE = "test"), {

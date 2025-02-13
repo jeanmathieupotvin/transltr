@@ -9,9 +9,7 @@ ranges <- c(
     "Ln  1, Col  22 @ Ln   10, Col 1",
     "Ln 11, Col 222 @ Ln 3333, Col 4")
 
-
 # location() -------------------------------------------------------------------
-
 
 test_that("location() returns a S3 object of class Location", {
     expect_s3_class(loc2, "Location")
@@ -78,18 +76,14 @@ test_that("location() orders ranges", {
     expect_identical(loc$col2,  c(7L, 8L))
 })
 
-
 # is_location() ----------------------------------------------------------------
-
 
 test_that("is_location() returns a logical", {
     expect_true(is_location(location()))
     expect_false(is_location(1L))
 })
 
-
 # format.Location() ------------------------------------------------------------
-
 
 test_that("format() returns a character", {
     # This test block is a little bit
@@ -114,9 +108,7 @@ test_that("format() returns a character", {
         "  Ln 11, Col 222 @ Ln 3333, Col 4"))
 })
 
-
 # print.Location() -------------------------------------------------------------
-
 
 test_that("print() works", {
     expect_output(print(loc1))
@@ -130,9 +122,7 @@ test_that("print() returns x invisibly", {
     expect_identical(print(loc1), loc1)
 })
 
-
 # c.Location -------------------------------------------------------------------
-
 
 test_that("c.Location() returns a Location object", {
     out <- c(loc1, loc2)
@@ -162,9 +152,7 @@ test_that("c.Location() throws an error if paths are not equal", {
     expect_snapshot(c(location("a"), location("b")), error = TRUE)
 })
 
-
 # merge_locations() ------------------------------------------------------------
-
 
 test_that("merge_locations() returns a list of Location object", {
     out <- merge_locations(location("a"), location("b"))
@@ -191,9 +179,7 @@ test_that("merge_locations() combines Location objects having different paths", 
     expect_identical(out[[3L]], location("c", 5L, 5L, 5L, 5L))
 })
 
-
 # range_format() ---------------------------------------------------------------
-
 
 test_that("range_format() returns a character", {
     out1 <- range_format(loc1)
@@ -217,9 +203,7 @@ test_that("range_format() creates ranges according to the expected format", {
         "Ln 11, Col 222 @ Ln 3333, Col 4"))
 })
 
-
 # range_parse() ----------------------------------------------------------------
-
 
 test_that("range_parse() returns a list of integers", {
     out <- range_parse(ranges)
@@ -268,9 +252,7 @@ test_that("range_parse() parses strings appropriately", {
         rep.int(NA_integer_, 4L))
 })
 
-
 # range_is_parseable() ---------------------------------------------------------
-
 
 test_that("range_is_parseable() returns an logical", {
     out <- range_is_parseable(ranges)

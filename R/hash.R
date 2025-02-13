@@ -41,7 +41,6 @@ hash <- function(lang = "", text = "", algorithm = "") {
             NULL))
 }
 
-
 #' Hashing Algorithms
 #'
 #' These algorithms map a character string to another character string of

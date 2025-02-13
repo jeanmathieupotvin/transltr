@@ -26,9 +26,7 @@ txt2 <- text(
 
 translate_call <- call("translate")
 
-
 # Class: active bindings -------------------------------------------------------
-
 
 test_that("active binding hash returns hash", {
     expect_identical(txt1$hash, "256e0d707386d0fcd9abf10ad994000bdaa25812")
@@ -123,9 +121,7 @@ test_that("active binding locations throws an error if value is not missing", {
     expect_snapshot(txt1$locations <- location(), error = TRUE)
 })
 
-
 # Class: public methods --------------------------------------------------------
-
 
 test_that("$initialize() works", {
     # It can only be tested indirectly via $new().
@@ -247,9 +243,7 @@ test_that("$rm_location() removes locations as expected", {
     expect_identical(txt$locations, list(b = location("b", 5L, 6L, 7L, 8L)))
 })
 
-
 # text() -----------------------------------------------------------------------
-
 
 test_that("text() returns an R6 object of class Text", {
     txt <- text(
@@ -281,18 +275,14 @@ test_that("text() checks that there is at least one translation corresponding to
     expect_snapshot(text(), error = TRUE)
 })
 
-
 # is_text() --------------------------------------------------------------------
-
 
 test_that("is_text() works", {
     expect_true(is_text(Text$new()))
     expect_false(is_text(1L))
 })
 
-
 # format.Text() ----------------------------------------------------------------
-
 
 test_that("format() returns a character", {
     # This test block is a little bit
@@ -370,9 +360,7 @@ test_that("format() escapes newlines", {
     expect_snapshot(print(txt))
 })
 
-
 # print.Text() -----------------------------------------------------------------
-
 
 test_that("print() works", {
     expect_output(print(txt1))
@@ -385,9 +373,7 @@ test_that("print() returns x invisibly", {
     expect_identical(print(txt1), txt1)
 })
 
-
 # c.Text() ---------------------------------------------------------------------
-
 
 test_that("c.Text() returns a Text object", {
     out <- c(txt1, txt2)
@@ -454,9 +440,7 @@ test_that("c.Text() does not mutate its arguments", {
         el = "Γεια σου, Κόσμος!"))
 })
 
-
 # merge_texts() ----------------------------------------------------------------
-
 
 test_that("merge_texts() returns a list of Text object", {
     txt <- test_text()
@@ -507,17 +491,13 @@ test_that("merge_texts() ignores Text objects with no set source language", {
         el = "Γεια σου, Κόσμος!"))
 })
 
-
 # as_text() --------------------------------------------------------------------
-
 
 test_that("as_text() works", {
     expect_s3_class(as_text(translate_call), "Text")
 })
 
-
 # as_text.call() ---------------------------------------------------------------
-
 
 test_that("as_text.call() returns a Text object", {
     txt <- as_text(

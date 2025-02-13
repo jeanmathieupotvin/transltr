@@ -1,6 +1,5 @@
 .__STR_EMPTY_LIST <- "<empty list>"
 
-
 #' Serialize Objects to Flat Strings
 #'
 #' Serialize \R objects into textual sequences of unindented (*flat*) and
