@@ -36,8 +36,8 @@
 #'
 #'   * converts `NULL` to the `"NULL"` character string,
 #'   * converts other elements to character strings using [format()] and
-#'   * replaces empty lists by a `r .__STR_EMPTY_LIST` constant treated as
-#'     a placeholder.
+#'   * replaces empty lists by a `<empty list>` constant treated as a
+#'     placeholder.
 #'
 #' @param x A list. It can be empty.
 #'

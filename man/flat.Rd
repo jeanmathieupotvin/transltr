@@ -81,8 +81,8 @@ serialization process. It
 \itemize{
 \item converts \code{NULL} to the \code{"NULL"} character string,
 \item converts other elements to character strings using \code{\link[=format]{format()}} and
-\item replaces empty lists by a \if{html}{\out{<empty list>}} constant treated as
-a placeholder.
+\item replaces empty lists by a \verb{<empty list>} constant treated as a
+placeholder.
 }
 }
 }
