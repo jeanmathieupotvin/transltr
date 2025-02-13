@@ -65,6 +65,11 @@ Current language and source language are respectively set with `language_set()`
 and `language_source_get()`. By default, the latter is set equal to `"en"` 
 (English).
 
+## Future Improvements
+
+An informal and approximative roadmap for the package is
+[available on GitHub](https://github.com/jeanmathieupotvin/transltr/wiki/Roadmap).
+
 ## Bugs and Feedback
 
 You may submit bugs, request features, and provide feedback by creating an

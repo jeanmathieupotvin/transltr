@@ -20,6 +20,7 @@ usethis::use_description(
         Roxygen     = "list(markdown = TRUE, r6 = TRUE)",
         URL         = "https://github.com/jeanmathieupotvin/transltr",
         BugReports  = "https://github.com/jeanmathieupotvin/transltr/issues",
+        Roadmap     = "https://github.com/jeanmathieupotvin/transltr/wiki/Roadmap",
         `Authors@R` = 'c(
             utils::person(
                 given   = "Jean-Mathieu",

@@ -16,6 +16,7 @@ Description: An object model for source text and translations. Find and extract
 License: MIT + file LICENSE
 URL: https://transltr.ununoctium.dev
 BugReports: https://github.com/jeanmathieupotvin/transltr/issues
+Roadmap: https://github.com/jeanmathieupotvin/transltr/wiki/Roadmap
 Encoding: UTF-8
 Language: en
 Roxygen: list(markdown = TRUE, r6 = TRUE)
