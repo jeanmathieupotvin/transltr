@@ -4,7 +4,8 @@
 #' [base::writeLines()]. They further validate their arguments, normalize
 #' file paths and re-encode inputs to `UTF-8` before reading and writing.
 #'
-#' @template param-path
+#' @param path A non-empty and non-NA character string. A path to a file to
+#'   read text from, or write text to.
 #'
 #' @template param-encoding
 #'
