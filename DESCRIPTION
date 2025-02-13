@@ -52,8 +52,6 @@ Collate:
     'normalize.R'
     'serialize.R'
     'text-io.R'
-    'translate-is-call.R'
-    'translate.R'
     'translator-io.R'
     'transltr-package.R'
     'utils-format-vector.R'

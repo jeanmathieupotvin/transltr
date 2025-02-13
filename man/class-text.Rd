@@ -26,14 +26,7 @@ merge_texts(..., algorithm = algorithms())
 
 as_text(x, ...)
 
-\method{as_text}{call}(
-  x,
-  strict = FALSE,
-  location = transltr::location(),
-  algorithm = algorithms(),
-  validate = TRUE,
-  ...
-)
+\method{as_text}{call}(x, loc = location(), algorithm = algorithms(), ...)
 }
 \arguments{
 \item{...}{Usage depends on the underlying function.
@@ -62,14 +55,7 @@ identification purposes.}
 
 \item{x}{Any \R object.}
 
-\item{strict}{A non-NA logical value. Should only \emph{explicit calls}, i.e.
-\code{transltr::translate()}, be extracted? If \code{FALSE}, calls to \emph{any} such
-function are extracted, i.e. \code{translate()}.}
-
-\item{location}{A \code{\link{Location}} object.}
-
-\item{validate}{A non-NA logical value. Should the arguments be validated
-before being used? This argument should be left as is.}
+\item{loc}{A \code{\link{Location}} object.}
 }
 \value{
 \code{\link[=text]{text()}}, \code{\link[=c]{c()}}, and \code{\link[=as_text]{as_text()}} return an \code{\link[R6:R6Class]{R6}} object of
@@ -85,14 +71,14 @@ class \code{\link{Text}}.
 can be empty if all underlying \code{\link{Text}} objects are empty.
 }
 \description{
-Structure a source text and its translations.
+Structure source text and its translations.
 }
 \details{
-A \code{\link{Text}} object is a piece of text that is extracted from \R source
-scripts.
+A \code{\link{Text}} object is a piece of source text that is extracted from \R
+source scripts.
 \itemize{
 \item It (typically) has one or more \code{\link[=Location]{Locations}} within a project.
-\item It is complemented by any number of translations and further attributes.
+\item It has zero or more translations.
 }
 
 The \code{\link{Text}} class structures this information and exposes a set of
@@ -168,11 +154,11 @@ merge_texts(txt1, txt2, txt3)
 
 # Objects can be coerced to a Text object with as_text(). Below is an
 # example for call objects. This is for illustration purposes only,
-# and the latter should not be used. It is worthwhile to note that this
-# method is used internally by find_source(). Use this function instead.
-translate_call <- str2lang("transltr::translate('Hello, world!')")
-translate_loc  <- location("example in class-text", 2L, 32L, 2L, 68L)
-as_text(translate_call, location = translate_loc)
+# and the latter should not be used. This method is used internally by
+# find_source().
+cl  <- str2lang("translate('Hello, world!')")
+loc <- location("example in class-text", 2L, 32L, 2L, 68L)
+as_text(cl, loc)
 
 
 ## ------------------------------------------------
