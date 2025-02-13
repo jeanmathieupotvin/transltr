@@ -33,6 +33,10 @@
 #'   * a [`call`][call] to method [`Translator$translate()`][Translator] **or**
 #'   * a [`call`][call] to a custom function referenced by `interface`.
 #'
+#' Calls to method [`Translator$translate()`][Translator] that include
+#' [`...`][dots] in their argument(s) are ignored. Such calls are part
+#' of the definition of a custom `interface` and should not be extracted.
+#'
 #' @returns
 #' [find_source_in_file()] and [find_source_in_exprs()] return a list of
 #' [`Text`][Text] objects. It may contain duplicated elements, depending
@@ -131,8 +135,12 @@ is_source <- function(x, interface = NULL) {
             is.call(x1) &&
             # to operator `$` and the latter is
             identical(as.name(x1[[1L]]), quote(`$`)) &&
-            # fetching method/function translate.
-            identical(as.name(x1[[3L]]), quote(translate)))
+            # fetching method/function translate and
+            identical(as.name(x1[[3L]]), quote(translate)) &&
+            # it is not passing ... to tr$translate().
+            # This is a sign that x is being used to define
+            # an interface. Such calls must be ignored.
+            all(!vapply_1l(x[-1L], identical, y = quote(...))))
     }
 
     # Otherwise, check whether x1 is a custom

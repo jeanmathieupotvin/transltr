@@ -117,6 +117,11 @@ test_that("is_source() looks for calls to $translate() if interface is null", {
     expect_true(is_source(str2lang('`$`(`tr`, `translate`)("test")')))
 })
 
+test_that("is_source() returns false when calls to $translate() include ...", {
+    expect_true(is_source(str2lang('tr$translate()')))
+    expect_false(is_source(str2lang('tr$translate(..., lang = language_get())')))
+})
+
 test_that("is_source() looks for calls to interface if it is a name", {
     intf <- quote(translate)
 

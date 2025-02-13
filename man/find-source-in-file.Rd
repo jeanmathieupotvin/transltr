@@ -80,6 +80,10 @@ This can either be
 \item a \code{\link{call}} to method \code{\link[=Translator]{Translator$translate()}} \strong{or}
 \item a \code{\link{call}} to a custom function referenced by \code{interface}.
 }
+
+Calls to method \code{\link[=Translator]{Translator$translate()}} that include
+\code{\link[=dots]{...}} in their argument(s) are ignored. Such calls are part
+of the definition of a custom \code{interface} and should not be extracted.
 }
 \seealso{
 \code{\link{Text}},
