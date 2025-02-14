@@ -12,7 +12,7 @@
 devtools::check(remote = TRUE, manual = TRUE)
 ```
 
-**0 errors | 0 warnings | 1 note**
+**Status: 1 NOTE**
 
 ```
 ❯ checking CRAN incoming feasibility ... [3s/17s] NOTE
@@ -28,7 +28,7 @@ devtools::check(remote = TRUE, manual = TRUE)
 devtools::check_win_devel()
 ```
 
-**0 errors | 0 warnings | 1 note**
+**Status: 1 NOTE**
 
 ```
 * checking CRAN incoming feasibility ... [56s] NOTE
