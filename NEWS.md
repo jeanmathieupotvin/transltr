@@ -2,24 +2,26 @@
 
 ## Breaking Changes
 
-* The package's lifecycle was reverted back to `experimental`. All features
-  are still well tested and documented, but they may change again in a near
-  future.
-* R `>= 4.2.0` is now required. This is necessary to leverage native `UTF-8`
-  support on Windows. R `>= 4.1.0` is also required to use function shorthands
-  (`\(...)`) and the native pipe operator `|>`.
+* The package's lifecycle is set back to `experimental`.
+  * All features are still well tested and documented, but they may
+    change again in a near future. I am thinking about introducing many
+    small changes to the interface of classes `Text` and `Translator`.
+* R `>= 4.3.0` is now required. This is necessary to
+  * leverage native `UTF-8` support on Windows,
+  * use function shorthands (`\(...)`) and
+  * use the native pipe operator `|>` and related placeholders `_`.
 * Package `stringi` is now required at runtime.
-* Option `transltr.default.path` was renamed to `transltr.path`.
-* `constant()` is removed. While it was internal, it was visible in some signatures
-  and in the documentation.
+  * This package dramatically increases the performance of `normalize()`.
+  * Its usage within the package will gradually increase over time.
+* Option `transltr.default.path` is renamed to `transltr.path`.
+* `constant()` is removed. While it technically was an unexported function,
+  it was used to pass default values to many function arguments.
 * `find_source()` loses argument `strict`. It is replaced by new argument
-  `interface`. See new features below.
-* `as_text.call()` loses arguments `strict` and `validate`. This is
-  because is was partially rewritten following the introduction of the new
-  `interface` mechanism of `find_source()`.
-* `translate()` (and internal function `is_translate_call()`) is removed. It
-  is replaced by the new `interface` mechanism of `find_source()`. See the
-  documentation of the former for more information.
+  `interface`.
+* `as_text.call()` loses arguments `strict` and `validate` following the
+  new `interface` mechanism of `find_source()`. It was rewritten accordingly.
+* `translate()` is removed and replaced by the new `interface` mechanism of
+  `find_source()`. See the documentation of the latter for more information.
 
 ## New Features
 
@@ -39,14 +41,15 @@
   `Translator$translate()` and `Translator$get_translation()` return when
   there is no translation.
 * Documentation of `find_source()` and class `Translator` is now more thorough.
-  There were several changes to the package's documentation overall.
+* Many details were added to the package's documentation overall. It was also
+  simplified whenever appropriate.
 
 ## Bug Fixes
 
 * `export.Text()` and `export_translations()` now wrap lines longer than 80
-  characters automatically (and so does `serialize()` and
-  `serialize_translations()`).
-* `normalize()` now handles edge cases appropriately.
+  characters automatically via new internal function `str_wrap()`.
+  * Consequently, so does `serialize()` and `serialize_translations()`.
+* `normalize()` now handles edge cases appropriately thanks to `stringi`.
 * `format.Text()` and `format.Translator()` now escape newline characters.
 * Identifiers of serialized `Location` objects embedded into serialized `Text`
   objects are now much shorter.
