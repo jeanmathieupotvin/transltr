@@ -1,24 +1,8 @@
 # Comments for CRAN
 
-## Resubmission
-
-This is a resubmission asked by CRAN reviewer Benjamin Altmann
-(<benjamin.altmann@wu.ac.at>). Many thanks to him for reviewing the
-first release of the package.
-
-This version introduces the following changes (the official version was left
-as is in file `DESCRIPTION`).
-
-* Examples for unexported functions were removed, along with calls to `:::`
-  in other examples.
-
-* All `\dontrun` and `\donttest` directives were removed from `man` pages.
-
-* Examples were benchmarked (locally) to ensure they can be executed in less
-  than 5 seconds (per individual `man` page).
-
-* This file was updated accordingly with the latest results stemming from
-  `R CMD check`.
+* This is the first submission of version `0.1.0` of package `transltr`.
+* There are no reverse dependency. I still performed required checks using
+  package `revdepcheck`.
 
 ## Results of R CMD check
 
@@ -28,14 +12,15 @@ as is in file `DESCRIPTION`).
 devtools::check(remote = TRUE, manual = TRUE)
 ```
 
+**0 errors | 0 warnings | 1 note**
+
 ```
-checking CRAN incoming feasibility ... [3s/18s] NOTE
+❯ checking CRAN incoming feasibility ... [3s/17s] NOTE
   Maintainer: ‘Jean-Mathieu Potvin <jeanmathieupotvin@ununoctium.dev>’
 
-  New submission
+  Unknown, possibly misspelled, fields in DESCRIPTION:
+    ‘Roadmap’
 ```
-
-0 errors | 0 warnings | 1 note
 
 ### R win-builder
 
@@ -43,13 +28,14 @@ checking CRAN incoming feasibility ... [3s/18s] NOTE
 devtools::check_win_devel()
 ```
 
-0 errors | 0 warnings | 1 note
+**0 errors | 0 warnings | 1 note**
 
 ```
-* checking CRAN incoming feasibility ... NOTE
+* checking CRAN incoming feasibility ... [56s] NOTE
 Maintainer: 'Jean-Mathieu Potvin <jeanmathieupotvin@ununoctium.dev>'
 
-New submission
+Unknown, possibly misspelled, fields in DESCRIPTION:
+  'Roadmap'
 ```
 
 ### R mac-builder
@@ -58,10 +44,6 @@ New submission
 devtools::check_mac_release()
 ```
 
-Status: OK
+**0 errors | 0 warnings | 0 note**
 
-### Comments
-
-* This is a first release.
-* PDF manual contains some necessary non-ASCII characters such as `ç`, `ñ`,
-  and `¡`. They did not generate an error when building the manual.
+**Status: OK**
