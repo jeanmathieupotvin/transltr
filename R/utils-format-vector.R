@@ -16,33 +16,33 @@
 #'
 #' @param x A [vector][vector()] of any [atomic][vector()] mode, a
 #'   [list][list()], or a [pairlist][pairlist()]. It can be empty
-#'   and it can contain [NA][base::NA] values.
+#'   and it can contain NA values.
 #'
-#' @param label A `NULL`, or a non-empty and non-[NA][base::NA] character
-#'   string. A (top) descriptive label for `x`. It is used to preserve,
-#'   and output all names in recursive calls. The value passed to `label`
-#'   is considered to be at `level` 0, and is not indented.
+#' @param label A `NULL`, or a non-empty and non-NA character string. A top
+#'   descriptive label for `x`. It is used to preserve, and output all names
+#'   in recursive calls. The value passed to `label` is considered to be at
+#'   `level` 0, and is not indented.
 #'
-#' @param level A non-[NA][base::NA] integer value. The current depth, or
-#'   current *nesting level* to use for indentation purposes.
+#' @param level A non-NA integer value. The current depth, or current
+#'   *nesting level* to use for indentation purposes.
 #'
-#' @param indent A non-[NA][base::NA] integer value. The number of single
-#'   space(s) to use for each `level` when indenting name/value pairs.
+#' @param indent A non-NA integer value. The number of single space(s) to use
+#'   for each `level` when indenting name/value pairs.
 #'
-#' @param fill_names A non-[NA][base::NA] logical value. Should `NULL` and
-#'   empty names be replaced by names created from the elements' underlying
-#'   positions? Positions are relative to each `level`.
+#' @param fill_names A non-NA logical value. Should `NULL` and empty names
+#'   be replaced by names created from the elements' underlying positions?
+#'   Positions are relative to each `level`.
 #'
-#' @param null A non-empty and non-[NA][base::NA] character string. The value
-#'   to use to represent `NULL` and empty parlists (they are conceptually the
-#'   same thing).
+#' @param null A non-empty and non-NA character string. The value to use to
+#'   represent `NULL` and empty parlists (they are conceptually the same thing).
 #'
-#' @param empty A non-empty and non-[NA][base::NA] character string. The
-#'   value to use to represent empty vectors, excluding `NULL`. See `null`
-#'   above for the latter. The [type][typeof()] of the underlying empty
-#'   object is added to `empty` for convenience. See Examples below.
+#' @param empty A non-empty and non-NA character string. The value to use to
+#'   represent empty vectors, excluding `NULL`. See `null` above for the latter.
+#'   The [type][typeof()] of the underlying empty object is added to `empty`
+#'   for convenience. See Examples below.
 #'
-#' @template param-validate
+#' @param validate A non-NA logical value. Should the arguments be validated
+#'   before being used? This argument should be left as is.
 #'
 #' @returns
 #' A character vector, possibly trimmed by [str_trim()].
@@ -59,8 +59,8 @@ format_vector <- function(
     level      = 0L,
     indent     = 1L,
     fill_names = FALSE,
-    null       = constant("null"),
-    empty      = constant("empty"),
+    null       = "<null>",
+    empty      = "<empty>",
     validate   = TRUE)
 {
     assert_lgl1(validate)
@@ -107,10 +107,10 @@ format_vector <- function(
         # Print element in a (more) semantic way.
         i_x <- if (is.null(i_x)) {
             # Print NULL (and empty pairlists)
-            # as a litteral character string.
+            # as a literal character string.
             null
         } else if (!length(i_x)) {
-            # Print other empty objects as litteral
+            # Print other empty objects as literal
             # character strings that state their
             # emptiness and their type.
             sprintf("%s [%s]", empty, typeof(i_x))

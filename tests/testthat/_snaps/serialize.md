@@ -46,7 +46,7 @@
       Translations: ~
       Locations:
         - !<Location>
-          Identifier: test-id:a
+          Identifier: test-id:l1
           Path: a
           Ranges: Ln 1, Col 2 @ Ln 3, Col 4
 
@@ -73,7 +73,7 @@
           Translations: ~
           Locations:
             - !<Location>
-              Identifier: 256e0d7:a
+              Identifier: 256e0d7:l1
               Path: a
               Ranges: Ln 1, Col 2 @ Ln 3, Col 4
         - !<Text>
@@ -85,9 +85,40 @@
           Translations: ~
           Locations:
             - !<Location>
-              Identifier: 2ac373a:b
+              Identifier: 2ac373a:l1
               Path: b
               Ranges: Ln 5, Col 6 @ Ln 7, Col 8
+
+# serialize() wraps long source text and translations
+
+    Code
+      cat(serialize(tr, set_translations = TRUE))
+    Output
+      !<Translator>
+      Identifier: test-translator
+      Algorithm: sha1
+      Languages:
+        en: English
+        fr: Français
+      Texts:
+        - !<Text>
+          Identifier: 818e96e
+          Algorithm: sha1
+          Hash: 818e96e5345d91681d5c34f26d4fd3f1846beb6a
+          Source Language: en
+          Source Text: |-
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text ever
+            since the 1500s, when an unknown printer took a galley of type and
+            scrambled it to make a type specimen book.
+          Translations:
+            fr: |-
+              Le Lorem Ipsum est simplement du faux texte employé dans la composition
+              et la mise en page avant impression. Le Lorem Ipsum est le faux texte
+              standard de l'imprimerie depuis les années 1500, quand un imprimeur
+              anonyme assembla ensemble des morceaux de texte pour réaliser un livre
+              spécimen de polices de texte.
+          Locations: []
 
 # export_translations() validates lang
 
@@ -194,6 +225,42 @@
       :: Translations: 2ac373a: Translation
       
       Au revoir, monde! 
+
+# serialize_translations() wraps long source texts and translations
+
+    Code
+      cat(serialize_translations(tr, "fr"), "\n")
+    Output
+      :: Identifier
+      
+      test-translator:translations:fr
+      
+      :: Language Code
+      
+      fr
+      
+      :: Language
+      
+      Français
+      
+      :: Source Language
+      
+      English
+      
+      :: Translations: 818e96e: Source Text
+      
+      Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+      Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+      when an unknown printer took a galley of type and scrambled it to make a type
+      specimen book.
+      
+      :: Translations: 818e96e: Translation
+      
+      Le Lorem Ipsum est simplement du faux texte employé dans la composition et la
+      mise en page avant impression. Le Lorem Ipsum est le faux texte standard de
+      l'imprimerie depuis les années 1500, quand un imprimeur anonyme assembla
+      ensemble des morceaux de texte pour réaliser un livre spécimen de polices de
+      texte. 
 
 # format_errors() validates errors
 

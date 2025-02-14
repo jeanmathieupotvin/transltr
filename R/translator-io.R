@@ -26,7 +26,7 @@
 #' There are two requirements.
 #'
 #'   * All files must be stored in the same directory. By default, this is set
-#'     equal to `inst/transltr/` (see `getOption("transltr.default.path")`).
+#'     equal to `inst/transltr/` (see `getOption("transltr.path")`).
 #'   * Filenames of translations files are standardized and must correspond to
 #'     languages (language codes, see `lang`).
 #'
@@ -45,8 +45,8 @@
 #' a set of translations sharing the same target language. This format attempts
 #' to be as simple as possible for non-technical collaborators.
 #'
-#' @param path A non-empty and non-[NA][base::NA] character string. A path to
-#'   a file to read from, or write to.
+#' @param path A non-empty and non-NA character string. A path to a file to
+#'   read from, or write to.
 #'
 #'   * This file must be a Translator file for [translator_read()].
 #'   * This file must be a translations file for [translations_read()].
@@ -62,15 +62,15 @@
 #'   will read translations and further register them (as long as they
 #'   correspond to an existing source text).
 #'
-#' @param overwrite A non-[NA][base::NA] logical value. Should existing
-#'   files be overwritten? If such files are detected and `overwrite` is
-#'   set equal to `TRUE`, an error is thrown.
+#' @param overwrite A non-NA logical value. Should existing files be
+#'   overwritten? If such files are detected and `overwrite` is set equal
+#'   to `TRUE`, an error is thrown.
 #'
-#' @param translations A non-[NA][base::NA] logical value. Should translations
-#'   files also be read, or written along with `path` (the Translator file)?
+#' @param translations A non-NA logical value. Should translations files also
+#'   be read, or written along with `path` (the Translator file)?
 #'
-#' @param parent_dir A non-empty and non-[NA][base::NA] character string. A
-#'   path to a parent directory.
+#' @param parent_dir A non-empty and non-NA character string. A path to a
+#'   parent directory.
 #'
 #' @template param-encoding
 #'
@@ -146,9 +146,9 @@
 #' @rdname translator-io
 #' @export
 translator_read <- function(
-    path         = getOption("transltr.default.path"),
+    path         = getOption("transltr.path"),
     encoding     = "UTF-8",
-    verbose      = TRUE,
+    verbose      = getOption("transltr.verbose", TRUE),
     translations = TRUE)
 {
     assert_lgl1(verbose)
@@ -199,9 +199,9 @@ translator_read <- function(
 #' @export
 translator_write <- function(
     tr           = translator(),
-    path         = getOption("transltr.default.path"),
+    path         = getOption("transltr.path"),
     overwrite    = FALSE,
-    verbose      = TRUE,
+    verbose      = getOption("transltr.verbose", TRUE),
     translations = TRUE)
 {
     assert_chr1(path)
@@ -237,7 +237,7 @@ translator_write <- function(
     comments <- c(
         "# Translator",
         "#",
-        "# - You may edit fields Identifier, and Languages.",
+        "# - You may edit fields Identifier and Languages.",
         "# - Do not edit other fields by hand. Edit source scripts instead.",
         "%YAML 1.1",
         "---")
@@ -259,10 +259,12 @@ translations_write <- function(tr = translator(), path = "", lang = "") {
     comments <- c(
         "# Translations",
         "#",
-        "# - Edit each 'Translation' section below.",
+        "# - Edit each 'Translation' subsection below.",
+        "# - Do not edit 'Source Text' subsections.",
         "# - Choose UTF-8 whenever you have to select a character encoding.",
         "# - You may use any text editor.",
         "# - You may split long sentences with single new lines.",
+        "# - You may separate paragraphs by leaving a blank line between them.",
         "# - You may include comments.",
         "#   - What follows an octothorpe (#) is ignored until the next line.",
         "#   - An escaped octothorpe (\\#) is treated as normal text.",
@@ -276,7 +278,7 @@ translations_write <- function(tr = translator(), path = "", lang = "") {
 #' @export
 translations_paths <- function(
     tr         = translator(),
-    parent_dir = dirname(getOption("transltr.default.path")))
+    parent_dir = dirname(getOption("transltr.path")))
 {
     assert_chr1(parent_dir)
 

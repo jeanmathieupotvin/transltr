@@ -35,9 +35,7 @@ tr2 <- translator(
 hash_compress   <- tr1$.__enclos_env__$private$.hash_reduce
 hash_decompress <- tr1$.__enclos_env__$private$.hash_expand
 
-
 # Class: active bindings -------------------------------------------------------
-
 
 test_that("active binding id returns id", {
     expect_identical(tr1$id, "test-translator")
@@ -156,9 +154,7 @@ test_that("active binding native_languages validates value", {
     expect_snapshot(tr1$native_languages <- "error", error = TRUE)
 })
 
-
 # Class: private methods -------------------------------------------------------
-
 
 test_that("$.hash_reduce() works", {
     hashes <- c("256e0d707386d0", "2ac373aa699a67")
@@ -181,9 +177,7 @@ test_that("$.hash_expand() returns <notfound> if hash has no match", {
     expect_identical(hash_decompress("test-hash"), "<notfound>")
 })
 
-
 # Class: public methods --------------------------------------------------------
-
 
 test_that("$initialize() works", {
     # It can only be tested indirectly via $new().
@@ -197,8 +191,7 @@ test_that("$initialize() works", {
 })
 
 test_that("$translate() returns a character string if translation is available", {
-    # By design, this also checks that
-    # inputs are hashed accordingly.
+    # By design, this also checks that inputs are hashed accordingly.
     expect_identical(tr1$translate("Hello, world!",    lang = "en"), "Hello, world!")
     expect_identical(tr1$translate("Hello, world!",    lang = "fr"), "Bonjour, monde!")
     expect_identical(tr2$translate("Hello, world!",    lang = "el"), "Γεια σου, Κόσμος!")
@@ -282,6 +275,31 @@ test_that("$set_texts() validates ...", {
     })
 })
 
+test_that("$rm_text() returns null invisibly", {
+    tr <- test_translator()
+    expect_null(tr$rm_text("256e0d7"))
+    expect_invisible(tr$rm_text("2ac373a"))
+})
+
+test_that("$rm_text() throws an error if there are no Text objects to remove", {
+    expect_error(Translator$new()$rm_text("error"))
+    expect_snapshot(Translator$new()$rm_text("error"), error = TRUE)
+})
+
+test_that("$rm_text() validates hash", {
+    expect_error(tr1$rm_text(1L))
+    expect_error(tr1$rm_text("error"))
+    expect_snapshot(tr1$rm_text(1L),      error = TRUE)
+    expect_snapshot(tr1$rm_text("error"), error = TRUE)
+})
+
+test_that("$rm_text() removes Text objects as expected", {
+    tr <- test_translator()
+    tr$rm_text("256e0d7")
+    expect_length(tr$hashes, 1L)
+    expect_identical(tr$hashes, c(`2ac373a` = "2ac373aa699a6712cdaddbead28031d537de29bc"))
+})
+
 test_that("$set_native_languages() returns null invisibly", {
     tr <- Translator$new()
 
@@ -322,34 +340,29 @@ test_that("$set_native_languages() validates ...", {
     expect_snapshot(tr1$set_native_languages("English"), error = TRUE)
 })
 
-test_that("$rm_text() returns null invisibly", {
-    tr <- test_translator()
-    expect_null(tr$rm_text("256e0d7"))
-    expect_invisible(tr$rm_text("2ac373a"))
+test_that("$set_default_value() returns null invisibly", {
+    tr <- Translator$new()
+
+    expect_null(tr$set_default_value())
+    expect_invisible(tr$set_default_value())
 })
 
-test_that("$rm_text() throws an error if there are no Text objects to remove", {
-    expect_error(Translator$new()$rm_text("error"))
-    expect_snapshot(Translator$new()$rm_text("error"), error = TRUE)
+test_that("$set_default_value() validates value if not null", {
+    tr <- Translator$new()
+
+    expect_error(tr$set_default_value(1L))
+    expect_snapshot(tr$set_default_value(1L), error = TRUE)
 })
 
-test_that("$rm_text() validates hash", {
-    expect_error(tr1$rm_text(1L))
-    expect_error(tr1$rm_text("error"))
-    expect_snapshot(tr1$rm_text(1L),      error = TRUE)
-    expect_snapshot(tr1$rm_text("error"), error = TRUE)
-})
+test_that("$set_default_value() registers default value", {
+    tr <- Translator$new()
+    tr$set_default_value("test-value")
 
-test_that("$rm_text() removes Text objects as expected", {
-    tr <- test_translator()
-    tr$rm_text("256e0d7")
-    expect_length(tr$hashes, 1L)
-    expect_identical(tr$hashes, c(`2ac373a` = "2ac373aa699a6712cdaddbead28031d537de29bc"))
+    expect_identical(tr$translate("Unavailable text."),       "test-value")
+    expect_identical(tr$get_translation("Unavailable text."), "test-value")
 })
-
 
 # translator() -----------------------------------------------------------------
-
 
 test_that("translator() returns an R6 object of class Translator", {
     tr <- translator(
@@ -386,18 +399,14 @@ test_that("translator() throws a warning if a language does not have a correspon
             text(en = "Hello, world!", fr = "Bonjour, monde!")))
 })
 
-
 # is_translator() --------------------------------------------------------------
-
 
 test_that("is_translator() works", {
     expect_true(is_translator(Translator$new()))
     expect_false(is_translator(1L))
 })
 
-
 # format.Translator() ----------------------------------------------------------
-
 
 test_that("format() returns a character", {
     # This test block is a little bit
@@ -415,7 +424,7 @@ test_that("format() returns a character", {
         " Languages:",
         "  en: English",
         "  fr: Français",
-        " Source Texts:",
+        " Source Text:",
         "  256e0d7 [en, fr]: Hello, world!",
         "  2ac373a [en, fr]: Farewell, world!"))
 
@@ -426,12 +435,19 @@ test_that("format() returns a character", {
         " Identifier: test-translator",
         " Algorithm: sha1",
         " Languages: <null>",
-        " Source Texts: <null>"))
+        " Source Text: <null>"))
 })
 
+test_that("format() escapes newlines", {
+    tr <- Translator$new(id = "test-translator")
+    tr$set_text(en = "Hello,\n\nworld!")
+    out <- format(tr)
+
+    expect_match(out[[6L]], r"{\\n\\n}")
+    expect_snapshot(print(tr))
+})
 
 # print.Translator() -----------------------------------------------------------
-
 
 test_that("print() works", {
     expect_output(print(tr1))

@@ -26,9 +26,7 @@ txt2 <- text(
 
 translate_call <- call("translate")
 
-
 # Class: active bindings -------------------------------------------------------
-
 
 test_that("active binding hash returns hash", {
     expect_identical(txt1$hash, "256e0d707386d0fcd9abf10ad994000bdaa25812")
@@ -123,9 +121,7 @@ test_that("active binding locations throws an error if value is not missing", {
     expect_snapshot(txt1$locations <- location(), error = TRUE)
 })
 
-
 # Class: public methods --------------------------------------------------------
-
 
 test_that("$initialize() works", {
     # It can only be tested indirectly via $new().
@@ -247,9 +243,7 @@ test_that("$rm_location() removes locations as expected", {
     expect_identical(txt$locations, list(b = location("b", 5L, 6L, 7L, 8L)))
 })
 
-
 # text() -----------------------------------------------------------------------
-
 
 test_that("text() returns an R6 object of class Text", {
     txt <- text(
@@ -281,18 +275,14 @@ test_that("text() checks that there is at least one translation corresponding to
     expect_snapshot(text(), error = TRUE)
 })
 
-
 # is_text() --------------------------------------------------------------------
-
 
 test_that("is_text() works", {
     expect_true(is_text(Text$new()))
     expect_false(is_text(1L))
 })
 
-
 # format.Text() ----------------------------------------------------------------
-
 
 test_that("format() returns a character", {
     # This test block is a little bit
@@ -359,9 +349,18 @@ test_that("format() sets names of locations equal to base names", {
     expect_snapshot(print(txt))
 })
 
+test_that("format() escapes newlines", {
+    txt <- text(
+        en = "Hello,\n\nworld!",
+        el = "Γεια σου,\n\nΚόσμος!")
+    out <- format(txt)
+
+    expect_match(out[[6L]], r"{\\n\\n}")  ## el
+    expect_match(out[[7L]], r"{\\n\\n}")  ## en
+    expect_snapshot(print(txt))
+})
 
 # print.Text() -----------------------------------------------------------------
-
 
 test_that("print() works", {
     expect_output(print(txt1))
@@ -374,9 +373,7 @@ test_that("print() returns x invisibly", {
     expect_identical(print(txt1), txt1)
 })
 
-
 # c.Text() ---------------------------------------------------------------------
-
 
 test_that("c.Text() returns a Text object", {
     out <- c(txt1, txt2)
@@ -443,9 +440,7 @@ test_that("c.Text() does not mutate its arguments", {
         el = "Γεια σου, Κόσμος!"))
 })
 
-
 # merge_texts() ----------------------------------------------------------------
-
 
 test_that("merge_texts() returns a list of Text object", {
     txt <- test_text()
@@ -496,22 +491,18 @@ test_that("merge_texts() ignores Text objects with no set source language", {
         el = "Γεια σου, Κόσμος!"))
 })
 
-
 # as_text() --------------------------------------------------------------------
-
 
 test_that("as_text() works", {
     expect_s3_class(as_text(translate_call), "Text")
 })
 
-
 # as_text.call() ---------------------------------------------------------------
-
 
 test_that("as_text.call() returns a Text object", {
     txt <- as_text(
-        call("translate", "Hello,", "world!"),
-        location  = location("test"),
+        call("translate", "Hello, world!"),
+        loc       = location("test"),
         algorithm = "utf8")
 
     expect_s3_class(txt, "Text")
@@ -522,43 +513,15 @@ test_that("as_text.call() returns a Text object", {
     expect_identical(txt$locations, list(test = location("test")))
 })
 
-test_that("as_text.call() validates x", {
-    expect_error(as_text(call("text")))
-    expect_snapshot(as_text(call("text")), error = TRUE)
-})
-
-test_that("as_text.call() validates strict", {
-    expect_error(as_text(translate_call, strict = 1L))
-    expect_snapshot(as_text(translate_call, strict = 1L), error = TRUE)
-})
-
-test_that("as_text.call() validates location", {
-    expect_error(as_text(translate_call, location = 1L))
-    expect_snapshot(as_text(translate_call, location = 1L), error = TRUE)
-})
-
-test_that("as_text.call() validates validate", {
-    expect_error(as_text(translate_call, validate = 1L))
-    expect_snapshot(as_text(translate_call, validate = 1L), error = TRUE)
+test_that("as_text.call() validates loc", {
+    expect_error(as_text(translate_call, loc = 1L))
+    expect_snapshot(as_text(translate_call, loc = 1L), error = TRUE)
 })
 
 test_that("as_text.call() extracts ... from x", {
-    # The second call is used to test that named
-    # arguments passed to ... are tolerated.
-    translate_call1 <- call("translate", "Hello, ", "world!")
-    translate_call2 <- call("translate", a = "Hello", b = ", world!",
-        concat      = "",
-        source_lang = "test")
+    translate_call1 <- call("translate", "Hello,", "world!")
 
-    expect_identical(as_text(translate_call1)$source_text, "Hello, world!")
-    expect_identical(as_text(translate_call2)$source_text, "Hello, world!")
-})
-
-test_that("as_text.call() extracts concat from x or sets it if not found", {
-    translate_call1 <- call("translate", "Hello", ", world!", concat = "")
-    translate_call2 <- call("translate", "Hello,", "world!")
-    expect_identical(as_text(translate_call1)$source_text, "Hello, world!")
-    expect_identical(as_text(translate_call2)$source_text, "Hello, world!")
+    expect_identical(as_text(translate_call1)$source_text, "Hello,\n\nworld!")
 })
 
 test_that("as_text.call() extracts source_lang from x or sets it if not found", {
@@ -566,4 +529,10 @@ test_that("as_text.call() extracts source_lang from x or sets it if not found", 
     translate_call2 <- call("translate", "Hello,", "world!")
     expect_identical(as_text(translate_call1)$source_lang, "test")
     expect_identical(as_text(translate_call2)$source_lang, "en")
+})
+
+test_that("as_text.call() sets source fields only if ... is not empty", {
+    txt <- as_text(translate_call)
+    expect_null(txt$source_text)
+    expect_identical(txt$source_lang, .__STR_UNSET)
 })

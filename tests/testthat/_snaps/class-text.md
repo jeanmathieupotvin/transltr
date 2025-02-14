@@ -195,6 +195,20 @@
           Path: /absolute/path/to/source/script/d
           Ranges: Ln 5, Col 6 @ Ln 7, Col 8
 
+# format() escapes newlines
+
+    Code
+      print(txt)
+    Output
+      <Text>
+       Hash: b3f088a87ffeeccce4cf1ccc64e34419fd736ae2
+       Source Lang: en
+       Algorithm: sha1
+       Translations:
+        el: Γεια σου,\n\nΚόσμος!
+        en: Hello,\n\nworld!
+       Locations: <empty> [list]
+
 # print() works
 
     Code
@@ -262,35 +276,11 @@
       Error:
       ! 'algorithm' must be equal to 'sha1', or 'utf8'.
 
-# as_text.call() validates x
+# as_text.call() validates loc
 
     Code
-      as_text(call("text"))
+      as_text(translate_call, loc = 1L)
     Condition
       Error:
-      ! 'x' must be a 'call' object to 'transltr::translate()'.
-
-# as_text.call() validates strict
-
-    Code
-      as_text(translate_call, strict = 1L)
-    Condition
-      Error:
-      ! 'strict' must be a non-NA logical of length 1 ('TRUE' or 'FALSE').
-
-# as_text.call() validates location
-
-    Code
-      as_text(translate_call, location = 1L)
-    Condition
-      Error:
-      ! 'location' must be a 'Location' object.
-
-# as_text.call() validates validate
-
-    Code
-      as_text(translate_call, validate = 1L)
-    Condition
-      Error:
-      ! 'validate' must be a non-NA logical of length 1 ('TRUE' or 'FALSE').
+      ! 'loc' must be a 'Location' object.
 

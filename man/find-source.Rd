@@ -6,137 +6,182 @@
 \title{Find Source Text}
 \usage{
 find_source(
-  path = getwd(),
+  path = ".",
   encoding = "UTF-8",
-  strict = TRUE,
-  id = uuid(),
-  algorithm = constant("algorithms"),
-  native_languages = character(),
-  verbose = TRUE
+  verbose = getOption("transltr.verbose", TRUE),
+  tr = translator(),
+  interface = NULL
 )
 
 find_source_in_files(
   paths = character(),
   encoding = "UTF-8",
-  strict = TRUE,
-  algorithm = constant("algorithms"),
-  verbose = TRUE
+  verbose = getOption("transltr.verbose", TRUE),
+  algorithm = algorithms(),
+  interface = NULL
 )
 }
 \arguments{
-\item{path}{A non-empty and non-\link[base:NA]{NA} character string. A path to
-a directory containing \R source scripts. All subdirectories are searched.
-Files that do not have a \code{.R}, or \code{.Rprofile} extension are skipped.}
+\item{path}{A non-empty and non-NA character string. A path to a directory
+containing \R source scripts. All subdirectories are searched. Files that
+do not have a \code{.R}, or \code{.Rprofile} extension are skipped.}
 
-\item{encoding}{A non-empty and non-\link[base:NA]{NA} character string. The
-underlying source character encoding. In almost all cases, this should
-be UTF-8. Other encodings are internally re-encoded to UTF-8 for
-portability.}
+\item{encoding}{A non-empty and non-NA character string. The source character
+encoding. In almost all cases, this should be UTF-8. Other encodings are
+internally re-encoded to UTF-8 for portability.}
 
-\item{strict}{A non-\link[base:NA]{NA} logical value. Should only
-\emph{explicit calls}, i.e. \code{transltr::translate()}, be extracted? If \code{FALSE},
-calls to \emph{any} such function are extracted regardless of the underlying
-namespace, i.e. \code{translate()}.}
+\item{verbose}{A non-NA logical value. Should progress information be
+reported?}
 
-\item{id}{A non-empty and non-\link[base:NA]{NA} character string. A globally
-unique identifier for the \code{\link{Translator}} object. Beware of
-plausible collisions when using user-defined values.}
+\item{tr}{A \code{\link{Translator}} object.}
 
-\item{algorithm}{A non-empty and non-\link[base:NA]{NA} character string
-equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
-source information for identification purposes.}
+\item{interface}{A \code{\link{name}}, a \code{\link{call}} object, or a \code{NULL}.
+A reference to an alternative (custom) function used to translate text.
+If a \code{\link{call}} object is passed to \code{interface}, it \strong{must} be to
+operator \code{::}. Calls to method \code{\link[=Translator]{Translator$translate()}}
+are ignored and calls to \code{interface} are extracted instead. See Details
+below.}
 
-\item{native_languages}{A named character vector of non-empty and
-non-\link[base:NA]{NA} values. It can be empty. It is used to to construct
-a mapping of language codes to native language names. See field
-\code{\link[=Translator]{Translator$native_languages}} for more information.}
+\item{paths}{A character vector of non-empty and non-NA values. A set of
+paths to \R source scripts that must be searched.}
 
-\item{verbose}{A non-\link[base:NA]{NA} logical value. Should progress
-information be reported?}
-
-\item{paths}{A character vector of non-empty and non-\link[base:NA]{NA} values.
-A set of paths to \R source scripts that must be searched.}
+\item{algorithm}{A non-empty and non-NA character string equal to \code{"sha1"},
+or \code{"utf8"}. The algorithm to use when hashing source information for
+identification purposes.}
 }
 \value{
 \code{\link[=find_source]{find_source()}} returns an \code{\link[R6:R6Class]{R6}} object of class
-\code{\link{Translator}}.
+\code{\link{Translator}}. If an existing \code{\link{Translator}}
+object is passed to \code{tr}, it is modified in place and returned.
 
 \code{\link[=find_source_in_files]{find_source_in_files()}} returns a list of \code{\link{Text}} objects. It may
 contain duplicated elements, depending on the extracted contents.
 }
 \description{
-Find and extract source text that requires translation.
+Find and extract source text that must be translated.
 }
 \details{
-\code{\link[=find_source]{find_source()}} and \code{\link[=find_source_in_files]{find_source_in_files()}} look for calls to \code{\link[=translate]{translate()}}
-in \R scripts and convert them to \code{\link{Text}} objects via \code{\link[=as_text]{as_text()}}.
+\code{\link[=find_source]{find_source()}} and \code{\link[=find_source_in_files]{find_source_in_files()}} look for calls to method
+\code{\link[=Translator]{Translator$translate()}} in \R scripts and convert them
+to \code{\link{Text}} objects. The former further sets these resulting
+objects into a \code{\link{Translator}} object. See argument \code{tr}.
 
-\code{\link[=find_source]{find_source()}} further constructs a \code{\link{Translator}} object from
-the set of \code{\link{Text}} objects. It can later be exported and imported
-via \code{\link[=translator_write]{translator_write()}} and \code{\link[=translator_read]{translator_read()}} respectively.
+\code{\link[=find_source]{find_source()}} and \code{\link[=find_source_in_files]{find_source_in_files()}} work on a purely lexical basis.
+The source code is parsed but never evaluated (aside from extracted literal
+character vectors).
+\itemize{
+\item The underlying \code{\link{Translator}} object is never evaluated and
+does not need to exist (placeholders may be used in the source code).
+\item Only \strong{literal} character vectors can be passed to arguments of
+method \code{\link[=Translator]{Translator$translate()}}.
+}
+\subsection{Interfaces}{
+
+In some cases, it may not be desirable to call method
+\code{\link[=Translator]{Translator$translate()}} directly. A custom function wrapping
+(\emph{interfacing}) this method may always be used as long as it has the same
+\href{https://en.wikipedia.org/wiki/Type_signature}{signature} as method
+\code{\link[=Translator]{Translator$translate()}}. In other words, it must minimally
+have two formal arguments: \code{...} and \code{source_lang}.
+
+Custom interfaces must be passed to \code{\link[=find_source]{find_source()}} and
+\code{\link[=find_source_in_files]{find_source_in_files()}} for extraction purposes. Since these functions work
+on a lexical basis, interfaces can be placeholders in the source code (non-
+existent bindings) at the time these functions are called. However, they must
+be bound to a function (ultimately) calling \code{\link[=Translator]{Translator$translate()}}
+at runtime.
+
+Custom interfaces are passed to \code{\link[=find_source]{find_source()}} and \code{\link[=find_source_in_files]{find_source_in_files()}}
+as \code{\link{name}} or \code{\link{call}} objects in a variety of ways. The most
+straightforward way is to use \code{\link[base:substitute]{base::quote()}}. See Examples below.
+}
+
 \subsection{Methodology}{
 
-Extracting source text from source code involves performing usual parsing
-operations. \code{\link[=find_source]{find_source()}} and \code{\link[=find_source_in_files]{find_source_in_files()}} go through these
-steps to extract source text from a single \R script.
+\code{\link[=find_source]{find_source()}} and \code{\link[=find_source_in_files]{find_source_in_files()}} go through these steps to
+extract source text from a single \R script.
 \enumerate{
-\item It is read with \code{\link[=text_read]{text_read()}}.
+\item It is read with \code{\link[=text_read]{text_read()}} and re-encoded to UTF-8 if necessary.
 \item It is parsed with \code{\link[=parse]{parse()}} and underlying tokens are extracted from
 parsed expressions with \code{\link[utils:getParseData]{utils::getParseData()}}.
-\item Each expression token (\code{expr}) is converted to language objects with
+\item Each expression (\code{expr}) token is converted to language objects with
 \code{\link[=str2lang]{str2lang()}}. Parsing errors and invalid expressions are silently
 skipped.
 \item Valid \code{\link[=call]{call}} objects stemming from step 3 are filtered with
-\code{\link[=is_translate_call]{is_translate_call()}}.
-\item Calls to \code{\link[=translate]{translate()}} stemming from step 4 are coerced to
-\code{\link{Text}} objects with \code{\link[=as_text]{as_text()}}.
+\code{\link[=is_source]{is_source()}}.
+\item Calls to method \code{\link[=Translator]{Translator$translate()}} or to \code{interface}
+stemming from step 4 are coerced to \code{\link{Text}} objects with
+\code{\link[=as_text]{as_text()}}.
 }
 
-\code{\link[=find_source]{find_source()}} further constructs a \code{\link{Translator}} object from
-\code{\link{Text}} objects stemming from step 5.
+These steps are repeated for each \R script. \code{\link[=find_source]{find_source()}} further merges
+all resulting \code{\link{Text}} objects into a coherent set with \code{\link[=merge_texts]{merge_texts()}}
+(identical source code is merged into single \code{\link{Text}} entities).
+
+Extracted character vectors are always normalized for consistency (at step
+5). See \code{\link[=normalize]{normalize()}} for more information.
 }
 
 \subsection{Limitations}{
 
 The current version of \code{\link{transltr}} can only handle \strong{literal}
-character vectors. This means it cannot process values passed to argument
-\code{...} of \code{\link[=translate]{translate()}} that depends on any state at runtime. There are
-plans to lift this limitation in the future.
+character vectors. This means it cannot resolve non-trivial expressions
+that depends on a \emph{state}. All values passed to argument \code{...} of method
+\code{\link[=Translator]{Translator$translate()}} must yield character vectors
+(trivially).
 }
 }
 \examples{
-# Create a directory containing dummy R
-# scripts for illustration purposes.
+# Create a directory containing dummy R scripts for illustration purposes.
 temp_dir   <- file.path(tempdir(TRUE), "find-source")
 temp_files <- file.path(temp_dir, c("ex-script-1.R", "ex-script-2.R"))
 dir.create(temp_dir, showWarnings = FALSE, recursive = TRUE)
 
 cat(
-  "translate('Not strict: Hello, world!')",
-  "transltr::translate('Strict: Farewell, world!')",
+  "tr$translate('Hello, world!')",
+  "tr$translate('Farewell, world!')",
   sep  = "\n",
   file = temp_files[[1L]])
 cat(
-  "transltr::translate('Strict: Hello, world!')",
-  "translate('Not strict: Farewell, world!')",
+  "tr$translate('Hello, world!')",
+  "tr$translate('Farewell, world!')",
   sep  = "\n",
   file = temp_files[[2L]])
 
-# Extract explicit calls to transltr::translate()
-# from source scripts (strict = TRUE).
-find_source(temp_dir, strict = TRUE, verbose = TRUE)
-find_source_in_files(temp_files, strict = TRUE, verbose = TRUE)
+# Extract calls to method Translator$translate().
+find_source(temp_dir)
+find_source_in_files(temp_files)
 
-# Extract calls to any translate() function
-# from source scripts (strict = FALSE).
-find_source(temp_dir, strict = FALSE, verbose = TRUE)
-find_source_in_files(temp_files, strict = FALSE, verbose = TRUE)
+# Use custom functions.
+# For illustrations purposes, assume the package
+# exports an hypothetical translate() function.
+cat(
+  "translate('Hello, world!')",
+  "transtlr::translate('Farewell, world!')",
+  sep  = "\n",
+  file = temp_files[[1L]])
+cat(
+  "translate('Hello, world!')",
+  "transltr::translate('Farewell, world!')",
+  sep  = "\n",
+  file = temp_files[[2L]])
+
+# Extract calls to translate() and transltr::translate().
+# Since find_source() and find_source_in_files() work on
+# a lexical basis, these are always considered to be two
+# distinct functions. They also don't need to exist in the
+# R session calling find_source() and find_source_in_files().
+find_source(temp_dir, interface = quote(translate))
+find_source_in_files(temp_files, interface = quote(transltr::translate))
 
 }
 \seealso{
 \code{\link{Translator}},
 \code{\link{Text}},
-\code{\link[=translate]{translate()}},
+\code{\link[=normalize]{normalize()}},
 \code{\link[=translator_read]{translator_read()}},
-\code{\link[=translator_write]{translator_write()}}
+\code{\link[=translator_write]{translator_write()}},
+\code{\link[base:substitute]{base::quote()}},
+\code{\link[base:call]{base::call()}},
+\code{\link[base:name]{base::as.name()}}
 }

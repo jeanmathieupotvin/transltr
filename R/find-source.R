@@ -1,66 +1,95 @@
 #' Find Source Text
 #'
-#' Find and extract source text that requires translation.
+#' Find and extract source text that must be translated.
 #'
-#' [find_source()] and [find_source_in_files()] look for calls to [translate()]
-#' in \R scripts and convert them to [`Text`][Text] objects via [as_text()].
+#' @details
+#' [find_source()] and [find_source_in_files()] look for calls to method
+#' [`Translator$translate()`][Translator] in \R scripts and convert them
+#' to [`Text`][Text] objects. The former further sets these resulting
+#' objects into a [`Translator`][Translator] object. See argument `tr`.
 #'
-#' [find_source()] further constructs a [`Translator`][Translator] object from
-#' the set of [`Text`][Text] objects. It can later be exported and imported
-#' via [translator_write()] and [translator_read()] respectively.
+#' [find_source()] and [find_source_in_files()] work on a purely lexical basis.
+#' The source code is parsed but never evaluated (aside from extracted literal
+#' character vectors).
+#'
+#'   * The underlying [`Translator`][Translator] object is never evaluated and
+#'     does not need to exist (placeholders may be used in the source code).
+#'   * Only **literal** character vectors can be passed to arguments of
+#'     method [`Translator$translate()`][Translator].
+#'
+#' ## Interfaces
+#'
+#' In some cases, it may not be desirable to call method
+#' [`Translator$translate()`][Translator] directly. A custom function wrapping
+#' (*interfacing*) this method may always be used as long as it has the same
+#' [signature](https://en.wikipedia.org/wiki/Type_signature) as method
+#' [`Translator$translate()`][Translator]. In other words, it must minimally
+#' have two formal arguments: `...` and `source_lang`.
+#'
+#' Custom interfaces must be passed to [find_source()] and
+#' [find_source_in_files()] for extraction purposes. Since these functions work
+#' on a lexical basis, interfaces can be placeholders in the source code (non-
+#' existent bindings) at the time these functions are called. However, they must
+#' be bound to a function (ultimately) calling [`Translator$translate()`][Translator]
+#' at runtime.
+#'
+#' Custom interfaces are passed to [find_source()] and [find_source_in_files()]
+#' as [`name`][name] or [`call`][call] objects in a variety of ways. The most
+#' straightforward way is to use [base::quote()]. See Examples below.
 #'
 #' ## Methodology
 #'
-#' Extracting source text from source code involves performing usual parsing
-#' operations. [find_source()] and [find_source_in_files()] go through these
-#' steps to extract source text from a single \R script.
+#' [find_source()] and [find_source_in_files()] go through these steps to
+#' extract source text from a single \R script.
 #'
-#'   1. It is read with [text_read()].
+#'   1. It is read with [text_read()] and re-encoded to UTF-8 if necessary.
 #'   2. It is parsed with [parse()] and underlying tokens are extracted from
 #'      parsed expressions with [utils::getParseData()].
-#'   3. Each expression token (`expr`) is converted to language objects with
+#'   3. Each expression (`expr`) token is converted to language objects with
 #'      [str2lang()]. Parsing errors and invalid expressions are silently
 #'      skipped.
 #'   4. Valid [`call`][call()] objects stemming from step 3 are filtered with
-#'      [is_translate_call()].
-#'   5. Calls to [translate()] stemming from step 4 are coerced to
-#'      [`Text`][Text] objects with [as_text()].
+#'      [is_source()].
+#'   5. Calls to method [`Translator$translate()`][Translator] or to `interface`
+#'      stemming from step 4 are coerced to [`Text`][Text] objects with
+#'      [as_text()].
 #'
-#' [find_source()] further constructs a [`Translator`][Translator] object from
-#' [`Text`][Text] objects stemming from step 5.
+#' These steps are repeated for each \R script. [find_source()] further merges
+#' all resulting [`Text`][Text] objects into a coherent set with [merge_texts()]
+#' (identical source code is merged into single [`Text`][Text] entities).
+#'
+#' Extracted character vectors are always normalized for consistency (at step
+#' 5). See [normalize()] for more information.
 #'
 #' ## Limitations
 #'
 #' The current version of [`transltr`][transltr] can only handle **literal**
-#' character vectors. This means it cannot process values passed to argument
-#' `...` of [translate()] that depends on any state at runtime. There are
-#' plans to lift this limitation in the future.
+#' character vectors. This means it cannot resolve non-trivial expressions
+#' that depends on a *state*. All values passed to argument `...` of method
+#' [`Translator$translate()`][Translator] must yield character vectors
+#' (trivially).
 #'
-#' @param path A non-empty and non-[NA][base::NA] character string. A path to
-#'   a directory containing \R source scripts. All subdirectories are searched.
-#'   Files that do not have a `.R`, or `.Rprofile` extension are skipped.
+#' @param path A non-empty and non-NA character string. A path to a directory
+#'   containing \R source scripts. All subdirectories are searched. Files that
+#'   do not have a `.R`, or `.Rprofile` extension are skipped.
 #'
-#' @param paths A character vector of non-empty and non-[NA][base::NA] values.
-#'   A set of paths to \R source scripts that must be searched.
+#' @param paths A character vector of non-empty and non-NA values. A set of
+#'   paths to \R source scripts that must be searched.
 #'
-#' @param native_languages A named character vector of non-empty and
-#'   non-[NA][base::NA] values. It can be empty. It is used to to construct
-#'   a mapping of language codes to native language names. See field
-#'   [`Translator$native_languages`][Translator] for more information.
+#' @param tr A [`Translator`][Translator] object.
 #'
 #' @template param-encoding
-#'
-#' @template param-strict
-#'
-#' @template param-id
 #'
 #' @template param-algorithm
 #'
 #' @template param-verbose
 #'
+#' @template param-interface
+#'
 #' @returns
 #' [find_source()] returns an [`R6`][R6::R6] object of class
-#' [`Translator`][Translator].
+#' [`Translator`][Translator]. If an existing [`Translator`][Translator]
+#' object is passed to `tr`, it is modified in place and returned.
 #'
 #' [find_source_in_files()] returns a list of [`Text`][Text] objects. It may
 #' contain duplicated elements, depending on the extracted contents.
@@ -68,55 +97,72 @@
 #' @seealso
 #' [`Translator`][Translator],
 #' [`Text`][Text],
-#' [translate()],
+#' [normalize()],
 #' [translator_read()],
-#' [translator_write()]
+#' [translator_write()],
+#' [base::quote()],
+#' [base::call()],
+#' [base::as.name()]
 #'
 #' @examples
-#' # Create a directory containing dummy R
-#' # scripts for illustration purposes.
+#' # Create a directory containing dummy R scripts for illustration purposes.
 #' temp_dir   <- file.path(tempdir(TRUE), "find-source")
 #' temp_files <- file.path(temp_dir, c("ex-script-1.R", "ex-script-2.R"))
 #' dir.create(temp_dir, showWarnings = FALSE, recursive = TRUE)
 #'
 #' cat(
-#'   "translate('Not strict: Hello, world!')",
-#'   "transltr::translate('Strict: Farewell, world!')",
+#'   "tr$translate('Hello, world!')",
+#'   "tr$translate('Farewell, world!')",
 #'   sep  = "\n",
 #'   file = temp_files[[1L]])
 #' cat(
-#'   "transltr::translate('Strict: Hello, world!')",
-#'   "translate('Not strict: Farewell, world!')",
+#'   "tr$translate('Hello, world!')",
+#'   "tr$translate('Farewell, world!')",
 #'   sep  = "\n",
 #'   file = temp_files[[2L]])
 #'
-#' # Extract explicit calls to transltr::translate()
-#' # from source scripts (strict = TRUE).
-#' find_source(temp_dir, strict = TRUE, verbose = TRUE)
-#' find_source_in_files(temp_files, strict = TRUE, verbose = TRUE)
+#' # Extract calls to method Translator$translate().
+#' find_source(temp_dir)
+#' find_source_in_files(temp_files)
 #'
-#' # Extract calls to any translate() function
-#' # from source scripts (strict = FALSE).
-#' find_source(temp_dir, strict = FALSE, verbose = TRUE)
-#' find_source_in_files(temp_files, strict = FALSE, verbose = TRUE)
+#' # Use custom functions.
+#' # For illustrations purposes, assume the package
+#' # exports an hypothetical translate() function.
+#' cat(
+#'   "translate('Hello, world!')",
+#'   "transtlr::translate('Farewell, world!')",
+#'   sep  = "\n",
+#'   file = temp_files[[1L]])
+#' cat(
+#'   "translate('Hello, world!')",
+#'   "transltr::translate('Farewell, world!')",
+#'   sep  = "\n",
+#'   file = temp_files[[2L]])
+#'
+#' # Extract calls to translate() and transltr::translate().
+#' # Since find_source() and find_source_in_files() work on
+#' # a lexical basis, these are always considered to be two
+#' # distinct functions. They also don't need to exist in the
+#' # R session calling find_source() and find_source_in_files().
+#' find_source(temp_dir, interface = quote(translate))
+#' find_source_in_files(temp_files, interface = quote(transltr::translate))
 #'
 #' @rdname find-source
 #' @export
 find_source <- function(
-    path             = getwd(),
-    encoding         = "UTF-8",
-    strict           = TRUE,
-    id               = uuid(),
-    algorithm        = constant("algorithms"),
-    native_languages = character(),
-    verbose          = TRUE)
+    path      = ".",
+    encoding  = "UTF-8",
+    verbose   = getOption("transltr.verbose", TRUE),
+    tr        = translator(),
+    interface = NULL)
 {
     assert_chr1(path)
-    assert_chr(native_languages, TRUE)
-    assert_named(native_languages)
 
-    if (!utils::file_test("-d", path <- normalizePath(path, mustWork = FALSE))) {
+    if (!utils::file_test("-d", normalizePath(path, mustWork = FALSE))) {
         stops("'path' does not exist or is not a directory.")
+    }
+    if (!is_translator(tr)) {
+        stops("'tr' must be a 'Translator' object.")
     }
 
     paths <- list.files(
@@ -129,13 +175,14 @@ find_source <- function(
         include.dirs = TRUE,
         no..         = TRUE)
 
-    texts <- find_source_in_files(paths, encoding, strict, algorithm, verbose)
-    trans <- Translator$new(id, algorithm)
+    texts <- find_source_in_files(paths,
+        encoding  = encoding,
+        verbose   = verbose,
+        algorithm = tr$algorithm,
+        interface = interface)
 
-    storage.mode(native_languages) <- "list"
-    do.call(trans$set_native_languages, native_languages)
-    do.call(trans$set_texts, texts)
-    return(trans)
+    do.call(tr$set_texts, texts)
+    return(tr)
 }
 
 #' @rdname find-source
@@ -143,15 +190,28 @@ find_source <- function(
 find_source_in_files <- function(
     paths     = character(),
     encoding  = "UTF-8",
-    strict    = TRUE,
-    algorithm = constant("algorithms"),
-    verbose   = TRUE)
+    verbose   = getOption("transltr.verbose", TRUE),
+    algorithm = algorithms(),
+    interface = NULL)
 {
     assert_chr(paths)
-    assert_lgl1(strict)
-    assert_arg(algorithm, TRUE)
     assert_lgl1(verbose)
+    assert_arg(algorithm, TRUE)
 
-    texts <- lapply(paths, find_source_in_file, encoding, strict, algorithm, verbose)
+    if (!is.null(interface) &&
+        !is.name(interface) && (
+        !is.call(interface) ||
+        !identical(interface[[1L]], quote(`::`)))) {
+        stops(
+            "'interface' must be a 'name', a 'call' object, or 'NULL'.\n",
+            "Calls must be to operator `::`, i.e. 'pkg::fun'.")
+    }
+
+    texts <- lapply(paths, find_source_in_file,
+        encoding  = encoding,
+        verbose   = verbose,
+        algorithm = algorithm,
+        interface = interface)
+
     return(unlist(texts, FALSE))
 }

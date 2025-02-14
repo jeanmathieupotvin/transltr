@@ -16,8 +16,7 @@ language_source_set(lang = "en")
 language_source_get()
 }
 \arguments{
-\item{lang}{A non-empty and non-\link[base:NA]{NA} character string. The
-underlying language.
+\item{lang}{A non-empty and non-NA character string. The underlying language.
 
 A language is usually a code (of two or three letters) for a native
 language name. While users retain full control over codes, it is best
@@ -47,7 +46,8 @@ They are registered as environment variables named
 }
 \details{
 The language and the source language can always be temporarily changed. See
-\code{\link[=translate]{translate()}} for more information.
+argument \code{lang} of method \code{\link[=Translator]{Translator$translate()}} for more
+information.
 
 The underlying locale is left as is. To change an \R session's locale,
 use \code{\link[=Sys.setlocale]{Sys.setlocale()}} or \code{\link[=Sys.setLanguage]{Sys.setLanguage()}} instead. See below for more
@@ -75,7 +75,7 @@ Moreover, it makes sense for some applications and/or programs such as
 current language (what \emph{users} see) from the back-end's locale (what
 \emph{developers} see). A UI may be displayed in a certain language while keeping
 logs and \R internal \link[=message]{messages}, \link[=warning]{warnings}, and
-\link[=stop]{errors} as is (untranslated).
+\link[=stop]{errors} as is.
 
 Consequently, the language setting of \code{\link{transltr}} is purposely
 kept separate from the underlying locale and removes the complexity of

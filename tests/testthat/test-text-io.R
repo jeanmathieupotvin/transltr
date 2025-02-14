@@ -21,9 +21,7 @@ chars_raw <- as.raw(c(
     0xe3, 0x82, 0x88,  # よ  (HIRAGANA LETTER YO)
     0xef, 0xbc, 0x81)) # ！  (FULLWIDTH EXCLAMATION MARK)
 
-
 # text_read() ------------------------------------------------------------------
-
 
 test_that("text_read() returns a character vector", {
     lines <- text_read(mock_file_utf8_path)
@@ -78,9 +76,7 @@ test_that("text_read() re-encodes input to utf-8", {
     expect_identical(Encoding(chars), "UTF-8")
 })
 
-
 # text_write() -----------------------------------------------------------------
-
 
 test_that("text_write() returns null", {
     temp_file <- withr::local_tempfile()

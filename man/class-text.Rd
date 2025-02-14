@@ -12,11 +12,7 @@
 \alias{Text}
 \title{Source Text}
 \usage{
-text(
-  ...,
-  source_lang = language_source_get(),
-  algorithm = constant("algorithms")
-)
+text(..., source_lang = language_source_get(), algorithm = algorithms())
 
 is_text(x)
 
@@ -26,18 +22,11 @@ is_text(x)
 
 \method{c}{Text}(...)
 
-merge_texts(..., algorithm = constant("algorithms"))
+merge_texts(..., algorithm = algorithms())
 
 as_text(x, ...)
 
-\method{as_text}{call}(
-  x,
-  strict = FALSE,
-  location = transltr::location(),
-  algorithm = constant("algorithms"),
-  validate = TRUE,
-  ...
-)
+\method{as_text}{call}(x, loc = location(), algorithm = algorithms(), ...)
 }
 \arguments{
 \item{...}{Usage depends on the underlying function.
@@ -50,8 +39,8 @@ method \code{\link[=c]{c()}}.
 \code{\link[=print]{print()}}, and \code{\link[=as_text]{as_text()}}.
 }}
 
-\item{source_lang}{A non-empty and non-\link[base:NA]{NA} character string. The
-language of the (untranslated) source text.
+\item{source_lang}{A non-empty and non-NA character string. The language of
+the source text.
 
 A language is usually a code (of two or three letters) for a native
 language name. While users retain full control over codes, it is best
@@ -60,21 +49,13 @@ to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
 Doing so maximizes portability and cross-compatibility between packages.}
 
-\item{algorithm}{A non-empty and non-\link[base:NA]{NA} character string
-equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
-source information for identification purposes.}
+\item{algorithm}{A non-empty and non-NA character string equal to \code{"sha1"},
+or \code{"utf8"}. The algorithm to use when hashing source information for
+identification purposes.}
 
 \item{x}{Any \R object.}
 
-\item{strict}{A non-\link[base:NA]{NA} logical value. Should only
-\emph{explicit calls}, i.e. \code{transltr::translate()}, be extracted? If \code{FALSE},
-calls to \emph{any} such function are extracted regardless of the underlying
-namespace, i.e. \code{translate()}.}
-
-\item{location}{A \code{\link{Location}} object.}
-
-\item{validate}{A non-\link[base:NA]{NA} logical value. Should the arguments be
-validated before being used? This argument should be left as is.}
+\item{loc}{A \code{\link{Location}} object.}
 }
 \value{
 \code{\link[=text]{text()}}, \code{\link[=c]{c()}}, and \code{\link[=as_text]{as_text()}} return an \code{\link[R6:R6Class]{R6}} object of
@@ -90,14 +71,14 @@ class \code{\link{Text}}.
 can be empty if all underlying \code{\link{Text}} objects are empty.
 }
 \description{
-Structure a source text and its translations.
+Structure source text and its translations.
 }
 \details{
-A \code{\link{Text}} object is a piece of text that is extracted from \R source
-scripts.
+A \code{\link{Text}} object is a piece of source text that is extracted from \R
+source scripts.
 \itemize{
 \item It (typically) has one or more \code{\link[=Location]{Locations}} within a project.
-\item It is complemented by any number of translations and further attributes.
+\item It has zero or more translations.
 }
 
 The \code{\link{Text}} class structures this information and exposes a set of
@@ -173,11 +154,11 @@ merge_texts(txt1, txt2, txt3)
 
 # Objects can be coerced to a Text object with as_text(). Below is an
 # example for call objects. This is for illustration purposes only,
-# and the latter should not be used. It is worthwhile to note that this
-# method is used internally by find_source(). Use this function instead.
-translate_call <- str2lang("transltr::translate('Hello, world!')")
-translate_loc  <- location("example in class-text", 2L, 32L, 2L, 68L)
-as_text(translate_call, location = translate_loc)
+# and the latter should not be used. This method is used internally by
+# find_source().
+cl  <- str2lang("translate('Hello, world!')")
+loc <- location("example in class-text", 2L, 32L, 2L, 68L)
+as_text(cl, loc)
 
 
 ## ------------------------------------------------
@@ -250,20 +231,20 @@ txt$rm_location("a")
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{hash}}{A non-empty and non-\link[base:NA]{NA} character string. A
-reproducible hash generated from \code{source_lang} and \code{source_text},
-and by using the algorithm specified by \code{algorithm}. It is used
-as a unique identifier for the underlying \code{\link{Text}} object.
+\item{\code{hash}}{A non-empty and non-NA character string. A reproducible
+hash generated from \code{source_lang} and \code{source_text}, and by using
+the algorithm specified by \code{algorithm}. It is used as a unique
+identifier for the underlying \code{\link{Text}} object.
 
 This is a \strong{read-only} field. It is automatically updated
 whenever fields \code{source_lang} and/or \code{algorithm} are updated.}
 
-\item{\code{algorithm}}{A non-empty and non-\link[base:NA]{NA} character string
-equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
-source information for identification purposes.}
+\item{\code{algorithm}}{A non-empty and non-NA character string equal to \code{"sha1"},
+or \code{"utf8"}. The algorithm to use when hashing source information for
+identification purposes.}
 
-\item{\code{source_lang}}{A non-empty and non-\link[base:NA]{NA} character string. The
-language of the (untranslated) source text.
+\item{\code{source_lang}}{A non-empty and non-NA character string. The language of
+the source text.
 
 A language is usually a code (of two or three letters) for a native
 language name. While users retain full control over codes, it is best
@@ -272,8 +253,8 @@ to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}.
 Doing so maximizes portability and cross-compatibility between packages.}
 
-\item{\code{source_text}}{A non-empty and non-\link[base:NA]{NA} character string. The
-(untranslated) source text. This is a \strong{read-only} field.}
+\item{\code{source_text}}{A non-empty and non-NA character string. The source text.
+This is a \strong{read-only} field.}
 
 \item{\code{languages}}{A character vector. Registered language
 codes. This is a \strong{read-only} field. Use methods below
@@ -309,15 +290,15 @@ to update it.}
 \subsection{Method \code{new()}}{
 Create a \code{\link{Text}} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Text$new(algorithm = constant("algorithms"))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Text$new(algorithm = algorithms())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{algorithm}}{A non-empty and non-\link[base:NA]{NA} character string
-equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
-source information for identification purposes.}
+\item{\code{algorithm}}{A non-empty and non-NA character string equal to \code{"sha1"},
+or \code{"utf8"}. The algorithm to use when hashing source information for
+identification purposes.}
 }
 \if{html}{\out{</div>}}
 }
@@ -346,8 +327,7 @@ Extract a translation, or the source text.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{lang}}{A non-empty and non-\link[base:NA]{NA} character string. The
-underlying language.
+\item{\code{lang}}{A non-empty and non-NA character string. The underlying language.
 
 A language is usually a code (of two or three letters) for a native
 language name. While users retain full control over codes, it is best
@@ -387,8 +367,7 @@ Register a translation, or the source text.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{lang}}{A non-empty and non-\link[base:NA]{NA} character string. The
-underlying language.
+\item{\code{lang}}{A non-empty and non-NA character string. The underlying language.
 
 A language is usually a code (of two or three letters) for a native
 language name. While users retain full control over codes, it is best
@@ -397,8 +376,8 @@ to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}
 to maximize portability and cross-compatibility.}
 
-\item{\code{text}}{A non-empty and non-\link[base:NA]{NA} character string. A
-translation, or a source text.}
+\item{\code{text}}{A non-empty and non-NA character string. A translation,
+or the source text.}
 }
 \if{html}{\out{</div>}}
 }
@@ -435,8 +414,8 @@ text.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{Any number of named, non-empty, and non-\link[base:NA]{NA}
-character strings.}
+\item{\code{...}}{Any number of named, non-empty, and non-NA character
+strings.}
 }
 \if{html}{\out{</div>}}
 }
@@ -509,8 +488,8 @@ Remove a registered translation.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{lang}}{A non-empty and non-\link[base:NA]{NA} character string
-identifying a translation to be removed.}
+\item{\code{lang}}{A non-empty and non-NA character string identifying a
+translation to be removed.}
 }
 \if{html}{\out{</div>}}
 }
@@ -550,8 +529,8 @@ Remove a registered location.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{path}}{A non-empty and non-\link[base:NA]{NA} character string
-identifying a \code{\link{Location}} object to be removed.}
+\item{\code{path}}{A non-empty and non-NA character string identifying a
+\code{\link{Location}} object to be removed.}
 }
 \if{html}{\out{</div>}}
 }

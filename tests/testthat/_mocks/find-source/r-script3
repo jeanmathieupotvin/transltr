@@ -1,13 +1,4 @@
-#' A mock R script
-#'
-#' A mock R script used to test the behavior of [find_source()]. Since it
-#' is used to test whether the former ignores non-R files, it has no file
-#' extension.
-#'
-#' @usage
-#' ## Expected usage in tests/testthat/test-find-source.R
-#' read_text(get_mock_path("scripts/find-source-3", ""))
-NULL
+# This script has no extension and should be ignored.
 
 translate("x")
 transltr::translate("y")

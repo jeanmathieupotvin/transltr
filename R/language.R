@@ -8,7 +8,8 @@
 #'
 #' @details
 #' The language and the source language can always be temporarily changed. See
-#' [translate()] for more information.
+#' argument `lang` of method [`Translator$translate()`][Translator] for more
+#' information.
 #'
 #' The underlying locale is left as is. To change an \R session's locale,
 #' use [Sys.setlocale()] or [Sys.setLanguage()] instead. See below for more
@@ -44,7 +45,7 @@
 #' current language (what *users* see) from the back-end's locale (what
 #' *developers* see). A UI may be displayed in a certain language while keeping
 #' logs and \R internal [messages][message()], [warnings][warning()], and
-#' [errors][stop()] as is (untranslated).
+#' [errors][stop()] as is.
 #'
 #' Consequently, the language setting of [`transltr`][transltr] is purposely
 #' kept separate from the underlying locale and removes the complexity of

@@ -111,14 +111,14 @@
         en: English
         es: Español
         fr: Français
-       Source Texts:
+       Source Text:
         256e0d7 [en, es, fr]: Hello, world!
         2ac373a [en, fr]: Farewell, world!
 
 # translator_read() reports errors
 
     Code
-      translator_read(temp_file)
+      translator_read(temp_file, verbose = TRUE)
     Output
       Reading translations from './el.txt'.
       Error(s): 'Language' must be a non-empty character string.
@@ -136,7 +136,7 @@
         en: English
         es: Español
         fr: Français
-       Source Texts:
+       Source Text:
         256e0d7 [en]: Hello, world!
         2ac373a [en]: Farewell, world!
 

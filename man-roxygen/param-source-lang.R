@@ -1,5 +1,5 @@
-#' @param source_lang A non-empty and non-[NA][base::NA] character string. The
-#'   language of the (untranslated) source text.
+#' @param source_lang A non-empty and non-NA character string. The language of
+#'   the source text.
 #'
 #'   A language is usually a code (of two or three letters) for a native
 #'   language name. While users retain full control over codes, it is best

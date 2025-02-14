@@ -26,17 +26,16 @@
 #'
 #' * Its features are extensively documented (even internal ones).
 #'
-#' * It can always locate and extract translatable strings (litteral character
-#'   vectors passed to [translate()]). They are treated as regular \R objects
-#'   (as [`Text`][Text] objects).
+#' * It can always locate and extract translatable strings (no matter where
+#'   they are in the source code).
 #'
-#' [translate()] works everywhere, including in calls to [stop()], [warning()],
-#' and [message()].
+#' * Translatable source text is treated as a regular \R object.
 #'
 #' @section Getting Started:
-#' Write code as you normally would. Whenever a piece of text (a literal 
-#' character vector) must be available in multiple languages, wrap it with
-#' [translate()].
+#' Write code as you normally would. Whenever a piece of text (literal 
+#' character vectors) should be available in multiple languages, pass it
+#' to method [`Translator$translate()`][Translator]. You may also use your
+#' own function.
 #'
 #' 1. Once you are ready to translate your project, call [find_source()].
 #'    This returns a [`Translator`][Translator] object.
@@ -75,3 +74,7 @@
 #'
 #' @keywords internal
 "_PACKAGE"
+
+# Suppress R CMD check note.
+#' @importFrom R6 R6Class
+NULL

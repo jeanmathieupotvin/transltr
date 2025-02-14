@@ -1,2 +1,2 @@
-#' @param verbose A non-[NA][base::NA] logical value. Should progress
-#'   information be reported?
+#' @param verbose A non-NA logical value. Should progress information be
+#'   reported?

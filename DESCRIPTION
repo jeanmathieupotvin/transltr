@@ -16,16 +16,18 @@ Description: An object model for source text and translations. Find and extract
 License: MIT + file LICENSE
 URL: https://transltr.ununoctium.dev
 BugReports: https://github.com/jeanmathieupotvin/transltr/issues
+Roadmap: https://github.com/jeanmathieupotvin/transltr/wiki/Roadmap
 Encoding: UTF-8
 Language: en
 Roxygen: list(markdown = TRUE, r6 = TRUE)
 RoxygenNote: 7.3.2
 Config/testthat/edition: 3
 Depends:
-    R (>= 4.2)
+    R (>= 4.3)
 Imports:
     digest,
     R6,
+    stringi,
     utils,
     yaml
 Suggests:
@@ -38,9 +40,9 @@ Suggests:
     usethis,
     withr
 Collate:
+    'aaa.R'
     'assert.R'
     'class-location.R'
-    'constants.R'
     'class-text.R'
     'class-translator.R'
     'find-source-in-exprs.R'
@@ -51,8 +53,6 @@ Collate:
     'normalize.R'
     'serialize.R'
     'text-io.R'
-    'translate-is-call.R'
-    'translate.R'
     'translator-io.R'
     'transltr-package.R'
     'utils-format-vector.R'

@@ -7,8 +7,7 @@
 hash(lang = "", text = "", algorithm = "")
 }
 \arguments{
-\item{lang}{A non-empty and non-\link[base:NA]{NA} character string. The
-underlying language.
+\item{lang}{A non-empty and non-NA character string. The underlying language.
 
 A language is usually a code (of two or three letters) for a native
 language name. While users retain full control over codes, it is best
@@ -17,11 +16,11 @@ to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}
 to maximize portability and cross-compatibility.}
 
-\item{text}{A non-\link[base:NA]{NA} character string. It can be empty.}
+\item{text}{A non-NA character string. It can be empty.}
 
-\item{algorithm}{A non-empty and non-\link[base:NA]{NA} character string
-equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
-source information for identification purposes.}
+\item{algorithm}{A non-empty and non-NA character string equal to \code{"sha1"},
+or \code{"utf8"}. The algorithm to use when hashing source information for
+identification purposes.}
 }
 \value{
 \code{\link[=hash]{hash()}} returns a character string, or \code{NULL} if \code{algorithm} is not
@@ -42,6 +41,6 @@ hashing purposes.
 \code{\link{Translator}},
 \code{\link{Text}},
 \code{\link[=normalize]{normalize()}},
-\code{\link[=constant]{constant()}}
+\code{\link[=algorithms]{algorithms()}}
 }
 \keyword{internal}

@@ -106,9 +106,7 @@ uuids_external_sample <- c(
     "ad3d4a00-308a-40ee-a2ff-73197480c5b6",
     "59728c44-895c-4549-8cb5-a5464423c9e9")
 
-
 # uuid() -----------------------------------------------------------------------
-
 
 test_that("uuid() returns a character string", {
     out <- uuid()
@@ -123,9 +121,7 @@ test_that("uuid() properly formats bytes internally", {
     expect_true(all(vapply_1l(uuids, uuid_is)))
 })
 
-
 # uuid_raw() -------------------------------------------------------------------
-
 
 test_that("uuid_raw() returns a raw vector", {
     out <- uuid_raw()
@@ -150,9 +146,7 @@ test_that("uuid_raw() sets default variant in values", {
     expect_true(all(variants >= 0x80 & variants <= 0xbf))
 })
 
-
 # uuid_is() --------------------------------------------------------------------
-
 
 test_that("uuid_is() returns a logical", {
     expect_true(uuid_is(uuid()))

@@ -45,6 +45,9 @@ if (interactive()) {
         # Shorter aliases.
         .mb <- microbenchmark::microbenchmark
 
+        # Append a newline to the output and print.
+        .cat <- \(...) cat(..., "\n")
+
         # Test a particular file.
         # Omit prefix `test-` and file extension.
         .tf <- \(file = "") {

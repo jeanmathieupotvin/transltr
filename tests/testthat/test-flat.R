@@ -2,9 +2,7 @@
 # and escaped comments (\#) for testing purposes.
 mock_flat_object_path <- get_mock_path(file.path("flat", "object"), "txt")
 
-
 # flat_serialize() -------------------------------------------------------------
-
 
 test_that("_serialize() returns a character string", {
     out <- flat_serialize(list(1L, 2L, 3L))
@@ -29,9 +27,7 @@ test_that("_serialize() serializes lists into streams of unindented sections beg
         ":: a\n\n1\n\n:: b\n\n2\n\n:: cd: c\n\n3\n\n:: cd: d\n\n4")
 })
 
-
 # flat_deserialize() -----------------------------------------------------------
-
 
 test_that("_deserialize() returns a named list", {
     out <- flat_deserialize(flat_serialize(list(a = 1L, b = 2L, c = 3L)))
@@ -116,9 +112,7 @@ test_that("_deserialize() throws an error if a node has another child node", {
     })
 })
 
-
 # flat_tag() -------------------------------------------------------------------
-
 
 test_that("_tag() returns a character", {
     expect_type(flat_tag(), "character")
@@ -162,9 +156,7 @@ test_that("_tag() retains the structure of x when replacing empty names by posit
     expect_identical(flat_tag(x), c("[1]", "[2]", "[3]: [1]", "[3]: [2]", "[4]"))
 })
 
-
 # flat_format() ----------------------------------------------------------------
-
 
 test_that("_format() returns a constant if x is empty", {
     expect_identical(flat_format(), "<empty list>")
@@ -227,9 +219,7 @@ test_that("_format() replaces empty lists by a constant", {
     expect_identical(flat_format(list(list(list()))), list(list("<empty list>")))
 })
 
-
 # flat_example() ---------------------------------------------------------------
-
 
 test_that("_example() returns a character string invisibly", {
     withr::local_output_sink(tempfile())

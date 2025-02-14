@@ -1,58 +1,61 @@
 #' Normalize Text
 #'
 #' @description
-#' Ensure consistency of input text, allowing it to be written in a variety
-#' of ways.
+#' Construct a standardized string from values passed to `...`
+#'
+#' @template param-dots-source-text
 #'
 #' @details
-#' In what follows, a space character is defined as being an ASCII regular
-#' space or an horizontal tab (`\t`). A new line is defined an ASCII line
-#' feed (`\n`).
+#' Input text can written in a variety of ways using single-line and multi-line
+#' strings. Values passed to `...` are normalized (to ensure their consistency)
+#' and collapsed to a single character string using the standard paragraph
+#' separator. The latter is defined as two newline characters (`"\n\n"`).
 #'
-#' [normalize()] constructs a normalized string from all single-line and
-#' multi-line strings passed to `...`. All underlying values are (implicitly)
-#' coerced to character values in the process. It does so by going through
-#' these 5 steps.
-#'
-#'   1. It removes implicit new lines and spaces used for indentation from
-#'      multi-line strings. Empty lines are preserved.
-#'   2. It replaces empty values by a new line.
-#'   3. It concatenates values into a single character string using `concat`.
-#'   4. It removes leading and/or trailing new lines and/or spaces, including
-#'      those that could had been introduced temporarily at previous steps.
-#'   5. It replaces substrings of space characters by a single space.
-#'
-#' @param ... Any number of character vectors containing non-[NA][base::NA]
-#'   elements. They can be empty.
-#'
-#' @param concat A non-[NA][base::NA] character string used to concatenate
-#'   values.
+#'   1. NA values and empty strings are discarded before reducing `...` to a
+#'      character string.
+#'   2. Whitespaces (tabs, newlines, and repeated spaces) characters are
+#'      replaced by a single space. Paragraph separators are preserved.
+#'   3. Leading or trailing whitespaces are stripped.
 #'
 #' @returns
 #' A character string, possibly empty.
 #'
-#' @note
-#' The author is not satisfied with the current implementation. It is *ugly*,
-#' and not fast enough. Calling [gsub()] five times yields a huge performance
-#' penalty. Advices are welcome. [normalize()] will be revisited in a
-#' near future.
-#'
+#' @export
 #' @keywords internal
-normalize <- function(..., concat = constant("concat")) {
-    assert_chr1(concat, TRUE)
-
-    dots  <- c(...)
-    empty <- which(!nzchar(dots)[-length(dots)])
-    dots  <- dots |>
-        gsub("\n[ \t]+", concat, x = _) |>
-        gsub("^[ \t\n]+|[ \t\n]+$", "", x = _)
-
-    dots[empty - 1L] <- paste0(dots[empty - 1L], "\n")
+normalize <- function(...) {
+    PARAGRAPH_SEP       <- "\n\n"
+    PARAGRAPH_SEP_REGEX <- "\n{2,}"
 
     return(
-        dots[nzchar(dots)] |>
-            paste0(collapse = concat) |>
-            gsub("[ \t]*\n[ \t]*", "\n", x = _) |>
-            gsub("\n+", "\n", x = _) |>
-            gsub("[ \t]+", " ", x = _))
+        # Each vector passed to ... represents a paragraph.
+        c(...) |>
+        # Step 1. Concatenate all elements into a single
+        # string. Discard NA values and empty strings.
+        stringi::stri_flatten(
+            collapse   = PARAGRAPH_SEP,
+            na_empty   = TRUE,
+            omit_empty = TRUE) |>
+        # Step 2. Split string into a character vector. Each
+        # element is a paragraph. Any string of two or more
+        # newlines is interpreted as a paragraph separator.
+        # This ensures that paragraphs are preserved.
+        stringi::stri_split_regex(PARAGRAPH_SEP_REGEX) |>
+        _[[1L]] |>
+        # Step 3. Replace one or more whitespaces by a space.
+        stringi::stri_replace_all_charclass(
+            # NOTE: See this Wikipedia page for Unicode
+            # property Wspace and what it contains:
+            # https://en.wikipedia.org/wiki/Whitespace_character#Unicode.
+            pattern     = "\\p{Wspace}",
+            replacement = " ",
+            merge       = TRUE) |>
+        # Step 4. Remove all trailing and leading spaces.
+        stringi::stri_trim_both() |>
+        # Step 5. Concatenate all paragraphs together
+        # using the standard paragraph separator.
+        stringi::stri_flatten(
+            collapse   = PARAGRAPH_SEP,
+            na_empty   = TRUE,
+            omit_empty = TRUE)
+    )
 }

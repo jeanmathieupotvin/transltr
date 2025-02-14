@@ -13,6 +13,18 @@ txt2 <- text(
     loc2,
     en = "Farewell, world!",
     fr = "Au revoir, monde!")
+txt3 <- text(
+    en = normalize("
+        Lorem Ipsum is simply dummy text of the printing and typesetting
+        industry. Lorem Ipsum has been the industry's standard dummy text
+        ever since the 1500s, when an unknown printer took a galley of type
+        and scrambled it to make a type specimen book."),
+    fr = normalize("
+        Le Lorem Ipsum est simplement du faux texte employé dans la
+        composition et la mise en page avant impression. Le Lorem Ipsum
+        est le faux texte standard de l'imprimerie depuis les années 1500,
+        quand un imprimeur anonyme assembla ensemble des morceaux de texte
+        pour réaliser un livre spécimen de polices de texte."))
 
 tr <- translator(
     id = "test-translator",
@@ -23,9 +35,7 @@ tr <- translator(
     txt1,
     txt2)
 
-
 # export() ---------------------------------------------------------------------
-
 
 test_that("export() works", {
     expect_s3_class(export(location()),       "ExportedLocation")
@@ -33,9 +43,7 @@ test_that("export() works", {
     expect_s3_class(export(Translator$new()), "ExportedTranslator")
 })
 
-
 # export.Location() ------------------------------------------------------------
-
 
 test_that("export.Location() returns an object of S3 class ExportedLocation", {
     out <- export(loc1, id = "test-id")
@@ -57,9 +65,7 @@ test_that("export.Location() validates id", {
     expect_snapshot(export(loc1, 1L), error = TRUE)
 })
 
-
 # export.Text() ----------------------------------------------------------------
-
 
 test_that("export.Text() returns an object of S3 class ExportedText", {
     out    <- export(txt1, id = "test-id")
@@ -85,7 +91,7 @@ test_that("export.Text() returns an object of S3 class ExportedText", {
     expect_identical(out$`Source Language`, txt1$source_lang)
     expect_identical(out$`Source Text`, txt1$source_text)
     expect_null(out$Translations)
-    expect_identical(out$Locations, list(export(loc1, id = loc_id)))
+    expect_identical(out$Locations, list(export(loc1, id = "test-id:l1")))
 })
 
 test_that("export.Text() validates id", {
@@ -126,42 +132,31 @@ test_that("export.Text() only sets Hash, Source Language, and Source Text if sou
     expect_null(out$`Source Text`)
 })
 
-test_that("export.Text() wraps source text and translations longer than 80 chars", {
-    txt <- text(
-        en = normalize("
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book. It has survived not
-            only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged. It was popularised in the 1960s with
-            the release of Letraset sheets containing Lorem Ipsum passages, and
-            more recently with desktop publishing software like Aldus PageMaker
-            including versions of Lorem Ipsum."),
-        fr = normalize("
-            Le Lorem Ipsum est simplement du faux texte employé dans la
-            composition et la mise en page avant impression. Le Lorem Ipsum
-            est le faux texte standard de l'imprimerie depuis les années 1500,
-            quand un imprimeur anonyme assembla ensemble des morceaux de texte
-            pour réaliser un livre spécimen de polices de texte. Il n'a pas
-            fait que survivre cinq siècles, mais s'est aussi adapté à la
-            bureautique informatique, sans que son contenu n'en soit modifié.
-            Il a été popularisé dans les années 1960 grâce à la vente de
-            feuilles Letraset contenant des passages du Lorem Ipsum, et, plus
-            récemment, par son inclusion dans des applications de mise en page
-            de texte, comme Aldus PageMaker."))
+test_that("export.Text() wraps source texts and translations", {
+    out <- export(txt3, set_translations = TRUE)
 
-    out <- export(txt, set_translations = TRUE)
+    wrapped_source_text <- paste(sep = "\n",
+        "Lorem Ipsum is simply dummy text of the printing and typesetting",
+        "industry. Lorem Ipsum has been the industry's standard dummy text ever",
+        "since the 1500s, when an unknown printer took a galley of type and",
+        "scrambled it to make a type specimen book.")
+    wrapped_translation <- paste(sep = "\n",
+        "Le Lorem Ipsum est simplement du faux texte employé dans la composition",
+        "et la mise en page avant impression. Le Lorem Ipsum est le faux texte",
+        "standard de l'imprimerie depuis les années 1500, quand un imprimeur",
+        "anonyme assembla ensemble des morceaux de texte pour réaliser un livre",
+        "spécimen de polices de texte.")
 
-    expect_type(out$`Source Text`, "character")
-    expect_true(length(out$`Source Text`) > 1L)
-    expect_type(out$`Translations`$fr, "character")
-    expect_true(length(out$`Translations`$fr) > 1L)
+    # This is not super useful, but widths are also
+    # checked to ensure they are below defined limits.
+    expect_true(all(nchar(strsplit(out$`Source Text`,   "\n")[[1L]]) <= 74L))
+    expect_true(all(nchar(strsplit(out$Translations$fr, "\n")[[1L]]) <= 72L))
+
+    expect_identical(out$`Source Text`,   wrapped_source_text)
+    expect_identical(out$Translations$fr, wrapped_translation)
 })
 
-
 # export.Translator() ----------------------------------------------------------
-
 
 test_that("export.Translator() returns an object of S3 class ExportedTranslator", {
     out    <- export(tr)
@@ -181,9 +176,7 @@ test_that("export.Translator() returns an object of S3 class ExportedTranslator"
         export(txt2, names(hashes)[hashes == txt2$hash])))
 })
 
-
 # serialize() ------------------------------------------------------------------
-
 
 test_that("serialize() returns a character string", {
     out <- serialize(loc1)
@@ -230,9 +223,16 @@ test_that("serialize() serializes objects as expected", {
     expect_snapshot(cat(serialize(tr)))
 })
 
+test_that("serialize() wraps long source text and translations", {
+    tr <- translator(
+        id = "test-translator",
+        en = "English",
+        fr = "Français",
+        txt3)
+    expect_snapshot(cat(serialize(tr, set_translations = TRUE)))
+})
 
 # export_translations() --------------------------------------------------------
-
 
 test_that("export_translations() returns an object of S3 class ExportedTranslations", {
     lang   <- "fr"
@@ -295,16 +295,43 @@ test_that("export_translations() validates tr", {
     expect_snapshot(export_translations(tr, "fr"), error = TRUE)
 })
 
-test_that("export_translations() sets each translation equal to constant 'untranslated' if required", {
+test_that("export_translations() sets unavailable translations", {
     out <- export_translations(tr, "el")
 
-    expect_identical(out$Translations$`256e0d7`$Translation, constant("untranslated"))
-    expect_identical(out$Translations$`2ac373a`$Translation, constant("untranslated"))
+    expect_identical(out$Translations$`256e0d7`$Translation, .__STR_UNTRANSLATED)
+    expect_identical(out$Translations$`2ac373a`$Translation, .__STR_UNTRANSLATED)
 })
 
+test_that("export_translations() wraps source texts and translations", {
+    tr   <- translator(en = "English", fr = "Français", txt3)
+    out  <- export_translations(tr, "fr")
+    hash <- names(tr$hashes)
+
+    source_text <- out$Translations[[hash]]$`Source Text`
+    translation <- out$Translations[[hash]]$Translation
+
+    wrapped_source_text <- paste(sep = "\n",
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
+        "when an unknown printer took a galley of type and scrambled it to make a type",
+        "specimen book.")
+    wrapped_translation <- paste(sep = "\n",
+        "Le Lorem Ipsum est simplement du faux texte employé dans la composition et la",
+        "mise en page avant impression. Le Lorem Ipsum est le faux texte standard de",
+        "l'imprimerie depuis les années 1500, quand un imprimeur anonyme assembla",
+        "ensemble des morceaux de texte pour réaliser un livre spécimen de polices de",
+        "texte.")
+
+    # This is not super useful, but widths are also
+    # checked to ensure they are below defined limits.
+    expect_true(all(nchar(strsplit(source_text, "\n")[[1L]]) <= 80L))
+    expect_true(all(nchar(strsplit(translation, "\n")[[1L]]) <= 80L))
+
+    expect_identical(source_text, wrapped_source_text)
+    expect_identical(translation, wrapped_translation)
+})
 
 # serialize_translations() -----------------------------------------------------
-
 
 test_that("serialize_translations() returns a character string", {
     out <- serialize_translations(tr, "fr")
@@ -327,9 +354,18 @@ test_that("serialize_translations() serializes translations as expected", {
     expect_snapshot(cat(serialize_translations(tr, "fr"), "\n"))
 })
 
+test_that("serialize_translations() wraps long source texts and translations", {
+    tr  <- translator(
+        id = "test-translator",
+        en = "English",
+        fr = "Français",
+        txt3)
+    out <- export_translations(tr, "fr")
+
+    expect_snapshot(cat(serialize_translations(tr, "fr"), "\n"))
+})
 
 # format_errors() --------------------------------------------------------------
-
 
 test_that("format_errors() returns a character if throw_error is false", {
     out <- format_errors("", throw_error = FALSE)
@@ -376,9 +412,7 @@ test_that("format_errors() formats errors as expected", {
     expect_snapshot(format_errors(errors, "test-id"), error = TRUE)
 })
 
-
 # assert.ExportedLocation() ----------------------------------------------------
-
 
 test_that("assert.ExportedLocation() returns a character if x is valid", {
     out <- assert(export(loc1))
@@ -415,7 +449,6 @@ test_that("assert.ExportedLocation() detects invalid Path field", {
     expect_snapshot(assert(out), error = TRUE)
 })
 
-
 test_that("assert.ExportedLocation() detects invalid Ranges field", {
     out <- export(loc1, id = "test-id")
     out$Ranges <- c(
@@ -426,9 +459,7 @@ test_that("assert.ExportedLocation() detects invalid Ranges field", {
     expect_snapshot(assert(out), error = TRUE)
 })
 
-
 # assert.ExportedText() --------------------------------------------------------
-
 
 test_that("assert.ExportedText() returns a character if x is valid", {
     out <- assert(export(txt1))
@@ -592,9 +623,7 @@ test_that("assert.ExportedText() detects invalid Locations field", {
     expect_snapshot(assert(out3), error = TRUE)
 })
 
-
 # assert.ExportedTranslator() --------------------------------------------------
-
 
 test_that("assert.ExportedTranslator() returns a character if x is valid", {
     out <- assert(export(tr))
@@ -689,9 +718,7 @@ test_that("assert.ExportedTranslator() detects invalid Texts field", {
     expect_snapshot(assert(out3), error = TRUE)
 })
 
-
 # assert.ExportedTranslations() ------------------------------------------------
-
 
 test_that("assert.ExportedTranslations() returns a character if x is valid", {
     out <- assert(export_translations(tr, "fr"))
@@ -779,9 +806,7 @@ test_that("assert.ExportedTranslations() detects invalid Translations field", {
     expect_snapshot(assert(out3), error = TRUE)
 })
 
-
 # import() ---------------------------------------------------------------------
-
 
 test_that("import() works", {
     expect_s3_class(import(export(location())),       "Location")
@@ -797,18 +822,14 @@ test_that("import() calls assert() before dispatching", {
     expect_error(import(invalid))
 })
 
-
 # import.default() -------------------------------------------------------------
-
 
 test_that("import.default() works", {
     expect_error(import(1L))
     expect_snapshot(import(1L), error = TRUE)
 })
 
-
 # import.ExportedLocation() ----------------------------------------------------
-
 
 test_that("import.ExportedLocation() returns an object of R6 class Location", {
     out <- import(export(loc1))
@@ -823,15 +844,32 @@ test_that("import.ExportedLocation() handles multiple ranges", {
     expect_identical(import(export(loc)), loc)
 })
 
-
 # import.ExportedText() --------------------------------------------------------
-
 
 test_that("import.ExportedText() returns an object of R6 class Text", {
     out <- import(export(txt1, set_translations = TRUE))
 
     expect_s3_class(out, "Text")
     expect_identical(out, txt1)
+})
+
+test_that("import.Text() unwraps source texts and translations", {
+    out <- import(export(txt3, set_translations = TRUE))
+
+    str_source_text <- paste(sep = " ",
+        "Lorem Ipsum is simply dummy text of the printing and typesetting",
+        "industry. Lorem Ipsum has been the industry's standard dummy text ever",
+        "since the 1500s, when an unknown printer took a galley of type and",
+        "scrambled it to make a type specimen book.")
+    str_translation <- paste(sep = " ",
+        "Le Lorem Ipsum est simplement du faux texte employé dans la composition",
+        "et la mise en page avant impression. Le Lorem Ipsum est le faux texte",
+        "standard de l'imprimerie depuis les années 1500, quand un imprimeur",
+        "anonyme assembla ensemble des morceaux de texte pour réaliser un livre",
+        "spécimen de polices de texte.")
+
+    expect_identical(out$source_text, str_source_text)
+    expect_identical(out$get_translation("fr"), str_translation)
 })
 
 test_that("import.ExportedText() only set source_lang and source_text if they are not null", {
@@ -849,9 +887,7 @@ test_that("import.ExportedText() throws a warning if hash is invalid", {
     expect_snapshot(import(etxt1))
 })
 
-
 # import.ExportedTranslator() --------------------------------------------------
-
 
 test_that("import.ExportedTranslator() returns an object of R6 class Translator", {
     out <- import(export(tr, set_translations = TRUE))
@@ -860,9 +896,7 @@ test_that("import.ExportedTranslator() returns an object of R6 class Translator"
     expect_identical(out, tr)
 })
 
-
 # deserialize() ----------------------------------------------------------------
-
 
 test_that("deserialize() returns an object of R6 class Location, Text, or Translator", {
     # deserialize() returns the output of import().
@@ -881,9 +915,7 @@ test_that("deserialize() throws an error when string is an invalid yaml object",
     expect_snapshot(deserialize("a: 1\nb 2\n"), error = TRUE)
 })
 
-
 # import.ExportedTranslations() ------------------------------------------------
-
 
 test_that("import.ExportedTranslations() returns an object of S3 class ExportedTranslations", {
     trans <- export_translations(tr, "fr")
@@ -893,7 +925,7 @@ test_that("import.ExportedTranslations() returns an object of S3 class ExportedT
     expect_identical(out, trans)
 })
 
-test_that("import.ExportedTranslations() replaces empty translations with a constant", {
+test_that("import.ExportedTranslations() sets empty translations", {
     # Language el has no available translation.
     trans1 <- export_translations(tr, "el")
     trans2 <- trans1
@@ -902,10 +934,10 @@ test_that("import.ExportedTranslations() replaces empty translations with a cons
     out1 <- import(trans1)
     out2 <- import(trans2)
 
-    expect_identical(out1$Translations$`256e0d7`$Translation, constant("empty"))
-    expect_identical(out1$Translations$`2ac373a`$Translation, constant("empty"))
-    expect_identical(out2$Translations$`256e0d7`$Translation, constant("empty"))
-    expect_identical(out2$Translations$`2ac373a`$Translation, constant("empty"))
+    expect_identical(out1$Translations$`256e0d7`$Translation, "<empty>")
+    expect_identical(out1$Translations$`2ac373a`$Translation, "<empty>")
+    expect_identical(out2$Translations$`256e0d7`$Translation, "<empty>")
+    expect_identical(out2$Translations$`2ac373a`$Translation, "<empty>")
 })
 
 test_that("import.ExportedTranslations() normalizes translations", {
@@ -955,9 +987,7 @@ test_that("import.ExportedTranslations() registers translations", {
     expect_identical(tr2$get_translation("2ac373a", lang), "Au revoir, monde!")
 })
 
-
 # deserialize_translations() ---------------------------------------------------
-
 
 test_that("deserialize_translations() returns an object of S3 class ExportedTranslations", {
     # deserialize_translations() returns the output

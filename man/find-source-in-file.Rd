@@ -4,71 +4,90 @@
 \alias{find_source_in_file}
 \alias{find_source_in_exprs}
 \alias{find_source_exprs}
-\title{Find Source Text in Expression Tokens}
+\alias{is_source}
+\title{Find Source Text in Expressions}
 \usage{
 find_source_in_file(
   path = "",
   encoding = "UTF-8",
-  strict = TRUE,
-  algorithm = constant("algorithms"),
-  verbose = FALSE
+  verbose = getOption("transltr.verbose", TRUE),
+  algorithm = algorithms(),
+  interface = NULL
 )
 
 find_source_in_exprs(
   tokens = utils::getParseData(),
   path = "",
-  strict = TRUE,
-  algorithm = constant("algorithms")
+  algorithm = algorithms(),
+  interface = NULL
 )
 
 find_source_exprs(path = "", encoding = "UTF-8")
+
+is_source(x, interface = NULL)
 }
 \arguments{
-\item{path}{A non-empty and non-\link[base:NA]{NA} character string. A path to
-an \R source script.}
+\item{path}{A non-empty and non-NA character string. A path to an \R source
+script.}
 
-\item{encoding}{A non-empty and non-\link[base:NA]{NA} character string. The
-underlying source character encoding. In almost all cases, this should
-be UTF-8. Other encodings are internally re-encoded to UTF-8 for
-portability.}
+\item{encoding}{A non-empty and non-NA character string. The source character
+encoding. In almost all cases, this should be UTF-8. Other encodings are
+internally re-encoded to UTF-8 for portability.}
 
-\item{strict}{A non-\link[base:NA]{NA} logical value. Should only
-\emph{explicit calls}, i.e. \code{transltr::translate()}, be extracted? If \code{FALSE},
-calls to \emph{any} such function are extracted regardless of the underlying
-namespace, i.e. \code{translate()}.}
+\item{verbose}{A non-NA logical value. Should progress information be
+reported?}
 
-\item{algorithm}{A non-empty and non-\link[base:NA]{NA} character string
-equal to \code{"sha1"}, or \code{"utf8"}. The algorithm to use when hashing
-source information for identification purposes.}
+\item{algorithm}{A non-empty and non-NA character string equal to \code{"sha1"},
+or \code{"utf8"}. The algorithm to use when hashing source information for
+identification purposes.}
 
-\item{verbose}{A non-\link[base:NA]{NA} logical value. Should progress
-information be reported?}
+\item{interface}{A \code{\link{name}}, a \code{\link{call}} object, or a \code{NULL}.
+A reference to an alternative (custom) function used to translate text.
+If a \code{\link{call}} object is passed to \code{interface}, it \strong{must} be to
+operator \code{::}. Calls to method \code{\link[=Translator]{Translator$translate()}}
+are ignored and calls to \code{interface} are extracted instead. See Details
+below.}
 
 \item{tokens}{A \code{\link[=data.frame]{data.frame}} returned by
 \code{\link[utils:getParseData]{utils::getParseData()}}. It must always minimally contain
 columns \code{line1}, \code{col1}, \code{line2}, \code{col2}, and \code{text}.}
+
+\item{x}{Any \R object.}
 }
 \value{
 \code{\link[=find_source_in_file]{find_source_in_file()}} and \code{\link[=find_source_in_exprs]{find_source_in_exprs()}} return a list of
 \code{\link{Text}} objects. It may contain duplicated elements, depending
 on the extracted contents.
 
-\code{\link[=find_source_exprs]{find_source_exprs()}} returns the same output as \code{\link[utils:getParseData]{utils::getParseData()}}.
-However, only \code{expr} tokens are returned.
+\code{\link[=find_source_exprs]{find_source_exprs()}} returns a subset of the output of
+\code{\link[utils:getParseData]{utils::getParseData()}}. Only \code{expr} tokens are returned.
+
+\code{\link[=is_source]{is_source()}} returns a logical value.
 }
 \description{
-Find, and extract source text that requires translation from a single file,
-or from a set of tokenized \R expressions stemming from \code{\link[=parse]{parse()}}.
+Find and extract source text that must be translated from a single file
+or a set of \R \code{expr} tokens.
 
-\strong{Some arguments listed below are not explicitly validated for efficiency.}
+\strong{Arguments listed below are not explicitly validated for efficiency.}
 }
 \details{
 \code{\link[=find_source_in_exprs]{find_source_in_exprs()}} silently skips parsing errors. See \code{\link[=find_source]{find_source()}}
 for more information.
+
+\code{\link[=is_source]{is_source()}} checks if an object conceptually represents a source text.
+This can either be
+\itemize{
+\item a \code{\link{call}} to method \code{\link[=Translator]{Translator$translate()}} \strong{or}
+\item a \code{\link{call}} to a custom function referenced by \code{interface}.
+}
+
+Calls to method \code{\link[=Translator]{Translator$translate()}} that include
+\code{\link[=dots]{...}} in their argument(s) are ignored. Such calls are part
+of the definition of a custom \code{interface} and should not be extracted.
 }
 \seealso{
 \code{\link{Text}},
-\code{\link[=translate]{translate()}},
-\code{\link[=find_source]{find_source()}}
+\code{\link[=find_source]{find_source()}},
+\code{\link[utils:getParseData]{utils::getParseData()}}
 }
 \keyword{internal}

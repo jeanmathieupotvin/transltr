@@ -1,32 +1,19 @@
-#' Source Texts and Translations
+#' Source Text and Translations
 #'
 #' Structure and manipulate the source text of a project and its translations.
 #'
-#' A [`Translator`][Translator] object encapsulates the source text of a
-#' project (or any other *context*) and all related translations. It exposes
-#' a set of methods that can be used to manipulate this information, but it
-#' is designed in such a way that its methods can be ignored most of the time.
-#'
-#' Under the hood, [`Translator`][Translator] objects are collections of
-#' [`Text`][Text] objects. These do most of the work. They are treated as
-#' lower-level component and in typical situations, users rarely interact
-#' with them.
-#'
-#' ## Translating Text
-#'
-#' Since it can be detected and processed by [find_source()], it is recommended
-#' to use [translate()] at all times. Method
-#' [`Translator$translate()`][Translator] is the underlying workhorse function
-#' called by the former.
-#'
-#' ## Exporting and Importing Translators
+#' A [`Translator`][Translator] object encapsulates the source text of a project
+#' (or any other *context*) and all related translations. Under the hood,
+#' [`Translator`][Translator] objects are collections of [`Text`][Text] objects.
+#' These do most of the work. They are treated as lower-level component and in
+#' typical situations, users rarely interact with them.
 #'
 #' [`Translator`][Translator] objects can be saved and exported with
-#' [translator_write()].
-#'
-#' They can be imported back into an \R session with [translator_read()].
+#' [translator_write()]. They can be imported back into an \R session
+#' with [translator_read()].
 #'
 #' @param ... Usage depends on the underlying function.
+#'
 #'   * Any number of [`Text`][Text] objects and/or named character
 #'     strings for [translator()] (in no preferred order).
 #'   * Further arguments passed to or from other methods for [format()],
@@ -49,7 +36,7 @@
 #' [print()] returns argument `x` invisibly.
 #'
 #' @seealso
-#' [translate()],
+#' [find_source()],
 #' [translator_read()],
 #' [translator_write()]
 #'
@@ -80,11 +67,9 @@
 #' # print() calls format() internally, as expected.
 #' print(tr)
 #'
-#' @include constants.R
-#'
 #' @rdname class-translator
 #' @export
-translator <- function(..., id = uuid(), algorithm = constant("algorithms")) {
+translator <- function(..., id = uuid(), algorithm = algorithms()) {
     trans <- Translator$new(id, algorithm)
     dots  <- list(...)
 
@@ -115,19 +100,24 @@ format.Translator <- function(x, ...) {
     # <reduced-hash> [<lang>, ...]: <source-text>.
     # Long lines are truncated by format_vector().
     if (!is.null(source_texts <- x$source_texts)) {
+        # Escape newlines to preserve format.
+        source_texts <- structure(
+            stringi::stri_replace_all_regex(x$source_texts, "\n", r"{\\n}"),
+            names = names(source_texts))
+
         langs <- lapply(x$hashes, \(h) {
             str_to(x$get_text(h)$languages, last_sep = ", ")
         })
 
-        # Names of source_texts are reduced hashes.
+        # Names are used as labels by format_vector().
         names(source_texts) <- sprintf("%s [%s]", names(source_texts), langs)
     }
 
     xlist <- list(
-        Identifier     = x$id,
-        Algorithm      = x$algorithm,
-        Languages      = x$native_languages,
-        `Source Texts` = source_texts)
+        Identifier    = x$id,
+        Algorithm     = x$algorithm,
+        Languages     = x$native_languages,
+        `Source Text` = source_texts)
 
     return(c("<Translator>", format_vector(xlist, level = 1L)))
 }
@@ -146,10 +136,11 @@ Translator <- R6::R6Class("Translator",
     lock_objects = TRUE,
     cloneable    = FALSE,
     private      = list(
-        .id           = constant("unset"),  # See $id
-        .algorithm    = constant("unset"),  # See $algorithm
-        .native_langs = NULL,               # See $native_languages, $initialize -> new.env()
-        .texts        = NULL,               # See $intialize -> new.env()
+        .id            = .__STR_UNSET,  # See $id
+        .algorithm     = .__STR_UNSET,  # See $algorithm
+        .native_langs  = NULL,          # See $native_languages, $initialize -> new.env()
+        .texts         = NULL,          # See $intialize -> new.env()
+        .default_value = NULL,
 
         # @description Compress a hash.
         #
@@ -199,7 +190,7 @@ Translator <- R6::R6Class("Translator",
         #' @template field-algorithm
         algorithm = \(value) {
             if (!missing(value)) {
-                assert_algorithm <- \(algorithm = constant("algorithms")) {
+                assert_algorithm <- \(algorithm = algorithms()) {
                     assert_arg(algorithm, TRUE)
                     return(algorithm)
                 }
@@ -221,11 +212,10 @@ Translator <- R6::R6Class("Translator",
             return(private$.algorithm)
         },
 
-        #' @field hashes A character vector of non-empty and non-[NA][base::NA]
-        #'   values, or `NULL`. The set of all `hash` exposed by registered
-        #'   [`Text`][Text] objects. If there is none, `hashes` is `NULL`.
-        #'   This is a **read-only** field. It is automatically updated
-        #'   whenever field `algorithm` is updated.
+        #' @field hashes A character vector of non-empty and non-NA values, or
+        #'   `NULL`. The set of all `hash` exposed by registered [`Text`][Text]
+        #'   objects. If there is none, `hashes` is `NULL`. This is a
+        #'   **read-only** field updated whenever field `algorithm` is updated.
         hashes = \(value) {
             if (!missing(value)) {
                 stops(
@@ -238,11 +228,10 @@ Translator <- R6::R6Class("Translator",
             return(unlist(hashes))
         },
 
-        #' @field source_texts A character vector of non-empty and
-        #'   non-[NA][base::NA] values, or `NULL`. The set of all
-        #'   `source_text` exposed by registered [`Text`][Text]
-        #'   objects. If there is none, `source_texts` is `NULL`.
-        #'   This is a **read-only** field.
+        #' @field source_texts A character vector of non-empty and non-NA
+        #'   values, or `NULL`. The set of all registered source texts. If
+        #'   there is none, `source_texts` is `NULL`. This is a **read-only**
+        #'   field.
         source_texts = \(value) {
             if (!missing(value)) {
                 stops(
@@ -260,14 +249,14 @@ Translator <- R6::R6Class("Translator",
             return(texts)
         },
 
-        #' @field source_langs A character vector of non-empty and
-        #'   non-[NA][base::NA] values, or `NULL`. The set of all
-        #'   `source_text` exposed by registered [`Text`][Text]
-        #'   objects. This is a **read-only** field.
-        #'   * If there is none, `source_texts` is `NULL`.
-        #'   * If there is one unique value, `source_texts` has
-        #'     a length equal to 1.
-        #'   * Otherwise, a named character vector is returned.
+        #' @field source_langs A character vector of non-empty and non-NA
+        #'   values, or `NULL`. The set of all registered source languages.
+        #'   This is a **read-only** field.
+        #'
+        #'   * If there is none, `source_langs` is `NULL`.
+        #'   * If there is one unique value, `source_langs` is an unnamed
+        #'     character string.
+        #'   * Otherwise, it is a named character vector.
         source_langs = \(value) {
             if (!missing(value)) {
                 stops(
@@ -290,11 +279,9 @@ Translator <- R6::R6Class("Translator",
             return(langs[[1L]])
         },
 
-        #' @field languages A character vector of non-empty and
-        #'   non-[NA][base::NA] values, or `NULL`. The set of all
-        #'   `languages` (codes) exposed by registered [`Text`][Text]
-        #'   objects. If there is none, `languages` is `NULL`.
-        #'   This is a **read-only** field.
+        #' @field languages A character vector of non-empty and non-NA values,
+        #'   or `NULL`. The set of all registered `languages` (codes). If there
+        #'   is none, `languages` is `NULL`. This is a **read-only** field.
         languages = \(value) {
             if (!missing(value)) {
                 stops(
@@ -307,10 +294,9 @@ Translator <- R6::R6Class("Translator",
         },
 
         #' @field native_languages A named character vector of non-empty and
-        #'   non-[NA][base::NA] values, or `NULL`. A map (bijection) of
-        #'   `languages` (codes) to native language names. Names are codes,
-        #'   and values are native languages. If there is none,
-        #'   `native_languages` is `NULL`.
+        #'   non-NA values, or `NULL`. A map (bijection) of `languages` (codes)
+        #'   to native language names. Names are codes and values are native
+        #'   languages. If there is none, `native_languages` is `NULL`.
         #'
         #'   While users retain full control over `native_languages`, it is
         #'   best to use well-known schemes such as
@@ -318,9 +304,8 @@ Translator <- R6::R6Class("Translator",
         #'   [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes).
         #'   Doing so maximizes portability and cross-compatibility between packages.
         #'
-        #'   Update this field with method
-        #'   [`Translator$set_native_languages()`][Translator]. See below for
-        #'   more information.
+        #'   Update this field with method [`$set_native_languages()`][Translator].
+        #'   See below for more information.
         native_languages = \(value) {
             if (!missing(value)) {
                 stops("use 'set_native_languages()' to update 'native_languages'.")
@@ -344,7 +329,7 @@ Translator <- R6::R6Class("Translator",
         #' @examples
         #' # Consider using translator() instead.
         #' tr <- Translator$new()
-        initialize = \(id = uuid(), algorithm = constant("algorithms")) {
+        initialize = \(id = uuid(), algorithm = algorithms()) {
             private$.native_langs <- new.env(parent = emptyenv())
             private$.texts        <- new.env(parent = emptyenv())
 
@@ -353,61 +338,48 @@ Translator <- R6::R6Class("Translator",
             return(self)
         },
 
-        #' @description Translate text. Consider using [translate()] instead
-        #'   of this method.
-        #'
-        #' @details
-        #' Since it can be detected by [find_source()], [translate()] is the
-        #' preferred interface to this method.
-        #'
-        #' Values passed to `...` are first [normalized][normalize()],
-        #' and then [hashed][hash()]. The translation that corresponds to
-        #' the resulting hash and `lang` pair is fetched via method
-        #' [`Translator$get_translation()`][Translator]. Argument `lang` will
-        #' not be validated if the resulting hash has no corresponding
-        #' [`Text`][Text] object.
+        #' @description Translate source text.
         #'
         #  NOTE: Package roxygen2 reuses templates whenever within an R6 class.
         #
+        #' @param source_lang A non-empty and non-NA character string. The
+        #'   language of the source text. See argument `lang` for more
+        #'   information.
+        #'
         #' @template param-dots-source-text
         #'
         #' @template param-lang
         #'
-        #' @template param-concat
+        #' @details
+        #' See [normalize()] for further details on how `...` is normalized.
         #'
-        #' @template param-source-lang-no-example
-        #'
-        #' @return A character string, or `NULL` if the underlying translation
-        #'   is unavailable.
+        #' @return A character string. If there is no corresponding translation,
+        #'   the value passed to method [`$set_default_value()`][Translator] is
+        #'   returned. `NULL` is returned by default.
         #'
         #' @examples
         #' tr <- Translator$new()
         #' tr$set_text(en = "Hello, world!", fr = "Bonjour, monde!")
-        #'
-        #' # Consider using translate() instead.
         #' tr$translate("Hello, world!", lang = "en")  ## Outputs "Hello, world!"
         #' tr$translate("Hello, world!", lang = "fr")  ## Outputs "Bonjour, monde!"
         translate = \(
             ...,
             lang        = language_get(),
-            concat      = constant("concat"),
             source_lang = language_source_get())
         {
-            # hash() validates source_lang, but it is also
-            # validated here to throw a coherent error message.
             assert_chr1(source_lang)
-            text <- normalize(..., concat = concat)
+            text <- normalize(...)
             hash <- hash(source_lang, text, self$algorithm)
             return(self$get_translation(hash, lang))
         },
 
-        #' @description Extract a translation, or source texts.
+        #' @description Extract a translation or a source text.
         #'
         #' @template param-hash
         #'
-        #' @return A character string. `NULL` is returned if the requested
-        #'   translation is not available (either `hash` or `lang` is not
-        #'   registered).
+        #' @return A character string. If there is no corresponding translation,
+        #'   the value passed to method [`$set_default_value()`][Translator] is
+        #'   returned. `NULL` is returned by default.
         #'
         #' @examples
         #' tr <- Translator$new()
@@ -417,13 +389,13 @@ Translator <- R6::R6Class("Translator",
         #' tr$get_translation("256e0d7", "en")  ## Outputs "Hello, world!"
         get_translation = \(hash = "", lang = "") {
             if (is.null(txt <- self$get_text(hash))) {
-                return(NULL)
+                return(private$.default_value)
             }
 
-            return(txt$get_translation(lang))
+            return(txt$get_translation(lang) %??% private$.default_value)
         },
 
-        #' @description Extract a [`Text`][Text] object.
+        #' @description Extract a source text and its translations.
         #'
         #' @return A [`Text`][Text] object, or `NULL`.
         #'
@@ -437,8 +409,7 @@ Translator <- R6::R6Class("Translator",
             return(private$.texts[[private$.hash_expand(hash)]])
         },
 
-        #' @description Simultaneously create and register a [`Text`][Text]
-        #'   object.
+        #' @description Register a source text.
         #'
         #' @param ... Passed as is to [text()].
         #'
@@ -459,15 +430,15 @@ Translator <- R6::R6Class("Translator",
             return(invisible())
         },
 
-        #' @description Register one or more [`Text`][Text] objects.
+        #' @description Register one or more source texts.
         #'
         #' @param ... Any number of [`Text`][Text] objects.
         #'
-        #' @details This method calls [merge_texts()] to merge all
-        #'   values passed to `...` together with previously registered
-        #'   [`Text`][Text] objects. The underlying registered source
-        #'   texts, translations, and [`Location`][Location] objects
-        #'   won't be duplicated.
+        #' @details This method calls [merge_texts()] to merge all values
+        #'   passed to `...` together with previously registered
+        #'   [`Text`][Text] objects. The underlying registered source texts,
+        #'   translations, and [`Location`][Location] objects won't be
+        #'   duplicated.
         #'
         #' @return A `NULL`, invisibly.
         #'
@@ -494,7 +465,7 @@ Translator <- R6::R6Class("Translator",
                 return(invisible())
             }
 
-            args  <- c(
+            args <- c(
                 as.list(private$.texts),
                 list(...),
                 algorithm = self$algorithm)
@@ -506,11 +477,37 @@ Translator <- R6::R6Class("Translator",
             return(invisible())
         },
 
+        #' @description Remove a registered source text.
+        #'
+        #' @param hash A non-empty and non-NA character string identifying the
+        #'   source text to remove.
+        #'
+        #' @return A `NULL`, invisibly.
+        #'
+        #' @examples
+        #' tr <- Translator$new()
+        #' tr$set_text(en = "Hello, world!")
+        #'
+        #' tr$rm_text("256e0d7")
+        rm_text = \(hash = "") {
+            if (!length(private$.texts)) {
+                stops("there are no registered 'Text' objects to remove.")
+            }
+
+            assert_chr1(hash)
+            assert_match(hash,
+                private$.hash_reduce(self$hashes),
+                quote_values = TRUE)
+
+            rm(list = private$.hash_expand(hash), envir = private$.texts)
+            return(invisible())
+        },
+
         #' @description Map a language code to a native language name.
         #'
-        #' @param ... Any number of named, non-empty, and non-[NA][base::NA]
-        #'   character strings. Names are codes and values are native
-        #'   languages. See field `native_languages` for more information.
+        #' @param ... Any number of named, non-empty, and non-NA character
+        #'   strings. Names are codes and values are native languages. See
+        #'   field `native_languages` for more information.
         #'
         #' @return A `NULL`, invisibly.
         #'
@@ -536,29 +533,27 @@ Translator <- R6::R6Class("Translator",
             return(invisible())
         },
 
-        #' @description Remove a registered location.
+        #' @description Register a default value to return when there is no
+        #'   corresponding translations for the requested language.
         #'
-        #' @param hash A non-empty and non-[NA][base::NA] character string
-        #'   identifying the [`Text`][Text] object to be removed.
+        #' @param value A `NULL` or a non-NA character string. It can be empty.
+        #'   The former is returned by default.
+        #'
+        #' @details This modifies what methods [`$translate()`][Translator] and
+        #'   [`$get_translation()`][Translator] returns when there is no
+        #'   translation for `lang`.
         #'
         #' @return A `NULL`, invisibly.
         #'
         #' @examples
         #' tr <- Translator$new()
-        #' tr$set_text(en = "Hello, world!")
-        #'
-        #' tr$rm_text("256e0d7")
-        rm_text = \(hash = "") {
-            if (!length(private$.texts)) {
-                stops("there are no registered 'Text' objects to remove.")
+        #' tr$set_default_value("<unavailable>")
+        set_default_value = function(value = NULL) {
+            if (!is.null(value)) {
+                assert_chr1(value, TRUE)
+                private$.default_value <- value
             }
 
-            assert_chr1(hash)
-            assert_match(hash,
-                private$.hash_reduce(self$hashes),
-                quote_values = TRUE)
-
-            rm(list = private$.hash_expand(hash), envir = private$.texts)
             return(invisible())
         }
     )

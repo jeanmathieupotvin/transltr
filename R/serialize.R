@@ -1,3 +1,5 @@
+.__STR_UNTRANSLATED <- "# Insert a translation here."
+
 #' Serialize Objects
 #'
 #' @description
@@ -69,20 +71,20 @@
 #'   is passed to these functions, they will import translations and further
 #'   register them (as long as they correspond to an existing source text).
 #'
-#' @param string A non-empty and non-[NA][base::NA] character string. Contents
+#' @param string A non-empty and non-NA character string. Contents
 #'   to deserialize.
 #'
-#' @param id A non-empty and non-[NA][base::NA] character string. A unique
-#'   identifier for the underlying object. It is used for validation purposes.
+#' @param id A non-empty and non-NA character string. A unique identifier for
+#'   the underlying object. It is used for validation purposes.
 #'
-#' @param set_translations A non-[NA][base::NA] logical value. Should
-#'   translations be included in the resulting [`ExportedText`][export()]
-#'   object? If `FALSE`, field `Translations` is set equal to `NULL`.
+#' @param set_translations A non-NA logical value. Should translations be
+#'   included in the resulting [`ExportedText`][export()] object? If `FALSE`,
+#'   field `Translations` is set equal to `NULL`.
 #'
 #' @param ... Further arguments passed to, or from other methods.
 #'
-#' @param errors A non-empty character vector of non-[NA][base::NA] values.
-#'   Error message(s) describing why object(s) are invalid.
+#' @param errors A non-empty character vector of non-NA values. Error
+#'   message(s) describing why object(s) are invalid.
 #'
 #' @template param-lang
 #'
@@ -180,19 +182,14 @@
 #'   \item{`Translations`}{A named list containing further named lists. Each
 #'     sublist contains two values:
 #'     \describe{
-#'       \item{`Source Text`}{A non-empty and non-[NA][base::NA] character
-#'         string.}
-#'       \item{`Translation`}{A non-empty and non-[NA][base::NA] character
-#'         string.}
+#'       \item{`Source Text`}{A non-empty and non-NA character string.}
+#'       \item{`Translation`}{A non-empty and non-NA character string.}
 #'     }
 #'     See [`Text$translations`][Text] for more information.}
 #' }
 #'
 #' Unavailable translations are automatically replaced by a placeholder that
-#' depends on the *context*:
-#'
-#'   * [`constant("untranslated")`][constant()] for [export()], and
-#'   * [`constant("empty")`][constant()] for [import()].
+#' depends on whether they are exported or imported.
 #'
 #' @note
 #' Dividing the serialization and deserialization processes into multiple steps
@@ -286,12 +283,12 @@ export_translations <- function(tr = translator(), lang = "") {
         stops("'lang' must have a corresponding native language registered in 'tr'.")
     }
 
-    untranslated <- constant("untranslated")
     translations <- lapply(lapply(tr$hashes, tr$get_text), \(txt) {
         return(
             list(
-                `Source Text` = txt$source_text,
-                Translation   = txt$get_translation(lang) %??% untranslated))
+                `Source Text` = str_wrap(txt$source_text),
+                Translation   = str_wrap(
+                    txt$get_translation(lang) %??% .__STR_UNTRANSLATED)))
     })
 
     out <- list(
@@ -331,27 +328,34 @@ export.Translator <- function(x, ...) {
 #' @keywords internal
 #' @export
 export.Text <- function(x, id = uuid(), set_translations = FALSE, ...) {
+    # Widths takes into account indentation and ensure
+    # lines of serialized Translator objects are never
+    # longer than 80 characters.
     assert_chr1(id)
     assert_lgl1(set_translations)
 
-    source_is_set <- x$source_lang != constant("unset")
-    translations  <- if (set_translations) {
+    src_is_set   <- x$source_lang != .__STR_UNSET
+    translations <- if (set_translations) {
+        # Source text is removed from translations
+        # and is treated independently.
         langs <- names(x$translations)
-        trans <- x$translations[langs[-match(x$source_lang, langs, 0L)]]
-        lapply(trans, strwrap, width = 80L)
+        lapply(
+            x$translations[langs[-match(x$source_lang, langs, 0L)]],
+            str_wrap,
+            width = 72L)
     }
 
     out <- list(
         Identifier        = id,
         Algorithm         = x$algorithm,
-        Hash              = if (source_is_set) x$hash,
-        `Source Language` = if (source_is_set) x$source_lang,
-        `Source Text`     = if (source_is_set) strwrap(x$source_text, 80L),
+        Hash              = if (src_is_set) x$hash,
+        `Source Language` = if (src_is_set) x$source_lang,
+        `Source Text`     = if (src_is_set) str_wrap(x$source_text, width = 74L),
         Translations      = translations,
         Locations         = map(
             export,
             x    = x$locations,
-            id   = sprintf("%s:%s", id, names(x$locations)),
+            id   = sprintf("%s:l%i", id, seq_along(x$locations)),
             more = list(...)))
 
     return(structure(out, class = "ExportedText", tag = "Text"))
@@ -392,10 +396,10 @@ assert.ExportedTranslator <- function(x, throw_error = TRUE, ...) {
             "'Identifier' must be a non-empty character string."
         },
         # Validate Algorithm.
-        if (!is_match(algo, constant("algorithms"))) {
+        if (!is_match(algo, algorithms())) {
             sprintf(
                 "'Algorithm' must be equal to %s.",
-                str_to(constant("algorithms"), TRUE))
+                str_to(algorithms(), TRUE))
         },
         # Validate Languages.
         if (!is_list(langs, TRUE) ||
@@ -439,10 +443,10 @@ assert.ExportedText <- function(x, throw_error = TRUE, ...) {
     # Accumulate error messages.
     errors <- c(
         # Validate Algorithm.
-        if (!is_match(algo, constant("algorithms"))) {
+        if (!is_match(algo, algorithms())) {
             sprintf(
                 "'Algorithm' must be equal to %s.",
-                str_to(constant("algorithms"), TRUE))
+                str_to(algorithms(), TRUE))
         },
         # Validate Hash.
         # Hash can be NULL and this is
@@ -517,7 +521,7 @@ assert.ExportedLocation <- function(x, throw_error = TRUE, ...) {
         if (!is_chr(ranges) || !all(range_is_parseable(ranges))) {
             sprintf(
                 "'Ranges' must be a single %s character string, or a sequence of such values.",
-                constant("range-format"))
+                .__STR_RANGE_USR_FMT)
         }
     )
 
@@ -606,11 +610,11 @@ import.ExportedTranslator <- function(x, ...) {
 import.ExportedText  <- function(x, ...) {
     txt <- Text$new(x[["Algorithm"]])
 
+    do.call(txt$set_locations,    lapply(x[["Locations"]], import, ...))
+    do.call(txt$set_translations, lapply(x[["Translations"]], normalize))
+
     source_lang <- x[["Source Language"]]
     source_text <- x[["Source Text"]]
-
-    do.call(txt$set_locations, lapply(x[["Locations"]], import, ...))
-    do.call(txt$set_translations, x[["Translations"]] %??% list())
 
     if (!is.null(source_lang) && !is.null(source_text)) {
         txt$set_translation(source_lang, normalize(source_text))
@@ -621,7 +625,7 @@ import.ExportedText  <- function(x, ...) {
     # constant (default value of Text$hash)
     # to ensure proper comparisons. %??% has
     # precedence over !=.
-    if (x[["Hash"]] %??% constant("unset") != txt$hash) {
+    if (x[["Hash"]] %??% .__STR_UNSET != txt$hash) {
         warn_msg <- sprintf(
             "['%s'] 'Hash' is not equal to computed hash ('%s'). The latter will be used.",
             x[["Identifier"]],
@@ -652,17 +656,13 @@ import.ExportedLocation <- function(x, ...) {
 #' @keywords internal
 #' @export
 import.ExportedTranslations <- function(x, tr = NULL, ...) {
-    empty        <- constant("empty")
-    untranslated <- constant("untranslated")
-
-    # Set untranslated source texts
-    # (empty Translation sections)
-    # equal to constant empty.
-    trans <- rapply(x[["Translations"]], how = "replace", f = \(txt) {
-        if (!nzchar(txt) || txt == untranslated) {
-            return(empty)
+    translations <- rapply(x[["Translations"]], how = "replace", f = \(txt) {
+        # Set untranslated or empty sections equal to constant empty.
+        if (!nzchar(txt) || txt == .__STR_UNTRANSLATED) {
+            return("<empty>")
         }
 
+        # Other, normalize the input.
         return(normalize(txt))
     })
 
@@ -674,7 +674,7 @@ import.ExportedTranslations <- function(x, tr = NULL, ...) {
             `Language Code`   = x[["Language Code"]],
             Language          = x[["Language"]],
             `Source Language` = x[["Source Language"]],
-            Translations      = trans),
+            Translations      = translations),
         class = "ExportedTranslations",
         tag = "Translations")
 
@@ -694,8 +694,8 @@ import.ExportedTranslations <- function(x, tr = NULL, ...) {
         # Empty translations are skipped silently.
         # vapply() is used to keep names (reduced
         # hashes) required below.
-        texts <- vapply(trans, `[[`, NA_character_, i = "Translation")
-        texts <- texts[texts != empty]
+        texts <- vapply(translations, `[[`, NA_character_, i = "Translation")
+        texts <- texts[texts != "<empty>"]
 
         map(hash = names(texts), text = texts, fun = \(hash, text) {
             if (!is.null(txt <- tr$get_text(hash))) {
@@ -742,6 +742,6 @@ format_errors <- function(
 
     # This guarantees id will be
     # valid in almost all cases.
-    id <- as.character(id %??% constant("unknown"))
+    id <- as.character(id %??% "<unknown>")
     return(sprintf("['%s'] %s", id, errors))
 }

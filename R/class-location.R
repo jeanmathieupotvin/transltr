@@ -1,3 +1,9 @@
+.__STR_RANGE_USR_FMT <- "`Ln <int>, Col <int> @ Ln <int>, Col <int>`"
+.__STR_RANGE_REGEX   <- paste(
+    "^Ln[ \t]*([0-9.]+),[ \t]*Col[ \t]*([0-9.]+)",
+    "[ \t]*@[ \t]*",
+    "Ln[ \t]*([0-9.]+),[ \t]*Col[ \t]*([0-9.]+)$")
+
 #' Source Locations
 #'
 #' Structure and manipulate source locations. Class [`Location`][Location] is
@@ -23,14 +29,13 @@
 #' number of [`Location`][Location] objects having possibly different paths.
 #' It can be viewed as a vectorized version of [c()].
 #'
-#' @param path A non-empty and non-[NA][base::NA] character string. The origin
-#'   of the range(s).
+#' @param path A non-empty and non-NA character string. The origin of the ranges.
 #'
-#' @param line1,col1 A non-empty integer vector of non-[NA][base::NA] values.
-#'   The (inclusive) starting point(s) of what is being referenced.
+#' @param line1,col1 A non-empty integer vector of non-NA values. The
+#'   (inclusive) starting point(s) of what is being referenced.
 #'
-#' @param line2,col2 A non-empty integer vector of non-[NA][base::NA] values.
-#'   The (inclusive) end(s) of what is being referenced.
+#' @param line2,col2 A non-empty integer vector of non-NA values. The
+#'   (inclusive) end(s) of what is being referenced.
 #'
 #' @param x Any \R object.
 #'
@@ -188,25 +193,24 @@ merge_locations <- function(...) {
     return(lapply(groups, \(group) do.call(c, group)))
 }
 
-
 #' Source Ranges
 #'
 #' Create, parse, and validate source ranges.
 #'
-#' Ranges are `r constant("range-format")` strings created on-the-fly from
+#' Ranges are `r .__STR_RANGE_USR_FMT` strings created on-the-fly from
 #' [`Location`][Location] objects for outputting purposes.
 #'
 #' @param x A [`Location`][Location] object.
 #'
-#' @param ranges A character vector of non-[NA][base::NA] and non-empty values.
+#' @param ranges A character vector of non-NA and non-empty values.
 #'   The ranges to extract pairs of indices (line, column) from.
 #'
 #' @returns
 #' [range_format()] returns a character vector. It assumes that `x` is valid.
 #'
 #' [range_parse()] returns a list having the same length as `ranges`. Each
-#' element is an integer vectors containing 4 non-[NA][base::NA] values (unless
-#' the underlying range is invalid).
+#' element is an integer vectors containing 4 non-NA values (unless the
+#' underlying range is invalid).
 #'
 #' [range_is_parseable()] returns a logical vector having the same length as
 #' `ranges`.
@@ -223,7 +227,7 @@ range_format <- function(x = location()) {
     }
 
     chars <- lapply(x[-1L], encodeString, width = NULL, justify = "right")
-    return(do.call(sprintf, c(constant("range-sprintf"), chars)))
+    return(do.call(sprintf, c("Ln %s, Col %s @ Ln %s, Col %s", chars)))
 }
 
 #' @rdname class-location-ranges
@@ -231,7 +235,7 @@ range_format <- function(x = location()) {
 range_parse <- function(ranges = character()) {
     assert_chr(ranges)
 
-    matches <- gregexpr(constant("range-pattern"), ranges, perl = TRUE)
+    matches <- gregexpr(.__STR_RANGE_REGEX, ranges, perl = TRUE)
     starts  <- sapply(matches, attr, "capture.start")
     widths  <- sapply(matches, attr, "capture.length")
     ends    <- starts + widths - 1L
@@ -253,5 +257,5 @@ range_parse <- function(ranges = character()) {
 #' @keywords internal
 range_is_parseable <- function(ranges = character()) {
     assert_chr(ranges)
-    return(grepl(constant("range-pattern"), ranges))
+    return(grepl(.__STR_RANGE_REGEX, ranges))
 }

@@ -79,8 +79,7 @@ This argument is \code{NULL} by default for \code{\link[=deserialize_translation
 is passed to these functions, they will import translations and further
 register them (as long as they correspond to an existing source text).}
 
-\item{lang}{A non-empty and non-\link[base:NA]{NA} character string. The
-underlying language.
+\item{lang}{A non-empty and non-NA character string. The underlying language.
 
 A language is usually a code (of two or three letters) for a native
 language name. While users retain full control over codes, it is best
@@ -89,22 +88,22 @@ to use language codes stemming from well-known schemes such as
 \href{https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}{ISO 639-1}
 to maximize portability and cross-compatibility.}
 
-\item{string}{A non-empty and non-\link[base:NA]{NA} character string. Contents
+\item{string}{A non-empty and non-NA character string. Contents
 to deserialize.}
 
-\item{id}{A non-empty and non-\link[base:NA]{NA} character string. A unique
-identifier for the underlying object. It is used for validation purposes.}
+\item{id}{A non-empty and non-NA character string. A unique identifier for
+the underlying object. It is used for validation purposes.}
 
-\item{set_translations}{A non-\link[base:NA]{NA} logical value. Should
-translations be included in the resulting \code{\link[=export]{ExportedText}}
-object? If \code{FALSE}, field \code{Translations} is set equal to \code{NULL}.}
+\item{set_translations}{A non-NA logical value. Should translations be
+included in the resulting \code{\link[=export]{ExportedText}} object? If \code{FALSE},
+field \code{Translations} is set equal to \code{NULL}.}
 
-\item{throw_error}{A non-\link[base:NA]{NA} logical value. Should an error be
-thrown? If so, \code{\link[=stops]{stops()}} is called. Otherwise, error messages are returned
-as a character vector (possibly empty).}
+\item{throw_error}{A non-NA logical value. Should an error be thrown? If so,
+\code{\link[=stops]{stops()}} is called. Otherwise, error messages are returned as a character
+vector (possibly empty).}
 
-\item{errors}{A non-empty character vector of non-\link[base:NA]{NA} values.
-Error message(s) describing why object(s) are invalid.}
+\item{errors}{A non-empty character vector of non-NA values. Error
+message(s) describing why object(s) are invalid.}
 }
 \value{
 See other sections for further information.
@@ -269,20 +268,14 @@ An \code{\link[=export]{ExportedTranslations}} object is a named list of S3 clas
 \item{\code{Translations}}{A named list containing further named lists. Each
 sublist contains two values:
 \describe{
-\item{\verb{Source Text}}{A non-empty and non-\link[base:NA]{NA} character
-string.}
-\item{\code{Translation}}{A non-empty and non-\link[base:NA]{NA} character
-string.}
+\item{\verb{Source Text}}{A non-empty and non-NA character string.}
+\item{\code{Translation}}{A non-empty and non-NA character string.}
 }
 See \code{\link[=Text]{Text$translations}} for more information.}
 }
 
 Unavailable translations are automatically replaced by a placeholder that
-depends on the \emph{context}:
-\itemize{
-\item \code{\link[=constant]{constant("untranslated")}} for \code{\link[=export]{export()}}, and
-\item \code{\link[=constant]{constant("empty")}} for \code{\link[=import]{import()}}.
-}
+depends on whether they are exported or imported.
 }
 }
 

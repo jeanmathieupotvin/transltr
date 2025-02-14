@@ -1,24 +1,7 @@
-#' A mock Shiny application
-#'
-#' A mock Shiny application used to test the behavior of [find_source()].
-#'
-#' @usage
-#' ## Expected usage in tests/testthat/test-find-source.R
-#' text_read(get_mock_path("scripts/find-source-1"))
-#'
-#' @seealso [Source code](https://github.com/rstudio/shiny-examples/tree/main/001-hello)
-NULL
-
-
-library(shiny)
-library(transltr)
-
-
-# User Interface ---------------------------------------------------------------
-
+# This script mocks a real R script containing source code.
 
 ui <- shiny::fluidPage(
-    shiny::titlePanel(transltr::translate("Hello Shiny!")),
+    shiny::titlePanel(tr$translate("Hello Shiny!")),
     # Sidebar layout with input and output definitions.
     shiny::sidebarLayout(
         # Sidebar panel for inputs.
@@ -26,7 +9,7 @@ ui <- shiny::fluidPage(
             # Input: Slider for the number of bins.
             shiny::sliderInput(
                 inputId = "bins",
-                label   = transltr::translate("Number of bins:"),
+                label   = `tr`$translate("Number of bins:"),
                 min     = 1L,
                 max     = 50L,
                 value   = 30L)
@@ -38,10 +21,6 @@ ui <- shiny::fluidPage(
         )
     )
 )
-
-
-# Server -----------------------------------------------------------------------
-
 
 server <- function(input, output) {
     # Histogram of the Old Faithful Geyser Data.
@@ -58,13 +37,9 @@ server <- function(input, output) {
             breaks = bins,
             col    = "#75AADB",
             border = "white",
-            xlab   = translate("Waiting time to next eruption (in mins)"),
-            main   = translate("Histogram of waiting times"))
+            xlab   = tr$`translate`("Waiting time to next eruption (in mins)"),
+            main   = tr$"translate"("Histogram of waiting times"))
     })
 }
-
-
-# Create the application and run it --------------------------------------------
-
 
 shiny::shinyApp(ui = ui, server = server)

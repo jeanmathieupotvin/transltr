@@ -1,12 +1,12 @@
 #' Source Text
 #'
-#' Structure a source text and its translations.
+#' Structure source text and its translations.
 #'
-#' A [`Text`][Text] object is a piece of text that is extracted from \R source
-#' scripts.
+#' A [`Text`][Text] object is a piece of source text that is extracted from \R
+#' source scripts.
 #'
 #'   * It (typically) has one or more [`Locations`][Location] within a project.
-#'   * It is complemented by any number of translations and further attributes.
+#'   * It has zero or more translations.
 #'
 #' The [`Text`][Text] class structures this information and exposes a set of
 #' methods to manipulate it.
@@ -36,6 +36,7 @@
 #' @param x Any \R object.
 #'
 #' @param ... Usage depends on the underlying function.
+#'
 #'   * Any number of [`Location`][Location] objects and/or named character
 #'     strings for [text()] (in no preferred order).
 #'   * Any number of [`Text`][Text] objects for [merge_texts()] and S3
@@ -43,15 +44,11 @@
 #'   * Further arguments passed to or from other methods for [format()],
 #'     [print()], and [as_text()].
 #'
-#' @param location A [`Location`][Location] object.
+#' @param loc A [`Location`][Location] object.
 #'
 #' @template param-source-lang
 #'
 #' @template param-algorithm
-#'
-#' @template param-strict
-#'
-#' @template param-validate
 #'
 #' @returns
 #' [text()], [c()], and [as_text()] return an [`R6`][R6::R6] object of
@@ -113,13 +110,11 @@
 #'
 #' # Objects can be coerced to a Text object with as_text(). Below is an
 #' # example for call objects. This is for illustration purposes only,
-#' # and the latter should not be used. It is worthwhile to note that this
-#' # method is used internally by find_source(). Use this function instead.
-#' translate_call <- str2lang("transltr::translate('Hello, world!')")
-#' translate_loc  <- location("example in class-text", 2L, 32L, 2L, 68L)
-#' as_text(translate_call, location = translate_loc)
-#'
-#' @include constants.R
+#' # and the latter should not be used. This method is used internally by
+#' # find_source().
+#' cl  <- str2lang("translate('Hello, world!')")
+#' loc <- location("example in class-text", 2L, 32L, 2L, 68L)
+#' as_text(cl, loc)
 #'
 #' @rdname class-text
 #' @keywords internal
@@ -127,7 +122,7 @@
 text <- function(
     ...,
     source_lang = language_source_get(),
-    algorithm   = constant("algorithms"))
+    algorithm   = algorithms())
 {
     assert_chr1(source_lang)
 
@@ -161,12 +156,18 @@ format.Text <- function(x, ...) {
     if (length(locations <- lapply(x$locations, format))) {
         names(locations) <- basename(names(locations))
     }
+    if (length(translations <- x$translations)) {
+        # Escape newlines to preserve format.
+        translations <- structure(
+            stringi::stri_replace_all_regex(translations, "\n", "\\\\n"),
+            names = names(translations))
+    }
 
     xlist <- list(
         Hash          = x$hash,
         `Source Lang` = x$source_lang,
         Algorithm     = x$algorithm,
-        Translations  = x$translations,
+        Translations  = translations,
         Locations     = locations)
 
     return(c("<Text>", format_vector(xlist, level = 1L)))
@@ -196,7 +197,7 @@ c.Text <- function(...) {
     if (!all(hashes[[1L]] == hashes[-1L])) {
         stops("all 'hash' must be equal in order to combine 'Text' objects.")
     }
-    if (hashes[[1L]] == constant("unset")) {
+    if (hashes[[1L]] == .__STR_UNSET) {
         stops("all 'Text' objects have no source language set.")
     }
 
@@ -218,7 +219,7 @@ c.Text <- function(...) {
 #' @rdname class-text
 #' @keywords internal
 #' @export
-merge_texts <- function(..., algorithm = constant("algorithms")) {
+merge_texts <- function(..., algorithm = algorithms()) {
     if (!all(vapply_1l(texts <- list(...), is_text))) {
         stops("values passed to '...' must all be 'Text' objects.")
     }
@@ -230,7 +231,7 @@ merge_texts <- function(..., algorithm = constant("algorithms")) {
     # and source language. These Texts cannot be
     # merged and must be ignored.
     hashes <- vapply_1c(texts, `[[`, i = "hash")
-    is_set <- hashes != constant("unset")
+    is_set <- hashes != .__STR_UNSET
     groups <- unname(split(texts[is_set], hashes[is_set]))
 
     return(lapply(groups, \(group) do.call(c, group)))
@@ -244,38 +245,32 @@ as_text <- function(x, ...) {
 }
 
 #' @rdname class-text
+#' @keywords internal
 #' @export
 as_text.call <- function(x,
-    strict    = FALSE,
-    location  = transltr::location(),
-    algorithm = constant("algorithms"),
-    validate  = TRUE,
+    loc       = location(),
+    algorithm = algorithms(),
     ...)
 {
-    assert_lgl1(validate)
-
-    if (validate) {
-        assert_lgl1(strict)
-
-        if (!is_translate_call(x, strict)) {
-            stops("'x' must be a 'call' object to 'transltr::translate()'.")
-        }
-        if (!is_location(location)) {
-            stops("'location' must be a 'Location' object.")
-        }
+    if (!is_location(loc)) {
+        stops("'loc' must be a 'Location' object.")
     }
 
-    # First element of a call is the
-    # name of the underlying function.
-    args        <- as.list(match.call(translate, x, expand.dots = FALSE))[-1L]
-    dots        <- unlist(args$`...`, use.names = FALSE)
-    concat      <- args$concat      %??% constant("concat")
-    source_lang <- args$source_lang %??% language_source_get()
+    x <- match.call(
+        call        = x,
+        definition  = Translator$public_methods$translate,
+        expand.dots = FALSE)
 
-    txt <- Text$new(algorithm)
-    txt$set_locations(location)
-    txt$set_translation(source_lang, normalize(dots, concat = concat))
-    txt$source_lang <- source_lang
+    dots <- x$`...`
+    txt  <- Text$new(algorithm)
+    txt$set_locations(loc)
+
+    if (!is.null(dots)) {
+        source_lang <- x$source_lang %??% language_source_get()
+        txt$set_translation(source_lang, normalize(dots))
+        txt$source_lang <- source_lang
+    }
+
     return(txt)
 }
 
@@ -287,17 +282,17 @@ Text <- R6::R6Class("Text",
     lock_objects = TRUE,
     cloneable    = FALSE,
     private      = list(
-        .hash         = constant("unset"),  # See $hash
-        .algorithm    = constant("unset"),  # See $algorithm
-        .source_lang  = constant("unset"),  # See $source_lang
-        .translations = NULL,               # See $translations
-        .locations    = NULL                # See $locations
+        .hash         = .__STR_UNSET,  # See $hash
+        .algorithm    = .__STR_UNSET,  # See $algorithm
+        .source_lang  = .__STR_UNSET,  # See $source_lang
+        .translations = NULL,          # See $translations
+        .locations    = NULL           # See $locations
     ),
     active = list(
-        #' @field hash A non-empty and non-[NA][base::NA] character string. A
-        #'   reproducible hash generated from `source_lang` and `source_text`,
-        #'   and by using the algorithm specified by `algorithm`. It is used
-        #'   as a unique identifier for the underlying [`Text`][Text] object.
+        #' @field hash A non-empty and non-NA character string. A reproducible
+        #'   hash generated from `source_lang` and `source_text`, and by using
+        #'   the algorithm specified by `algorithm`. It is used as a unique
+        #'   identifier for the underlying [`Text`][Text] object.
         #'
         #'   This is a **read-only** field. It is automatically updated
         #'   whenever fields `source_lang` and/or `algorithm` are updated.
@@ -314,7 +309,7 @@ Text <- R6::R6Class("Text",
         #' @template field-algorithm
         algorithm = \(value) {
             if (!missing(value)) {
-                assert_algorithm <- \(algorithm = constant("algorithms")) {
+                assert_algorithm <- \(algorithm = algorithms()) {
                     assert_arg(algorithm, TRUE)
                     return(algorithm)
                 }
@@ -386,7 +381,11 @@ Text <- R6::R6Class("Text",
                     "Update them by setting, or removing translations.")
             }
 
-            return(unlist(as.list(private$.translations, sorted = TRUE)))
+            return(
+                unlist(
+                    as.list(private$.translations,
+                        all.names = TRUE,
+                        sorted    = TRUE)))
         },
 
         #' @field locations A list of [`Location`][Location] objects giving
@@ -400,7 +399,7 @@ Text <- R6::R6Class("Text",
                     "Update them by setting, or removing 'Location' objects.")
             }
 
-            return(as.list(private$.locations, sorted = TRUE))
+            return(as.list(private$.locations, all.names = TRUE, sorted = TRUE))
         }
     ),
     public = list(
@@ -413,7 +412,7 @@ Text <- R6::R6Class("Text",
         #' @examples
         #' # Consider using text() instead.
         #' txt <- Text$new()
-        initialize = \(algorithm = constant("algorithms")) {
+        initialize = \(algorithm = algorithms()) {
             private$.translations <- new.env(parent = emptyenv())
             private$.locations    <- new.env(parent = emptyenv())
 
@@ -446,8 +445,8 @@ Text <- R6::R6Class("Text",
         #' @details This method is also used to register `source_lang` and
         #'  `source_text` **before** setting them as such. See Examples below.
         #'
-        #' @param text A non-empty and non-[NA][base::NA] character string. A
-        #'   translation, or a source text.
+        #' @param text A non-empty and non-NA character string. A translation,
+        #'   or the source text.
         #'
         #' @return A `NULL`, invisibly.
         #'
@@ -466,8 +465,8 @@ Text <- R6::R6Class("Text",
         #' @description Register one or more translations, and/or the source
         #'   text.
         #'
-        #' @param ... Any number of named, non-empty, and non-[NA][base::NA]
-        #'   character strings.
+        #' @param ... Any number of named, non-empty, and non-NA character
+        #'   strings.
         #'
         #' @details This method can be viewed as a vectorized version of
         #'   method `set_translation()`.
@@ -522,8 +521,8 @@ Text <- R6::R6Class("Text",
 
         #' @description Remove a registered translation.
         #'
-        #' @param lang A non-empty and non-[NA][base::NA] character string
-        #'   identifying a translation to be removed.
+        #' @param lang A non-empty and non-NA character string identifying a
+        #'   translation to be removed.
         #'
         #' @details You cannot remove `lang` when it is registered as the
         #'   current `source_lang`. You must update `source_lang` before
@@ -557,8 +556,8 @@ Text <- R6::R6Class("Text",
 
         #' @description Remove a registered location.
         #'
-        #' @param path A non-empty and non-[NA][base::NA] character string
-        #'   identifying a [`Location`][Location] object to be removed.
+        #' @param path A non-empty and non-NA character string identifying a
+        #'   [`Location`][Location] object to be removed.
         #'
         #' @return A `NULL`, invisibly.
         #'

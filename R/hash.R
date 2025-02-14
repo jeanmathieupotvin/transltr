@@ -11,7 +11,7 @@
 #' Values passed to these arguments are concatenated with a colon character for
 #' hashing purposes.
 #'
-#' @param text A non-[NA][base::NA] character string. It can be empty.
+#' @param text A non-NA character string. It can be empty.
 #'
 #' @template param-lang
 #'
@@ -25,7 +25,7 @@
 #' [`Translator`][Translator],
 #' [`Text`][Text],
 #' [normalize()],
-#' [constant()]
+#' [algorithms()]
 #'
 #' @keywords internal
 hash <- function(lang = "", text = "", algorithm = "") {
@@ -39,4 +39,35 @@ hash <- function(lang = "", text = "", algorithm = "") {
                 serialize = FALSE),
             utf8 = as.character(sum(cumsum(utf8ToInt(x)))),
             NULL))
+}
+
+#' Hashing Algorithms
+#'
+#' These algorithms map a character string to another character string of
+#' hexadecimal characters highly likely to be unique. The latter is used
+#' to uniquely identify a source text (and the underlying source language).
+#'
+#' ## Secure Hash Algorithm 1
+#'
+#' Method `sha1` corresponds to SHA-1 (Secure Hash Algorithm version 1), a
+#' cryptographic hashing function. While it is now superseded by more secure
+#' variants (SHA-256, SHA-512, etc.), it is still useful for non-sensitive
+#' purposes. It is fast, collision-resistant, and may handle very large inputs.
+#' It emits strings of 40 hexadecimal characters.
+#'
+#' ## Cumulative UTF-8 Sum
+#'
+#' `r lifecycle::badge("experimental")`
+#'
+#' **This method is experimental. Use with caution.**
+#'
+#' Method `utf8` is a simple method derived from cumulative sums of UTF-8 code
+#' points (converted to integers). It is slightly faster than method `sha1` for
+#' small inputs and emits hashes with a width porportional to the underlying
+#' input's length. It is used for testing purposes internally.
+#'
+#' @rdname constants
+#' @keywords internal
+algorithms <- function() {
+    return(c("sha1", "utf8"))
 }

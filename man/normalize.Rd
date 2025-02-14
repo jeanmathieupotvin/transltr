@@ -4,45 +4,35 @@
 \alias{normalize}
 \title{Normalize Text}
 \usage{
-normalize(..., concat = constant("concat"))
+normalize(...)
 }
 \arguments{
-\item{...}{Any number of character vectors containing non-\link[base:NA]{NA}
-elements. They can be empty.}
-
-\item{concat}{A non-\link[base:NA]{NA} character string used to concatenate
-values.}
+\item{...}{Any number of vectors containing \link{atomic} elements. Each vector
+is normalized as a paragraph.
+\itemize{
+\item Elements are coerced to character values.
+\item NA values and empty strings are discarded.
+\item Multi-line strings are supported and encouraged. Blank lines are
+interpreted (two or more newline characters) as paragraph separators.
+}}
 }
 \value{
 A character string, possibly empty.
 }
 \description{
-Ensure consistency of input text, allowing it to be written in a variety
-of ways.
+Construct a standardized string from values passed to \code{...}
 }
 \details{
-In what follows, a space character is defined as being an ASCII regular
-space or an horizontal tab (\verb{\\t}). A new line is defined an ASCII line
-feed (\verb{\\n}).
-
-\code{\link[=normalize]{normalize()}} constructs a normalized string from all single-line and
-multi-line strings passed to \code{...}. All underlying values are (implicitly)
-coerced to character values in the process. It does so by going through
-these 5 steps.
+Input text can written in a variety of ways using single-line and multi-line
+strings. Values passed to \code{...} are normalized (to ensure their consistency)
+and collapsed to a single character string using the standard paragraph
+separator. The latter is defined as two newline characters (\code{"\\n\\n"}).
 \enumerate{
-\item It removes implicit new lines and spaces used for indentation from
-multi-line strings. Empty lines are preserved.
-\item It replaces empty values by a new line.
-\item It concatenates values into a single character string using \code{concat}.
-\item It removes leading and/or trailing new lines and/or spaces, including
-those that could had been introduced temporarily at previous steps.
-\item It replaces substrings of space characters by a single space.
+\item NA values and empty strings are discarded before reducing \code{...} to a
+character string.
+\item Whitespaces (tabs, newlines, and repeated spaces) characters are
+replaced by a single space. Paragraph separators are preserved.
+\item Leading or trailing whitespaces are stripped.
 }
-}
-\note{
-The author is not satisfied with the current implementation. It is \emph{ugly},
-and not fast enough. Calling \code{\link[=gsub]{gsub()}} five times yields a huge performance
-penalty. Advices are welcome. \code{\link[=normalize]{normalize()}} will be revisited in a
-near future.
 }
 \keyword{internal}

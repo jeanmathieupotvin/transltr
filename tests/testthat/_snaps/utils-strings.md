@@ -20,7 +20,7 @@
       Error:
       ! 'x' must be a character vector of non-NA values.
 
-# str_trim() validates len
+# str_trim() validates width
 
     Code
       str_trim(v2, "1")
@@ -35,4 +35,28 @@
     Condition
       Error:
       ! 'width' must be a non-NA numeric value in the range [3, Inf).
+
+# str_wrap() validates x
+
+    Code
+      str_wrap(1L)
+    Condition
+      Error:
+      ! 'x' must be a character vector of non-NA values.
+
+# str_wrap() validates width
+
+    Code
+      str_wrap(v2, "1")
+    Condition
+      Error:
+      ! 'width' must be a non-NA integer of length 1.
+
+---
+
+    Code
+      str_wrap(v2, 0L)
+    Condition
+      Error:
+      ! 'width' must be a non-NA numeric value in the range [1, Inf).
 

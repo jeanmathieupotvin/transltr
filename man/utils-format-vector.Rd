@@ -10,42 +10,41 @@ format_vector(
   level = 0L,
   indent = 1L,
   fill_names = FALSE,
-  null = constant("null"),
-  empty = constant("empty"),
+  null = "<null>",
+  empty = "<empty>",
   validate = TRUE
 )
 }
 \arguments{
 \item{x}{A \link[=vector]{vector} of any \link[=vector]{atomic} mode, a
 \link[=list]{list}, or a \link[=pairlist]{pairlist}. It can be empty
-and it can contain \link[base:NA]{NA} values.}
+and it can contain NA values.}
 
-\item{label}{A \code{NULL}, or a non-empty and non-\link[base:NA]{NA} character
-string. A (top) descriptive label for \code{x}. It is used to preserve,
-and output all names in recursive calls. The value passed to \code{label}
-is considered to be at \code{level} 0, and is not indented.}
+\item{label}{A \code{NULL}, or a non-empty and non-NA character string. A top
+descriptive label for \code{x}. It is used to preserve, and output all names
+in recursive calls. The value passed to \code{label} is considered to be at
+\code{level} 0, and is not indented.}
 
-\item{level}{A non-\link[base:NA]{NA} integer value. The current depth, or
-current \emph{nesting level} to use for indentation purposes.}
+\item{level}{A non-NA integer value. The current depth, or current
+\emph{nesting level} to use for indentation purposes.}
 
-\item{indent}{A non-\link[base:NA]{NA} integer value. The number of single
-space(s) to use for each \code{level} when indenting name/value pairs.}
+\item{indent}{A non-NA integer value. The number of single space(s) to use
+for each \code{level} when indenting name/value pairs.}
 
-\item{fill_names}{A non-\link[base:NA]{NA} logical value. Should \code{NULL} and
-empty names be replaced by names created from the elements' underlying
-positions? Positions are relative to each \code{level}.}
+\item{fill_names}{A non-NA logical value. Should \code{NULL} and empty names
+be replaced by names created from the elements' underlying positions?
+Positions are relative to each \code{level}.}
 
-\item{null}{A non-empty and non-\link[base:NA]{NA} character string. The value
-to use to represent \code{NULL} and empty parlists (they are conceptually the
-same thing).}
+\item{null}{A non-empty and non-NA character string. The value to use to
+represent \code{NULL} and empty parlists (they are conceptually the same thing).}
 
-\item{empty}{A non-empty and non-\link[base:NA]{NA} character string. The
-value to use to represent empty vectors, excluding \code{NULL}. See \code{null}
-above for the latter. The \link[=typeof]{type} of the underlying empty
-object is added to \code{empty} for convenience. See Examples below.}
+\item{empty}{A non-empty and non-NA character string. The value to use to
+represent empty vectors, excluding \code{NULL}. See \code{null} above for the latter.
+The \link[=typeof]{type} of the underlying empty object is added to \code{empty}
+for convenience. See Examples below.}
 
-\item{validate}{A non-\link[base:NA]{NA} logical value. Should the arguments be
-validated before being used? This argument should be left as is.}
+\item{validate}{A non-NA logical value. Should the arguments be validated
+before being used? This argument should be left as is.}
 }
 \value{
 A character vector, possibly trimmed by \code{\link[=str_trim]{str_trim()}}.

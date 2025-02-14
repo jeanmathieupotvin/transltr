@@ -1,3 +1,5 @@
+.__STR_EMPTY_LIST <- "<empty list>"
+
 #' Serialize Objects to Flat Strings
 #'
 #' Serialize \R objects into textual sequences of unindented (*flat*) and
@@ -34,20 +36,20 @@
 #'
 #'   * converts `NULL` to the `"NULL"` character string,
 #'   * converts other elements to character strings using [format()] and
-#'   * replaces empty lists by a `"<empty-list>"` constant treated as a placeholder.
+#'   * replaces empty lists by a `<empty list>` constant treated as a
+#'     placeholder.
 #'
 #' @param x A list. It can be empty.
 #'
-#' @param tag_sep A non-empty and non-[NA][base::NA] character string. The
-#'   separator to use when creating tags from names (recursively) extracted
-#'   from `x`.
+#' @param tag_sep A non-empty and non-NA character string. The separator to use
+#'   when creating tags from names (recursively) extracted from `x`.
 #'
-#' @param tag_empty A non-[NA][base::NA] character string. The value to use
-#'   as a substitute for empty names. Positional indices are automatically
-#'   appended to it to ensure tags are always unique.
+#' @param tag_empty A non-NA character string. The value to use as a substitute
+#'   for empty names. Positional indices are automatically appended to it to
+#'   ensure tags are always unique.
 #'
-#' @param string A non-[NA][base::NA] character string. It can be empty.
-#'   Contents to deserialize.
+#' @param string A non-NA character string. It can be empty. Contents to
+#'   deserialize.
 #'
 #' @returns
 #' [flat_serialize()] returns a character string, possibly empty.
@@ -135,7 +137,7 @@ flat_deserialize <- function(string = "", tag_sep = ": ") {
         lvls     <- tags_lvls[[ti]]
         lvls_len <- length(lvls)
         lvls_ind <- seq_along(lvls)
-        value    <- if (identical(values[[ti]], constant("empty-list"))) {
+        value    <- if (identical(values[[ti]], .__STR_EMPTY_LIST)) {
             list()
         } else {
             values[[ti]]
@@ -224,7 +226,7 @@ flat_format <- function(x = list()) {
     assert_list(x, TRUE)
 
     if (!length(x)) {
-        return(constant("empty-list"))
+        return(.__STR_EMPTY_LIST)
     }
 
     out <- lapply(x, \(el) {

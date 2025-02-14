@@ -14,21 +14,13 @@
       Error:
       ! 'path' does not exist or is not a directory.
 
-# find_source() validates native_languages
+# find_source() validates tr
 
     Code
-      find_source(native_languages = 1L)
+      find_source(tr = 1L)
     Condition
       Error:
-      ! 'native_languages' must be a character vector of non-NA values.
-
----
-
-    Code
-      find_source(native_languages = "English")
-    Condition
-      Error:
-      ! 'native_languages' must have names.
+      ! 'tr' must be a 'Translator' object.
 
 # find_source_in_files() validates paths
 
@@ -38,13 +30,13 @@
       Error:
       ! 'paths' must be a non-empty character vector of non-NA values.
 
-# find_source_in_files() validates strict
+# find_source_in_files() validates verbose
 
     Code
-      find_source_in_files(path_mock1, strict = 1L)
+      find_source_in_files(path_mock1, verbose = 1L)
     Condition
       Error:
-      ! 'strict' must be a non-NA logical of length 1 ('TRUE' or 'FALSE').
+      ! 'verbose' must be a non-NA logical of length 1 ('TRUE' or 'FALSE').
 
 # find_source_in_files() validates algorithm
 
@@ -54,11 +46,12 @@
       Error:
       ! 'algorithm' must be equal to 'sha1', or 'utf8'.
 
-# find_source_in_files() validates verbose
+# find_source_in_files() validates interface
 
     Code
-      find_source_in_files(path_mock1, verbose = 1L)
+      find_source_in_files(path_mock1, interface = 1L)
     Condition
       Error:
-      ! 'verbose' must be a non-NA logical of length 1 ('TRUE' or 'FALSE').
+      ! 'interface' must be a 'name', a 'call' object, or 'NULL'.
+      Calls must be to operator `::`, i.e. 'pkg::fun'.
 
