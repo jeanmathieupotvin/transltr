@@ -7,7 +7,7 @@ deploy:
   install_metadata: true
 
 # Where to store assets in project's directory.
-destination: docs/
+destination: ../transltr-www/
 
 # Where the website is deployed.
 url: https://transltr.ununoctium.dev
