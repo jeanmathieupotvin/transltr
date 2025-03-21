@@ -4,7 +4,7 @@
 #' left-hand side operand is `NULL`. Otherwise, its left-hand side operand
 #' is returned.
 #'
-#' `%??%` is identical to `%||\%`, another nullish coalescing operator
+#' `%??%` is identical to `%||%`, another nullish coalescing operator
 #' introduced in R version 4.4.0 in package \pkg{base}. It is redefined
 #' here for convenience (and for earlier versions of \R) until further
 #' notice.
