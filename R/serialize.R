@@ -58,7 +58,7 @@
 #' ## Formatting errors
 #'
 #' [assert()] methods accumulate error messages before returning, or throwing
-#' them. [format_errors()] is a helper function that eases this process. It
+#' them. [report_errors()] is a helper function that eases this process. It
 #' exists to avoid repeting code in each method. There is no reason to call
 #' it outside of [assert()] methods.
 #'
@@ -130,7 +130,7 @@
 #' [assert.ExportedTranslations()] return a character vector, possibly empty.
 #' If `throw_error` is `TRUE`, an error is thrown if an object is invalid.
 #'
-#' [format_errors()] returns a character vector, and outputs its contents as
+#' [report_errors()] returns a character vector, and outputs its contents as
 #' an error if `throw_error` is `TRUE`.
 #'
 #' @section Exported Objects:
@@ -253,9 +253,9 @@ deserialize <- function(string = "") {
             merge.warning  = TRUE,
             # Classes are inferred from existing tags.
             handlers = list(
-                Translator = \(x) structure(x, class = "ExportedTranslator"),
-                Text       = \(x) structure(x, class = "ExportedText"),
-                Location   = \(x) structure(x, class = "ExportedLocation")))
+                Translator     = \(x) structure(x, class = "ExportedTranslator"),
+                SourceText     = \(x) structure(x, class = "ExportedSourceText"),
+                SourceLocation = \(x) structure(x, class = "ExportedSourceLocation")))
     })
 
     return(import(obj))
@@ -299,237 +299,6 @@ export_translations <- function(tr = translator(), lang = "") {
         Translations      = translations)
 
     return(structure(out, class = "ExportedTranslations", tag = "Translations"))
-}
-
-#' @rdname serialize
-#' @keywords internal
-export <- function(x, ...) {
-    UseMethod("export")
-}
-
-#' @rdname serialize
-#' @keywords internal
-#' @export
-export.Translator <- function(x, ...) {
-    out <- list(
-        Identifier = x$id,
-        Algorithm  = x$algorithm,
-        Languages  = as.list(x$native_languages),
-        Texts      = map(
-            export,
-            x    = lapply(x$hashes, x$get_text),
-            id   = names(x$hashes),
-            more = list(...)))
-
-    return(structure(out, class = "ExportedTranslator", tag = "Translator"))
-}
-
-#' @rdname serialize
-#' @keywords internal
-#' @export
-export.Text <- function(x, id = uuid(), set_translations = FALSE, ...) {
-    # Widths takes into account indentation and ensure
-    # lines of serialized Translator objects are never
-    # longer than 80 characters.
-    assert_chr1(id)
-    assert_lgl1(set_translations)
-
-    src_is_set   <- x$source_lang != .__STR_UNSET
-    translations <- if (set_translations) {
-        # Source text is removed from translations
-        # and is treated independently.
-        langs <- names(x$translations)
-        lapply(
-            x$translations[langs[-match(x$source_lang, langs, 0L)]],
-            str_wrap,
-            width = 72L)
-    }
-
-    out <- list(
-        Identifier        = id,
-        Algorithm         = x$algorithm,
-        Hash              = if (src_is_set) x$hash,
-        `Source Language` = if (src_is_set) x$source_lang,
-        `Source Text`     = if (src_is_set) str_wrap(x$source_text, width = 74L),
-        Translations      = translations,
-        Locations         = map(
-            export,
-            x    = x$locations,
-            id   = sprintf("%s:l%i", id, seq_along(x$locations)),
-            more = list(...)))
-
-    return(structure(out, class = "ExportedText", tag = "Text"))
-}
-
-#' @rdname serialize
-#' @keywords internal
-#' @export
-export.Location <- function(x, id = uuid(), ...) {
-    assert_chr1(id)
-
-    out <- list(
-        Identifier = id,
-        Path       = x$path,
-        Ranges     = range_format(x))
-
-    return(structure(out, class = "ExportedLocation", tag = "Location"))
-}
-
-#' @rdname serialize
-#' @export
-assert.ExportedTranslator <- function(x, throw_error = TRUE, ...) {
-    # This prevents any out-of-bound
-    # errors that may stem from `[[`.
-    if (!is.list(x)) {
-        x <- list()
-    }
-
-    id    <- x[["Identifier"]]
-    algo  <- x[["Algorithm"]]
-    langs <- x[["Languages"]]
-    texts <- x[["Texts"]]
-
-    # Accumulate error messages.
-    errors <- c(
-        # Validate Identifier.
-        if (!is_chr1(id)) {
-            "'Identifier' must be a non-empty character string."
-        },
-        # Validate Algorithm.
-        if (!is_match(algo, algorithms())) {
-            sprintf(
-                "'Algorithm' must be equal to %s.",
-                str_to(algorithms(), TRUE))
-        },
-        # Validate Languages.
-        if (!is_list(langs, TRUE) ||
-            !is_named(langs) ||
-            !all(vapply_1l(langs, is_chr1))) {
-            "'Languages' must a mapping of non-empty character strings."
-        },
-        # Validate Texts.
-        if (!is_list(texts, TRUE) ||
-            !all(vapply_1l(texts, inherits, what = "ExportedText"))) {
-            "'Texts' must a sequence of 'Text' objects."
-        },
-        # Validate contents of each Text object.
-        unlist(lapply(texts, assert, throw_error = FALSE, ...))
-    )
-
-    if (length(errors)) {
-        return(format_errors(errors, id, throw_error))
-    }
-
-    return(character())
-}
-
-#' @rdname serialize
-#' @export
-assert.ExportedText <- function(x, throw_error = TRUE, ...) {
-    # This prevents any out-of-bound
-    # errors that may stem from `[[`.
-    if (!is.list(x)) {
-        x <- list()
-    }
-
-    xnames <- names(x)
-    algo   <- x[["Algorithm"]]
-    hash   <- x[["Hash"]]
-    lang   <- x[["Source Language"]]
-    text   <- x[["Source Text"]]
-    trans  <- x[["Translations"]]
-    locs   <- x[["Locations"]]
-
-    # Accumulate error messages.
-    errors <- c(
-        # Validate Algorithm.
-        if (!is_match(algo, algorithms())) {
-            sprintf(
-                "'Algorithm' must be equal to %s.",
-                str_to(algorithms(), TRUE))
-        },
-        # Validate Hash.
-        # Hash can be NULL and this is
-        # different from a missing field.
-        if (!match("Hash", xnames, 0L) || !is.null(hash) && !is_chr1(hash)) {
-            "'Hash' must be a null, or a non-empty character string."
-        },
-        if (!is.null(hash) && (is.null(text) || is.null(lang))) {
-            "'Hash' is defined but not 'Source Text', and/or 'Source Lang'."
-        },
-        # Validate Source Language.
-        # Source Language can be NULL and
-        # this is different from a missing field.
-        if (!match("Source Language", xnames, 0L) ||
-            !is.null(lang) && !is_chr1(lang)) {
-            "'Source Language' must be a null, or a non-empty character string."
-        },
-        # Validate Source Text.
-        # Source Text can be NULL and this
-        # is different from a missing field.
-        if (!match("Source Text", xnames, 0L) ||
-            !is.null(text) && !is_chr1(text)) {
-            "'Source Text' must be a null, or a non-empty character string."
-        },
-        if (!is.null(lang) && is.null(text) ||
-            !is.null(text) && is.null(lang)) {
-            "'Source Language' is defined but not 'Source Text', or vice-versa."
-        },
-        # Validate Translations.
-        if (!match("Translations", xnames, 0L) ||
-            !is.null(trans) && (
-                !is_list(trans, TRUE) ||
-                !is_named(trans) ||
-                !all(vapply_1l(trans, is_chr1)))) {
-            "'Translations' must be a null, or a mapping of non-empty character strings."
-        },
-        # Validate Locations.
-        if (!is_list(locs, TRUE) ||
-            !all(vapply_1l(locs, inherits, what = "ExportedLocation"))) {
-            "'Locations' must be a sequence of 'Location' objects."
-        },
-        # Validate contents of each Location object.
-        unlist(lapply(locs, assert, throw_error = FALSE, ...))
-    )
-
-    if (length(errors)) {
-        return(format_errors(errors, x[["Identifier"]], throw_error))
-    }
-
-    return(character())
-}
-
-#' @rdname serialize
-#' @export
-assert.ExportedLocation <- function(x, throw_error = TRUE, ...) {
-    # This prevents any out-of-bound
-    # errors that may stem from `[[`.
-    if (!is.list(x)) {
-        x <- list()
-    }
-
-    path   <- x[["Path"]]
-    ranges <- x[["Ranges"]]
-
-    # Accumulate error messages.
-    errors <- c(
-        # Validate Path.
-        if (!is_chr1(path)) {
-            "'Path' must be a non-empty character string."
-        },
-        # Validate Ranges.
-        if (!is_chr(ranges) || !all(range_is_parseable(ranges))) {
-            sprintf(
-                "'Ranges' must be a single %s character string, or a sequence of such values.",
-                .__STR_RANGE_USR_FMT)
-        }
-    )
-
-    if (length(errors)) {
-        return(format_errors(errors, x[["Identifier"]], throw_error))
-    }
-
-    return(character())
 }
 
 #' @rdname serialize
@@ -579,7 +348,7 @@ assert.ExportedTranslations <- function(x, throw_error = TRUE, ...) {
     )
 
     if (length(errors)) {
-        return(format_errors(errors, id, throw_error))
+        return(report_errors(errors, id, throw_error))
     }
 
     return(character())
@@ -714,34 +483,4 @@ import.default <- function(x, ...) {
     stops(
         "deserialized object is not supported by transltr.",
         " It is likely missing a '!<type>' tag, or has an invalid one.")
-}
-
-#' @rdname serialize
-#' @keywords internal
-format_errors <- function(
-    errors      = character(),
-    id          = uuid(),
-    throw_error = TRUE)
-{
-    assert_chr(errors)
-    assert_lgl1(throw_error)
-
-    if (throw_error) {
-        if (length(errors) == 1L) {
-            stops(errors)
-        }
-
-        # This puts each elements of errors on its own line.
-        # The format is as follow.
-        # Error:
-        #  - Error 1.
-        #  - Error 2.
-        #  - ...
-        stops("\n", paste0(" - ", errors, collapse = "\n"))
-    }
-
-    # This guarantees id will be
-    # valid in almost all cases.
-    id <- as.character(id %??% "<unknown>")
-    return(sprintf("['%s'] %s", id, errors))
 }
