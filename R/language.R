@@ -4,7 +4,7 @@
 #' Get or set the current, and source languages.
 #'
 #' They are registered as environment variables named
-#' `TRANSLTR_LANGUAGE`, and `TRANSLTR_SOURCE_LANGUAGE`.
+#' `TRANSLTR_LANG`, and `TRANSLTR_SOURCE_LANG`.
 #'
 #' @details
 #' The language and the source language can always be temporarily changed. See
@@ -20,14 +20,14 @@
 #' @returns
 #' [language_set()], and [language_source_set()] return `NULL`, invisibly. They
 #' are used for their side-effect of setting environment variables
-#' `TRANSLTR_LANGUAGE` and `TRANSLTR_SOURCE_LANGUAGE`, respectively.
+#' `TRANSLTR_LANG` and `TRANSLTR_SOURCE_LANG`, respectively.
 #'
 #' [language_get()] returns a character string. It is the current value of
-#' environment variable `TRANSLTR_LANGUAGE`. It is empty if the latter is
+#' environment variable `TRANSLTR_LANG`. It is empty if the latter is
 #' unset.
 #'
 #' [language_source_get()] returns a character string. It is the current value
-#' of environment variable `TRANSLTR_SOURCE_LANGUAGE`. It returns `"en"` if the
+#' of environment variable `TRANSLTR_SOURCE_LANG`. It returns `"en"` if the
 #' latter is unset.
 #'
 #' @section Locales versus languages:
@@ -83,57 +83,57 @@
 #' @export
 language_set <- function(lang = "en") {
     if (is.null(lang)) {
-        if (!Sys.unsetenv("TRANSLTR_LANGUAGE") || .__LGL_DEBUG_FLAG) {
+        if (!Sys.unsetenv("TRANSLTR_LANG") || .__LGL_DEBUG_FLAG) {
             stopf("failed to unset current language '%s'.", language_get())
         }
 
-        return(invisible())
+        return(invisible(language_get()))
     }
 
     assert_chr1(lang)
 
-    if (!Sys.setenv(TRANSLTR_LANGUAGE = lang) || .__LGL_DEBUG_FLAG) {
+    if (!Sys.setenv(TRANSLTR_LANG = lang) || .__LGL_DEBUG_FLAG) {
         stopf("failed to set language '%s'.", lang)
     }
 
-    return(invisible())
+    return(invisible(lang))
 }
 
 #' @rdname language
 #' @export
 language_get <- function() {
-    # It does not matter whether the environment variable
-    # is set equal to "" or truly unset (on some OS only).
-    # Both cases leads to the same error. Therefore, there
-    # is no need to distinguish these cases with unset = NA.
-    return(Sys.getenv("TRANSLTR_LANGUAGE", unset = "", names = FALSE))
+    return(Sys.getenv("TRANSLTR_LANG", unset = "en", names = FALSE))
 }
 
 #' @rdname language
 #' @export
 language_source_set <- function(lang = "en") {
     if (is.null(lang)) {
-        if (!Sys.unsetenv("TRANSLTR_SOURCE_LANGUAGE") || .__LGL_DEBUG_FLAG) {
+        if (!Sys.unsetenv("TRANSLTR_SOURCE_LANG") || .__LGL_DEBUG_FLAG) {
             stopf(
                 "failed to unset current source language '%s'.",
                 language_source_get())
         }
 
-        return(invisible())
+        return(invisible(language_source_get()))
     }
 
     assert_chr1(lang)
 
-    if (!Sys.setenv(TRANSLTR_SOURCE_LANGUAGE = lang) || .__LGL_DEBUG_FLAG) {
+    if (!Sys.setenv(TRANSLTR_SOURCE_LANG = lang) || .__LGL_DEBUG_FLAG) {
         stopf("failed to set source language '%s'.", lang)
     }
 
-    return(invisible())
+    return(invisible(lang))
 }
 
 #' @rdname language
 #' @export
 language_source_get <- function() {
-    x <- Sys.getenv("TRANSLTR_SOURCE_LANGUAGE", unset = "", names = FALSE)
-    return(if (nzchar(x)) x else "en")
+    return(Sys.getenv("TRANSLTR_SOURCE_LANG", unset = "en", names = FALSE))
 }
+
+# An internal logical value always equal to `FALSE` used to force errors that
+# are hard, or (almost) impossible to test otherwise. It is only temporarily
+# set equal to `TRUE` via [testthat::with_mocked_bindings()].
+.__LGL_DEBUG_FLAG <- FALSE
