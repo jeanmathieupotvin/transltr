@@ -28,6 +28,7 @@ Imports:
     R6,
     stringi,
     utils,
+    xxhashlite,
     yaml
 Suggests:
     covr,
@@ -38,26 +39,3 @@ Suggests:
     testthat (>= 3.0.0),
     usethis,
     withr
-Collate:
-    'aaa.R'
-    'assert.R'
-    'class-location.R'
-    'class-text.R'
-    'class-translator.R'
-    'find-source-in-exprs.R'
-    'find-source.R'
-    'flat.R'
-    'hash.R'
-    'language.R'
-    'normalize.R'
-    'serialize.R'
-    'text-io.R'
-    'translator-io.R'
-    'transltr-package.R'
-    'utils-format-vector.R'
-    'utils-map.R'
-    'utils-nullish-op.R'
-    'utils-stop.R'
-    'utils-strings.R'
-    'uuid.R'
-    'zzz.R'
