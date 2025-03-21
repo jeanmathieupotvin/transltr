@@ -1,7 +1,7 @@
-#' @param ... Any number of vectors containing [atomic] elements. Each vector
-#'   is normalized as a paragraph.
+#' @param ... Any number of [atomic] vectors.
 #'
-#'   * Elements are coerced to character values.
+#'   * Each element is coerced to a character and normalized as a paragraph.
 #'   * NA values and empty strings are discarded.
-#'   * Multi-line strings are supported and encouraged. Blank lines are
-#'     interpreted (two or more newline characters) as paragraph separators.
+#'   * Multi-line strings are supported and encouraged. Any indentation may
+#'     be used. Blank lines are interpreted (two or more newline characters)
+#'     as paragraph separators.

@@ -1,8 +1,8 @@
-#' Character String Utilities
+#' Character Strings
 #'
 #' @description
-#' [str_to()] converts an \R object to a character string. It is a slightly
-#' more flexible alternative to [base::toString()].
+#' [str_to()] converts (*stringifies*) an \R object to a character string. Its
+#' default method is slightly more general than [base::toString()].
 #'
 #' [str_trim()] wraps [base::strtrim()] and further adds a `...` suffix to
 #' each trimmed element.
@@ -11,10 +11,11 @@
 #' returned.
 #'
 #' @details
-#' [str_to()] concatenates all elements with `", "`, except for the last
-#' one. See argument `last_sep`.
+#' [str_to.default()] concatenates all elements with `", "`, except for the
+#' last one. See argument `last_sep`.
 #'
-#' [str_wrap()] preserves existing paragraph separators (`"\n\n"`).
+#' [str_wrap()] preserves existing
+#' [paragraph separators][paragraph_std_template()].
 #'
 #' @param x Any \R object for [str_to()]. A character vector otherwise.
 #'
